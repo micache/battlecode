@@ -1,88 +1,70 @@
-# Current experiment: task-1dc3b256a0de46648114a0975812d515
+# Current experiment: task-b8b7c1c541fe484ab309e4dbec9b507b
 
 ## Identity and recovery
-- Bot alpha; branch bot/alpha; input HEAD 4b6483b0e91df11262fb6d8b42ab2667778e1571.
+- Bot alpha; branch bot/alpha; input HEAD 9c798b72454402253b836cc9e19c6acadd657e53.
 - Accepted commit c0cebd720fcd55e2bbb51d57dd2c398889d4071e; base source
   9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
 - Engine/SDK 2.1.6; historical-panels-v1; engine lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-- Entry branch/HEAD and all six accepted file hashes match the trusted handoff.
-  Owned source is intentionally restored to accepted, not HEAD. Preserved entry
-  diff and accepted files under this task's -entry.patch / -accepted-* names.
-- Latest published candidate 24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f
-  completed evaluation INCONCLUSIVE; no candidate awaiting evaluation identified.
-- Read/preserved exact notes, result and checkpoint patch for prior blocked task
-  task-1b0e5c1c51ef41f4a84bb0ef951cff7f and interrupted task
-  task-d64d418366c1460d8577433cfbaf6b8d (its final result is absent).
-  Copies use -recovered-* names; entry NOTES archived by its experiment ID.
-- Recover only the most recent camp-reset experiment. The interrupted spawn-heal
-  experiment remains archived, without combining behaviors.
+- Entry branch/HEAD, all six source files against accepted commit, and SDK header
+  verified; see this task's -identity.json. Entry diff from HEAD is the trusted
+  restoration to accepted source. Existing Git snapshots preserve that baseline.
+- Latest camp-reset evaluation af490775e94f281cfb6a4e0222804c31d44871e1a8184d57bf5fd517833d4eb2
+  is REJECTED, not pending: 22W/32L, matched delta -0.0185185, zero faults.
+  It evaluates source 3b7a9a65316fc22332da1e1b23910b91e6edea765ddd570beb2a60e4d8882377,
+  commit equal to input HEAD, revision 500edc8401c2ef7a44fe62fdbafa55eed1c24f164a24d3dbe42b774f30811c90.
+- Prior NOTES archived by experiment ID. Interrupted spawn-heal experiment
+  task-d64d418366c1460d8577433cfbaf6b8d already has preserved recovered notes and
+  changes in this directory. Inspected both and its exact own-attempt paths:
+  old bot-check artifact is empty; final result absent per prior recovery.
+  No trusted successful check/evaluation identified for that experiment.
+  Recover its minimal behavioral change only; no attack-reset or item change.
 
-## One hypothesis: playbook D, unused camp attack resets
-After a basic hit on a surviving visible camp, using at most one ready attack
-reset and one further legal basic attack will improve clearing and increase mean
-collected gems against accepted source on paired development cases. Falsifier:
-mean collected gems does not increase. Compare submitted gems and outcomes too.
-Invariant: require the successful first hit, a visible living survivor and cast
-readiness; recheck attack availability, visibility, health and range after casting.
-No reset on champion attacks and no chaining to another camp after a kill.
+## One hypothesis: playbook C, recall recovery
+Holding an injured champion on allied spawn through turn-end healing will reduce
+mean champion deaths versus accepted source on matched development cases.
+Falsifier: mean deaths does not decrease. Compare submitted gems and outcomes to
+check whether survival offsets the one-turn delay. Source invariant: after
+shopping, an injured spawn occupant returns before combat, banking or farming;
+full-health and away-from-spawn behavior retain accepted policy.
 
-## Evidence and implementation
-- Evaluation e525c2d2f15f5b4d23774ef05a6f1d02f4c1a921e98c20ec650995eb28799f1b
-  evaluated source 24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f,
-  revision a1ebb71a3144494723f622be61da10ca05f071b5be0af966c9ae14144b12bcec,
-  commit equal to input HEAD, against opponent source equal to base. It reported
-  four wins/two losses, zero faults, provisional-three-map-wiring coverage.
-- Corners B: 60f5b94e1c1c0035738a5bf80fe4ba22bec7b8e0e0c267b9b4b09c1f27b34a82,
-  terminal teamA round 648; submitted 658 vs 1020. Ryth/Marcella camp damage
-  10335/7740 and damage taken 1300/2280, respectively.
-- Elkring A: e75cb9a38791770ab6434d597066d0f4cfbec4232911e35f500d2855be3e3109,
-  terminal teamB round 1115; submitted 792 vs 1026. Ryth/Marcella/Willow camp
-  damage 17817/22605/11786, damage taken 10160/9130/8060.
-- Complete final.json obtained in bounded arena-client slices and saved as this
-  task's -corners-final.json / -elkring-final.json. Both report zero bot faults.
-  These hindsight statistics are never runtime inputs. Their engineVersion 0.0.1
-  field is distinct from the trusted envelope's CLI/SDK version 2.1.6.
-- Accepted source never casts and returns after one camp hit. Statistics motivate
-  testing clear speed but do not establish missed-reset counts or causal losses.
-- New recovery rationale: prior source 67e149ef76461fc02aca4bbc6df04ee2234f19f6ea9176dcf47086c7d38ca0f5
-  failed BUILD_FAILED before smoke; historical diagnostics were unavailable.
-  Installed cambc.h declares ability_slots private (3368) and exposes public
-  abilities() (3602). Prior patch incorrectly accessed the private member.
-  This is a source-proven compilation defect; historical compiler text is unknown.
-- Recover the same bounded helper at both camp attack sites, replacing private
-  member access with abilities(). Keep all other accepted source byte-identical.
-  No item, draft, routing, banking, recall, memory or fuel-limit changes.
-- SDK is_ready() checks cooldown and current can_cast; reset use() is untargeted.
-  GameRules.md 116 and published kits specify restored basic attack allowance.
-- Handoff flagged documentation changed/unrecorded: read both complete exports,
-  BOT_REFERENCE.md and installed C++ cambc.h; hashes match handoff. Consulted
-  playbook D and RESEARCH.md evidence limits. SDK header SHA-256
-  90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
+## Evidence and change
+- Development loss 7a8f7341cdecb35c237bfe8e5b9c2dc36f7372ff7d91017ce56c70fa1b117517,
+  collision A: 25 deaths, 946 submitted vs 1012, round 1602, zero faults.
+- Development loss 36fc17ba0abdcd46bc29ede9586266d7c9e5c027ac2edf6e157d38705e01a012,
+  collision B: 42 deaths, 836 submitted vs 1012, round 1423, zero faults.
+  Both are from the evaluated source/revision above, not the new edit. These
+  losses motivate survival work; missed-heal counts and causality are unknown.
+- Accepted source shops at spawn and then can immediately route toward gems or
+  camps. Recall completion clears the channel at turn start, passing its guard.
+- GameRules.md 122, 369-375 and BOT_REFERENCE.md section 3: healing requires
+  remaining on spawn through turn end. Installed C++ header health/max_health
+  queries are live; spawn_region(team::ally) supplies the allied spawn mask.
+- Added one injured-at-spawn return after shopping. Requeries health after Health
+  purchases. main.cpp retains unconditional official end_turn after play_turn.
+  No new state, loops, threshold, memory, draft, item or fuel-budget changes.
+- Documentation manifest unchanged; consulted playbook C and relevant handbook,
+  compact reference and SDK sections, plus RESEARCH.md evidence limits.
   Separate organizers' AGENTS.md remains unavailable and unreviewed.
 
 ## Validation and uncertainty
-- python3 experiments/alpha/check_camp_reset.py PASSED, exit 0; saved report
-  task-1dc3b256a0de46648114a0975812d515-source-check.json. Checks first hit,
-  visible survivor/readiness, public accessor, bounded reset, fresh second-hit
-  legality, both farming sites, exact accepted-source delta and retained yield.
-  These are source invariants, not runtime/fuel measurements.
+- python3 experiments/alpha/check_spawn_heal.py PASSED, exit 0; report
+  task-b8b7c1c541fe484ab309e4dbec9b507b-source-check.json. Verifies ordering,
+  exact accepted-source delta, unchanged other source and retained turn yield.
+  These are source invariants, not runtime measurements.
 - git diff --check PASSED, exit 0.
-- Trusted command: bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
-  PASSED, exit 0. Exact checked source:
-  3b7a9a65316fc22332da1e1b23910b91e6edea765ddd570beb2a60e4d8882377.
-- Local report: .agent/check-task-1dc3b256a0de46648114a0975812d515.json;
-  also preserved as this task's -bot-check.json. Trusted reference:
-  check:task-1dc3b256a0de46648114a0975812d515:3b7a9a65316fc22332da1e1b23910b91e6edea765ddd570beb2a60e4d8882377.
-- Wrapper smoke IDs bf0d8b0295c2129f6923add8a7205565729560815da9c69fceab8267ad42247d
-  and 4c97b1033ca6b7cce13f049226547614b21b1832430c8269502228ea97f1e8ca.
+- bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
+  PASSED, exit 0; exact checked source
+  4b1ee918038011be24888b3b8e918831c1451e45a07ba9e518647afa93f3e21b.
+  Report: .agent/check-task-b8b7c1c541fe484ab309e4dbec9b507b.json; preserved as
+  this task's -bot-check.json. Trusted reference:
+  check:task-b8b7c1c541fe484ab309e4dbec9b507b:4b1ee918038011be24888b3b8e918831c1451e45a07ba9e518647afa93f3e21b.
+- Wrapper smoke IDs ed38b033e118c5f0a7115f9d597661d96e7b00cf2e0dd1064b29a791977c20b5
+  and 8df7f25e3468f68262ee025bdad88aed139ccb4c4ba9539212ddbe9e60a1f220.
   Finals not inspected; IDs alone do not prove full-game completion or gains.
-- Saved this task's -identity.json records accepted-source, SDK and doc hashes.
-- Existing entry bot.h restoration and Focus item are differences from HEAD;
-  the only behavioral delta from accepted is camp-reset use.
-- No improvement claim. Runtime reset use, fuel headroom and clear times are
-  unknown. Spending resets on camps can weaken later combat or alter routes.
-  Capture timing may dominate whether more damage yields more collected gems.
-- Outcome READY_FOR_EVAL. Supervisor evaluates this exact checked source
-  against accepted. Next idea only after evaluation: inspect capture completion
-  if extra camp damage fails to improve collection. No publication performed.
+- Outcome READY_FOR_EVAL. No tournament evaluation or publication invoked.
+- Runtime recall frequency, branch coverage and fuel headroom remain unknown.
+  Camp choice, linked-body deaths and interrupted recalls can dominate survival.
+  Waiting while injured may delay banking; no improvement claim before evaluation.
+- Next: supervisor evaluates the exact checked candidate against accepted source.
+  If mortality does not improve, inspect interrupted recalls in development logs.
