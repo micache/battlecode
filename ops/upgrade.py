@@ -35,7 +35,7 @@ def main():
     stage = Path('/opt') / f'battlecode.staging-{revision}'
     require(not backup.exists() and not stage.exists(), 'preserve/reconcile existing upgrade copy')
     stage.mkdir(mode=0o755)
-    for name in ('arena', 'ops', 'schemas', 'config', 'sources', 'evidence', 'docs'):
+    for name in ('arena', 'ops', 'schemas', 'config', 'sources', 'evidence', 'docs', 'fixtures'):
         shutil.copytree(source / name, stage / name, ignore=shutil.ignore_patterns('__pycache__'))
     for name in ('AGENTS.md', 'ARENA.md', 'AUTH_AND_OPERATIONS.md', 'BOT_REFERENCE.md', 'PROMPTS.md',
                  'PLAYBOOKS.md', 'RESEARCH.md', 'RULES_CHECKLIST.md', 'pyproject.toml', '.gitignore'):
