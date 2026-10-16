@@ -55,6 +55,8 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False, 
     os.chown(runtime, arena_uid, read_gid)
     runtime.chmod(0o700)
     root = Path("/srv/battlecode")
+    if blaxel and root.is_symlink():
+        root.resolve().mkdir(parents=True, exist_ok=True)
     root.mkdir(parents=True, exist_ok=True)
     os.chown(root, arena_uid, read_gid)
     root.chmod(0o750)
@@ -109,9 +111,12 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False, 
     for executable, module, function in (("arena", "arena.cli", "main"), ("arena-client", "arena.client", "main"),
                                          ("bot-check", "arena.client", "check_main")):
         target = Path("/usr/local/bin") / executable
+        content = f"#!/usr/bin/python3\nimport sys\nsys.path.insert(0, '/opt/battlecode')\nfrom {module} import {function}\nsys.exit({function}())\n"
         if target.exists():
-            raise RuntimeError(f"refusing to overwrite existing command: {target}")
-        target.write_text(f"#!/usr/bin/python3\nimport sys\nsys.path.insert(0, '/opt/battlecode')\nfrom {module} import {function}\nsys.exit({function}())\n")
+            if target.read_text() != content or target.stat().st_uid != 0:
+                raise RuntimeError(f"refusing to overwrite existing command: {target}")
+        else:
+            target.write_text(content)
         target.chmod(0o755)
     for path in (source / "ops/systemd").glob("*"):
         if blaxel:

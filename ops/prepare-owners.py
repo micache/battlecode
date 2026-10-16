@@ -34,7 +34,7 @@ if known.exists():
     require(known.read_bytes() == host, 'preserve existing host trust; inspect before changing')
 else:
     atomic_bytes(known, host, 0o600)
-    os.chown(known, arena.pw_uid, arena.pw_gid)
+os.chown(known, arena.pw_uid, arena.pw_gid)
 key = ssh / 'id_ed25519'
 if not key.exists():
     subprocess.run(['runuser', '-u', 'bc-arena', '--', 'ssh-keygen', '-q', '-t', 'ed25519',
