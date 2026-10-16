@@ -1,59 +1,60 @@
-# Current experiment: task-c2c7bf3ea00b414a866765a00628b958
+# Current experiment: task-5ff630fce5d04a3b94b1dc4cff40d615
 
 ## Identity and prior work
-- Bot alpha, branch bot/alpha; engine/SDK 2.1.6; suite pilot-wiring-v1.
-- Input HEAD: 4922166cd44fa0bc1291cf9ccd9b05125cfcb84a.
-- Accepted commit: c0cebd720fcd55e2bbb51d57dd2c398889d4071e.
-- Base source: 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+- Bot alpha, branch bot/alpha, input revision a27105b001a30fab44c2ed4485f4e2888e25fdb7.
+- Engine/SDK 2.1.6; suite pilot-wiring-v1.
+- Accepted commit c0cebd720fcd55e2bbb51d57dd2c398889d4071e.
+- Base source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
 - Entry source matched accepted_snapshot/src exactly (diff -r exit 0).
-  Initial tracked diff is the supervisor's accepted-source restoration, confirmed
-  by arena/worker.py make_attempt; it is not an interrupted experiment.
-- Prior candidate 65c8c92fcea5bb2a17bc9476695a4aaff8a9ee9d2a7666dc88ba4843ec27e4b7
-  was evaluated INCONCLUSIVE, not pending. Its notes are archived in
-  task-e1eebd52bd4149da9bd5a22bca914599.md; accepted snapshot remains untouched.
+  Initial tracked modifications are the supervisor's accepted-source restoration,
+  as confirmed by arena/worker.py make_attempt, not interrupted work.
+- Prior candidate f3a7e2da713bbe6b7c03d3d99cbcc8301e45040386668fbdefc44da4e1e012da
+  has completed evaluation, INCONCLUSIVE; it is not pending. Prior notes archived
+  as task-c2c7bf3ea00b414a866765a00628b958.md.
 
-## Hypothesis (playbook C: objective, economy, banking)
-Prioritizing banking over opportunistic enemy attacks while carrying gems will
-remove combat-induced banking delays. Falsifiable invariant: after channel and
-recovery handling, every carrier executes the banking branch before any enemy
-attack selection. Expected evaluation effect: more submitted gems and fewer
-unconverted bags; strategic improvement is unproven.
+## One hypothesis: playbook C, recovery cost
+Keeping an injured champion on allied spawn through turn end will prevent
+immediate departure after recall from skipping spawn healing. Falsifiable
+invariant: after shopping on spawn, health below maximum returns before all
+movement, enemy attacks, banking and farming; the dispatcher then end_turn()s.
+Expected evaluation effect: fewer repeated low-health recall trips, improving
+productive uptime. Win-rate improvement remains unproven.
 
-## Evidence and change
-- Supplied evaluation 639e91c9e7c215e00382562c3362bbcafc029683ce06cae70ac3dbdc491d8abf
-  evaluates the prior candidate, not this working source; six candidate games,
-  zero reported bot faults, four wins, two losses, INCONCLUSIVE overall.
-- Prior candidate collision B: match
-  7f9a575ca7dcaab8d4ccabb77f368fbaea727bdfc7be9c70f1fef6ce689dd29c,
-  submitted 858 vs 1012, deaths 36 vs 20.
-- Prior candidate elkring A: match
-  4ed66a84a804e708f235c3e490323f1c89a6cc1a8066ac237314c1277ecee5df,
-  collected 612, submitted 504, carried 36; opponent submitted 1008.
-- These aggregates motivate conversion work but do not prove combat caused losses.
-  Bag loss and channel interruption metrics are unavailable.
-- Accepted bot.cpp returned after any in-range enemy attack before checking bag.
-  The same enemy can therefore repeatedly defer banking, including at an altar.
-- Moved that existing enemy loop below the existing banking branch; updated bot.h
-  priority comment. No thresholds, routing, draft, recall or shared-state changes.
-- GameRules.md 217-223: only tribute scores; ordinary damage does not cancel it.
-  Installed C++ cambc.h submit_gems returns void; existing call contract retained.
-- Main dispatcher still yields via end_turn after return or exception.
+## Evidence and implementation
+- Supplied evaluation 1547e017ef91e36ce01cb35729db66ad6a46c87dcc24df7a7a18bc7bdad505a1
+  evaluates the previous candidate at input revision, not this edited source.
+  Six candidate observations, zero reported faults, two wins and four losses.
+- Collision A, match 3f219304b791f4bdcf5a2a4d49edbcea093392bbb5e48d6dcb2da58962b680e0:
+  candidate submitted 660 vs 1034, deaths 20.
+- Collision B, match 2245195074781d07ca5b6a23f7b4124f4012fa89b6fc43c2d840dded3e553899:
+  candidate submitted 660 vs 1012, deaths 39.
+- These aggregates motivate recovery work but do not prove this mechanism caused
+  those losses. Recall traces and counts are unknown; no raw private artifacts read.
+- Accepted source shops on spawn then can immediately move away, including on
+  recall arrival. Added only the post-shop injured-spawn early return in bot.cpp.
+- GameRules.md 122 and 373-375 specify turn-start recall arrival and turn-end heal.
+  Matching C++ cambc.h health()/max_health() query current state. No new API used.
+- Source documentation hashes match RESEARCH.md; routine relevant-section review.
+- Existing channel preservation, 35% recall threshold, draft, banking, routing,
+  shared memory and item choices retained. Accepted snapshot remains untouched.
+- Dispatcher still reaches end_turn() on normal return and caught exceptions.
 
-## Validation and uncertainty
+## Validation and limitations
 - Trusted command: bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
-- PASSED, exit 0; candidate source:
-  f3a7e2da713bbe6b7c03d3d99cbcc8301e45040386668fbdefc44da4e1e012da.
-- Local report: .agent/check-task-c2c7bf3ea00b414a866765a00628b958.json.
+- PASSED, exit 0; checked source hash:
+  1907882027b38f8e7efdf4127f06e1a7fa5fec4ed7d613f26d28c29f2927e2dd.
+- Local report: .agent/check-task-5ff630fce5d04a3b94b1dc4cff40d615.json.
 - Trusted report reference (not opened directly):
-  /srv/battlecode/checks/task-c2c7bf3ea00b414a866765a00628b958/f3a7e2da713bbe6b7c03d3d99cbcc8301e45040386668fbdefc44da4e1e012da/report.json.
-- Wrapper returned smoke IDs 3f219304b791f4bdcf5a2a4d49edbcea093392bbb5e48d6dcb2da58962b680e0
-  and 2245195074781d07ca5b6a23f7b4124f4012fa89b6fc43c2d840dded3e553899.
-  No final metrics inspected; these IDs alone do not prove completed full games.
-- git diff --check passed.
-- Source inspection confirms the banking branch returns before enemy selection.
-- No tournament evaluation, improvement claim, or independent repeated samples.
-- Risk: refusing a useful defensive attack or kill may expose a carrier to death;
-  low-health recall still precedes banking. Exact delay counts remain unknown.
-- Next: supervisor evaluates this exact candidate against the accepted source;
-  compare submitted gems and outcomes on both sides, then investigate traces.
-- Separate organizers' AGENTS.md remains unavailable per RESEARCH.md.
+  /srv/battlecode/checks/task-5ff630fce5d04a3b94b1dc4cff40d615/1907882027b38f8e7efdf4127f06e1a7fa5fec4ed7d613f26d28c29f2927e2dd/report.json.
+- Wrapper smoke IDs: 8758b60b843632177fb857859cc96546cdb34ec874a36514b3fc898481737d35
+  and 25e325ef6c7b59b534af71da0aa5d8538dd63aabc95d903ab7b27d53138db0c3.
+  Final statistics were not inspected; IDs alone do not prove completed games.
+- git diff --check passed. Source review confirms the post-shop guard precedes
+  every movement branch; full-health champions retain existing behavior.
+- No tournament evaluation or strength claim. Deterministic repeats are not
+  independent evidence. Existing debug logging and fuel headroom are unmeasured.
+- Risk: waiting for even a small health deficit costs a turn and delays banking;
+  expected benefit depends on actual frequency of incomplete spawn recovery.
+- Next: supervisor evaluates this exact candidate against accepted source;
+  compare submitted gems, outcomes and recovery traces if available.
+- Separate organizers' AGENTS.md remains unavailable, as recorded in RESEARCH.md.

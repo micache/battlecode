@@ -126,8 +126,13 @@ void Bot::play_turn() {
 
     // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
-    if (at_spawn)
+    if (at_spawn) {
         buy_items();
+        // Recall arrives at turn start; spawn healing happens at turn end.
+        // Keep an injured champion here until that recovery has resolved.
+        if (me.health() < me.max_health())
+            return;
+    }
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
@@ -135,7 +140,12 @@ void Bot::play_turn() {
         return;
     }
 
-    // Carriers prioritize tribute over opportunistic combat and farming.
+    // Attack the first enemy champion already in range.
+    for (const auto& enemy : cambc::vision::champions(team::enemy))
+        if (attack_if_in_range(enemy))
+            return;
+
+    // Bank any carried gems before farming.
     if (me.gem_count() > 0) {
         // Union all altar approach tiles: the field chooses the nearest reachable altar.
         cambc::bitboard goals;
@@ -151,11 +161,6 @@ void Bot::play_turn() {
         move_towards_closest(goals);
         return;
     }
-
-    // Attack the first enemy champion already in range.
-    for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy))
-            return;
 
     farm_camps();
 
