@@ -10,14 +10,14 @@ def load(path):
     require(config["repository_url"] in ("https://github.com/micache/battlecode", "git@github.com:micache/battlecode.git"),
             "repository must match assignment; never embed a token in a URL")
     workers = config["workers"]
-    require(set(workers) == {"alpha", "beta"}, "pilot requires exactly alpha and beta")
-    require(len({w["linux_user"] for w in workers.values()}) == 2, "owner users must differ")
+    require({"alpha", "beta"} <= set(workers), "alpha and beta must remain registered")
+    require(len({w["linux_user"] for w in workers.values()}) == len(workers), "owner users must differ")
     for bot, worker in workers.items():
         slug(bot)
         slug(worker["linux_user"])
         require(worker["branch"] == f"bot/{bot}", "branch/identity conflict")
         require(Path(worker["clone"]).is_absolute(), "absolute clone required")
-    require(len({w["clone"] for w in workers.values()}) == 2, "writable clones must differ")
+    require(len({w["clone"] for w in workers.values()}) == len(workers), "writable clones must differ")
     require(config["limits"]["matches"] == config["limits"]["builds"] ==
             config["limits"]["codex_jobs"] == 1, "pilot concurrency must be 1/1/1")
     require(config["official"] == {"upload": False, "activation": False, "challenges": False},

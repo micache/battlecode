@@ -158,7 +158,7 @@ def main():
             result[collection] = [summary(r) for r in (rows["data"] if isinstance(rows, dict) else rows)
                                   if r["metadata"]["name"] in (NAME, VOLUME)]
     elif args.command == "provision":
-        volume = client.ensure("volumes", VOLUME, {"region": REGION, "size": 102400})
+        volume = client.ensure("volumes", VOLUME, {"region": REGION, "size": 8192})
         print(json.dumps({"volume": summary(volume)}, indent=2), flush=True)
         box = client.ensure("sandboxes", NAME, {
             "region": REGION, "runtime": {"image": "blaxel/docker-in-sandbox:latest", "memory": 8192,

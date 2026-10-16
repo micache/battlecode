@@ -17,7 +17,7 @@ def main(argv=None):
     starter = sub.add_parser("starter-check")
     starter.add_argument("--normalize-only", action="store_true")
     ingest_parser = sub.add_parser("ingest")
-    ingest_parser.add_argument("bot", choices=["alpha", "beta"])
+    ingest_parser.add_argument("bot")
     ingest_parser.add_argument("commit")
     register = sub.add_parser("register-starter")
     register.add_argument("revision_id")

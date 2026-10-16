@@ -4,15 +4,18 @@ import json
 import os
 from pathlib import Path
 import pwd
+import re
 import subprocess
 
 
-def provision_users():
+def provision_users(bots=("alpha", "beta")):
     if os.geteuid() != 0:
         raise RuntimeError("administrator/root required to provision Linux users")
     path = Path("/etc/battlecode/users.json")
     recorded = json.loads(path.read_text()) if path.exists() else {}
-    names = ("bc-arena", "bc-alpha", "bc-beta")
+    if not bots or any(not re.fullmatch(r'[a-z0-9][a-z0-9-]{2,31}', bot) for bot in bots):
+        raise RuntimeError("invalid bot registration")
+    names = ("bc-arena", *(f"bc-{bot}" for bot in bots))
     for name in names:
         try:
             account = pwd.getpwnam(name)
@@ -21,7 +24,7 @@ def provision_users():
         if (name not in recorded or recorded[name]["uid"] != account.pw_uid or
                 recorded[name]["home"] != account.pw_dir or account.pw_uid == 0):
             raise RuntimeError(f"unregistered existing identity {name}; inspect before adopting")
-    for name in ("bc-read", "bc-alpha", "bc-beta"):
+    for name in ("bc-read", *(f"bc-{bot}" for bot in bots)):
         try:
             grp.getgrnam(name)
         except KeyError:
@@ -38,7 +41,7 @@ def provision_users():
             pending.chmod(0o644)
             os.replace(pending, path)
         subprocess.run(["usermod", "--append", "--groups",
-                        "bc-alpha,bc-beta" if name == "bc-arena" else "bc-read", name], check=True)
+                        ",".join(f"bc-{bot}" for bot in bots) if name == "bc-arena" else "bc-read", name], check=True)
         Path(recorded[name]["home"]).chmod(0o700)
     return {"users": recorded, "owner_authentication": "manual; no credentials copied"}
 

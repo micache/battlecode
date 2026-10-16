@@ -15,9 +15,9 @@ def command(*args):
     return subprocess.run(args, check=True, capture_output=True, text=True).stdout.strip()
 
 
-def install(source, revision, persistent_ack, dry=False, temporary_colab=False):
+def install(source, revision, persistent_ack, dry=False, temporary_colab=False, blaxel=False):
     required = ("python3", "git", "runuser", "useradd", "groupadd") + (
-        ("bwrap", "prlimit") if temporary_colab else ("podman", "systemctl"))
+        ("bwrap", "prlimit") if temporary_colab else (("podman",) if blaxel else ("podman", "systemctl")))
     missing = [tool for tool in required if not shutil.which(tool)]
     if missing:
         raise RuntimeError("administrator must install: " + ", ".join(missing))
@@ -27,7 +27,7 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False):
                 "services_started": False, "owner_login": "manual, after users exist"}
     if os.geteuid() != 0:
         raise RuntimeError("administrator command required: run with sudo")
-    if not temporary_colab and Path("/proc/1/comm").read_text().strip() != "systemd":
+    if not temporary_colab and not blaxel and Path("/proc/1/comm").read_text().strip() != "systemd":
         raise RuntimeError("host PID 1 is not systemd; use a persistent systemd VM for this acceptance")
     if not persistent_ack and not temporary_colab:
         raise RuntimeError("select/mount persistent /srv storage, then pass --ack-persistent-volume")
@@ -87,6 +87,17 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False):
         config["deployment"] = {"mode": "temporary-colab", "reboot_persistence_verified": False,
                                 "sandbox": "bubblewrap-watchdog-v1"}
         config["repository_url"] = "git@github.com:micache/battlecode.git"
+    if blaxel:
+        if not Path('/persist').is_mount():
+            raise RuntimeError('Blaxel persistent /persist volume must be mounted')
+        for directory in (root, etc, Path('/home/bc-arena'), Path('/home/bc-alpha'), Path('/home/bc-beta')):
+            if directory.stat().st_dev != Path('/persist').stat().st_dev:
+                raise RuntimeError(f'{directory} is not on the persistent volume')
+        config['deployment'] = {'mode': 'blaxel', 'reboot_persistence_verified': False,
+                                'sandbox': 'rootless-podman', 'volume': 'battlecode-arena-data'}
+        config['repository_url'] = 'git@github.com:micache/battlecode.git'
+        config['limits']['artifact_budget_bytes'] = 3 * 1024**3
+        config['limits']['minimum_free_bytes'] = 1024**3
     (etc / "arena.json").write_text(json.dumps(config, indent=2) + "\n")
     (etc / "arena.json").chmod(0o644)
     for bot in ("alpha", "beta"):
@@ -103,11 +114,13 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False):
         target.write_text(f"#!/usr/bin/python3\nimport sys\nsys.path.insert(0, '/opt/battlecode')\nfrom {module} import {function}\nsys.exit({function}())\n")
         target.chmod(0o755)
     for path in (source / "ops/systemd").glob("*"):
+        if blaxel:
+            continue
         target = Path("/etc/systemd/system") / path.name
         if target.exists():
             raise RuntimeError(f"refusing to overwrite existing unit: {target}")
         shutil.copyfile(path, target)
-    if not temporary_colab:
+    if not temporary_colab and not blaxel:
         command("systemctl", "daemon-reload")
     return {"installed": True, "revision": revision, "services_started": False,
             "next": "Follow /opt/battlecode/ops/OPERATIONS.md: prepare engine, starter checks, branches, owner logins."}
@@ -120,13 +133,17 @@ def main():
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--temporary-colab", action="store_true",
                         help="Explicitly opt into ephemeral storage and process supervision; no reboot guarantee")
+    parser.add_argument("--blaxel", action="store_true", help="Persistent Blaxel volume and non-systemd supervisor")
     args = parser.parse_args()
     try:
         source = Path(args.source).resolve()
         revision = command("git", "-c", f"safe.directory={source}", "-C", str(source), "rev-parse", "HEAD")
         if command("git", "-c", f"safe.directory={source}", "-C", str(source), "status", "--porcelain"):
             raise RuntimeError("commit infrastructure changes before installation")
-        print(json.dumps(install(source, revision, args.ack_persistent_volume, args.dry_run, args.temporary_colab), indent=2))
+        if args.blaxel and args.temporary_colab:
+            raise RuntimeError('choose exactly one deployment profile')
+        print(json.dumps(install(source, revision, args.ack_persistent_volume, args.dry_run,
+                                 args.temporary_colab, args.blaxel), indent=2))
     except (OSError, RuntimeError, subprocess.CalledProcessError) as exc:
         print(json.dumps({"installed": False, "error": str(exc)}), file=sys.stderr)
         return 1
