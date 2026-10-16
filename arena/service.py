@@ -70,10 +70,11 @@ class Arena:
                         (job_id, json.dumps(spec), time.time()))
         return job_id
 
-    def run_one_match(self):
+    def run_one_match(self, job_id=None):
         if self.db.get("adapter_paused", False):
             return False
-        job = self.db.one("SELECT * FROM match_jobs WHERE state='QUEUED' ORDER BY created LIMIT 1")
+        job = (self.db.one("SELECT * FROM match_jobs WHERE state='QUEUED' AND id=?", (job_id,)) if job_id else
+               self.db.one("SELECT * FROM match_jobs WHERE state='QUEUED' ORDER BY created LIMIT 1"))
         if not job:
             return False
         number = job["attempt_count"] + 1
@@ -102,7 +103,8 @@ class Arena:
     def finish_match(self, job_id, number, directory):
         result = verify_artifacts(directory, job_id, number)
         require(result["state"] in TERMINAL, "invalid adapter state")
-        retry = result["state"] in ("INFRA_ERROR", "TIMEOUT") and number <= self.config["limits"]["infra_retries"]
+        parser_pending = result.get("detail") == "statistics parser has no reviewed real-engine fixture"
+        retry = result["state"] in ("INFRA_ERROR", "TIMEOUT") and not parser_pending and number <= self.config["limits"]["infra_retries"]
         with self.db.transaction():
             self.db.execute("UPDATE match_attempts SET state=?,finished=? WHERE job_id=? AND number=?",
                             (result["state"], time.time(), job_id, number))

@@ -66,7 +66,7 @@ def starter_check(arena, normalize_only=False):
             if db.one("SELECT state FROM match_jobs WHERE id=?", (job_id,))["state"] == "QUEUED":
                 was_paused = db.get("adapter_paused", False)
                 db.put("adapter_paused", False)
-                arena.run_one_match()
+                arena.run_one_match(job_id)
                 if was_paused:
                     db.put("adapter_paused", was_paused)
     results = [db.one("SELECT * FROM match_jobs WHERE id=?", (job,)) for job in jobs]

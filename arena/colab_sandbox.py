@@ -65,7 +65,16 @@ def arguments(toolchain, project, output, command):
             "--fsize=268435456:268435456", "--core=0:0", "--cpu=600:600", "--",
             "bwrap", "--unshare-all", "--die-with-parent", "--cap-drop", "ALL", "--clearenv",
             "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin", "--symlink", "usr/lib", "/lib",
-            "--symlink", "usr/lib64", "/lib64", "--dir", "/proc", "--dev", "/dev",
+            "--symlink", "usr/lib64", "/lib64", "--dir", "/proc/self", "--dev", "/dev",
+            # The Colab kernel forbids a new procfs. A private static exe link
+            # supports cambc's self-launch without revealing any host process.
+            # LLVM also uses this link for its resource prefix, so supply the
+            # SAME pinned SDK resources under that prefix. No build flags change.
+            "--ro-bind", str(Path(toolchain) / "bin/cambc"), "/compiler/bin/cambc",
+            "--ro-bind", str(Path(toolchain) / "cache/wasi-sdk-33/lib"), "/compiler/lib",
+            "--ro-bind", str(Path(toolchain) / "cache/wasi-sdk-33/share"), "/compiler/share",
+            "--ro-bind", str(Path(toolchain) / "cache/wasi-sdk-33/bin/wasm-ld"), "/compiler/bin/wasm-ld",
+            "--symlink", "/compiler/bin/cambc", "/proc/self/exe",
             "--bind", str(Path(project).resolve() / ".sandbox-tmp"), "/tmp",
             "--dir", "/home/bc-arena",
             "--ro-bind", str(toolchain), "/toolchain",
