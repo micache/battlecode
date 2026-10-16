@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import pwd
+import shutil
 import subprocess
 
 
@@ -38,7 +39,10 @@ def main():
         target = Path('/persist/homes') / name
         target.parent.mkdir(mode=0o755, exist_ok=True)
         if not target.exists():
-            home.rename(target)
+            if (home / '.codex').exists() or (home / '.ssh').exists():
+                raise RuntimeError('refusing to copy an authenticated home; use a fresh owner identity')
+            shutil.copytree(home, target)
+            home.rename(home.with_name(home.name + '.initial-home'))
             home.symlink_to(target, target_is_directory=True)
         elif not home.is_symlink() or home.resolve() != target:
             raise RuntimeError('existing persistent home requires explicit recovery, never overwrite')
