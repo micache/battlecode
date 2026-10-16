@@ -74,6 +74,14 @@ def main():
     for path in (delegated, delegated / 'cgroup.procs', delegated / 'cgroup.subtree_control',
                  delegated / 'cgroup.threads', leaf, leaf / 'cgroup.procs', leaf / 'cgroup.threads'):
         os.chown(path, arena.pw_uid, arena.pw_gid)
+    owners = root / 'battlecode-workers'
+    owners.mkdir(exist_ok=True)
+    (owners / 'cgroup.subtree_control').write_text('+cpu +memory +pids')
+    for bot in bots:
+        lane = owners / bot
+        lane.mkdir(exist_ok=True)
+        for filename, value in (('memory.max', str(2 * 1024**3)), ('pids.max', '256'), ('cpu.max', '100000 100000')):
+            (lane / filename).write_text(value)
     runtime = Path('/run/battlecode-arena')
     runtime.mkdir(mode=0o700, exist_ok=True)
     os.chown(runtime, arena.pw_uid, arena.pw_gid)

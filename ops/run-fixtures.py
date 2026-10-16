@@ -15,7 +15,8 @@ from arena.engine import OfficialEngine, normalize_result, seal_artifacts
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--name', choices=['idle-tie', 'crash', 'fuel', 'truncated', 'timeout'], required=True)
+    parser.add_argument('--name', choices=['idle-tie', 'crash', 'fuel', 'truncated', 'timeout', 'mechanics', 'hidden'], required=True)
+    parser.add_argument('--map', choices=['collision','corners','elkring'], default='collision')
     args = parser.parse_args()
     config = load('/etc/battlecode/arena.json')
     root = Path(config['root'])
@@ -26,12 +27,20 @@ def main():
         source_a = Path('/opt/battlecode/fixtures') / ('idle' if args.name in ('idle-tie', 'truncated', 'timeout') else args.name)
         source_b = Path('/opt/battlecode/fixtures/idle')
         for name, source in [('a', source_a), ('b', source_b)]:
+            if args.name == 'mechanics':
+                source=Path(engine.lock['project_template']) / 'bots/side-a'
+            elif args.name == 'hidden':
+                source=Path('/opt/battlecode/fixtures/hidden')
             shutil.copytree(source, directory / name)
+            if args.name == 'mechanics':
+                shutil.copyfile('/opt/battlecode/fixtures/mechanics/src/main.cpp', directory / name / 'src/main.cpp')
+            elif args.name == 'hidden' and name=='b':
+                shutil.copyfile('/opt/battlecode/fixtures/hidden/blocker.h', directory / name / 'src/role.h')
         spec = {'a_snapshot': str(directory / 'a'), 'b_snapshot': str(directory / 'b'),
                 'a_source_hash': tree_hash(directory / 'a/src'), 'b_source_hash': tree_hash(directory / 'b/src'),
                 'engine_lock_hash': engine.lock_hash, 'fixture': args.name,
                 'infrastructure_commit': config['infrastructure_commit'],
-                'map_path': config['maps'] + '/collision.map26a',
+                'map_path': config['maps'] + '/' + args.map + '.map26a',
                 'round_override': 1 if args.name == 'truncated' else None, 'fuel_override': None,
                 'wall_timeout_override':0.05 if args.name == 'timeout' else None}
         spec['map_hash'] = file_hash(spec['map_path'])

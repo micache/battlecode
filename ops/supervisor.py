@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import pwd
+import resource
 import signal
 import subprocess
 import sys
@@ -85,11 +86,20 @@ def unit(name):
     restarts = 0
     history = []
     def identity():
-        if read_json('/etc/battlecode/arena.json').get('deployment', {}).get('mode') == 'blaxel' and name == 'arena':
-            Path('/sys/fs/cgroup/battlecode-arena/service/cgroup.procs').write_text(str(os.getpid()))
+        parent = os.getppid()
+        if read_json('/etc/battlecode/arena.json').get('deployment', {}).get('mode') == 'blaxel':
+            group = '/sys/fs/cgroup/battlecode-arena/service' if name == 'arena' else f'/sys/fs/cgroup/battlecode-workers/{name}'
+            Path(group, 'cgroup.procs').write_text(str(os.getpid()))
+        if name != 'arena':
+            resource.setrlimit(resource.RLIMIT_FSIZE, (256*1024**2, 256*1024**2))
+            resource.setrlimit(resource.RLIMIT_NOFILE, (512,512))
+            resource.setrlimit(resource.RLIMIT_CORE, (0,0))
         os.setgroups(os.getgrouplist(user.pw_name, user.pw_gid))
         os.setgid(user.pw_gid)
         os.setuid(user.pw_uid)
+        ctypes.CDLL(None, use_errno=True).prctl(1, signal.SIGKILL, 0, 0, 0)
+        if os.getppid() != parent:
+            os._exit(1)
     while not stopping:
         with (ROOT / f"{name}.log").open("ab") as log:
             child = subprocess.Popen(args, env=env, cwd="/opt/battlecode", preexec_fn=identity,
@@ -112,6 +122,7 @@ def unit(name):
 
 
 def serve():
+    ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0)
     with lock(ROOT / "supervisor.lock"):
         children = []
         try:
@@ -129,6 +140,7 @@ def serve():
                     child.send_signal(signal.SIGTERM)
             for child in children:
                 child.wait(timeout=15)
+            terminate_children()
 
 
 def alive(record):
