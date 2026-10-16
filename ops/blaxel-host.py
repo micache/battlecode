@@ -20,6 +20,8 @@ def main():
     for target, persisted in (('/etc/battlecode', '/persist/config'), ('/srv/battlecode', '/persist/arena')):
         destination = Path(persisted)
         destination.mkdir(mode=0o755, parents=True, exist_ok=True)
+        if target == '/etc/battlecode':
+            destination.chmod(0o755)
         link = Path(target)
         link.parent.mkdir(parents=True, exist_ok=True)
         if not link.exists():
@@ -40,6 +42,7 @@ def main():
         home = Path(pwd.getpwnam(name).pw_dir)
         target = Path('/persist/homes') / name
         target.parent.mkdir(mode=0o755, exist_ok=True)
+        target.parent.chmod(0o755)
         if not target.exists():
             if (home / '.codex').exists() or (home / '.ssh').exists():
                 raise RuntimeError('refusing to copy an authenticated home; use a fresh owner identity')
