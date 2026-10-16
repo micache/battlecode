@@ -34,21 +34,8 @@ def install(source, revision, persistent_ack, dry=False):
         raise RuntimeError("Python 3.11+ required")
     if Path("/opt/battlecode").exists() or Path("/etc/battlecode/arena.json").exists():
         raise RuntimeError("installation already exists; preserve it and follow documented upgrade/rollback")
-    for group in ("bc-read", "bc-alpha", "bc-beta"):
-        try:
-            grp.getgrnam(group)
-        except KeyError:
-            command("groupadd", group)
-    for user in ("bc-arena", "bc-alpha", "bc-beta"):
-        try:
-            pwd.getpwnam(user)
-            raise RuntimeError(f"{user} already exists; inspect identity/permissions manually")
-        except KeyError:
-            pass
-        command("useradd", "--create-home", "--shell", "/bin/bash", "--gid",
-                "bc-read" if user == "bc-arena" else user, user)
-        command("usermod", "--append", "--groups", "bc-alpha,bc-beta" if user == "bc-arena" else "bc-read", user)
-        Path(pwd.getpwnam(user).pw_dir).chmod(0o700)
+    from provision import provision_users
+    provision_users()
     # Rootless Podman requires subordinate IDs and a working user namespace. No privileged socket is used.
     if not any(line.startswith("bc-arena:") for line in Path("/etc/subuid").read_text().splitlines()):
         raise RuntimeError("administrator must allocate non-overlapping subuid/subgid ranges for bc-arena; then continue setup manually")
