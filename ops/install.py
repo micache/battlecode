@@ -100,6 +100,7 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False, 
         config['repository_url'] = 'git@github.com:micache/battlecode.git'
         config['limits']['artifact_budget_bytes'] = 3 * 1024**3
         config['limits']['minimum_free_bytes'] = 1024**3
+        config['limits']['backup_interval_seconds'] = 86400
     (etc / "arena.json").write_text(json.dumps(config, indent=2) + "\n")
     (etc / "arena.json").chmod(0o644)
     for bot in ("alpha", "beta"):

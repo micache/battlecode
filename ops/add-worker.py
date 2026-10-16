@@ -52,6 +52,8 @@ def main():
                  'root':str(root), 'infrastructure':config['infrastructure'], 'read_repository':config['mirror'],
                  'clone':str(home / 'battlecode'), 'attempts':str(home / 'attempts'),
                  'codex_executable':binary, 'codex_sha256':file_hash(binary), 'model':None}
+        if config.get('deployment', {}).get('mode') == 'blaxel':
+            owner['read_repository'] = 'https://github.com/micache/battlecode.git'
         atomic_json(path.with_name(f'{bot}.json'), owner, 0o644)
         atomic_json(path, config, 0o644)
     print(json.dumps({'registered':bot, 'enabled':False,

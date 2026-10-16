@@ -12,6 +12,16 @@ from arena.supervisor import handle_request
 
 
 class OperationsTests(Harness):
+    def test_daily_backup_uses_only_service_writer_even_while_paused(self):
+        from unittest.mock import patch
+        self.config['limits']['backup_interval_seconds'] = 86400
+        self.arena.db.put('paused', True)
+        with patch('arena.operations.backup') as backup:
+            self.arena.step()
+            self.arena.step()
+        backup.assert_called_once_with(self.arena)
+        self.assertGreater(self.arena.db.get('last_backup_at'), 0)
+
     def test_independent_starter_does_not_replace_existing_lanes(self):
         import shutil
         alpha = self.commit("alpha", "existing nonstarter bot")

@@ -18,6 +18,10 @@ for bot in config['workers']:
     path = Path(f'/etc/battlecode/{bot}.json')
     owner = read_json(path)
     owner.update(codex_executable=binary, codex_sha256=expected)
+    if config.get('deployment', {}).get('mode') == 'blaxel':
+        # This repository is public. Native HTTPS reads avoid granting Git trust
+        # in a repository owned by another Linux user; only the publisher uses SSH.
+        owner['read_repository'] = 'https://github.com/micache/battlecode.git'
     atomic_json(path, owner, 0o644)
     user = pwd.getpwnam(owner['linux_user'])
     runtime = Path(user.pw_dir) / '.runtime'

@@ -324,6 +324,11 @@ class Arena:
         pressure = (status["disk"]["free"] < self.config["limits"]["minimum_free_bytes"] or
                     status["disk"]["artifact_bytes"] >= self.config["limits"]["artifact_budget_bytes"])
         self.db.put("disk_pressure", pressure)
+        interval = self.config['limits'].get('backup_interval_seconds', 0)
+        if interval and not pressure and time.time() - self.db.get('last_backup_at', 0) >= interval:
+            from .operations import backup
+            backup(self)
+            self.db.put('last_backup_at', time.time())
         if self.db.get("paused", True) or pressure:
             return
         self.advance_evaluations()
