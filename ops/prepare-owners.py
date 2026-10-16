@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 import pwd
+import subprocess
 import sys
 
 sys.path.insert(0, '/opt/battlecode')
@@ -23,6 +24,10 @@ for bot in config['workers']:
     runtime.mkdir(mode=0o700, exist_ok=True)
     os.chown(runtime, user.pw_uid, user.pw_gid)
 arena = pwd.getpwnam('bc-arena')
+ssh = Path(arena.pw_dir) / '.ssh'
+ssh.mkdir(mode=0o700, exist_ok=True)
+os.chown(ssh, arena.pw_uid, arena.pw_gid)
+ssh.chmod(0o700)
 known = Path(arena.pw_dir) / '.ssh/known_hosts'
 host = b'github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl\n'
 if known.exists():
@@ -30,4 +35,9 @@ if known.exists():
 else:
     atomic_bytes(known, host, 0o600)
     os.chown(known, arena.pw_uid, arena.pw_gid)
+key = ssh / 'id_ed25519'
+if not key.exists():
+    subprocess.run(['runuser', '-u', 'bc-arena', '--', 'ssh-keygen', '-q', '-t', 'ed25519',
+                    '-N', '', '-f', str(key), '-C', 'battlecode-arena-blaxel'], check=True)
 print('CLI pinned; owner login remains manual; existing credentials unchanged.')
+print(key.with_suffix('.pub').read_text().strip())

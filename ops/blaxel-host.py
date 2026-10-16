@@ -15,6 +15,8 @@ def run(*args):
 def main():
     if os.geteuid() != 0 or not Path('/persist').is_mount():
         raise RuntimeError('root and a mounted persistent volume required')
+    # Fresh provider volumes default to root-only; owners need traversal, not listing.
+    Path('/persist').chmod(0o711)
     for target, persisted in (('/etc/battlecode', '/persist/config'), ('/srv/battlecode', '/persist/arena')):
         destination = Path(persisted)
         destination.mkdir(mode=0o755, parents=True, exist_ok=True)
