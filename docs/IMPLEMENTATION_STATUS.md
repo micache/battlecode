@@ -3,7 +3,8 @@
 The arena is deployed on Blaxel `banabolabs/battlecode-arena` (4 CPU, 8192 MB
 RAM, 8192 MB persistent volume). Both owners completed native ChatGPT logins;
 the repository deploy key is installed. Actual model improvement jobs have
-started. **Final acceptance is not yet complete.** No synthetic/manual task is
+completed two publication/evaluation cycles per lane. **Formal readiness is not
+yet certified**, for the explicit limits below. No synthetic/manual task is
 counted as a Codex improvement cycle.
 
 Setup/status/start/pause/stop commands: [Blaxel operations](../ops/BLAXEL.md).
@@ -40,9 +41,19 @@ sealed match artifacts and replays remain on the server.
 
 ## Pending and explicit limits
 
-- Two actual published Codex improvement/evaluation cycles per lane are still
-  pending. `arena acceptance-report` is authoritative; it retains real task,
-  source commit and match identities and will not count operator bootstraps.
+- Two actual Codex cycles per lane are complete in `live-cycles.json` and
+  `live-evaluations.json`, with frozen suites, real commits and match IDs:
+  alpha `4922166cd44fa0bc1291cf9ccd9b05125cfcb84a`, then
+  `a27105b001a30fab44c2ed4485f4e2888e25fdb7`; beta
+  `02ab89d1e111f8c75f726004ee54346f5e7e4d8a`, then
+  `d93aa34394a38b0b4fc3681e0b3bafa363665c85`.
+  Both first experiments scored 4/6 (+1/6 over incumbent); both second ideas
+  scored 2/6 (-1/6). These are three-map observations, not full-gate promotions.
+  The native loop had 34 completed saved games at this checkpoint, including
+  starter, smoke and evaluation runs; cached case views are not independent
+  games. The initial two-publication cap is removed for continued operation.
+  `arena acceptance-report` honestly remains `verified: false` because the
+  full readiness evidence below is not certified. No synthetic cycles count.
 - The first live alpha invocation stopped because feedback exposed a raw
   artifact path without explaining the development-evidence mailbox. The
   handoff now supplies exact `arena-client ... slice` commands and omits private

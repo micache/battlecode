@@ -1,7 +1,7 @@
 # Blaxel two-owner pilot
 
-The server is **deployed**, but owner authentication and real Codex improvement
-cycles are not complete. See [acceptance status](../docs/IMPLEMENTATION_STATUS.md)
+The server is **deployed**, both owner accounts are authenticated, and two real
+Codex publication/evaluation cycles per bot are saved. See [acceptance status](../docs/IMPLEMENTATION_STATUS.md)
 and [saved evidence](../evidence/blaxel/). Do not rerun installation on this server.
 
 ## Installed configuration
@@ -15,7 +15,8 @@ and [saved evidence](../evidence/blaxel/). Do not rerun installation on this ser
 - Three-map wiring suite. Automatic promotion, official operations, model API
   billing and cross-account failover are all disabled.
 - Artifact budget 3 GiB, minimum free space 1 GiB, automatic daily database
-  backup, initial limit two published Codex experiments per lane.
+  backup, initial two-experiment cap removed after the four real pilot cycles.
+  Each invocation remains bounded to 20 minutes; quota/disk gates still apply.
 
 The provider's virtiofs mount ignores guest `chown`. The installation therefore
 uses a 7 GiB ext4 image, `/persist/battlecode-data.ext4`, mounted nodev,nosuid at
@@ -65,7 +66,8 @@ Pending/unknown API responses are not permission to resubmit a write: inspect th
 named process first. Never start a second supervisor to bypass a held lock.
 
 In the Blaxel console, select **banabolabs → battlecode-arena → Terminal**.
-As root, these are the **manual owner actions still required**:
+As root, these are the manual owner actions for a fresh installation (already
+completed for this pilot):
 
 ```bash
 runuser -l bc-alpha -c '/usr/local/bin/codex login --device-auth'
@@ -106,6 +108,13 @@ No model job is started by `configure-owners.py`. Explicit resume is required.
 An authentication, permission or quota error parks the affected lane; do not
 copy another account's credentials or route its task to the other account.
 
+Console access is optional. The trusted operator can start each native owner
+login through `ops/blaxel.py run ... --keep-alive --name OWNER-login`, retrieve
+that named process's output with `ops/blaxel.py process OWNER-login`, and let
+the intended owner approve the displayed device flow in their own browser.
+Never commit temporary login codes or credential output. No Blaxel dashboard
+account or transferred Codex auth cache is needed.
+
 ## Evidence, recovery and maintenance
 
 Root terminal commands:
@@ -122,12 +131,20 @@ tail -n 50 /var/lib/battlecode-volume/supervisor/beta.log
 python3 /opt/battlecode/ops/supervisor.py stop
 git -C /opt/battlecode-source pull --ff-only
 python3 /opt/battlecode-source/ops/upgrade.py
+
+# With services stopped, optional publication cap: positive count or none.
+python3 /opt/battlecode/ops/set-cycle-limit.py none
 ```
 
 After upgrade start the managed supervisor again. Worker and source transactions
 retain their actual input revisions. Interrupted coding attempts are checkpointed
 and parked, not replayed automatically. Queued/running games reconcile sealed
 completion artifacts; unknown outcomes never become invented losses.
+
+From the operator machine, compact live status needs no console access:
+`python3 ops/blaxel.py run 'python3 /opt/battlecode/ops/loop-status.py'`.
+Continuous dispatch requires fresh evaluation feedback; a NO_CHANGE result
+consumes that feedback and idles instead of repeatedly invoking the model.
 
 Daily backups are consistent SQLite snapshots plus manifests, **not complete
 off-host replay backups**. Download/copy the referenced source, replay and lock

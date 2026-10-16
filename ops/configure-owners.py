@@ -33,9 +33,9 @@ def main():
                 f'{bot}: manual ChatGPT login required')
         modes[bot] = 'ChatGPT; distinct-account pairing attested by operator, not read from auth cache'
         config['workers'][bot].update(enabled=True, owner_confirmed=True)
-    config['limits']['published_cycles_per_bot'] = 2
+    config['limits'].setdefault('published_cycles_per_bot', 2)
     atomic_json(path, config, 0o644)
-    print(json.dumps({'owner_modes': modes, 'published_cycles_per_bot': 2,
+    print(json.dumps({'owner_modes': modes, 'published_cycles_per_bot': config['limits']['published_cycles_per_bot'],
                       'worker_resume': 'explicit arena-client resume required'}, indent=2))
 
 
