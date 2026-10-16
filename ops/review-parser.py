@@ -34,6 +34,21 @@ def main():
     require(str(stats['round']) in inspected['body'], 'final round absent from replay review')
     for team in stats['teams']:
         require(f"{team['submittedGems']:,}" in inspected['body'], 'submitted gems disagree with replay')
+    diagnostics = {}
+    for name in ('idle-tie', 'crash', 'fuel'):
+        files = sorted((Path(config['root']) / 'acceptance/real-fixtures').glob(f'{name}-*/run/artifacts/final.json'))
+        require(files, f'actual {name} fixture missing')
+        actual = files[-1]
+        data, process = read_json(actual), read_json(actual.parent / 'process-result.json')
+        require(process['returncode'] == 0 and not process['timeout'] and data['round'] == 2000,
+                f'{name}: incomplete real-engine diagnostic')
+        require(data['botFaults'] == [6000, 0] if name == 'crash' else data['botFaults'] == [0, 0],
+                f'{name}: unverified fault attribution')
+        require(data['outcome'] == 'teamB', f'{name}: unexpected diagnostic outcome')
+        if name == 'idle-tie':
+            require(all(team['submittedGems'] == 0 for team in data['teams']) and
+                    all(c['earnedGold'] == c['kills'] == 0 for c in data['champions']), 'not a complete tie')
+        diagnostics[name] = {'path':str(actual), 'sha256':file_hash(actual)}
     contract = {'protocol_version':1, 'statistics_schema':'cambc-216-v2',
         'engine_sha256':config['engine']['binary_sha256'], 'fixture_path':str(fixture),
         'fixture_sha256':file_hash(fixture), 'reviewed_by':'arena_implementer; saved official visualizer final frame',
@@ -43,7 +58,7 @@ def main():
         'fuel_suspension_patterns':[],
         'truncated_patterns':['truncated: round', 'Statistics require a game outcome'],
         'review_evidence':{'replay':str(replay),'replay_sha256':file_hash(replay),
-                           'review':str(review),'review_sha256':file_hash(review)},
+                           'review':str(review),'review_sha256':file_hash(review), 'diagnostics':diagnostics},
         'created':time.time()}
     atomic_json(config['parser_contract'], contract, 0o644)
     print(json.dumps(contract, indent=2))
