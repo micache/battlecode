@@ -15,7 +15,7 @@ Reviewed for this implementation on 16 October 2026. Gameplay/API exports were r
 | Unit/parser tests | Absolute B attribution, suspension versus trap, truncation versus wall timeout, and missing fields are tested with explicitly synthetic data only. |
 | Organizers' separate AGENTS.md | Not supplied or retrieved. Do not confuse our project AGENTS.md with it. Preserve the organizer file at `docs/rules/organizer-agents.md`, hash and reconcile it when obtained. |
 | Event policies, AI/sharing eligibility, production build constraints | UNKNOWN; no contest-compliance certification. Private implementation is permitted by the assignment while these checks remain pending. |
-| Official submission/challenge integration | Disabled in code/config. No competition login, API, upload, activation or challenge creation performed. Manual original-file import only. |
+| Official submission/challenge integration | Native official CLI login succeeded on Blaxel on 16 October 2026, owner-approved; seven-day session. Owner-supplied current Getting Started guide confirms source-upload/bundle flow, not activation/challenge semantics or policies. Uploads, activation and challenges remain disabled pending verification. External original-file import feeds bounded metadata to its own worker, never local promotion scores. See `docs/OFFICIAL_AUTOMATION.md`. |
 
 Teleport-wall landing, monster sleep and generic camp-range wording conflicts remain as documented in BOT_REFERENCE.md. Required real-engine fixtures must verify channel completion, ranged allowances, capture occupancy/reset, hidden obstruction handling, free approach tiles, a deliberately crashing bot and effective settings. No such engine experiment ran in this session.
 

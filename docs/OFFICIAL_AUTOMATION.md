@@ -10,6 +10,14 @@ is `/var/lib/battlecode-volume/official-auth`, mode 0700, owned by `bc-arena`.
 Neither worker nor bot/build containers receive that directory. Authentication
 uses the native browser approval flow; no token extraction or password sharing.
 
+The owner subsequently supplied the current handbook's Getting Started guide.
+It confirms browser-approved seven-day CLI login, `cambc submit BOT` uploading
+source to the current team, equivalent source selection for bundle and submit,
+and following compilation/matches/replays through the platform. It does not
+describe active-submission changes, challenge automation/quotas or AI policy.
+This is owner-supplied documentation, not an independently retrieved export of
+the missing organizer AGENTS.md or platform policy.
+
 ## Running private training
 
 `arena/strategy.py` selects the pinned starter plus one strong, fault-free,

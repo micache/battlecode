@@ -1,0 +1,70 @@
+{
+  "protocol_version": 1,
+  "deployed_infrastructure_commit": "7f841410b99a306156e70dddb45ed55fe59d9997",
+  "official_login": {
+    "provider": "native cambc 2.1.6 browser approval",
+    "completed_at_utc": "2026-10-16 14:24:27",
+    "exit_code": 0,
+    "reported_session_days": 7,
+    "credential_cache_inspected": false,
+    "official_mutations_performed": false
+  },
+  "maintenance": {
+    "supervisor_stopped_before_upgrade": true,
+    "interrupted_task": "task-d64d418366c1460d8577433cfbaf6b8d",
+    "checkpoint": "/home/bc-alpha/attempts/supervisor/task-d64d418366c1460d8577433cfbaf6b8d/maintenance-checkpoint-1792160427599379070",
+    "remote_tip_confirmed_unchanged": "4b6483b0e91df11262fb6d8b42ab2667778e1571",
+    "interrupted_outcome": "PAUSED; patch preserved, not published or counted as improvement",
+    "upgrade_process": "arena-install-exploration",
+    "upgrade_exit_code": 0,
+    "managed_process": "arena-loop-exploration-v1",
+    "managed_keep_alive": true,
+    "restart_on_failure": true,
+    "max_provider_restarts": 5,
+    "scheduling_resume_acknowledged": true
+  },
+  "live_observation": {
+    "timestamp": 1792160952.7563083,
+    "scheduler_heartbeat": 1792160951.0070345,
+    "paused": false,
+    "service_error": null,
+    "completed_games": 80,
+    "new_task": "task-1b0e5c1c51ef41f4a84bb0ef951cff7f",
+    "new_task_bot": "alpha",
+    "new_task_published_cycle": 6,
+    "new_task_state": "DISPATCHED",
+    "new_task_commit": null,
+    "new_task_evaluation": null,
+    "new_task_infrastructure_pin_verified": true,
+    "recent_completed_match_ids": [
+      "0174e030d4b23cbc0a634d3b4e914c38c14c2ad773a07a270b3f6eddc6b54ddb",
+      "2997d74a93e4215f21c4ac2327c92df82dd11031c73fdfae917f08ecdfefffcf"
+    ]
+  },
+  "enabled": {
+    "historical_frozen_opponents": true,
+    "exploration_every_published_cycles": 5,
+    "full_evaluations_per_lane_per_rolling_day": 2,
+    "automatic_promotion": false,
+    "official_uploads": false,
+    "official_challenges": false,
+    "api_model_billing": false,
+    "cross_account_quota_failover": false
+  },
+  "local_focused_checks": {
+    "commands": [
+      "python3 -m unittest discover -s tests -p test_strategy.py -v",
+      "python3 -m unittest discover -s tests -p test_arena.py -v"
+    ],
+    "passed": 31,
+    "synthetic_not_real_engine_acceptance": true
+  },
+  "limits": [
+    "Official selection monitor cannot upload until a reviewed adapter exists.",
+    "Organizer AGENTS.md and AI/automation policies remain unavailable.",
+    "Activation effects, supported challenge interface and official quotas remain unknown.",
+    "No bot has passed the complete promotion/readiness gate.",
+    "Physical VM reboot persistence and complete off-host replay backup remain unverified.",
+    "Continuous process supervision is not a continuously running chat agent."
+  ]
+}
