@@ -93,6 +93,8 @@ def make_attempt(config, task):
         path.chmod(0o700 if path.is_dir() else 0o600)
     (directory / ".agent").mkdir(mode=0o700)
     atomic_json(directory / ".agent/task.json", task, 0o600)
+    from .memory import brief
+    atomic_bytes(directory / '.agent/brief.md', brief(task).encode(), 0o600)
     atomic_json(directory / '.agent/entry.json', {
         'task_id': task['task_id'], 'bot_id': bot, 'branch': task['branch'],
         'head': commit_id(directory, 'HEAD'), 'source_hash': tree_hash(target),
@@ -116,7 +118,7 @@ def checkpoint(attempt, destination):
         shutil.copytree(notes, destination / "notes", symlinks=True)
 
 
-def publish_attempt(config, attempt, owner=None):
+def candidate_payload(config, attempt):
     bot = config["bot_id"]
     task_id = attempt.name
     # Trusted envelope is read from arena-owned, read-only task delivery, not model-writable .agent.
@@ -129,13 +131,23 @@ def publish_attempt(config, attempt, owner=None):
             result["base_source_hash"] == task["base_source_hash"], "worker result identity conflict")
     actual_paths = validate_worktree(attempt, bot)
     require(result["outcome"] == "READY_FOR_EVAL" and actual_paths, "no valid proposed edit")
-    # A second, trusted smoke check ignores any model claim that checks passed.
     source = encode_source(attempt / "bots" / bot / "src")
+    notes = encode_source(attempt / 'experiments' / bot)
+    # Generated Python bytecode is ignored by Git too; retain it in private checkpoints, not publication.
+    notes = {name: data for name, data in notes.items()
+             if '__pycache__' not in Path(name).parts and Path(name).suffix not in ('.pyc', '.pyo')}
+    return {'task_id': task_id, 'result': result, 'source': source, 'notes': notes}
+
+
+def publish_attempt(config, attempt, owner=None):
+    payload = candidate_payload(config, attempt)
+    task_id = payload['task_id']
+    # A second, trusted smoke check ignores any model claim that checks passed.
+    source = payload['source']
     report = request(config, "check", {"task_id": task_id, "source": source})
     require(report["state"] == "PASSED", "trusted candidate check failed")
     # The arena owns the sole GitHub write credential and creates a clean commit itself.
-    notes = encode_source(attempt / "experiments" / bot)
-    return request(config, "publish", {"task_id": task_id, "result": result, "source": source, "notes": notes, "owner": owner})
+    return request(config, 'publish', dict(payload, owner=owner))
 
 
 def perform_task(config, task):
@@ -157,7 +169,9 @@ def perform_task(config, task):
         attempt = make_attempt(config, task)
         final = attempt / ".agent" / f"final-{task_id}.json"
         prompt = (f"ROLE: bot_worker. Perform exactly one task from .agent/task.json. Follow AGENTS.md, "
-                  f"read .agent/entry.json, feedback.handoff, recent history and NOTES.md first. "
+                  f"read .agent/brief.md, .agent/entry.json, own NOTES.md and current source first. "
+                  "The complete .agent/task.json is for targeted lookup, not a mandatory bulk dump. "
+                  "On unchanged routine iterations, do not reread entire rules/API/SDK or all playbooks. "
                   f"Use bot-check --owner-config {config['owner_config_path']} "
                   "for trusted checks. Save one falsifiable hypothesis and compact notes. "
                   "Do not commit, push, start agents, wait for evaluations, or invoke official submissions. "
@@ -189,8 +203,10 @@ def perform_task(config, task):
             checkpoint(attempt, private / "checkpoint")
         outcome = {"task_id": task_id, "state": "AUTH_REQUIRED" if "AUTH_REQUIRED" in str(exc) else "PAUSED", "detail": str(exc)}
     if "process" in locals():
+        from .usage import usage_summary
         outcome["invocation"] = {"provider": "codex", "binary_sha256": config["codex_sha256"],
                                   **process, "raw_path": str(private),
+                                  'efficiency_profile': 'brief-v1', 'usage': usage_summary(private / 'stdout.log'),
                                   "stdout_sha256": file_hash(private / "stdout.log"),
                                   "stderr_sha256": file_hash(private / "stderr.log")}
     if 'validated_result' in locals():

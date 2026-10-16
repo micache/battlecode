@@ -12,13 +12,14 @@ def publish(arena, bot, task, source, notes):
     branch = task["branch"]
     config = arena.config
     files, source_hash = decode_source(source)
-    # Notes may be markdown/JSON, but never execute as build recipes.
+    # Notes and source-level regression/reference fixtures are data, never build recipes.
     import base64
     decoded_notes = {}
     require(isinstance(notes, dict) and len(notes) <= 128, "oversized experiment history")
     for name, data in notes.items():
         safe_relative(name)
-        require(Path(name).suffix in (".md", ".json", ".txt", ".patch", ".py") and len(data) <= 350000,
+        require(Path(name).suffix in (".md", ".json", ".txt", ".patch", ".py", ".cpp", ".cc", ".cxx", ".h", ".hpp")
+                and len(data) <= 350000,
                 "unexpected/oversized experiment artifact")
         decoded_notes[name] = base64.b64decode(data, validate=True)
     require(sum(map(len, decoded_notes.values())) <= 1024 * 1024, "oversized notes")
@@ -58,3 +59,43 @@ def publish(arena, bot, task, source, notes):
     git(directory, "push", "origin", f"HEAD:refs/heads/{branch}")
     return {"task_id": task["task_id"], "state": "PUBLISHED", "commit": commit,
             "source_hash": source_hash, "actual_changed_paths": actual_paths}
+
+
+def recover_publication(arena, bot, payload):
+    """Operator-only, stopped-service repair of the known pre-push artifact bug.
+
+    Never reuse this for auth/quota failures, conflicts or ambiguous pushes.
+    Source is checked again; no model invocation or old outcome overwrite.
+    """
+    import json
+    from .supervisor import check_source, handle_request, trusted_task
+    task, envelope = trusted_task(arena, bot, payload['task_id'])
+    worker = arena.db.one('SELECT * FROM workers WHERE id=?', (bot,))
+    lane = arena.db.one('SELECT * FROM bots WHERE id=?', (bot,))
+    require(arena.db.get('paused', True), 'pause scheduling before operator recovery')
+    require(task['state'] == 'PAUSED' and worker['state'] == 'PAUSED' and worker['task_id'] == task['id']
+            and worker['detail'] == 'unexpected/oversized experiment artifact', 'not the known recoverable publisher failure')
+    require(task['published_commit'] is None and not (arena.root / 'publication' / task['id']).exists(),
+            'publication intent exists; reconcile remote, never retry blindly')
+    require(envelope['engine_lock_hash'] == arena.adapter().lock_hash and
+            envelope['base_source_hash'] == lane['accepted_source_hash'] and
+            envelope['input_revision'] == lane['latest_tip'], 'recovery inputs changed')
+    require(payload['result'] == json.loads(task['result']) and payload['result']['outcome'] == 'READY_FOR_EVAL',
+            'preserved native result mismatch')
+    _, source_hash = decode_source(payload['source'])
+    old_check = arena.db.get(f"check:{task['id']}:{source_hash}")
+    require(old_check and old_check['state'] == 'PASSED', 'no exact-source previously passed candidate')
+    arena.db.put(f"operator-publication-recovery:{task['id']}", {'at': time.time(), 'old_state': task['state'],
+                 'source_hash': source_hash, 'infrastructure_commit': arena.config['infrastructure_commit'],
+                 'model_invocations': 0, 'reason': 'preserve valid native candidate after artifact allowlist repair'})
+    arena.db.execute("UPDATE tasks SET state='DISPATCHED' WHERE id=?", (task['id'],))
+    arena.db.execute("UPDATE workers SET state='RUNNING' WHERE id=?", (bot,))
+    try:
+        check = check_source(arena, bot, payload)
+        require(check['state'] == 'PASSED', 'fresh exact-source validation failed')
+        publication = handle_request(arena, bot, {'operation': 'publish', 'payload': payload})
+        handle_request(arena, bot, {'operation': 'worker-finished', 'payload': publication})
+        return dict(publication, operator_recovery=True, new_model_invocations=0)
+    except Exception as exc:
+        arena.db.execute("UPDATE workers SET state='PAUSED',detail=? WHERE id=?", (str(exc), bot))
+        raise  # Keep DISPATCHED/PUBLICATION_APPROVED and any intent for explicit reconciliation.

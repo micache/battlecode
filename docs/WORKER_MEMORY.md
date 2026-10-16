@@ -4,6 +4,11 @@ Each invocation remains one bounded experiment in a fresh native Codex session.
 No API model billing or resumed conversation is required. The supervisor, not
 model memory, carries experimental state forward.
 
+For quota efficiency, initial reading now starts at `.agent/brief.md`, not a bulk
+dump of `.agent/task.json`. The brief points to the complete envelope and paged
+history when detail affects the experiment. No canonical evidence is removed.
+See [quota efficiency](QUOTA_EFFICIENCY.md) for observed costs and tradeoffs.
+
 This follows the durable-context pattern in OpenAI's
 [workflow guidance](https://developers.openai.com/cookbook/examples/codex/iterating-development-workflows-with-codex):
 record material decisions and their provenance, keep canonical evidence, and

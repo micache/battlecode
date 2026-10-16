@@ -5,7 +5,7 @@ from unittest.mock import patch
 from test_arena import Harness
 from arena.common import ArenaError, atomic_json, tree_manifest
 from arena.engine import BuildError
-from arena.memory import task_history
+from arena.memory import brief, task_history
 from arena.protocol import encode_source
 from arena.supervisor import handle_request, new_task
 
@@ -88,3 +88,16 @@ class MemoryTests(Harness):
         history = json.dumps(task_history(self.arena, 'alpha', task_id=task['task_id'], detailed=True))
         self.assertNotIn('hidden-job', history)
         self.assertNotIn('monolith', history)
+
+    def test_brief_preserves_identity_and_targets_routine_reading(self):
+        self.establish()
+        first = new_task(self.arena, 'alpha')
+        second = new_task(self.arena, 'alpha')
+        text = brief(second)
+        self.assertIn(second['task_id'], text)
+        self.assertIn(second['base_source_hash'], text)
+        self.assertIn(second['input_revision'], text)
+        self.assertIn('Do not reread complete unchanged exports/SDK', text)
+        self.assertIn(first['task_id'], text)
+        self.assertLess(len(text.encode()), 10000)
+        self.assertIn('Complete the bootstrap/changed-document review', brief(first))

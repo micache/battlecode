@@ -20,12 +20,12 @@ from arena.db import Database
 from arena.engine import BuildError
 
 
-def recover(config, finals):
+def recover(config, finals, usage=None):
     root = Path(config['root'])
     with lock(root / 'state/service.lock'), lock(root / 'model.lock'):
         db = Database(root / 'state/arena.sqlite')
         schema = read_json(Path(config['infrastructure']) / 'schemas/worker-result.schema.json')
-        recovered, unavailable, diagnostics = [], [], []
+        recovered, unavailable, diagnostics, recovered_usage = [], [], [], []
         for bot in config['workers']:
             for task in db.all('SELECT * FROM tasks WHERE bot_id=? AND result IS NULL', (bot,)):
                 result = finals.get(task['id'])
@@ -60,36 +60,53 @@ def recover(config, finals):
             report['diagnostics_recovered_by_operator'] = True
             db.put(row['key'], report)
             diagnostics.append(row['key'])
+        for task_id, observation in (usage or {}).items():
+            require(db.one('SELECT id FROM tasks WHERE id=?', (task_id,)), 'unknown usage task')
+            invocation = db.get(f'invocation:{task_id}')
+            if invocation and invocation.get('provider') == 'codex' and 'usage' not in invocation:
+                invocation.update(usage=observation, efficiency_profile='legacy-jsonl-backfill')
+                db.put(f'invocation:{task_id}', invocation)
+                recovered_usage.append(task_id)
         db.connection.close()
         return {'recovered_results': recovered, 'unavailable_final_results': unavailable,
-                'recovered_diagnostics': diagnostics, 'original_artifacts_changed': False}
+                'recovered_diagnostics': diagnostics, 'recovered_usage': recovered_usage,
+                'original_artifacts_changed': False}
 
 
 def collect(config):
     require(os.geteuid() == 0, 'administrator required; stop services first')
-    finals = {}
+    finals, usage = {}, {}
     # Read-only task enumeration; only the delegated child writes central state.
     db = sqlite3.connect(f"file:{config['root']}/state/arena.sqlite?mode=ro", uri=True)
     for bot, settings in config['workers'].items():
         owner = read_json('/etc/battlecode/' + bot + '.json')
         require(owner['bot_id'] == bot and owner['linux_user'] == settings['linux_user'], 'owner mismatch')
         attempts = Path(owner['attempts']).resolve(strict=True)
-        for (task_id,) in db.execute('SELECT id FROM tasks WHERE bot_id=? AND result IS NULL', (bot,)):
+        for task_id, result in db.execute('SELECT id,result FROM tasks WHERE bot_id=?', (bot,)):
             require(re.fullmatch('task-[a-f0-9]{32}', task_id), 'unsafe task ID')
             path = attempts / task_id / '.agent' / f'final-{task_id}.json'
             require(path.resolve() == path, 'symlink in historical result path')
-            if path.is_file():
+            if result is None and path.is_file():
                 require(path.stat().st_size <= 65536, 'oversized historical result')
                 finals[task_id] = read_json(path)
+            invocation = db.execute('SELECT value FROM meta WHERE key=?', (f'invocation:{task_id}',)).fetchone()
+            if invocation and 'usage' not in json.loads(invocation[0]):
+                log = attempts / 'supervisor' / task_id / 'stdout.log'
+                require(log.resolve() == log, 'symlink in native usage path')
+                if log.is_file():
+                    require(log.stat().st_size <= 64 * 1024**2, 'oversized native usage log')
+                    from arena.usage import usage_summary
+                    usage[task_id] = usage_summary(log)
     db.close()
-    return finals
+    return {'finals': finals, 'usage': usage}
 
 
 if __name__ == '__main__':
     config = load('/etc/battlecode/arena.json')
     if sys.argv[1:] == ['--apply']:
         require(os.geteuid() != 0, 'SQLite writer must be non-root')
-        print(json.dumps(recover(config, json.load(sys.stdin))))
+        data = json.load(sys.stdin)
+        print(json.dumps(recover(config, data['finals'], data.get('usage'))))
     else:
         finals = collect(config)
         subprocess.run(['python3', '/opt/battlecode/ops/as-arena.py', 'python3',
