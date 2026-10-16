@@ -1,0 +1,69 @@
+diff --git a/bots/beta/src/bot.cpp b/bots/beta/src/bot.cpp
+index 561144e..066c585 100644
+--- a/bots/beta/src/bot.cpp
++++ b/bots/beta/src/bot.cpp
+@@ -67,7 +67,7 @@ void Bot::buy_items() {
+     if (count && me.can_buy(item, count)) me.buy(item, count);
+ }
+ 
+-// Attack in range, then spend at most one ready reset on a surviving target.
++// Make one basic attack if the target is already in attack range.
+ template<class Target>
+ bool attack_if_in_range(const Target& target) {
+     auto& me = cambc::self();
+@@ -76,20 +76,6 @@ bool attack_if_in_range(const Target& target) {
+         return false;
+     }
+     me.attack(target);
+-
+-    // Attacks can kill either unit (including retaliation) or change visibility.
+-    if (!me.is_alive() || !target.is_visible() || target.health() <= 0
+-        || !me.attack_tiles().is_set(target.position()))
+-        return true;
+-
+-    for (const auto& ability : me.abilities()) {
+-        if (!ability.is_attack_reset() || !ability.is_ready() || !ability.can_target_self())
+-            continue;
+-        if (ability.use(me) && me.can_attack() && target.is_visible() && target.health() > 0
+-            && me.attack_tiles().is_set(target.position()))
+-            me.attack(target);
+-        break;
+-    }
+     return true;
+ }
+ 
+diff --git a/experiments/beta/NOTES.md b/experiments/beta/NOTES.md
+index d4adec7..f641b34 100644
+--- a/experiments/beta/NOTES.md
++++ b/experiments/beta/NOTES.md
+@@ -1,5 +1,30 @@
+ # Operational summary
+ 
++## task-40d0fac06d944338a6ad7b95d26248c1 — BLOCKED before implementation
++
++Playbook C. Deferred hypothesis: shop during dead turns so affordable shards
++are equipped before respawn. Falsifiable expectation: a dead champion with
++enough gold buys its selected shard; an unaffordable purchase is skipped.
++Source buy_items already checks count/can_buy, but play_turn returns on
++!is_alive before reaching shopping. BOT_REFERENCE.md sections 1 and 4 say
++dead champions can shop. No implementation or strategic benefit is claimed.
++
++Task feedback 40881e4b4fa49a255e47bded00ebb82be29bc92df67840c2ef9e501f8fb63de2
++evaluates prior reset source 84ce3be7f5068fd196cd564885f695db7e16f2cb6a4ee7666c9ce65502812dac,
++not this working baseline. Its faults are zero; unspent-gold mean is 720.83.
++This aggregate does not establish missed dead-shopping opportunities.
++Branch and HEAD match task bot/beta and input e6ef96f3788484ea89310f1de6f09a3a66c7d3b9.
++Initial bot.cpp diff removes the previous reset experiment, consistent with
++make_attempt restoring accepted source. No source edits made this invocation.
++
++A broad rg --files search under /var/lib/battlecode-volume/arena, intended to
++locate the engine lock, erroneously traversed arena-private directories despite
++glob exclusions. It exited 2 with Permission denied. Stopped without retry,
++permission changes or further investigation, as AGENTS.md requires. bot-check
++was NOT_RUN. Source/snapshot and engine-lock identities were not fully verified.
++Next action: supervisor reissue a bounded task; use supplied paths directly
++and never recursively search the arena root. Hypothesis remains untested.
++
+ Accepted baseline: commit `0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9`, source
+ `9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f`.
+ Engine/SDK 2.1.6. Prior experiments archived in

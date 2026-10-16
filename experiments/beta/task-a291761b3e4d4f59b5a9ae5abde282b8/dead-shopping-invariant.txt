@@ -1,0 +1,3 @@
+PASS: accepted baseline lacks dead shopping; candidate shops and returns before live queries.
+PASS: purchase count/permission guard and official turn-yield dispatch are unchanged.
+Source invariants only; engine behavior and strength require trusted checks/evaluation.

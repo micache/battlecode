@@ -1,0 +1,38 @@
+{
+  "protocol_version": 1,
+  "task_id": "task-40d0fac06d944338a6ad7b95d26248c1",
+  "bot_id": "beta",
+  "base_source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "outcome": "BLOCKED",
+  "hypothesis": "Shopping during dead turns equips affordable shards before respawn. Expected: dead champions buy affordable selected shards and skip unaffordable purchases. Deferred, untested.",
+  "changed_paths": [
+    "experiments/beta/NOTES.md"
+  ],
+  "evidence": [
+    {
+      "kind": "source",
+      "reference": "bots/beta/src/bot.cpp",
+      "claim": "The dead-unit guard returns before shopping. No source edits were made this invocation."
+    },
+    {
+      "kind": "evaluation",
+      "reference": ".agent/task.json#feedback",
+      "claim": "Prior-candidate evaluation is INCONCLUSIVE with zero reported bot faults; it does not evaluate a new candidate."
+    },
+    {
+      "kind": "check",
+      "reference": "experiments/beta/NOTES.md",
+      "claim": "A broad arena file search reached restricted directories and exited 2 with permission denials. Work stopped without retry."
+    }
+  ],
+  "tests": [
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/beta.json",
+      "status": "NOT_RUN",
+      "exit_code": null,
+      "report_path": null
+    }
+  ],
+  "blocked_reason": "My search exceeded the permitted evidence scope and encountered permission denials. AGENTS.md requires stopping. Source and engine-lock identity verification remained incomplete.",
+  "next_action": "Supervisor may reissue the task. Use explicit supplied paths and avoid recursive searches of the arena root."
+}

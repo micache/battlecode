@@ -67,7 +67,7 @@ void Bot::buy_items() {
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
 
-// Attack in range, then spend at most one ready reset on a surviving target.
+// Make one basic attack if the target is already in attack range.
 template<class Target>
 bool attack_if_in_range(const Target& target) {
     auto& me = cambc::self();
@@ -76,20 +76,6 @@ bool attack_if_in_range(const Target& target) {
         return false;
     }
     me.attack(target);
-
-    // Attacks can kill either unit (including retaliation) or change visibility.
-    if (!me.is_alive() || !target.is_visible() || target.health() <= 0
-        || !me.attack_tiles().is_set(target.position()))
-        return true;
-
-    for (const auto& ability : me.abilities()) {
-        if (!ability.is_attack_reset() || !ability.is_ready() || !ability.can_target_self())
-            continue;
-        if (ability.use(me) && me.can_attack() && target.is_visible() && target.health() > 0
-            && me.attack_tiles().is_set(target.position()))
-            me.attack(target);
-        break;
-    }
     return true;
 }
 
@@ -133,8 +119,14 @@ void Bot::play_turn() {
 
     auto& me = cambc::self();
 
+    // Dead champions can shop without a live position or action allowance.
+    if (!me.is_alive()) {
+        buy_items();
+        return;
+    }
+
     // Leave channels running and skip turns where we cannot act.
-    if (!me.is_alive() || me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
+    if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
         || (!me.can_move() && !me.can_attack()))
         return;
 
