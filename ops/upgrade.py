@@ -45,6 +45,8 @@ def main():
     stage.rename(old)
     config = read_json('/etc/battlecode/arena.json')
     config['infrastructure_commit'] = revision
+    if config.get('deployment', {}).get('mode') == 'blaxel':
+        config['limits'].setdefault('backup_interval_seconds', 86400)
     atomic_json('/etc/battlecode/arena.json', config, 0o644)
     lock = read_json(config['engine_lock']) if Path(config['engine_lock']).exists() else {}
     if lock.get('isolation') == 'bubblewrap-watchdog-v1':

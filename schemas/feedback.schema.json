@@ -31,10 +31,7 @@
     },
     "bot_id": {
       "type": "string",
-      "enum": [
-        "alpha",
-        "beta"
-      ]
+      "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"
     },
     "candidate": {
       "type": "object"

@@ -37,10 +37,19 @@ def new_task(arena, bot, owner="server"):
                 "accepted_snapshot": accepted["snapshot"], "infrastructure_commit": config["infrastructure_commit"],
                 "engine_version": config["engine"]["version"], "engine_lock_hash": arena.adapter().lock_hash,
                 "evaluation_suite": config["evaluation"]["suite_version"], "feedback_id": latest["evaluation_id"],
-                "feedback": latest["summary"], "available_commands": ["bot-check"],
+                "feedback": latest["summary"], "available_commands": ["bot-check",
+                    f"arena-client --config /etc/battlecode/{bot}.json feedback",
+                    f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file final.json",
+                    f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file bot-a.stdout.log",
+                    f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file bot-b.stdout.log"],
                 "owned_paths": [f"bots/{bot}/src/", f"experiments/{bot}/"], "wall_timeout_seconds": 1200,
                 "prior_task_id": worker["task_id"],
                 "instructions": "One hypothesis, one experiment. Preserve interrupted work. No agents, daemon, publication or official actions. "
+                                "Raw matches/, evaluations/, checks/ and state/ are arena-private: do not open or list them. "
+                                "Use the supplied arena-client commands for this lane's development evidence; "
+                                "final.json contains complete final statistics, bot-a.stdout.log and bot-b.stdout.log contain bounded bot logs. "
+                                "A missing optional diagnostic is unknown, not a reason to invent evidence. "
+                                "Read the compact feedback and owned source, state uncertainty, and select a source-supported hypothesis. "
                                 + "Matching installed C++ SDK: " + str(Path(arena.adapter().lock.get("project_template", "/unavailable")) / "sdk/cpp")}
     validate_schema(envelope, read_json(Path(config["infrastructure"]) / "schemas/task.schema.json"))
     with db.transaction():

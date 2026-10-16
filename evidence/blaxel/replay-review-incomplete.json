@@ -1,0 +1,27 @@
+{
+  "body": "Loading engine...\nLoad map / replay\nLogs\n\nNo logs included in this replay.\n\nHighlights\n0\n\nHighlights appear as combat and objectives resolve.\n\nThis application requires WebGL2.\nShortcuts\nThis application requires WebGL2.\nRound\n—\nAction\n0\n/\n0\nUndo\nCtrl+Z\n×0.5\n1×\n×2\nRounds\nStep\nmode",
+  "inputs": [
+    {
+      "type": "file",
+      "min": "",
+      "max": "",
+      "value": "",
+      "aria": null
+    },
+    {
+      "type": "range",
+      "min": "0",
+      "max": "0",
+      "value": "0",
+      "aria": "Seek timeline round"
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": "Step mode"
+    }
+  ],
+  "errors": []
+}

@@ -97,6 +97,9 @@ def export_feedback(db, config, evaluation):
     for field in ("missing", "fault_matches", "unknown_reliability"):
         metrics[f"holdout_{field}_count"] = len(set(metrics[field]) & reserved_jobs)
         metrics[field] = [job for job in metrics[field] if job not in reserved_jobs]
+    for failure in metrics['representative_failures']:
+        # Workers request bounded development slices; they cannot traverse raw artifacts.
+        failure.pop('artifact', None)
     summary = {"protocol_version": 1, "evaluation_id": evaluation["id"], "bot_id": evaluation["bot_id"],
                "candidate": {"revision_id": revision["id"], "commit": revision["commit_sha"],
                              "source_hash": revision["source_hash"], "build_id": suite.get("candidate_build")},
