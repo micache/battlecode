@@ -1,0 +1,58 @@
+{
+  "maps": [
+    {
+      "id": "3bf50c50-7d65-4962-81e0-eec0592790e3",
+      "name": "collision",
+      "sha256": "688199fc0e7673fb731be0946afa2eab0873298c103bc595901a035409925600",
+      "size": 1322
+    },
+    {
+      "id": "8b48383d-7eaf-420f-b4c5-109ff05eac38",
+      "name": "corners",
+      "sha256": "35a749b76bf756c09e9f3165d73e69357db560804fc32fff9a49a64bf4ead54e",
+      "size": 2600
+    },
+    {
+      "id": "bb12893c-ce47-40ee-b0b0-61614ab8576f",
+      "name": "elkring",
+      "sha256": "37b8ace8d2ae29b8d7dcedc7ce5107e9ef3c5d8868fb8d42e2e1293cdc04939e",
+      "size": 509
+    },
+    {
+      "id": "4705f2c8-114b-47e5-ae59-6b94c315a8de",
+      "name": "expanse",
+      "sha256": "62630c258647621e2dfa687e721382b8b9ca2cb170aba331ca4dcd53ff4129fc",
+      "size": 1343
+    },
+    {
+      "id": "49a6f0b9-eb7d-40d5-aa68-494b93d19bdb",
+      "name": "interlock",
+      "sha256": "a6556f1fe2eb02d8de1afa53305e1b0defe63b0e3b4a4fb5335feeff88efcac5",
+      "size": 1599
+    },
+    {
+      "id": "df106d8d-d4ee-4cf8-b8f9-fa28cffcf02e",
+      "name": "lanes",
+      "sha256": "322914beda81d0a38e87c4ec058c1d1b5c96113cc4e07125d3b41a2ad424e6c3",
+      "size": 744
+    },
+    {
+      "id": "3991a8b3-ffb8-435a-a53d-32bcaa27d266",
+      "name": "monolith",
+      "sha256": "61bcbc25b93c80091ab59ebfd8a087847880f54cb0dfaa2c39e2fe0ef3cedb2e",
+      "size": 1587
+    },
+    {
+      "id": "81824dd7-dd52-4e7b-8fbd-ddd2b98fbe15",
+      "name": "packs",
+      "sha256": "d6b390d394e698db8805e46528be35b9a4945b56cfbecdf3b9c42d3d4beae19a",
+      "size": 273
+    },
+    {
+      "id": "25d81311-e304-4cec-b9f5-f0c25d169f99",
+      "name": "rows",
+      "sha256": "50365c961d1f85234220239211a5b526e70522f30c145160a46c0ea6e1cf757a",
+      "size": 4693
+    }
+  ]
+}

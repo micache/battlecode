@@ -1,0 +1,77 @@
+{
+  "title": "Normalized local match v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "state",
+    "completed",
+    "winner",
+    "terminal_reason",
+    "metrics",
+    "bot_faults",
+    "fuel_suspensions",
+    "detail"
+  ],
+  "properties": {
+    "protocol_version": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "COMPLETED",
+        "BOT_FAULT",
+        "TRUNCATED",
+        "INFRA_ERROR",
+        "TIMEOUT",
+        "CANCELLED"
+      ]
+    },
+    "completed": {
+      "type": "boolean"
+    },
+    "winner": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "A",
+        "B",
+        null
+      ]
+    },
+    "terminal_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "bot_faults": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "fuel_suspensions": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "detail": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

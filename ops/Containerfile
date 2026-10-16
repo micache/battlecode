@@ -1,0 +1,12 @@
+# Bootstrap uses network once; runtime pins the resulting local sha256 image ID.
+FROM docker.io/library/ubuntu:24.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-pip ca-certificates curl tar xz-utils unzip build-essential && rm -rf /var/lib/apt/lists/*
+COPY engine-requirements.txt /opt/engine-requirements.txt
+RUN pip3 install --break-system-packages --no-cache-dir --only-binary=:all: --require-hashes -r /opt/engine-requirements.txt
+COPY engine-evidence.py /opt/engine-evidence.py
+RUN python3 /opt/engine-evidence.py verify
+RUN cambc init --yes /opt/project
+WORKDIR /opt/project
+RUN cambc new side-a --lang cpp && cambc new side-b --lang cpp && cambc build side-a --output /opt/starter.wasm
+RUN dpkg-query -W > /opt/compiler-packages.txt

@@ -1,0 +1,19 @@
+usage: client.py [-h] [--config CONFIG] [--owner OWNER] [--attempt ATTEMPT]
+                 [--metadata METADATA] [--match-id MATCH_ID] [--file FILE]
+                 [--offset OFFSET]
+                 {status,feedback,slice,pause,resume,claim,release,publish,import-external}
+
+Owner mailbox client; never writes central SQLite
+
+positional arguments:
+  {status,feedback,slice,pause,resume,claim,release,publish,import-external}
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --owner OWNER
+  --attempt ATTEMPT
+  --metadata METADATA
+  --match-id MATCH_ID
+  --file FILE
+  --offset OFFSET

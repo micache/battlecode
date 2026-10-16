@@ -1,0 +1,11 @@
+usage: cli.py [-h] [--config CONFIG]
+              {init,serve,status,start,pause,adapter-resume,backup,compact,acceptance-report,tick,starter-check,ingest,register-starter,verify-readiness,restore-drill,register-toolchain,worker} ...
+
+Trusted Battlecode arena operator
+
+positional arguments:
+  {init,serve,status,start,pause,adapter-resume,backup,compact,acceptance-report,tick,starter-check,ingest,register-starter,verify-readiness,restore-drill,register-toolchain,worker}
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG

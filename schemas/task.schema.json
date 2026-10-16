@@ -1,0 +1,122 @@
+{
+  "title": "Bounded bot task v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "role",
+    "task_id",
+    "bot_id",
+    "branch",
+    "base_source_hash",
+    "accepted_commit",
+    "input_revision",
+    "accepted_snapshot",
+    "infrastructure_commit",
+    "engine_version",
+    "engine_lock_hash",
+    "evaluation_suite",
+    "feedback_id",
+    "feedback",
+    "available_commands",
+    "owned_paths",
+    "wall_timeout_seconds",
+    "prior_task_id",
+    "instructions"
+  ],
+  "properties": {
+    "protocol_version": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "bot_worker"
+      ]
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^task-[a-f0-9]{32}$"
+    },
+    "bot_id": {
+      "type": "string",
+      "enum": [
+        "alpha",
+        "beta"
+      ]
+    },
+    "branch": {
+      "type": "string",
+      "pattern": "^bot/(alpha|beta)$"
+    },
+    "base_source_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "accepted_commit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "input_revision": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "accepted_snapshot": {
+      "type": "string"
+    },
+    "infrastructure_commit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "engine_version": {
+      "type": "string",
+      "enum": [
+        "2.1.6"
+      ]
+    },
+    "engine_lock_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "evaluation_suite": {
+      "type": "string"
+    },
+    "feedback_id": {
+      "type": "string"
+    },
+    "feedback": {
+      "type": "object"
+    },
+    "available_commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "owned_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "wall_timeout_seconds": {
+      "type": "integer",
+      "enum": [
+        1200
+      ]
+    },
+    "prior_task_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "instructions": {
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

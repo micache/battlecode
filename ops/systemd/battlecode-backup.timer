@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Battlecode consistent backup
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "battlecode-private-arena"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = []
+description = "Recoverable two-owner Cambridge Battlecode 2026a pilot"
+
+[project.scripts]
+arena = "arena.cli:main"
+arena-client = "arena.client:main"
+bot-check = "arena.client:check_main"
+
+[tool.setuptools]
+packages = ["arena"]

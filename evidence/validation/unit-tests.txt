@@ -1,0 +1,40 @@
+test_full_gate_requires_holdout_and_complete_side_pairs (test_arena.GateTests.test_full_gate_requires_holdout_and_complete_side_pairs) ... ok
+test_unknown_reliability_blocks_promotion (test_arena.GateTests.test_unknown_reliability_blocks_promotion) ... ok
+test_immutable_snapshot_and_supersession (test_arena.IngestionTests.test_immutable_snapshot_and_supersession) ... ok
+test_notes_only_no_re_evaluation (test_arena.IngestionTests.test_notes_only_no_re_evaluation) ... ok
+test_outside_owned_paths_rejected (test_arena.IngestionTests.test_outside_owned_paths_rejected) ... ok
+test_symlink_and_unexpected_dependency_rejected (test_arena.IngestionTests.test_symlink_and_unexpected_dependency_rejected) ... ok
+test_absolute_team_b_and_fuel_not_crash (test_arena.NormalizationTests.test_absolute_team_b_and_fuel_not_crash) ... ok
+test_artifact_corruption_detected (test_arena.NormalizationTests.test_artifact_corruption_detected) ... ok
+test_no_parser_or_draw_never_scored (test_arena.NormalizationTests.test_no_parser_or_draw_never_scored) ... ok
+test_truncated_crash_timeout_and_malformed_distinct (test_arena.NormalizationTests.test_truncated_crash_timeout_and_malformed_distinct) ... ok
+test_config_fails_closed_on_billing_and_official_actions (test_arena.ProtocolTests.test_config_fails_closed_on_billing_and_official_actions) ... ok
+test_model_failure_not_successful_publication (test_arena.ProtocolTests.test_model_failure_not_successful_publication) ... ok
+test_path_traversal_and_size_limits (test_arena.ProtocolTests.test_path_traversal_and_size_limits) ... ok
+test_quota_backoff_uses_provider_reset (test_arena.ProtocolTests.test_quota_backoff_uses_provider_reset) ... ok
+test_backup_restore_includes_wal (test_arena.SchedulerTests.test_backup_restore_includes_wal) ... ok
+test_cache_does_not_create_independent_samples (test_arena.SchedulerTests.test_cache_does_not_create_independent_samples) ... ok
+test_disk_pressure_pauses_new_work (test_arena.SchedulerTests.test_disk_pressure_pauses_new_work) ... ok
+test_failure_retries_once_then_pauses (test_arena.SchedulerTests.test_failure_retries_once_then_pauses) ... ok
+test_full_promotion_has_nine_maps_three_fixed_opponents_and_head_to_head (test_arena.SchedulerTests.test_full_promotion_has_nine_maps_three_fixed_opponents_and_head_to_head) ... ok
+test_map_change_rejected (test_arena.SchedulerTests.test_map_change_rejected) ... ok
+test_no_change_feedback_consumed_once (test_arena.SchedulerTests.test_no_change_feedback_consumed_once) ... ok
+test_push_during_running_job_keeps_frozen_inputs (test_arena.SchedulerTests.test_push_during_running_job_keeps_frozen_inputs) ... ok
+test_quota_parks_only_one_owner (test_arena.SchedulerTests.test_quota_parks_only_one_owner) ... ok
+test_restart_reconciles_atomic_artifact_without_duplicate (test_arena.SchedulerTests.test_restart_reconciles_atomic_artifact_without_duplicate) ... ok
+test_two_cycles_each_bot_and_feedback_bound_to_commits (test_arena.SchedulerTests.test_two_cycles_each_bot_and_feedback_bound_to_commits) ... ok
+test_two_writer_lock_excluded (test_arena.SchedulerTests.test_two_writer_lock_excluded) ... ok
+test_acceptance_never_counts_synthetic_or_manual_cycles (test_operations.OperationsTests.test_acceptance_never_counts_synthetic_or_manual_cycles) ... ok
+test_bounded_child_timeout_retains_process_evidence (test_operations.OperationsTests.test_bounded_child_timeout_retains_process_evidence) ... ok
+test_compression_preserves_verified_bytes (test_operations.OperationsTests.test_compression_preserves_verified_bytes) ... ok
+test_external_replay_import_has_real_id_and_source_hash (test_operations.OperationsTests.test_external_replay_import_has_real_id_and_source_hash) ... ok
+test_holdout_slice_is_denied (test_operations.OperationsTests.test_holdout_slice_is_denied) ... ok
+test_independent_starter_does_not_replace_existing_lanes (test_operations.OperationsTests.test_independent_starter_does_not_replace_existing_lanes) ... ok
+test_malformed_identity_and_outside_edit_do_not_publish (test_publication.PublicationTests.test_malformed_identity_and_outside_edit_do_not_publish) ... ok
+test_manual_handoff_retains_lease_and_uses_trusted_publication (test_publication.PublicationTests.test_manual_handoff_retains_lease_and_uses_trusted_publication) ... ok
+test_two_published_cycles_per_lane_start_from_accepted_source (test_publication.PublicationTests.test_two_published_cycles_per_lane_start_from_accepted_source) ... ok
+
+----------------------------------------------------------------------
+Ran 35 tests in 3.135s
+
+OK

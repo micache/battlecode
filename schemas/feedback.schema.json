@@ -1,0 +1,87 @@
+{
+  "title": "Compact worker feedback v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "evaluation_id",
+    "bot_id",
+    "candidate",
+    "incumbent",
+    "suite_hash",
+    "engine_lock_hash",
+    "settings_hash",
+    "map_pool_hash",
+    "opponents",
+    "coverage",
+    "decision",
+    "metrics",
+    "created",
+    "next_action"
+  ],
+  "properties": {
+    "protocol_version": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "evaluation_id": {
+      "type": "string"
+    },
+    "bot_id": {
+      "type": "string",
+      "enum": [
+        "alpha",
+        "beta"
+      ]
+    },
+    "candidate": {
+      "type": "object"
+    },
+    "incumbent": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "suite_hash": {
+      "type": "string"
+    },
+    "engine_lock_hash": {
+      "type": "string"
+    },
+    "settings_hash": {"type": "string"},
+    "map_pool_hash": {"type": "string"},
+    "opponents": {
+      "type": "object"
+    },
+    "coverage": {
+      "type": "string",
+      "enum": [
+        "full-nine-map",
+        "provisional-three-map-wiring"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "ACCEPTED",
+        "REJECTED",
+        "INCONCLUSIVE",
+        "BUILD_FAILED",
+        "SUPERSEDED"
+      ]
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "created": {
+      "type": "number"
+    },
+    "next_action": {
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

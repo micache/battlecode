@@ -1,0 +1,11 @@
+[Unit]
+Description=Request a consistent arena database backup
+After=battlecode-arena.service
+
+[Service]
+Type=oneshot
+User=bc-arena
+Group=bc-read
+WorkingDirectory=/opt/battlecode
+ExecStart=/usr/local/bin/arena backup
+UMask=0077

@@ -1,0 +1,38 @@
+[Unit]
+Description=Battlecode private arena (single SQLite writer)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=bc-arena
+Group=bc-read
+SupplementaryGroups=bc-alpha bc-beta
+WorkingDirectory=/opt/battlecode
+ExecStart=/usr/local/bin/arena --config /etc/battlecode/arena.json serve
+Restart=on-failure
+RestartSec=15
+KillMode=control-group
+Delegate=yes
+TimeoutStopSec=30
+UMask=0027
+RuntimeDirectory=battlecode-arena
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+Environment=XDG_RUNTIME_DIR=/run/battlecode-arena
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/srv/battlecode /home/bc-arena /run/battlecode-arena
+PrivateTmp=yes
+TasksMax=512
+MemoryMax=6G
+CPUQuota=200%
+LimitFSIZE=1G
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

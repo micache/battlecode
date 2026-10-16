@@ -1,0 +1,32 @@
+[Unit]
+Description=Battlecode Codex owner lane %i
+After=network-online.target battlecode-arena.service
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=bc-%i
+Group=bc-%i
+SupplementaryGroups=bc-read
+WorkingDirectory=/home/bc-%i
+ExecStart=/usr/local/bin/arena worker --owner-config /etc/battlecode/%i.json
+Restart=on-failure
+RestartSec=30
+KillMode=control-group
+TimeoutStopSec=30
+UMask=0077
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/bc-%i /srv/battlecode/inbox/%i
+PrivateTmp=yes
+NoNewPrivileges=yes
+TasksMax=256
+MemoryMax=4G
+CPUQuota=100%
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,85 @@
+{
+  "platforms": [
+    {
+      "platform": "windows-x64",
+      "label": "Windows x64",
+      "published": {
+        "id": "2325d8c5-c910-46f3-bab3-39fe36342569",
+        "platform": "windows-x64",
+        "version": "2.1.6",
+        "fileName": "cambc.exe",
+        "sha256": "91f42c859c40c07c186eb94a692349396c7b168d2b454f1cb060c714825d9882",
+        "size": 78170624,
+        "createdAt": "2026-10-14T02:35:30.864Z",
+        "deleting": false,
+        "downloadUrl": "https://2026a.battlecode.co.uk/api/v1/distribution/windows-x64/download"
+      }
+    },
+    {
+      "platform": "windows-arm64",
+      "label": "Windows ARM64",
+      "published": null
+    },
+    {
+      "platform": "linux-x64",
+      "label": "Linux x64",
+      "published": {
+        "id": "f7ac4dba-a50e-4335-bfa7-8f763393abbb",
+        "platform": "linux-x64",
+        "version": "2.1.6",
+        "fileName": "cambc",
+        "sha256": "e2a641bab3c9ec3b80d595c2956e6dbb115959b039617efb14e554617bf0d08c",
+        "size": 95129344,
+        "createdAt": "2026-10-14T02:36:09.428Z",
+        "deleting": false,
+        "downloadUrl": "https://2026a.battlecode.co.uk/api/v1/distribution/linux-x64/download"
+      }
+    },
+    {
+      "platform": "linux-arm64",
+      "label": "Linux ARM64",
+      "published": {
+        "id": "4bce2f39-e719-4d82-8ea0-d0ecf6a66f4f",
+        "platform": "linux-arm64",
+        "version": "2.1.6",
+        "fileName": "cambc",
+        "sha256": "6f748889474a529fc019c722e3d5127f86760df02d88d5cdfd1ac7d5fa07f6bf",
+        "size": 91317296,
+        "createdAt": "2026-10-14T02:36:38.896Z",
+        "deleting": false,
+        "downloadUrl": "https://2026a.battlecode.co.uk/api/v1/distribution/linux-arm64/download"
+      }
+    },
+    {
+      "platform": "macos-x64",
+      "label": "macOS Intel",
+      "published": {
+        "id": "5cd8f8a9-464c-4958-80e7-196774bc183d",
+        "platform": "macos-x64",
+        "version": "2.1.6",
+        "fileName": "cambc",
+        "sha256": "653a72369e8d8a725965ec52784ddd8581df592c36bc3c506aee19c2bb6d144a",
+        "size": 82449352,
+        "createdAt": "2026-10-14T02:37:15.653Z",
+        "deleting": false,
+        "downloadUrl": "https://2026a.battlecode.co.uk/api/v1/distribution/macos-x64/download"
+      }
+    },
+    {
+      "platform": "macos-arm64",
+      "label": "macOS Apple Silicon",
+      "published": {
+        "id": "240c3977-8c35-4afe-bb38-c442e2704892",
+        "platform": "macos-arm64",
+        "version": "2.1.6",
+        "fileName": "cambc",
+        "sha256": "f5337a197952b9fe83ee43f7d3d76eaf8506c54575531cc33713f971bde2b734",
+        "size": 79407952,
+        "createdAt": "2026-10-14T02:38:01.316Z",
+        "deleting": false,
+        "downloadUrl": "https://2026a.battlecode.co.uk/api/v1/distribution/macos-arm64/download"
+      }
+    }
+  ],
+  "downloadPageUrl": "https://2026a.battlecode.co.uk/game/download"
+}

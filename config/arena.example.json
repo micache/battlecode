@@ -1,0 +1,150 @@
+{
+  "config_version": 1,
+  "enabled": false,
+  "note": "Implementation input, not a runnable service. Fill required owner/repository/opponent settings and validate before enabling.",
+  "repository_url": null,
+  "infrastructure_commit": null,
+  "state_directory": "/srv/battlecode/state",
+  "artifact_directory": "/srv/battlecode/matches",
+  "feedback_directory": "/srv/battlecode/feedback",
+  "documentation": {
+    "rules_path": "sources/GameRules.md",
+    "rules_sha256": "1c7fcf111d95b4734070f8f676cd50a48154feb0673de73a31c79845afa34732",
+    "python_api_path": "sources/BotAPIPython.md",
+    "python_api_sha256": "3013fde86080e89ebf109357d4b8ca913babcb4592be542d92df0fadd542772f",
+    "derived_reference_path": "BOT_REFERENCE.md",
+    "organizer_agents_path": null,
+    "source": "user-supplied handbook/API exports; exact engine commit not stated"
+  },
+  "expected_game_profile": {
+    "note": "Documented validation targets, not measured effective runtime settings.",
+    "winning_submitted_gems": 1000,
+    "max_rounds": 2000,
+    "tiebreak_order": ["submitted_gems", "lifetime_gold_earned", "champion_kills", "team_b"],
+    "draft_memory_bytes": 1024,
+    "shared_memory_bytes": 8,
+    "base_fuel_per_turn": 100000,
+    "fuel_multipliers": {"cpp": 1, "rust": 1, "ocaml": 5, "python": 25},
+    "first_draft_turn_fuel_multiplier": 10,
+    "first_champion_turn_fuel_multiplier": 2
+  },
+  "engine": {
+    "event": "2026a",
+    "version": "2.1.6",
+    "platform": "linux-x64",
+    "binary_sha256": "e2a641bab3c9ec3b80d595c2956e6dbb115959b039617efb14e554617bf0d08c",
+    "executable": null,
+    "toolchain_lock": null,
+    "map_pool_manifest": null,
+    "settings_snapshot": null,
+    "use_default_fuel": true,
+    "round_limit_override": null,
+    "seed": null
+  },
+  "readiness": {
+    "private_arena_ready": false,
+    "competition_parity_verified": false,
+    "official_automation_verified": false
+  },
+  "scheduler": {
+    "git_poll_seconds": 60,
+    "max_concurrent_matches": 2,
+    "max_concurrent_builds": 1,
+    "max_concurrent_model_jobs": 2,
+    "max_pending_revisions_per_bot": 1,
+    "initial_match_timeout_seconds": 300,
+    "infra_retries": 1,
+    "model_job_timeout_seconds": 1200,
+    "unknown_quota_backoff_seconds": [1800, 3600, 7200, 14400]
+  },
+  "evaluation": {
+    "suite_version": "bootstrap-v1",
+    "opponent_build_ids": [],
+    "screen_map_names": ["collision", "corners", "elkring"],
+    "development_map_names": ["collision", "corners", "elkring", "expanse", "interlock", "lanes"],
+    "holdout_map_names": ["monolith", "packs", "rows"],
+    "both_sides": true,
+    "required_complete_games": true,
+    "allow_completed_draws": false,
+    "count_fuel_suspension_as_crash": false,
+    "minimum_common_opponent_score_gain": 0.05,
+    "maximum_covered_map_score_drop": 0.25,
+    "allow_holdout_aggregate_regression": false,
+    "allow_reproducible_candidate_faults": false,
+    "max_promotion_checks_per_bot_per_day": 2,
+    "raw_artifact_budget_bytes": 10737418240,
+    "ordinary_replay_retention_days": 14,
+    "preserve_champion_and_representative_evidence": true
+  },
+  "workers": [
+    {
+      "worker_id": "codex-owner-1",
+      "provider_cli": "codex",
+      "linux_user": "bc-codex-1",
+      "owner_confirmed": false,
+      "bot_id": null,
+      "branch": null,
+      "model": null,
+      "max_active_invocations": 1,
+      "focus": "gem economy and survival",
+      "enabled": false
+    },
+    {
+      "worker_id": "codex-owner-2",
+      "provider_cli": "codex",
+      "linux_user": "bc-codex-2",
+      "owner_confirmed": false,
+      "bot_id": null,
+      "branch": null,
+      "model": null,
+      "max_active_invocations": 1,
+      "focus": "combat and ability use",
+      "enabled": false
+    },
+    {
+      "worker_id": "codex-owner-3",
+      "provider_cli": "codex",
+      "linux_user": "bc-codex-3",
+      "owner_confirmed": false,
+      "bot_id": null,
+      "branch": null,
+      "model": null,
+      "max_active_invocations": 1,
+      "focus": "navigation, vision and coordination",
+      "enabled": false
+    },
+    {
+      "worker_id": "claude-owner",
+      "provider_cli": "claude",
+      "linux_user": "bc-claude",
+      "owner_confirmed": false,
+      "bot_id": null,
+      "branch": null,
+      "model": null,
+      "max_active_invocations": 1,
+      "focus": "draft, builds and strategy review",
+      "enabled": false
+    }
+  ],
+  "billing": {
+    "subscription_only": true,
+    "api_fallback": false,
+    "automatic_credit_purchase": false,
+    "cross_account_quota_failover": false
+  },
+  "official": {
+    "mode": "manual_import",
+    "automatic_upload": false,
+    "automatic_activation": false,
+    "automatic_challenges": false,
+    "verified_integration_document": null,
+    "publisher_linux_user": null,
+    "our_team_id": null,
+    "approved_opponent_team_ids": [],
+    "max_outstanding_challenges": 1,
+    "self_imposed_min_interval_seconds": 1800,
+    "self_imposed_max_challenges_per_day": 12,
+    "official_rate_limit": null,
+    "retry_unknown_remote_creation": false
+  }
+}

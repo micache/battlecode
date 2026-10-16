@@ -1,0 +1,138 @@
+Official cambc help captured 2026-10-15 UTC. Binary SHA-256: e2a641bab3c9ec3b80d595c2956e6dbb115959b039617efb14e554617bf0d08c
+
+$ cambc --version
+cambc 2.1.6
+
+$ cambc --help
+Usage: cambc <COMMAND>
+
+Commands:
+  run-batch    Run independent matches from a four-column text manifest
+  init         Create or refresh a cambc project: the SDK sources, maps and a bots/ directory under DIR (default: the current directory)
+  shell-init   Print shell integration that enters the workspace after init
+  add-to-path  Add cambc to PATH for this terminal session (prints setup instructions without shell integration)
+  maps         Download the current published competition map pool
+  login        Sign in with your platform account (session lasts seven days)
+  submit       Upload a bot's source to your team's submissions
+  bundle       Package a bot's source as a ZIP for uploading on the platform
+  new          Create a bot, prompting for any missing details
+  build        
+  run          
+  view         Open a replay in the visualiser: a .repl26a file, a match directory, or (by default) the most recent bundle under replays/
+  mapeditor    Open the map editor, optionally loading a map path or a name from maps/ [alias: map-editor]
+  help         Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+
+$ cambc init --help
+Create or refresh a cambc project: the SDK sources, maps and a bots/ directory under DIR (default: the current directory)
+
+Usage: cambc init [OPTIONS] [DIR]
+
+Arguments:
+  [DIR]  
+
+Options:
+      --yes   
+  -h, --help  Print help
+
+$ cambc new --help
+Create a bot, prompting for any missing details
+
+Usage: cambc new [OPTIONS] [NAME]
+
+Arguments:
+  [NAME]  
+
+Options:
+      --lang <LANG>  [possible values: cpp, rust, python, ocaml]
+  -h, --help         Print help
+
+$ cambc build --help
+Usage: cambc build [OPTIONS] <BOT>
+
+Arguments:
+  <BOT>  
+
+Options:
+      --output <OUTPUT>  Copy the compiled WASI module to a stable path for the submission service
+  -h, --help             Print help
+
+$ cambc run --help
+Usage: cambc run [OPTIONS] <BOT_A> <BOT_B>
+
+Arguments:
+  <BOT_A>  
+  <BOT_B>  
+
+Options:
+      --map <MAP>                Map file (.map26a): a path, or a bare name resolved under maps/ (default: the first .map26a file in maps/, alphabetically)
+  -o, --out-dir <OUTDIR>         Directory for the replay bundle (default: replays/ in the project)
+      --rounds <ROUNDS>          Rounds to play (default: play to the end)
+      --fuel <FUEL_QUANTUM>      fuel per turn
+      --view                     Open the replay in the visualiser after the match
+      --statistics <STATISTICS>  Export final game statistics as JSON (requires a completed game)
+  -h, --help                     Print help
+
+$ cambc run-batch --help
+Run independent matches from a four-column text manifest
+
+Usage: cambc run-batch [OPTIONS] [MANIFEST]
+
+Arguments:
+  [MANIFEST]  Text file: bot-a-project bot-b-project map replay.repl26a (paths relative to this file)
+
+Options:
+      --jsonl <JSONL>                API v1 compiled-input JSONL manifest; stdout contains only machine events
+      --jobs <JOBS>                  Maximum independent runner processes [default: 1]
+      --rounds <ROUNDS>              Stop after this many game rounds; otherwise play until the game finishes
+      --fuel-quantum <FUEL_QUANTUM>  
+      --timeout <TIMEOUT>            Wall-clock seconds per match, including runner startup
+      --color <COLOR>                [default: auto] [possible values: auto, always, never]
+  -h, --help                         Print help
+
+$ cambc bundle --help
+Package a bot's source as a ZIP for uploading on the platform
+
+Usage: cambc bundle [OPTIONS] <BOT>
+
+Arguments:
+  <BOT>  
+
+Options:
+  -o, --out-dir <OUTDIR>  Directory for <bot>.zip (default: current directory)
+      --output <OUTPUT>   Save to this exact ZIP file instead
+  -h, --help              Print help
+
+$ cambc submit --help
+Upload a bot's source to your team's submissions
+
+Usage: cambc submit <BOT>
+
+Arguments:
+  <BOT>  
+
+Options:
+  -h, --help  Print help
+
+$ cambc maps --help
+Download the current published competition map pool
+
+Usage: cambc maps <COMMAND>
+
+Commands:
+  pull  Refresh maps/ from the platform, preserving custom and edited maps
+  help  Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help  Print help
+
+$ cambc login --help
+Sign in with your platform account (session lasts seven days)
+
+Usage: cambc login
+
+Options:
+  -h, --help  Print help

@@ -1,0 +1,21 @@
+{
+  "protocol_version": 1,
+  "python": "3.11+",
+  "python_dependencies": [],
+  "cambc": {
+    "version": "2.1.6",
+    "wheel": "cambc-2.1.6-py3-none-manylinux_2_28_x86_64.whl",
+    "wheel_sha256": "209370d22858e1404ee4c03b64d1b23abf3fc86f4efe78145fc1642b8bc451e0",
+    "binary_sha256": "e2a641bab3c9ec3b80d595c2956e6dbb115959b039617efb14e554617bf0d08c"
+  },
+  "codex": {
+    "observed_local_version": "0.163.0",
+    "server_version": null,
+    "server_binary_sha256": null
+  },
+  "oci_image_id": null,
+  "compiler_versions": null,
+  "generated_sdk_sha256": null,
+  "effective_profile": null,
+  "note": "Runtime registration records actual immutable image, SDK, compilers and evidence. Null fields are unverified and block use."
+}

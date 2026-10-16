@@ -1,0 +1,78 @@
+{
+  "protocol_version": 1,
+  "repository_url": "https://github.com/micache/battlecode",
+  "infrastructure_commit": null,
+  "infrastructure": "/opt/battlecode",
+  "root": "/srv/battlecode",
+  "mirror": "/srv/battlecode/repos/source.git",
+  "maps": "/srv/battlecode/maps/pool-2026a-216",
+  "map_manifest": "/opt/battlecode/evidence/map-pool.json",
+  "engine_lock": "/srv/battlecode/locks/engine.json",
+  "parser_contract": "/etc/battlecode/parser.json",
+  "engine": {
+    "version": "2.1.6",
+    "binary_sha256": "e2a641bab3c9ec3b80d595c2956e6dbb115959b039617efb14e554617bf0d08c"
+  },
+  "limits": {
+    "matches": 1,
+    "builds": 1,
+    "codex_jobs": 1,
+    "match_timeout_seconds": 300,
+    "build_timeout_seconds": 300,
+    "infra_retries": 1,
+    "artifact_budget_bytes": 10737418240,
+    "minimum_free_bytes": 2147483648
+  },
+  "evaluation": {
+    "suite_version": "pilot-wiring-v1",
+    "automatic_promotion": false,
+    "screen_maps": [
+      "collision",
+      "corners",
+      "elkring"
+    ],
+    "development_maps": [
+      "collision",
+      "corners",
+      "elkring",
+      "expanse",
+      "interlock",
+      "lanes"
+    ],
+    "holdout_maps": [
+      "monolith",
+      "packs",
+      "rows"
+    ],
+    "opponent_revision_ids": [],
+    "minimum_gain": 0.05,
+    "maximum_map_drop": 0.25,
+    "max_promotion_checks_per_day": 2
+  },
+  "workers": {
+    "alpha": {
+      "linux_user": "bc-alpha",
+      "branch": "bot/alpha",
+      "clone": "/home/bc-alpha/battlecode",
+      "enabled": false,
+      "owner_confirmed": false
+    },
+    "beta": {
+      "linux_user": "bc-beta",
+      "branch": "bot/beta",
+      "clone": "/home/bc-beta/battlecode",
+      "enabled": false,
+      "owner_confirmed": false
+    }
+  },
+  "official": {
+    "upload": false,
+    "activation": false,
+    "challenges": false
+  },
+  "billing": {
+    "subscription_only": true,
+    "api_fallback": false,
+    "cross_account_failover": false
+  }
+}
