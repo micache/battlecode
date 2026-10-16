@@ -7,3 +7,4 @@ runtime/
 *.sqlite*
 *.wasm
 *.repl26a
+artifacts/submissions/
