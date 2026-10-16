@@ -8,6 +8,6 @@ class Bot {
     void buy_items();
 
 public:
-    // Priorities: shop and recall, attack enemies in range, bank gems, then farm.
+    // Priorities: shop and recall, bank gems, attack enemies in range, then farm.
     void play_turn();
 };
