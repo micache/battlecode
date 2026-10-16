@@ -46,7 +46,7 @@ def main():
     config = read_json('/etc/battlecode/arena.json')
     config['infrastructure_commit'] = revision
     atomic_json('/etc/battlecode/arena.json', config, 0o644)
-    lock = read_json(config['engine_lock'])
+    lock = read_json(config['engine_lock']) if Path(config['engine_lock']).exists() else {}
     if lock.get('isolation') == 'bubblewrap-watchdog-v1':
         lock['recipe_sha256'] = file_hash(old / 'arena/colab_sandbox.py')
         uid, gid = Path(config['engine_lock']).stat().st_uid, Path(config['engine_lock']).stat().st_gid
