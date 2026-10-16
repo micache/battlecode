@@ -1,6 +1,6 @@
 The pilot has exactly two independent owners, `bc-alpha` and `bc-beta`, with branches `bot/alpha` and `bot/beta`. One scheduler serializes matches and builds; a shared kernel lock limits Codex to one invocation. Workers start disabled and paused. The arena user alone holds GitHub write access. Workers clone its read-only mirror, submit source through their own mailboxes, and cannot write the mirror, database, rules, thresholds or service files. Neither worker needs GitHub credentials.
 
-The supplied workspace was a design export without Git metadata. Remote access was blocked before SSH, and the engine was unavailable. See `docs/IMPLEMENTATION_STATUS.md` and `evidence/local-validation.json` for what actually ran. These instructions are setup commands, not evidence of deployment.
+For the deployed Blaxel pilot, use [BLAXEL.md](BLAXEL.md) and the [current status](../docs/IMPLEMENTATION_STATUS.md). The commands below target a standard systemd VM, not Blaxel. Historical synthetic validation remains in `evidence/local-validation.json`; real server evidence is in `evidence/blaxel/`.
 
 Install on the selected server as an administrator, after committing/pushing the implementation to the assigned repository. `/srv/battlecode` must be persistent local storage. A normal Colab runtime may lack systemd and may disappear when its allocation ends; the installer checks systemd and requires an explicit persistent-volume acknowledgement. A service cannot survive destruction of the underlying VM.
 

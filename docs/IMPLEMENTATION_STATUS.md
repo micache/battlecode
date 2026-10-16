@@ -1,24 +1,67 @@
-The two-owner pilot is implemented locally, but is **not deployed or accepted on the Colab server**.
+# Live pilot status — 16 October 2026
 
-Implemented: alpha/beta identity validation; independent owner users/clones/configuration; arena-only GitHub publication; exact commit/subtree ingestion and immutable snapshots; pinned rootless source-project engine adapter; serial durable queue; frozen opponents/maps and matched candidate/incumbent evaluation; three-map provisional wiring plus the unchanged full promotion gate; raw artifacts and checksum manifests; compact development feedback and reserved holdout aggregation; bounded subscription Codex jobs; native owner authentication checks; same-owner quota waits; checkpoints and explicit recovery; restricted client mailboxes and manual handoff; manual external import; consistent backups/restore drill; replay compression; disk-pressure pause; installer and systemd units.
+The arena is deployed on Blaxel `banabolabs/battlecode-arena` (4 CPU, 8192 MB
+RAM, 8192 MB persistent volume). Both owners completed native ChatGPT logins;
+the repository deploy key is installed. Actual model improvement jobs have
+started. **Final acceptance is not yet complete.** No synthetic/manual task is
+counted as a Codex improvement cycle.
 
-Local validation is recorded in `evidence/local-validation.json` and its referenced logs. Tests use real temporary Git repositories/commits/pushes and SQLite/files/processes, but a synthetic engine and synthetic CLI fixtures. They include two publication/evaluation cycles per lane, starting each from its accepted source, plus corruption, stale/malformed results, wrong paths, quota isolation, holdout slice denial, handoff, interrupted completion recovery and a WAL-aware restore drill. These temporary test identities are not pilot match IDs or stronger bots.
+Setup/status/start/pause/stop commands: [Blaxel operations](../ops/BLAXEL.md).
+Standard persistent-VM systemd units remain under `ops/systemd/`; Blaxel uses
+its managed keep-alive process and root-owned unit supervisor instead.
 
-`evidence/validation/synthetic-cycles.json` preserves the actual local test commit/task/case IDs and normalized fake outcomes; `synthetic-publication.bundle` preserves their Git history. Both explicitly state that no model or real game ran. They are useful orchestration evidence, not the requested live acceptance.
+## Completed real evidence
 
-Access blockers observed:
+Reports are preserved under [evidence/blaxel](../evidence/blaxel/). Original
+sealed match artifacts and replays remain on the server.
 
-- `colab ssh --help` and the supported `--logtostderr` variant both fail before SSH because the CLI unconditionally opens `/home/micache/.config/colab-cli/colab.log` on a read-only filesystem. No credential cache was inspected or copied. No account or permission setting was changed to bypass this.
-- `git ls-remote https://github.com/micache/battlecode ...` fails with `Could not resolve host: github.com`. This session cannot fetch or publish repository commits. The web-rendered GitHub page appeared empty; no remote source revision was accepted as known.
-- Initializing local Git metadata also fails: `.git/hooks/: Read-only file system`. There is no implementation commit to report from this workspace; use the delivered files/archive in an authorized checkout and commit there before installation.
-- `cambc` and the installed C++ SDK/maps are absent. Podman is present, but `podman info` fails because `/run/user/1000/libpod` is read-only. No engine container, compiler build or game ran.
-- PID 1 in the local workspace is `codex`, not systemd. `systemd-analyze verify` cannot initialize required sockets under this sandbox (`Operation not permitted`). Unit presence is not evidence of service execution.
-- The two new owners have not logged in. No Codex improvement invocation was made, and no subscription quota was consumed by the implemented worker.
+- Two complete official starter games, reviewed against the official replay
+  viewer's final frame: round 1448, submitted gems A=1012/B=814, no bot faults.
+  Match IDs `e19df34bf0a753702aa503d34adda2b6e1c61f75c8e92fea19de1779b24baa82`
+  and `be2289273a96df1584e32cac156ca37442eb496527fa97f712aa6401f6038b57`.
+  Deterministic repetitions, not independent strategic samples.
+- Alpha baseline commit `c0cebd720fcd55e2bbb51d57dd2c398889d4071e` and beta
+  baseline `0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9` passed the three-map,
+  both-side wiring suite. Full evaluation/match identities are in
+  `pilot-identities.json`. Identical source/engine/map games are reused and
+  viewed from both sides; they are not extra independent matches.
+- Real tie-to-Team-B, deliberate trap versus fuel suspension, truncation versus
+  wall timeout, recall/tribute timing, capture occupancy, ranged allowance,
+  altar approach and hidden-obstruction diagnostics are in
+  `diagnostic-review.json`. The first hidden probe reproduced nothing; a later
+  corners-map probe passed the obstruction/reveal/fallback assertions.
+- `host-isolation.json` records native Codex sandbox success, separate owner
+  UID/GID and private-home enforcement, denied root API/protected writes, and
+  actual networkless rootless container memory/CPU/PID limits.
+- `restart-service.json` and `restart-supervisor.json` record successful
+  SIGKILL recovery with accepted baselines preserved. `volume-remount.json`
+  records unchanged database/config bytes and owner metadata after remount.
+  A consistent SQLite backup restored with integrity/foreign-key checks.
 
-Administrator actions: restore normal Colab CLI logging/SSH access in an authorized host session; select persistent storage and a systemd host; install prerequisites and run `ops/install.sh`; prepare the image/SDK/maps; inspect real starter statistics/replays and install the parser contract; configure the arena's scoped GitHub credential; bootstrap branches and run baseline evaluations. If Colab cannot provide systemd and persistent storage, a persistent VM is required for the requested service lifecycle.
+## Pending and explicit limits
 
-Owner actions, after the users exist: independently install/verify the official Codex CLI, perform `codex login --device-auth`, confirm ChatGPT authentication, and select any model preference. An administrator then records each CLI hash and enables the confirmed lane. Commands are in `ops/OPERATIONS.md`.
+- Two actual published Codex improvement/evaluation cycles per lane are still
+  pending. `arena acceptance-report` is authoritative; it retains real task,
+  source commit and match identities and will not count operator bootstraps.
+- The first live alpha invocation stopped because feedback exposed a raw
+  artifact path without explaining the development-evidence mailbox. The
+  handoff now supplies exact `arena-client ... slice` commands and omits private
+  artifact paths. The stopped attempt remains preserved, not counted as a cycle.
+- Process recovery and API-client disconnection were observed; physical VM
+  reboot and literal SSH-disconnect persistence are not certified. Blaxel
+  archive/unarchive returned 403 because the workspace lacks that preview
+  feature (`provider-archive.json`); no permission denial was bypassed.
+- C++ runtime capacities, winning threshold, round limit and fuel behavior have
+  real evidence. The complete cross-language runtime profile is not measured;
+  the engine lock therefore honestly retains `effective_profile: null`.
+- Organizer AGENTS.md and event participation/AI/official-platform policies are
+  still missing. No contest-parity or official-automation certification.
+- Daily database snapshots/manifests do not constitute a complete off-host
+  replay backup. Disk pressure pauses new work; automatic destructive pruning
+  is not enabled. The 8 GB volume is a bounded pilot, not unlimited storage.
 
-Acceptance still pending on the real host: two completed starter games with replay/statistics agreement; alpha/beta baseline commits; two actual Codex publication/evaluation cycles per bot with retained commit and match IDs; live credential/network isolation checks; mechanic/settings fixtures; an SSH disconnect; service restart during execution; and a host backup/restore drill. Actual pilot commit IDs, match IDs, match durations, scores and throughput are unknown. `arena acceptance-report` refuses to count manual or synthetic cycles as Codex acceptance.
-
-No official submission/challenge automation or API billing/failover was enabled. Three-map results cannot automatically promote a candidate. Enabling promotion additionally requires the full nine-map matched suite, three distinct frozen opponents, reliability/readiness evidence and the declared score/map/holdout thresholds.
+Automatic champion promotion remains disabled. Three-map evaluations are
+provisional: the unchanged full nine-map, three-distinct-frozen-opponent gate,
+matched incumbent comparison and head-to-head, reliability/readiness and all
+score/holdout thresholds remain required before enabling promotion. Official
+submissions/challenges, API billing and cross-account failover remain disabled.

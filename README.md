@@ -1,8 +1,8 @@
 # Battlecode arena: selected design
 
-An initial two-owner implementation now lives in `arena/`, with `config/pilot.json`, an administrator installer, rootless engine bootstrap, systemd units and tests. See [operations and exact commands](ops/OPERATIONS.md), [implementation/acceptance status](docs/IMPLEMENTATION_STATUS.md), and [rules verification](docs/rules/verified.md). The pilot overrides the original four-lane design below: alpha/beta only, one match/build/Codex job, and official automation disabled. Deployment and real-engine acceptance remain pending; synthetic tests are labeled separately.
+The two-owner implementation is deployed on Blaxel. Both owner accounts are authenticated, starter games and three-map baselines are complete, and live improvement jobs have started; final acceptance is still pending. See [Blaxel commands](ops/BLAXEL.md), [current acceptance status](docs/IMPLEMENTATION_STATUS.md), and [standard VM operations](ops/OPERATIONS.md). The pilot overrides the historical four-lane design below: alpha/beta only, one match/build/Codex job, and official automation disabled. Real and synthetic evidence are labeled separately.
 
-Revised 16 October 2026, Asia/Saigon, after reading the supplied rules and Python API exports in full. This is an implementation specification and prompt pack, not an installed service.
+Revised 16 October 2026, Asia/Saigon. The remaining sections preserve the original design and prompt pack; the live pilot status and deployment-specific commands linked above take precedence.
 
 Use one persistent CPU server for both the official game runner and the coding CLIs. Give each account owner an isolated worker and bot branch. A small Python supervisor runs bounded improvement jobs, evaluates immutable candidates, and saves feedback until the owner returns. GitHub stores code; the server stores match artifacts.
 
