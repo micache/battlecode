@@ -1,0 +1,219 @@
+diff --git a/bots/alpha/src/bot.cpp b/bots/alpha/src/bot.cpp
+index c6af8ef..8d6aa59 100644
+--- a/bots/alpha/src/bot.cpp
++++ b/bots/alpha/src/bot.cpp
+@@ -60,10 +60,8 @@ bool move_towards_closest(cambc::bitboard goals) {
+ 
+ void Bot::buy_items() {
+     auto& me = cambc::self();
+-    // No active abilities are cast: redirect the former Focus build to Strength.
+-    // Keep three choices so the existing deterministic RNG stream is unchanged.
+     const std::array items{cambc::item_type::power_shard_of_strength,
+-        cambc::item_type::power_shard_of_strength, cambc::item_type::power_shard_of_health};
++        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
+     const auto item = items[chosen_stat];
+     const unsigned count = me.gold_count() / item.cost();
+     if (count && me.can_buy(item, count)) me.buy(item, count);
+@@ -81,10 +79,28 @@ bool attack_if_in_range(const Target& target) {
+     return true;
+ }
+ 
++// Spend at most one ready reset on a surviving camp, then recheck attack legality.
++bool attack_camp_with_reset(const cambc::camp& camp) {
++    if (!attack_if_in_range(camp))
++        return false;
++
++    auto& me = cambc::self();
++    if (camp.is_visible() && camp.health() > 0 && me.can_cast()) {
++        for (const auto& ability : me.ability_slots) {
++            if (ability.is_attack_reset() && ability.is_ready()) {
++                if (ability.use())
++                    attack_if_in_range(camp);
++                break;
++            }
++        }
++    }
++    return true;
++}
++
+ // Attack a camp already in range, otherwise move toward the nearest camp tiles.
+ void farm_camps() {
+     for (const auto& camp : cambc::vision::camps())
+-        if (attack_if_in_range(camp))
++        if (attack_camp_with_reset(camp))
+             return;
+ 
+     // Union every group's spawn tiles except visibly respawning groups.
+@@ -101,7 +117,7 @@ void farm_camps() {
+     // Fresh vision after movement may reveal a camp already in range.
+     if (move_towards_closest(goals))
+         for (const auto& camp : cambc::vision::camps())
+-            if (attack_if_in_range(camp))
++            if (attack_camp_with_reset(camp))
+                 return;
+ }
+ 
+diff --git a/bots/alpha/src/bot.h b/bots/alpha/src/bot.h
+index d364b4e..38f6515 100644
+--- a/bots/alpha/src/bot.h
++++ b/bots/alpha/src/bot.h
+@@ -1,10 +1,10 @@
+ #pragma once
+ 
+-// Per-champion state survives between turns. Pick a build and keep buying it.
++// Per-champion state survives between turns. Pick one stat and keep buying it.
+ class Bot {
+     int chosen_stat = -1;
+ 
+-    // Power build choices: Strength, Strength, Health; preserve the three-way draw.
++    // Spend only on power shards of the randomly chosen stat.
+     void buy_items();
+ 
+ public:
+diff --git a/experiments/alpha/NOTES.md b/experiments/alpha/NOTES.md
+index 090705d..1702577 100644
+--- a/experiments/alpha/NOTES.md
++++ b/experiments/alpha/NOTES.md
+@@ -1,67 +1,85 @@
+-# Current experiment: task-60546c3a86fa400bb632346db8815d8c
++# Current experiment: task-1b0e5c1c51ef41f4a84bb0ef951cff7f
+ 
+ ## Identity and prior work
+-- Bot alpha; branch bot/alpha; input HEAD a5ab224c3fe72bc9feb762d976c6058ca905a72b.
++- Bot alpha; branch bot/alpha; input HEAD 4b6483b0e91df11262fb6d8b42ab2667778e1571.
+ - Accepted commit c0cebd720fcd55e2bbb51d57dd2c398889d4071e; base source
+   9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+-- Engine/SDK 2.1.6; suite pilot-wiring-v1; envelope engine lock
++- Engine/SDK CLI 2.1.6; suite historical-panels-v1; engine lock
+   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
+-- Branch and HEAD match task. Entry source exactly matched accepted_snapshot/src
+-  (diff -r exit 0); worker.py make_attempt restores accepted source at startup.
+-- Preserved entry tracked diff in task-60546c3a86fa400bb632346db8815d8c-entry.patch.
+-  Prior notes archived in task-0e948f1303a047e49c83a62c9106b875.md.
+-- Previous banking-priority candidate source
+-  0e56af7ea1530234b68be56d4cac56ffe8470646b663e89a2c11e8fab4ad023d
++- HEAD and branch match envelope. Entry source matched accepted_snapshot/src
++  exactly (diff -r exit 0); worker.py make_attempt restores accepted source.
++- Preserved entry tracked delta in this task's -entry.patch. Prior NOTES archived
++  as task-60546c3a86fa400bb632346db8815d8c.md before editing.
++- Latest candidate 24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f
+   completed evaluation INCONCLUSIVE; no pending candidate identified.
+ 
+-## One hypothesis: playbook C, item value and farming economy
+-Redirecting the former Focus power-shard build to Strength will improve basic
+-attack camp clearing and subsequent gem income because the policy casts no active
+-abilities. Falsifiable source invariant: build indices 0/1 buy Strength and index 2
+-buys Health, using the unchanged random_number(3) draw and purchase legality guard.
+-Evaluation prediction: higher mean collected gems than the accepted bot on matched
+-development cases; submitted gems and outcomes check whether extra income converts.
++## One hypothesis: playbook D, unused attack resets while farming
++After a successful basic hit on a surviving camp, cast one ready attack reset and
++attempt one further legal basic attack. This should reduce camp clearing time and
++increase collected gems relative to accepted source on paired development cases.
++Falsifier: mean collected gems does not exceed accepted; also compare submitted
++gems and outcomes to detect failure to convert any extra clearing into wins.
++Source invariant: no reset without a successful first hit and visible living camp;
++at most one cast and one extra attack per farming invocation. Recheck attack
++allowance, visibility, health and range after casting. No reset on enemy attacks.
+ 
+-## Evidence and implementation
+-- Supplied evaluation 64d2bd09b993111371fe7fa209382a408be4ee874fd37496f972a6b6f3dbbf97:
+-  previous candidate at input HEAD had 2 wins/4 losses and zero reported bot faults.
+-  Coverage is provisional three-map wiring; it does not evaluate this new source.
+-- Corners B, 73a3820f4d5f4c7246646350de1c772c03733c5eaa4f18e08450f3e973d89857:
+-  previous candidate collected 230 vs 1014, submitted 146 vs 1014, deaths 16 vs 5;
+-  completed round reported as 396.
+-- Collision A, 956e6de8e2854f8a99475029f6e967d55209de0a59779b96b84a24fcc307a6f5:
+-  previous candidate collected 814 vs 1122, submitted 660 vs 1034, round 1264.
+-- Both cases use candidate revision 0e5cc8e75f19491f8c9dce2fd50c12e06f26231692a5204e0dca9ae18f7c2fbf
+-  versus opponent source equal to base. These income deficits motivate the change
+-  but do not prove item choice caused the losses. Per-build clear times are unknown.
+-- Accepted source assigns a persistent three-way build then spends available gold
+-  on Strength/Focus/Health Power shards; runtime source has no ability-cast calls.
+-- Replaced only the Focus array entry with Strength, retaining the same RNG draw,
+-  purchase quantity and can_buy guard. Updated comments in bot.cpp and bot.h.
+-  Executable source delta from accepted is exactly this item replacement.
+-- GameRules.md 280-303: Strength increases basic damage; shards use champion stat
+-  growth; Power emblems grant six shards of the selected stat. Matching installed
+-  C++ cambc.h item declarations and can_buy(item,count) contract reviewed.
+-- Documentation export hashes match RESEARCH.md. Compact reference and relevant
+-  handbook/SDK sections consulted; separate organizers' AGENTS.md still missing.
++## Evidence and change
++- Supplied evaluation e525c2d2f15f5b4d23774ef05a6f1d02f4c1a921e98c20ec650995eb28799f1b:
++  candidate four wins/two losses, zero reported bot faults, three provisional maps.
++  Candidate revision a1ebb71a3144494723f622be61da10ca05f071b5be0af966c9ae14144b12bcec,
++  input commit above; opponent source equals base. This is not our new candidate.
++- Corners B, 60f5b94e1c1c0035738a5bf80fe4ba22bec7b8e0e0c267b9b4b09c1f27b34a82:
++  submitted 658 vs 1020, collected 838, deaths 17; terminal teamA, round 648.
++  Ryth dealt 10335 camp damage, took 1300; Marcella dealt 7740, took 2280.
++- Elkring A, e75cb9a38791770ab6434d597066d0f4cfbec4232911e35f500d2855be3e3109:
++  submitted 792 vs 1026, collected 918, deaths 45; terminal teamB, round 1115.
++  Ryth dealt 17817 camp damage, took 10160; Marcella dealt 22605, took 9130;
++  Willow dealt 11786, took 8060. All three have attack resets in handbook/SDK.
++- Complete final.json slices retrieved through arena-client only, saved as this
++  task's -60f5b94e1c1c-final.json and -e75cb9a38791-final.json; feedback also saved.
++  These are offline diagnostics, never runtime inputs. Final exporter labels
++  engineVersion 0.0.1; do not equate that field with envelope CLI/SDK 2.1.6.
++- Bounded Elkring A stdout slice showed shared-round logs, no action trace;
++  actual missed reset counts, clearing times and causality remain unknown.
++- Accepted source has no casts and returns immediately after a single camp hit.
++  Added attack_camp_with_reset in bot.cpp at both pre/post-movement camp sites.
++  Scans the SDK's two ability slots, accepts only a ready attack-reset kind,
++  uses its untargeted cast, then the existing fresh attack legality helper.
++- All source other than bot.cpp equals accepted snapshot. Entry bot.h restoration
++  relative to HEAD is preserved. No item, draft, banking, recall or routing changes.
++- GameRules.md 116 and published reset kits describe restored attack allowance.
++  Matching C++ cambc.h ability.is_attack_reset/is_ready/use and ability_slots
++  reviewed: is_ready includes live can_cast and cooldown. No cast range query
++  is made on a range-less reset; second hit refreshes target observations.
++- Export hashes match RESEARCH.md; compact reference/relevant rules and SDK read.
++  Separate organizers' AGENTS.md remains unavailable.
+ 
+-## Validation, uncertainty and next action
+-- Source invariant check PASSED, exit 0; saved report
+-  task-60546c3a86fa400bb632346db8815d8c-source-check.json. Confirms only executable
+-  delta, preserved build RNG draw, purchase legality and unchanged dispatcher/draft.
+-- git diff --check PASSED, exit 0.
++## Validation and uncertainty
++- python3 experiments/alpha/check_camp_reset.py PASSED, exit 0; report:
++  experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-source-check.json.
++  Checks exact delta from accepted, first-hit/survivor/readiness guards, bounded
++  cast, both farming sites, fresh follow-up legality and retained official yield.
++  These are source checks, not runtime or fuel measurements.
++- git diff --check PASSED, exit 0 before trusted check.
+ - Trusted command: bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
+-  PASSED, exit 0; checked source hash
+-  24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f.
+-- Local report: .agent/check-task-60546c3a86fa400bb632346db8815d8c.json.
+-- Trusted report reference (not directly opened):
+-  /srv/battlecode/checks/task-60546c3a86fa400bb632346db8815d8c/24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f/report.json.
+-- Wrapper smoke IDs: 602dc2b7c5479c9706f8f2ea0c779d05088fe16f7e9d0881cc354059ff39c7be,
+-  da11077d227246d4779e4e4b367a938b39e6a0ad57eb7a8b6aa66e0f04a6d83f.
+-  Finals not inspected; IDs alone do not establish completed full games or gains.
+-- No strength claim. Ren's Focus-based retaliation can benefit without active casts;
+-  losing that scaling may hurt. More basic damage may also increase unwanted combat.
+-  Full runtime fuel headroom, build-specific performance and capture timing unknown.
+-- Supervisor should evaluate this exact candidate versus accepted source, comparing
+-  collected/submitted gems and outcomes. Next idea only after evaluation: inspect
+-  build-specific camp clearing if this item substitution fails.
++  FAILED, exit 1, BUILD_FAILED; no smoke matches ran. Checked source hash:
++  67e149ef76461fc02aca4bbc6df04ee2234f19f6ea9176dcf47086c7d38ca0f5.
++- Local report: .agent/check-task-1b0e5c1c51ef41f4a84bb0ef951cff7f.json;
++  preserved under experiments/alpha with this task's -bot-check.json suffix.
++- Trusted report reference (not opened directly):
++  /srv/battlecode/checks/task-1b0e5c1c51ef41f4a84bb0ef951cff7f/67e149ef76461fc02aca4bbc6df04ee2234f19f6ea9176dcf47086c7d38ca0f5/report.json.
++- Wrapper pointed to build diagnostics:
++  /srv/battlecode/builds/7962c625cf4dab1209a1648154cfb23748788c0121e53901eb6465b002e989e1/output.
++  file/rg access returned Permission denied. Stopped without permission changes,
++  toolchain searches or another check. Compiler cause UNKNOWN; cannot distinguish
++  bot compilation fault from build infrastructure failure with available output.
++- Outcome BLOCKED. Preserve this source patch; it is not valid for evaluation.
++  Supervisor must provide compiler diagnostics through an authorized worker-facing
++  channel. No further experiment or source repair attempted after the denial.
++- Risks: reset cooldown is spent on farming rather than later combat; changes to
++  clearing timing can worsen captures/routes. No chaining onto another monster if
++  first hit kills; no post-walk reset when ranged basic attack allowance is absent.
++- No improvement claim. Capture timing, fuel headroom and exact reset use remain
++  unknown until trustworthy runtime evidence. After diagnostics, repair and pass
++  trusted checks before requesting evaluation. Next idea only after evaluation:
++  inspect capture completion if extra camp damage fails to yield more gems.

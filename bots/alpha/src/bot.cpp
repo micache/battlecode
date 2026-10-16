@@ -60,10 +60,8 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    // No active abilities are cast: redirect the former Focus build to Strength.
-    // Keep three choices so the existing deterministic RNG stream is unchanged.
     const std::array items{cambc::item_type::power_shard_of_strength,
-        cambc::item_type::power_shard_of_strength, cambc::item_type::power_shard_of_health};
+        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
     const unsigned count = me.gold_count() / item.cost();
     if (count && me.can_buy(item, count)) me.buy(item, count);
@@ -81,10 +79,28 @@ bool attack_if_in_range(const Target& target) {
     return true;
 }
 
+// Spend at most one ready reset on a surviving camp, then recheck attack legality.
+bool attack_camp_with_reset(const cambc::camp& camp) {
+    if (!attack_if_in_range(camp))
+        return false;
+
+    auto& me = cambc::self();
+    if (camp.is_visible() && camp.health() > 0 && me.can_cast()) {
+        for (const auto& ability : me.abilities()) {
+            if (ability.is_attack_reset() && ability.is_ready()) {
+                if (ability.use())
+                    attack_if_in_range(camp);
+                break;
+            }
+        }
+    }
+    return true;
+}
+
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
     for (const auto& camp : cambc::vision::camps())
-        if (attack_if_in_range(camp))
+        if (attack_camp_with_reset(camp))
             return;
 
     // Union every group's spawn tiles except visibly respawning groups.
@@ -101,7 +117,7 @@ void farm_camps() {
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
         for (const auto& camp : cambc::vision::camps())
-            if (attack_if_in_range(camp))
+            if (attack_camp_with_reset(camp))
                 return;
 }
 

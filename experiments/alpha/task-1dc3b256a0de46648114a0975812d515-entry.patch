@@ -1,0 +1,33 @@
+diff --git a/bots/alpha/src/bot.cpp b/bots/alpha/src/bot.cpp
+index c6af8ef..066c585 100644
+--- a/bots/alpha/src/bot.cpp
++++ b/bots/alpha/src/bot.cpp
+@@ -60,10 +60,8 @@ bool move_towards_closest(cambc::bitboard goals) {
+ 
+ void Bot::buy_items() {
+     auto& me = cambc::self();
+-    // No active abilities are cast: redirect the former Focus build to Strength.
+-    // Keep three choices so the existing deterministic RNG stream is unchanged.
+     const std::array items{cambc::item_type::power_shard_of_strength,
+-        cambc::item_type::power_shard_of_strength, cambc::item_type::power_shard_of_health};
++        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
+     const auto item = items[chosen_stat];
+     const unsigned count = me.gold_count() / item.cost();
+     if (count && me.can_buy(item, count)) me.buy(item, count);
+diff --git a/bots/alpha/src/bot.h b/bots/alpha/src/bot.h
+index d364b4e..38f6515 100644
+--- a/bots/alpha/src/bot.h
++++ b/bots/alpha/src/bot.h
+@@ -1,10 +1,10 @@
+ #pragma once
+ 
+-// Per-champion state survives between turns. Pick a build and keep buying it.
++// Per-champion state survives between turns. Pick one stat and keep buying it.
+ class Bot {
+     int chosen_stat = -1;
+ 
+-    // Power build choices: Strength, Strength, Health; preserve the three-way draw.
++    // Spend only on power shards of the randomly chosen stat.
+     void buy_items();
+ 
+ public:

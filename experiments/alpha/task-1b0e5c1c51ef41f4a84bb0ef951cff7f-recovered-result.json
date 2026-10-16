@@ -1,0 +1,60 @@
+{
+  "protocol_version": 1,
+  "task_id": "task-1b0e5c1c51ef41f4a84bb0ef951cff7f",
+  "bot_id": "alpha",
+  "base_source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "outcome": "BLOCKED",
+  "hypothesis": "Using one ready attack reset after a surviving camp takes a basic hit will improve clearing and increase mean collected gems versus accepted source.",
+  "changed_paths": [
+    "bots/alpha/src/bot.cpp",
+    "bots/alpha/src/bot.h",
+    "experiments/alpha/NOTES.md",
+    "experiments/alpha/check_camp_reset.py",
+    "experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-60f5b94e1c1c-final.json",
+    "experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-bot-check.json",
+    "experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-e75cb9a38791-final.json",
+    "experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-entry.patch",
+    "experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-feedback.json",
+    "experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-source-check.json",
+    "experiments/alpha/task-60546c3a86fa400bb632346db8815d8c.md"
+  ],
+  "evidence": [
+    {
+      "kind": "evaluation",
+      "reference": "e525c2d2f15f5b4d23774ef05a6f1d02f4c1a921e98c20ec650995eb28799f1b",
+      "claim": "Previous candidate completed evaluation INCONCLUSIVE, with four wins, two losses and zero reported bot faults; this does not evaluate the new patch."
+    },
+    {
+      "kind": "source",
+      "reference": "bots/alpha/src/bot.cpp",
+      "claim": "Added bounded camp-only reset use. Source invariants passed; all other source matches the accepted snapshot, including preserved bot.h restoration."
+    },
+    {
+      "kind": "check",
+      "reference": "experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-bot-check.json",
+      "claim": "Trusted wrapper reported BUILD_FAILED for source 67e149ef76461fc02aca4bbc6df04ee2234f19f6ea9176dcf47086c7d38ca0f5; no smoke matches ran."
+    }
+  ],
+  "tests": [
+    {
+      "command": "python3 experiments/alpha/check_camp_reset.py",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": "experiments/alpha/task-1b0e5c1c51ef41f4a84bb0ef951cff7f-source-check.json"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": null
+    },
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+      "status": "FAILED",
+      "exit_code": 1,
+      "report_path": ".agent/check-task-1b0e5c1c51ef41f4a84bb0ef951cff7f.json"
+    }
+  ],
+  "blocked_reason": "Build failed, and access to the wrapper-referenced compiler diagnostics returned permission denied. Compiler cause is unknown. Stopped and preserved the patch.",
+  "next_action": "Supervisor provides authorized compiler diagnostics; repair and pass trusted checks before evaluation."
+}

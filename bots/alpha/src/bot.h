@@ -1,10 +1,10 @@
 #pragma once
 
-// Per-champion state survives between turns. Pick a build and keep buying it.
+// Per-champion state survives between turns. Pick one stat and keep buying it.
 class Bot {
     int chosen_stat = -1;
 
-    // Power build choices: Strength, Strength, Health; preserve the three-way draw.
+    // Spend only on power shards of the randomly chosen stat.
     void buy_items();
 
 public:

@@ -1,0 +1,17 @@
+{
+  "task_id": "task-1dc3b256a0de46648114a0975812d515",
+  "scope": "source invariants, not runtime execution",
+  "checks": {
+    "first_attack_required": true,
+    "live_survivor_and_cast_guard": true,
+    "public_ability_accessor": true,
+    "only_ready_reset": true,
+    "bounded_single_cast": true,
+    "followup_uses_fresh_legality": true,
+    "both_farming_sites": true,
+    "only_intended_delta_from_accepted": true,
+    "other_source_unchanged_from_accepted": true,
+    "yield_retained": true
+  },
+  "passed": true
+}

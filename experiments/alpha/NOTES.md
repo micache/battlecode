@@ -1,67 +1,88 @@
-# Current experiment: task-60546c3a86fa400bb632346db8815d8c
+# Current experiment: task-1dc3b256a0de46648114a0975812d515
 
-## Identity and prior work
-- Bot alpha; branch bot/alpha; input HEAD a5ab224c3fe72bc9feb762d976c6058ca905a72b.
+## Identity and recovery
+- Bot alpha; branch bot/alpha; input HEAD 4b6483b0e91df11262fb6d8b42ab2667778e1571.
 - Accepted commit c0cebd720fcd55e2bbb51d57dd2c398889d4071e; base source
   9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-- Engine/SDK 2.1.6; suite pilot-wiring-v1; envelope engine lock
+- Engine/SDK 2.1.6; historical-panels-v1; engine lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-- Branch and HEAD match task. Entry source exactly matched accepted_snapshot/src
-  (diff -r exit 0); worker.py make_attempt restores accepted source at startup.
-- Preserved entry tracked diff in task-60546c3a86fa400bb632346db8815d8c-entry.patch.
-  Prior notes archived in task-0e948f1303a047e49c83a62c9106b875.md.
-- Previous banking-priority candidate source
-  0e56af7ea1530234b68be56d4cac56ffe8470646b663e89a2c11e8fab4ad023d
-  completed evaluation INCONCLUSIVE; no pending candidate identified.
+- Entry branch/HEAD and all six accepted file hashes match the trusted handoff.
+  Owned source is intentionally restored to accepted, not HEAD. Preserved entry
+  diff and accepted files under this task's -entry.patch / -accepted-* names.
+- Latest published candidate 24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f
+  completed evaluation INCONCLUSIVE; no candidate awaiting evaluation identified.
+- Read/preserved exact notes, result and checkpoint patch for prior blocked task
+  task-1b0e5c1c51ef41f4a84bb0ef951cff7f and interrupted task
+  task-d64d418366c1460d8577433cfbaf6b8d (its final result is absent).
+  Copies use -recovered-* names; entry NOTES archived by its experiment ID.
+- Recover only the most recent camp-reset experiment. The interrupted spawn-heal
+  experiment remains archived, without combining behaviors.
 
-## One hypothesis: playbook C, item value and farming economy
-Redirecting the former Focus power-shard build to Strength will improve basic
-attack camp clearing and subsequent gem income because the policy casts no active
-abilities. Falsifiable source invariant: build indices 0/1 buy Strength and index 2
-buys Health, using the unchanged random_number(3) draw and purchase legality guard.
-Evaluation prediction: higher mean collected gems than the accepted bot on matched
-development cases; submitted gems and outcomes check whether extra income converts.
+## One hypothesis: playbook D, unused camp attack resets
+After a basic hit on a surviving visible camp, using at most one ready attack
+reset and one further legal basic attack will improve clearing and increase mean
+collected gems against accepted source on paired development cases. Falsifier:
+mean collected gems does not increase. Compare submitted gems and outcomes too.
+Invariant: require the successful first hit, a visible living survivor and cast
+readiness; recheck attack availability, visibility, health and range after casting.
+No reset on champion attacks and no chaining to another camp after a kill.
 
 ## Evidence and implementation
-- Supplied evaluation 64d2bd09b993111371fe7fa209382a408be4ee874fd37496f972a6b6f3dbbf97:
-  previous candidate at input HEAD had 2 wins/4 losses and zero reported bot faults.
-  Coverage is provisional three-map wiring; it does not evaluate this new source.
-- Corners B, 73a3820f4d5f4c7246646350de1c772c03733c5eaa4f18e08450f3e973d89857:
-  previous candidate collected 230 vs 1014, submitted 146 vs 1014, deaths 16 vs 5;
-  completed round reported as 396.
-- Collision A, 956e6de8e2854f8a99475029f6e967d55209de0a59779b96b84a24fcc307a6f5:
-  previous candidate collected 814 vs 1122, submitted 660 vs 1034, round 1264.
-- Both cases use candidate revision 0e5cc8e75f19491f8c9dce2fd50c12e06f26231692a5204e0dca9ae18f7c2fbf
-  versus opponent source equal to base. These income deficits motivate the change
-  but do not prove item choice caused the losses. Per-build clear times are unknown.
-- Accepted source assigns a persistent three-way build then spends available gold
-  on Strength/Focus/Health Power shards; runtime source has no ability-cast calls.
-- Replaced only the Focus array entry with Strength, retaining the same RNG draw,
-  purchase quantity and can_buy guard. Updated comments in bot.cpp and bot.h.
-  Executable source delta from accepted is exactly this item replacement.
-- GameRules.md 280-303: Strength increases basic damage; shards use champion stat
-  growth; Power emblems grant six shards of the selected stat. Matching installed
-  C++ cambc.h item declarations and can_buy(item,count) contract reviewed.
-- Documentation export hashes match RESEARCH.md. Compact reference and relevant
-  handbook/SDK sections consulted; separate organizers' AGENTS.md still missing.
+- Evaluation e525c2d2f15f5b4d23774ef05a6f1d02f4c1a921e98c20ec650995eb28799f1b
+  evaluated source 24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f,
+  revision a1ebb71a3144494723f622be61da10ca05f071b5be0af966c9ae14144b12bcec,
+  commit equal to input HEAD, against opponent source equal to base. It reported
+  four wins/two losses, zero faults, provisional-three-map-wiring coverage.
+- Corners B: 60f5b94e1c1c0035738a5bf80fe4ba22bec7b8e0e0c267b9b4b09c1f27b34a82,
+  terminal teamA round 648; submitted 658 vs 1020. Ryth/Marcella camp damage
+  10335/7740 and damage taken 1300/2280, respectively.
+- Elkring A: e75cb9a38791770ab6434d597066d0f4cfbec4232911e35f500d2855be3e3109,
+  terminal teamB round 1115; submitted 792 vs 1026. Ryth/Marcella/Willow camp
+  damage 17817/22605/11786, damage taken 10160/9130/8060.
+- Complete final.json obtained in bounded arena-client slices and saved as this
+  task's -corners-final.json / -elkring-final.json. Both report zero bot faults.
+  These hindsight statistics are never runtime inputs. Their engineVersion 0.0.1
+  field is distinct from the trusted envelope's CLI/SDK version 2.1.6.
+- Accepted source never casts and returns after one camp hit. Statistics motivate
+  testing clear speed but do not establish missed-reset counts or causal losses.
+- New recovery rationale: prior source 67e149ef76461fc02aca4bbc6df04ee2234f19f6ea9176dcf47086c7d38ca0f5
+  failed BUILD_FAILED before smoke; historical diagnostics were unavailable.
+  Installed cambc.h declares ability_slots private (3368) and exposes public
+  abilities() (3602). Prior patch incorrectly accessed the private member.
+  This is a source-proven compilation defect; historical compiler text is unknown.
+- Recover the same bounded helper at both camp attack sites, replacing private
+  member access with abilities(). Keep all other accepted source byte-identical.
+  No item, draft, routing, banking, recall, memory or fuel-limit changes.
+- SDK is_ready() checks cooldown and current can_cast; reset use() is untargeted.
+  GameRules.md 116 and published kits specify restored basic attack allowance.
+- Handoff flagged documentation changed/unrecorded: read both complete exports,
+  BOT_REFERENCE.md and installed C++ cambc.h; hashes match handoff. Consulted
+  playbook D and RESEARCH.md evidence limits. SDK header SHA-256
+  90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
+  Separate organizers' AGENTS.md remains unavailable and unreviewed.
 
-## Validation, uncertainty and next action
-- Source invariant check PASSED, exit 0; saved report
-  task-60546c3a86fa400bb632346db8815d8c-source-check.json. Confirms only executable
-  delta, preserved build RNG draw, purchase legality and unchanged dispatcher/draft.
+## Validation and uncertainty
+- python3 experiments/alpha/check_camp_reset.py PASSED, exit 0; saved report
+  task-1dc3b256a0de46648114a0975812d515-source-check.json. Checks first hit,
+  visible survivor/readiness, public accessor, bounded reset, fresh second-hit
+  legality, both farming sites, exact accepted-source delta and retained yield.
+  These are source invariants, not runtime/fuel measurements.
 - git diff --check PASSED, exit 0.
 - Trusted command: bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
-  PASSED, exit 0; checked source hash
-  24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f.
-- Local report: .agent/check-task-60546c3a86fa400bb632346db8815d8c.json.
-- Trusted report reference (not directly opened):
-  /srv/battlecode/checks/task-60546c3a86fa400bb632346db8815d8c/24f016d952f46c984bfb2eeff620bbfb78aa5a47a6b72d7893acbf616baeb79f/report.json.
-- Wrapper smoke IDs: 602dc2b7c5479c9706f8f2ea0c779d05088fe16f7e9d0881cc354059ff39c7be,
-  da11077d227246d4779e4e4b367a938b39e6a0ad57eb7a8b6aa66e0f04a6d83f.
-  Finals not inspected; IDs alone do not establish completed full games or gains.
-- No strength claim. Ren's Focus-based retaliation can benefit without active casts;
-  losing that scaling may hurt. More basic damage may also increase unwanted combat.
-  Full runtime fuel headroom, build-specific performance and capture timing unknown.
-- Supervisor should evaluate this exact candidate versus accepted source, comparing
-  collected/submitted gems and outcomes. Next idea only after evaluation: inspect
-  build-specific camp clearing if this item substitution fails.
+  PASSED, exit 0. Exact checked source:
+  3b7a9a65316fc22332da1e1b23910b91e6edea765ddd570beb2a60e4d8882377.
+- Local report: .agent/check-task-1dc3b256a0de46648114a0975812d515.json;
+  also preserved as this task's -bot-check.json. Trusted reference:
+  check:task-1dc3b256a0de46648114a0975812d515:3b7a9a65316fc22332da1e1b23910b91e6edea765ddd570beb2a60e4d8882377.
+- Wrapper smoke IDs bf0d8b0295c2129f6923add8a7205565729560815da9c69fceab8267ad42247d
+  and 4c97b1033ca6b7cce13f049226547614b21b1832430c8269502228ea97f1e8ca.
+  Finals not inspected; IDs alone do not prove full-game completion or gains.
+- Saved this task's -identity.json records accepted-source, SDK and doc hashes.
+- Existing entry bot.h restoration and Focus item are differences from HEAD;
+  the only behavioral delta from accepted is camp-reset use.
+- No improvement claim. Runtime reset use, fuel headroom and clear times are
+  unknown. Spending resets on camps can weaken later combat or alter routes.
+  Capture timing may dominate whether more damage yields more collected gems.
+- Outcome READY_FOR_EVAL. Supervisor evaluates this exact checked source
+  against accepted. Next idea only after evaluation: inspect capture completion
+  if extra camp damage fails to improve collection. No publication performed.
