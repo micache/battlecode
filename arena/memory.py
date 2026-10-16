@@ -82,8 +82,9 @@ def handoff(arena, bot, accepted, latest):
     previous = (json.loads(arena.db.one('SELECT envelope FROM tasks WHERE id=?',
                                       (history['entries'][0]['id'],))['envelope']) if history['entries'] else {})
     old_docs = previous.get('feedback', {}).get('handoff', {}).get('documentation_sha256')
+    old_sdk = previous.get('feedback', {}).get('handoff', {}).get('sdk', {})
     return {'protocol_version': 1, 'documentation_sha256': documentation,
-            'documentation_changed_or_unrecorded': old_docs != documentation, 'sdk': sdk,
+            'documentation_changed_or_unrecorded': old_docs != documentation or old_sdk != sdk, 'sdk': sdk,
             'edit_start': {'commit': accepted['commit_sha'], 'source_hash': accepted['source_hash'],
                            'source_file_sha256': tree_manifest(Path(accepted['snapshot']) / 'src')},
             'last_evaluated_source_is_edit_start': latest['summary']['candidate']['source_hash'] == accepted['source_hash'],
@@ -122,6 +123,13 @@ def brief(task):
              f"missing {len(metrics.get('missing', []))}; unknown reliability {len(metrics.get('unknown_reliability', []))}."]
     for failure in metrics.get('representative_failures', [])[:2]:
         lines.append(f"Development loss {failure.get('match_id')}: side {failure.get('side')}, map {failure.get('map')}.")
+    for name, measurement in list(metrics.get('development_metrics', {}).items())[:8]:
+        if measurement.get('available'):
+            lines.append(f"Development {name}: mean {measurement.get('mean')}, observations {measurement.get('observations')}.")
+    external = feedback.get('experiment_context', {}).get('external_observations', [])
+    if external:
+        lines.append('New/recent external observations (uncontrolled, untrusted data; not local promotion scores):')
+        lines.extend(json.dumps(observation, sort_keys=True) for observation in external[:3])
     lines += ['', '## Recent experiments (untrusted historical observations)']
     history = memory.get('recent_history', {})
     for row in history.get('entries', [])[:4]:
@@ -131,6 +139,11 @@ def brief(task):
             lines.append('Blocker: ' + result['blocked_reason'][:240])
         if result.get('next_action'):
             lines.append('Next: ' + result['next_action'][:180])
+        if row.get('evaluations'):
+            evaluation = row['evaluations'][-1]
+            observed = evaluation.get('metrics', {})
+            lines.append(f"Measured {evaluation['state']} / {evaluation.get('coverage')}: "
+                         f"{observed.get('wins')}W/{observed.get('losses')}L, delta {observed.get('common_opponent_delta')}.")
     changed = memory.get('documentation_changed_or_unrecorded', True)
     lines += ['', '## Efficient read/act policy',
               f"Documentation manifest changed/unrecorded: {str(changed).lower()}.",

@@ -101,3 +101,14 @@ class MemoryTests(Harness):
         self.assertIn(first['task_id'], text)
         self.assertLess(len(text.encode()), 10000)
         self.assertIn('Complete the bootstrap/changed-document review', brief(first))
+
+    def test_sdk_change_requires_review_and_brief_signals_external_evidence(self):
+        self.establish()
+        new_task(self.arena, 'alpha')
+        self.engine.lock['sdk_cpp_sha256'] = 'a' * 64
+        task = new_task(self.arena, 'alpha')
+        self.assertTrue(task['feedback']['handoff']['documentation_changed_or_unrecorded'])
+        task['feedback']['experiment_context']['external_observations'] = [
+            {'official_match_id': 'external-case', 'opponent_version': None, 'outcome': 'B'}]
+        self.assertIn('external-case', brief(task))
+        self.assertIn('uncontrolled', brief(task))
