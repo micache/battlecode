@@ -23,7 +23,7 @@ def main():
     path = Path('/etc/battlecode/arena.json')
     config = read_json(path)
     modes = {}
-    for bot in ('alpha', 'beta'):
+    for bot in config['workers']:
         owner = read_json(f'/etc/battlecode/{bot}.json')
         require(file_hash(owner['codex_executable']) == owner['codex_sha256'], 'CLI pin mismatch')
         result = subprocess.run(['runuser', '-l', f'bc-{bot}', '-c', '/usr/local/bin/codex login status'],

@@ -25,12 +25,22 @@ def provision_users(bots=("alpha", "beta")):
                 recorded[name]["home"] != account.pw_dir or account.pw_uid == 0):
             raise RuntimeError(f"unregistered existing identity {name}; inspect before adopting")
     for name in ("bc-read", *(f"bc-{bot}" for bot in bots)):
+        expected_gid = recorded.get('bc-arena' if name == 'bc-read' else name, {}).get('gid')
         try:
-            grp.getgrnam(name)
+            group = grp.getgrnam(name)
+            if expected_gid is not None and group.gr_gid != expected_gid:
+                raise RuntimeError(f'registered group ID changed: {name}')
         except KeyError:
-            subprocess.run(["groupadd", name], check=True)
+            subprocess.run(["groupadd", *(['--gid', str(expected_gid)] if expected_gid is not None else []), name], check=True)
     path.parent.mkdir(mode=0o755, exist_ok=True)
     for name in names:
+        if name in recorded:
+            try:
+                pwd.getpwnam(name)
+            except KeyError:
+                info = recorded[name]
+                subprocess.run(['useradd', '--no-create-home', '--shell', '/bin/bash', '--uid', str(info['uid']),
+                                '--gid', str(info['gid']), '--home-dir', info['home'], name], check=True)
         if name not in recorded:
             subprocess.run(["useradd", "--create-home", "--shell", "/bin/bash", "--gid",
                             "bc-read" if name == "bc-arena" else name, name], check=True)

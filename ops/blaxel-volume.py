@@ -54,6 +54,14 @@ def main():
                              *((f'/home/{name}', f'/persist/homes/{name}', DATA / 'homes' / name)
                                for name in ('bc-arena', 'bc-alpha', 'bc-beta'))]:
         link = Path(target)
+        if not link.exists() and not link.is_symlink():
+            # Fresh first installation: homes are created by useradd in blaxel-host.py.
+            if str(target).startswith('/home/') and not new.exists():
+                continue
+            new.mkdir(mode=0o755, parents=True, exist_ok=True)
+            link.parent.mkdir(parents=True, exist_ok=True)
+            link.symlink_to(new, target_is_directory=True)
+            continue
         if link.is_symlink() and link.resolve() == Path(old):
             link.unlink()
             link.symlink_to(new, target_is_directory=True)

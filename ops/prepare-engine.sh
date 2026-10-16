@@ -2,7 +2,8 @@
 # Run as bc-arena during explicit network-enabled maintenance, before starting services.
 set -euo pipefail
 cd /opt/battlecode/ops
-podman --cgroup-manager=cgroupfs build --tag battlecode-toolchain:2.1.6 --file Containerfile .
+# Trusted bootstrap only; match/build execution below always uses network=none.
+podman --cgroup-manager=cgroupfs build --network=host --tag battlecode-toolchain:2.1.6 --file Containerfile .
 arena_image_id=$(podman image inspect --format '{{.Id}}' battlecode-toolchain:2.1.6)
 mkdir -p /srv/battlecode/repos/official-template /srv/battlecode/maps/pool-2026a-216
 podman run --rm --pull=never --network=none "$arena_image_id" tar -C /opt/project --exclude='.cambc' -cf - . | tar -C /srv/battlecode/repos/official-template -xf -
