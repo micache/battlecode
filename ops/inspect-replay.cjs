@@ -17,18 +17,23 @@ const fs = require('node:fs');
   });
   const page = await context.newPage();
   await page.addInitScript(() => {
-    localStorage.setItem('cambc.graphics.mode', 'very low');
+    localStorage.setItem('cambc.graphics.mode', 'manual');
     localStorage.setItem('cambc.graphics.v1', JSON.stringify({renderScale:50,ground:'simple',groundResolution:25,
-      bloom:false,antialiasing:false,shadows:false,foliageDensity:0,decorativeFoliage:false,
+      bloom:false,antialiasing:false,shadows:false,foliageDensity:25,decorativeFoliage:false,
       foliageSway:false,bushWindows:false,mapBackdrop:false}));
   });
   const errors = [];
   page.on('pageerror', error => errors.push(String(error)));
   await page.goto('http://127.0.0.1:7026/?replay=replay.zip&cambc-cli=1');
-  await page.waitForFunction(round => {
+  try { await page.waitForFunction(round => {
     const range = document.querySelector('input[aria-label="Seek timeline round"]');
     return range && Number(range.max) >= round && !document.body.innerText.includes('Loading timeline...');
-  }, expectedRound, {timeout:90000});
+  }, expectedRound, {timeout:90000}); } catch (error) {
+    fs.writeFileSync(output + '-incomplete.json', JSON.stringify({body: await page.locator('body').innerText(),
+      inputs: await page.locator('input').evaluateAll(elements => elements.map(e => ({type:e.type,min:e.min,max:e.max,value:e.value,aria:e.getAttribute('aria-label')}))),
+      errors}, null, 2));
+    throw error;
+  }
   const seek = page.locator('input[aria-label="Seek timeline round"]');
   await seek.focus();
   await page.keyboard.press('End');

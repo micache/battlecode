@@ -30,6 +30,14 @@ def stop_signal(*_):
     stopping = True
 
 
+def parent_death_signal():
+    # Unit wrappers must clean up even if the managed top-level process is SIGKILLed.
+    parent = os.getppid()
+    ctypes.CDLL(None, use_errno=True).prctl(1, signal.SIGTERM, 0, 0, 0)
+    if parent == 1 or os.getppid() != parent:
+        os._exit(1)
+
+
 def descendants(parent):
     rows = {}
     for entry in Path("/proc").iterdir():
@@ -109,7 +117,7 @@ def serve():
         try:
             for name in UNITS:
                 children.append(subprocess.Popen([sys.executable, SCRIPT, "unit", "--name", name],
-                                                  start_new_session=True))
+                                                  start_new_session=True, preexec_fn=parent_death_signal))
             atomic_json(ROOT / "supervisor.json", {"identity": process_identity(os.getpid()),
                         "started": time.time(), "reboot_persistence_verified": False}, 0o600)
             while not stopping:
