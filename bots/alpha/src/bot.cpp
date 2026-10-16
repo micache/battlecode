@@ -60,8 +60,10 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
+    // No active abilities are cast: redirect the former Focus build to Strength.
+    // Keep three choices so the existing deterministic RNG stream is unchanged.
     const std::array items{cambc::item_type::power_shard_of_strength,
-        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
+        cambc::item_type::power_shard_of_strength, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
     const unsigned count = me.gold_count() / item.cost();
     if (count && me.can_buy(item, count)) me.buy(item, count);
@@ -135,7 +137,12 @@ void Bot::play_turn() {
         return;
     }
 
-    // Carriers prioritize banking over opportunistic enemy attacks.
+    // Attack the first enemy champion already in range.
+    for (const auto& enemy : cambc::vision::champions(team::enemy))
+        if (attack_if_in_range(enemy))
+            return;
+
+    // Bank any carried gems before farming.
     if (me.gem_count() > 0) {
         // Union all altar approach tiles: the field chooses the nearest reachable altar.
         cambc::bitboard goals;
@@ -151,11 +158,6 @@ void Bot::play_turn() {
         move_towards_closest(goals);
         return;
     }
-
-    // Attack the first enemy champion already in range.
-    for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy))
-            return;
 
     farm_camps();
 

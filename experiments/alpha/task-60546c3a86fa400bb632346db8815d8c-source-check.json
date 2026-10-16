@@ -1,0 +1,9 @@
+{
+  "status": "PASSED",
+  "checks": [
+    "Only executable source delta from accepted is Focus item redirected to Strength",
+    "Three-way build RNG draw preserved",
+    "Purchase legality guard and count preserved",
+    "Draft, dispatcher, RNG implementation unchanged"
+  ]
+}
