@@ -65,7 +65,7 @@ def arguments(toolchain, project, output, command):
             "--fsize=268435456:268435456", "--core=0:0", "--cpu=600:600", "--",
             "bwrap", "--unshare-all", "--die-with-parent", "--cap-drop", "ALL", "--clearenv",
             "--ro-bind", "/usr", "/usr", "--symlink", "usr/lib", "/lib",
-            "--symlink", "usr/lib64", "/lib64", "--proc", "/proc", "--dev", "/dev",
+            "--symlink", "usr/lib64", "/lib64", "--dir", "/proc", "--dev", "/dev",
             "--bind", str(Path(project).resolve() / ".sandbox-tmp"), "/tmp",
             "--dir", "/home/bc-arena",
             "--ro-bind", str(toolchain), "/toolchain",
