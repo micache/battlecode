@@ -17,7 +17,7 @@ with sqlite3.connect('file:' + str(root / 'state/arena.sqlite') + '?mode=ro', ur
         for key in ('suite', 'metrics'):
             item[key] = json.loads(item[key]) if item[key] else None
         item['matches'] = [dict(row) for row in db.execute(
-            'SELECT c.job_id,c.side,c.map_name,j.state,j.artifact FROM evaluation_cases c JOIN match_jobs j ON j.id=c.job_id WHERE c.evaluation_id=?',
+            'SELECT c.job_id,c.candidate_side,c.map_name,j.state,j.artifact FROM evaluation_cases c JOIN match_jobs j ON j.id=c.job_id WHERE c.evaluation_id=?',
             (item['id'],))]
         evaluations.append(item)
 atomic_json(root / 'acceptance/pilot-identities.json', {'evaluations': evaluations,
