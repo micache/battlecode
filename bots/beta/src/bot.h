@@ -8,6 +8,6 @@ class Bot {
     void buy_items();
 
 public:
-    // Priorities: shop and recall, nearby tribute, combat, bank travel, then farm.
+    // Shop/recall first; bags >=36 skip enemy combat to bank; otherwise combat, bank, farm.
     void play_turn();
 };

@@ -96,3 +96,51 @@ Wrapper match IDs: 18becb7e85db1c5f94ad705af6649b5cc510712bea5e4fba5c76efdec6747
 edd864c4b2384543243a076dd6095d711b67ce7449ae5833b615c7fe1f558807.
 `git diff --check` passed. No claim of strategic improvement or measured
 banking-delay reduction; supervisor evaluation is the next action.
+
+## task-71c9eb3108ef49ebb55a7414dded1ec1 — bank substantial bags before combat
+
+Playbook C. Hypothesis: skipping opportunistic enemy basic attacks at bags of
+at least 36 gems prevents repeated attack returns from delaying bank travel.
+Falsifiable expectation: after existing channel/shop/recall guards, carriers
+with >=36 gems reach banking logic even with an attackable visible enemy;
+bags 0–35 retain baseline combat priority. Threshold 36 is one full elk reward,
+a deterministic policy choice, not an established optimum. No safety or win
+improvement is claimed; passing enemies may increase incoming damage.
+
+Identity checked: branch bot/beta; HEAD/input d93aa34394a38b0b4fc3681e0b3bafa363665c85.
+Both initial source and accepted snapshot hash matched baseline above. Initial
+diff resets prior nearby-tribute experiment; arena/worker.py make_attempt
+explicitly restores accepted source. No interrupted edits or pending evaluation:
+feedback 8d257b250bfe2e10daae3f1fcfc17ac5403cc407f713443e454b676412740346
+is INCONCLUSIVE. Supplied documentation hashes match RESEARCH.md; SDK 2.1.6.
+Accepted snapshot preserved unchanged; separate organizer AGENTS.md unavailable.
+
+Evidence: feedback evaluates prior candidate 89bf52d2f9c5904b35afc5edc5851586a5a6cce7dcc48a879f473235589a45af,
+not this baseline/patch. Losses include collision B, match
+edd864c4b2384543243a076dd6095d711b67ce7449ae5833b615c7fe1f558807
+(858 submitted, 40 deaths); corners A,
+b683287aeb357e232f01dc07fc9c4f19370854d22ab5c244eab5b53b9b7afa31
+(850 submitted, 21 deaths); corners B,
+52415beef20017e915295c8d922816586f7ffeecba6dc099c27e8bbdb3020069
+(110 submitted, 13 deaths). Reported faults are zero. No turn traces supplied;
+aggregates do not establish banking delay or death causes. Source proves enemy
+attack returns preempt bank travel. Prior experiment only prioritized tribute
+already in range; this experiment instead suppresses combat for substantial bags
+throughout travel, starting from accepted source. GameRules.md describes ranged
+movement/attack shared allowance; installed C++ gem_count reads current self bag.
+
+Change: guard enemy attack loop with gem_count <36; update priority comment.
+No draft, shared-memory, recall, navigation or item changes. Validation below.
+Remaining uncertainty: delay frequency and strategic benefit require evaluation.
+Next idea: inspect carrier travel decisions if bounded traces become available.
+
+Validation: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
+exited 0, PASSED. Initial source 3e32a2b30cb783689f84985264ba5bab1a7dc4f14eebe3cf30d55500393007de
+passed; repeated after the final header comment edit to check exact final source:
+4a47b50ba1d4170055dba73a6b3abdf1788967dbe44ec4135b3e722830b66947
+Local report: .agent/check-task-71c9eb3108ef49ebb55a7414dded1ec1.json.
+Trusted report reference (not opened):
+/srv/battlecode/checks/task-71c9eb3108ef49ebb55a7414dded1ec1/4a47b50ba1d4170055dba73a6b3abdf1788967dbe44ec4135b3e722830b66947/report.json
+Final wrapper match IDs: 2469e24db203a72a9ed3a97449c1b21669d54cc3ab55bc36be9a4976c6a14047,
+705567d4110d2c461f44f30c4c83446e793b33462f1d72712f55766cdc3559f1.
+`git diff --check` passed. No strategic improvement inferred from smoke checks.

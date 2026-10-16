@@ -135,20 +135,13 @@ void Bot::play_turn() {
         return;
     }
 
-    // Secure carried gems before an opportunistic attack can delay tribute.
-    // Ordinary damage does not interrupt tribute; existing recall policy stays first.
-    if (me.gem_count() > 0)
-        for (auto altar : cambc::map::altars().positions())
-            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
-                && !cambc::vision::has_altar_lock(altar)) {
-                me.submit_gems(altar);
+    // A full elk reward (36 gems) warrants banking instead of optional combat.
+    // In particular, ranged attacks would consume the move needed to bank.
+    constexpr unsigned bank_before_combat_gems = 36;
+    if (me.gem_count() < bank_before_combat_gems)
+        for (const auto& enemy : cambc::vision::champions(team::enemy))
+            if (attack_if_in_range(enemy))
                 return;
-            }
-
-    // Attack the first enemy champion already in range.
-    for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy))
-            return;
 
     // Bank any carried gems before farming.
     if (me.gem_count() > 0) {
@@ -156,6 +149,11 @@ void Bot::play_turn() {
         cambc::bitboard goals;
         goals.clear();
         for (auto altar : cambc::map::altars().positions()) {
+            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
+                && !cambc::vision::has_altar_lock(altar)) {
+                    me.submit_gems(altar);
+                    return;
+                }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
         move_towards_closest(goals);
