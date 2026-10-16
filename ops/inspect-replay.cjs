@@ -4,20 +4,35 @@ const { chromium } = require('/opt/battlecode-check-tools/node_modules/playwrigh
 const fs = require('node:fs');
 (async () => {
   const output = process.argv[2];
-  const browser = await chromium.launch({headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage']});
-  const cleanup = setTimeout(() => browser.close().finally(() => process.exit(2)), 60000);
+  const expectedRound = Number(process.argv[3]);
+  if (!Number.isInteger(expectedRound) || expectedRound < 1) throw new Error('expected final statistics round required');
+  const browser = await chromium.launch({headless: true,
+    executablePath: fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined,
+    args: ['--no-sandbox', '--disable-dev-shm-usage']});
+  const cleanup = setTimeout(() => browser.close().finally(() => process.exit(2)), 120000);
   const context = await browser.newContext({viewport: {width: 900, height: 650}});
   await context.route('**/*', route => {
     const url = new URL(route.request().url());
     return ['127.0.0.1', 'localhost'].includes(url.hostname) ? route.continue() : route.abort();
   });
   const page = await context.newPage();
+  await page.addInitScript(() => {
+    localStorage.setItem('cambc.graphics.mode', 'very low');
+    localStorage.setItem('cambc.graphics.v1', JSON.stringify({renderScale:50,ground:'simple',groundResolution:25,
+      bloom:false,antialiasing:false,shadows:false,foliageDensity:0,decorativeFoliage:false,
+      foliageSway:false,bushWindows:false,mapBackdrop:false}));
+  });
   const errors = [];
   page.on('pageerror', error => errors.push(String(error)));
   await page.goto('http://127.0.0.1:7026/?replay=replay.zip&cambc-cli=1');
-  await page.waitForTimeout(10000);
+  await page.waitForFunction(round => {
+    const range = document.querySelector('input[aria-label="Seek timeline round"]');
+    return range && Number(range.max) >= round && !document.body.innerText.includes('Loading timeline...');
+  }, expectedRound, {timeout:90000});
+  const seek = page.locator('input[aria-label="Seek timeline round"]');
+  await seek.focus();
   await page.keyboard.press('End');
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(2000);
   const report = {url: page.url(), body: await page.locator('body').innerText(),
                   buttons: await page.getByRole('button').evaluateAll(elements => elements.map(e => ({text:e.textContent, title:e.title, aria:e.getAttribute('aria-label')}))),
                   inputs: await page.locator('input').evaluateAll(elements => elements.map(e => ({type:e.type,min:e.min,max:e.max,value:e.value,aria:e.getAttribute('aria-label')}))), errors};
