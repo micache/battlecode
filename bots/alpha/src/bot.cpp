@@ -126,8 +126,13 @@ void Bot::play_turn() {
 
     // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
-    if (at_spawn)
+    if (at_spawn) {
         buy_items();
+        // Recall arrives at turn start; spawn healing happens at turn end.
+        // Yield here while injured so routing cannot leave before recovery.
+        if (me.health() < me.max_health())
+            return;
+    }
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
