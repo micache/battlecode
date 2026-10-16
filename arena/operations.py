@@ -2,6 +2,7 @@ import base64
 import contextlib
 import json
 from pathlib import Path
+import re
 import shutil
 import sqlite3
 import time
@@ -13,7 +14,10 @@ from .protocol import save_source
 
 
 def register_toolchain(config, image_id, template, compiler_record, profile_record=None):
-    require(run(["podman", "image", "inspect", "--format", "{{.Id}}", image_id]) == image_id,
+    require(isinstance(image_id, str) and re.fullmatch(r'(sha256:)?[a-f0-9]{64}', image_id), 'immutable image ID required')
+    image_id = 'sha256:' + image_id.removeprefix('sha256:')
+    inspected = run(["podman", "image", "inspect", "--format", "{{.Id}}", image_id])
+    require('sha256:' + inspected.removeprefix('sha256:') == image_id,
             "image must already be installed at immutable ID")
     version = run(["podman", "run", "--rm", "--pull=never", "--network=none", image_id, "cambc", "--version"])
     require(version == "cambc 2.1.6", "engine version mismatch")

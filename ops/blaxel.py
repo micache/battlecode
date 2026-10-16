@@ -128,6 +128,7 @@ def main():
     parser.add_argument("--workspace", default=os.environ.get("BL_WORKSPACE", "banabolabs"))
     parser.add_argument("--keep-alive", action="store_true")
     parser.add_argument("--name")
+    parser.add_argument("--restart-on-failure", action="store_true")
     args = parser.parse_args()
     if args.command == "login":
         key = getpass.getpass("Blaxel API key (stored locally, mode 0600): ")
@@ -174,6 +175,8 @@ def main():
                 parser.error("run requires a command string")
             body = {"command": args.argument, "waitForCompletion": not args.keep_alive,
                     "keepAlive": args.keep_alive, "timeout": 0 if args.keep_alive else 60}
+            if args.restart_on_failure:
+                body.update(restartOnFailure=True, maxRestarts=5)
             if args.name:
                 if not re.fullmatch(r"[a-z0-9-]+", args.name):
                     parser.error("invalid process name")

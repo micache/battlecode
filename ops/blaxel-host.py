@@ -33,12 +33,13 @@ def main():
             raise RuntimeError(f'refusing to replace existing {target}')
     # Old image versions may not honor the API-isolation environment flag.
     # Explicitly deny workload UIDs and nested/forwarded traffic to the root API.
-    for rule in (['OUTPUT', '-p', 'tcp', '--dport', '8080', '-m', 'owner', '!', '--uid-owner', '0',
+    for tool in ('iptables', 'ip6tables'):
+      for rule in (['OUTPUT', '-p', 'tcp', '--dport', '8080', '-m', 'owner', '!', '--uid-owner', '0',
                   '-j', 'REJECT', '--reject-with', 'tcp-reset'],
                  ['FORWARD', '-p', 'tcp', '--dport', '8080', '-j', 'REJECT', '--reject-with', 'tcp-reset']):
-        check = subprocess.run(['iptables', '-C', *rule], capture_output=True)
+        check = subprocess.run([tool, '-C', *rule], capture_output=True)
         if check.returncode:
-            run('iptables', '-I', *rule)
+            run(tool, '-I', *rule)
     from provision import provision_users
     provision_users()
     for name in ('bc-arena', 'bc-alpha', 'bc-beta'):
