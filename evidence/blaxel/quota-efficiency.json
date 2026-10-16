@@ -1,0 +1,79 @@
+{
+  "protocol_version": 1,
+  "deployed_infrastructure_commit": "823773a73a758f4499edf280d93852539d82e3f2",
+  "profile": "brief-v1",
+  "managed_process": "arena-loop-efficiency-v1",
+  "drained_and_stopped_before_code_upgrade": true,
+  "native_model_settings_verified": {
+    "alpha": {"model": "gpt-6.1-sol", "reasoning_effort": "high", "service_tier": null},
+    "beta": {"model": "gpt-6.1-sol", "reasoning_effort": "high", "service_tier": null}
+  },
+  "observed_pre_change_expensive_invocation": {
+    "task_id": "task-1dc3b256a0de46648114a0975812d515",
+    "input_tokens": 4939868,
+    "cached_input_tokens": 4741888,
+    "input_tokens_not_read_from_cache": 197980,
+    "output_tokens": 14180,
+    "reasoning_output_tokens": 4149,
+    "completed_command_events": 34,
+    "command_output_bytes": 605166,
+    "context": "Initial/unrecorded-documentation-manifest full review, not a steady-state benchmark."
+  },
+  "same_envelope_rendering_comparison": {
+    "alpha": {"full_envelope_bytes": 26207, "brief_bytes": 5727, "smaller_percent": 78.1},
+    "beta": {"full_envelope_bytes": 25764, "brief_bytes": 6109, "smaller_percent": 76.3},
+    "measures": "Initial rendered context bytes only, not total model tokens or consumed quota.",
+    "canonical_evidence_removed": false
+  },
+  "historical_usage_observations_backfilled": 17,
+  "known_usage_last_five_hours_before_recovery": {
+    "alpha": {"known_tasks": 9, "unknown_tasks": 1, "input_tokens_not_read_from_cache": 647474, "output_tokens": 49241},
+    "beta": {"known_tasks": 8, "unknown_tasks": 0, "input_tokens_not_read_from_cache": 646052, "output_tokens": 38390},
+    "window_is_provider_quota_reset_window": false
+  },
+  "recovered_candidates": [
+    {
+      "bot": "alpha",
+      "task_id": "task-1dc3b256a0de46648114a0975812d515",
+      "commit": "9c798b72454402253b836cc9e19c6acadd657e53",
+      "source_hash": "3b7a9a65316fc22332da1e1b23910b91e6edea765ddd570beb2a60e4d8882377",
+      "new_model_invocations": 0,
+      "fresh_trusted_smoke_match_ids": [
+        "66e027ffd9a109fecb69b8dde8fe881f982237e15e718a7b1d8ab8634f1cda90",
+        "5f42fd592e1c5a09908524c59858cba0442b74b63b5f2f90bd25c68b10090b21"
+      ]
+    },
+    {
+      "bot": "beta",
+      "task_id": "task-a291761b3e4d4f59b5a9ae5abde282b8",
+      "commit": "29355cc80fddebe918e9d896de2ee430d8c64852",
+      "source_hash": "3036b3fac8c535a946dee4a06be419d84110294e7afec6621600d6073fa1504c",
+      "new_model_invocations": 0,
+      "fresh_trusted_smoke_match_ids": [
+        "0df7859e00fda177ebe31f2ca3ff9928bd371d1754965475c8751341bd997855",
+        "14ce5df65e223d01fbecf9f413d0030409a92d0d20ff0531ade22612c0dd325d"
+      ]
+    }
+  ],
+  "post_restart_observation": {
+    "timestamp": 1792163547.5471227,
+    "scheduler_start_acknowledged": true,
+    "service_error_at_prior_snapshot": null,
+    "workers": {"alpha": "WAITING_EVALUATION", "beta": "WAITING_EVALUATION"},
+    "candidate_revision_states": {"alpha": "PENDING", "beta": "PENDING"},
+    "new_tournament_evaluation_completed": false,
+    "new_model_usage_reduction_measured": false,
+    "claims_strategic_improvement": false
+  },
+  "guardrails": {
+    "bootstrap_and_changed_document_sdk_review_retained": true,
+    "older_history_and_full_evidence_retrievable": true,
+    "full_promotion_gate_unchanged": true,
+    "automatic_promotion": false,
+    "official_mutations": false,
+    "api_billing": false,
+    "cross_account_failover": false,
+    "quota_wait_policy_unchanged": true,
+    "guessed_quota_token_conversion": false
+  }
+}
