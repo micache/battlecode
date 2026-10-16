@@ -46,3 +46,53 @@ Remaining uncertainty: this guard's strategic benefit and frequency in accepted
 losses are unmeasured. Smoke validity is not evidence of improved strength.
 Next idea after evaluation: inspect recovery traces and repeated recall frequency.
 Separate organizers' AGENTS.md remains unavailable, as recorded in RESEARCH.md.
+
+## task-2a7a442a0b7e4920a536dcf46b9d23a0 — nearby tribute priority
+
+Playbook C. Hypothesis: prioritizing an immediately available tribute over an
+opportunistic enemy attack prevents combat from repeatedly delaying banking.
+Falsifiable expectation: after existing channel/shop/recall guards, a carrier
+within tribute range of an unlocked altar starts tribute without attacking,
+even with an attackable enemy. Outside that case, combat/travel priorities stay
+unchanged. Death, stun and locks can still prevent successful banking.
+
+Identity: branch bot/beta, HEAD/input 02ab89d1e111f8c75f726004ee54346f5e7e4d8a.
+Initial working and accepted snapshot source hashes both equal the baseline
+9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+Initial diff removes the prior candidate's spawn guard; arena/worker.py
+make_attempt explicitly restores accepted source before invocation. This is
+expected setup, not interrupted work. No pending evaluation: supplied feedback
+d895057d31eda679526427d5fe39fdafaca17fb31dc2bf8aeec13c26cf8b1807 is INCONCLUSIVE.
+Engine/SDK remains 2.1.6; supplied documentation hashes match RESEARCH.md.
+Accepted snapshot remains untouched outside this edit transaction.
+
+Evidence limits: feedback evaluates candidate source
+5ce83774dbb2ba2a893c9cf2c4a7d24919420b4f5a27ddbda77b8d106ae3a7b0,
+not current baseline or this patch. Candidate losses include collision B,
+match d3a449ab7793af6d1f7054f4cf54a1954bb8199615b32cb0dc49962dfebe8618
+(858 submitted, 36 deaths), and elkring A,
+match 9b6341ea49e134f09771bcf08babf6e505f6828c0a2b792fefd43e2e50e51b19
+(504 submitted, 42 deaths). Neither has faults or supplied turn traces;
+these totals do not prove combat delayed tribute. Source establishes the
+reproducible decision pattern: attack_if_in_range returned before tribute.
+GameRules.md:223 says ordinary damage does not interrupt tribute. Installed
+C++ submit_gems returns void; has_altar_lock observes either team's locks.
+Existing conservative lock exclusion is preserved.
+
+Change: move only the in-range tribute attempt ahead of enemy combat, after
+recall; retain banking movement after combat. Update priority comment in bot.h.
+No shared-memory, draft, recall threshold or spawn-recovery changes.
+Validation pending trusted wrapper below. Strategic gain remains unmeasured.
+Next idea: evaluate this candidate against the accepted baseline; if traces
+become available, measure turns spent attacking while tribute was available.
+
+Validation: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
+exited 0, trusted state PASSED for source
+89bf52d2f9c5904b35afc5edc5851586a5a6cce7dcc48a879f473235589a45af.
+Local report: .agent/check-task-2a7a442a0b7e4920a536dcf46b9d23a0.json.
+Trusted report reference (not opened):
+/srv/battlecode/checks/task-2a7a442a0b7e4920a536dcf46b9d23a0/89bf52d2f9c5904b35afc5edc5851586a5a6cce7dcc48a879f473235589a45af/report.json.
+Wrapper match IDs: 18becb7e85db1c5f94ad705af6649b5cc510712bea5e4fba5c76efdec6747ee5,
+edd864c4b2384543243a076dd6095d711b67ce7449ae5833b615c7fe1f558807.
+`git diff --check` passed. No claim of strategic improvement or measured
+banking-delay reduction; supervisor evaluation is the next action.

@@ -126,19 +126,24 @@ void Bot::play_turn() {
 
     // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
-    if (at_spawn) {
+    if (at_spawn)
         buy_items();
-        // Recall arrives at turn start; spawn healing happens at turn end.
-        // Yield here while wounded so the farming/banking route cannot leave early.
-        if (me.health() < me.max_health())
-            return;
-    }
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
         me.recall();
         return;
     }
+
+    // Secure carried gems before an opportunistic attack can delay tribute.
+    // Ordinary damage does not interrupt tribute; existing recall policy stays first.
+    if (me.gem_count() > 0)
+        for (auto altar : cambc::map::altars().positions())
+            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
+                && !cambc::vision::has_altar_lock(altar)) {
+                me.submit_gems(altar);
+                return;
+            }
 
     // Attack the first enemy champion already in range.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
@@ -151,11 +156,6 @@ void Bot::play_turn() {
         cambc::bitboard goals;
         goals.clear();
         for (auto altar : cambc::map::altars().positions()) {
-            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
-                && !cambc::vision::has_altar_lock(altar)) {
-                    me.submit_gems(altar);
-                    return;
-                }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
         move_towards_closest(goals);
