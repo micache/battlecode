@@ -95,9 +95,35 @@ def summary(resource):
                 "runtime": {k: v for k, v in resource.get("spec", {}).get("runtime", {}).items() if k != "envs"}}
 
 
+def plan_report(client):
+    """Read advertised plan/tier limits, NOT inaccessible effective quota overrides."""
+    workspace = client.get("/workspaces/" + urllib.parse.quote(client.workspace, safe=""))
+    account_id = workspace.get("accountId")
+    if not isinstance(account_id, str) or not re.fullmatch(r"[a-zA-Z0-9-]+", account_id):
+        raise RuntimeError("workspace did not return a valid account ID")
+    account = client.get(f"/accounts/{account_id}")
+    subscription = account.get("spec", {}).get("subscription", {})
+    plan, tier = subscription.get("plan"), subscription.get("tier")
+    definitions = client.get(f"/accounts/{account_id}/plan").get("plans", {})
+    tier_limits = definitions.get("tiers", {}).get(tier, {}).get("limits")
+    plan_limits = definitions.get(plan, {}).get("limits")
+    if not isinstance(tier_limits, dict) or not isinstance(plan_limits, dict):
+        raise RuntimeError("missing plan/tier definitions; do not guess resource limits")
+    selected = ("memory", "volume_max_size", "volume_total_max_size", "volumes", "sandboxes",
+                "sandbox_enforced_ttl", "sandbox_ttl", "image_total_max_size")
+    return {"workspace": client.workspace, "plan": plan, "tier": tier,
+            "source": "GET /accounts/{accountId}/plan; active subscription from GET /accounts/{accountId}",
+            "effective_quota_overrides_verified": False,
+            "size_unit": "MiB (console label); API fields are integer MB",
+            "tier_limits": {k: tier_limits.get(k) for k in selected},
+            "plan_limits": {k: plan_limits.get(k) for k in selected},
+            "warning": "Advertised limits only, not allocation proof. Service accounts cannot read account quotas. "
+                       "TTL policy may differ between plan, tier and effective overrides; verify on the created sandbox."}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["login", "status", "provision", "run", "process", "logs"])
+    parser.add_argument("command", choices=["login", "status", "limits", "provision", "run", "process", "logs"])
     parser.add_argument("argument", nargs="?")
     parser.add_argument("--workspace", default=os.environ.get("BL_WORKSPACE", "banabolabs"))
     parser.add_argument("--keep-alive", action="store_true")
@@ -123,7 +149,9 @@ def main():
         key = credentials["key"]
         args.workspace = credentials["workspace"]
     client = Client(key, args.workspace)
-    if args.command == "status":
+    if args.command == "limits":
+        result = plan_report(client)
+    elif args.command == "status":
         result = {}
         for collection in ("sandboxes", "volumes"):
             rows = client.get(f"/{collection}?limit=200")

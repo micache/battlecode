@@ -47,6 +47,23 @@ class BlaxelTests(unittest.TestCase):
         self.assertNotIn("not-shared", str(report))
         self.assertEqual(report["runtime"]["memory"], 8192)
 
+    def test_plan_report_does_not_misrepresent_tier_as_effective_quotas(self):
+        client = operator.Client("TEST-NOT-A-REAL-KEY", "test")
+        responses = [{"accountId": "test-account"}, {"spec": {"subscription": {
+            "plan": "free", "tier": "tier_2"}}}, {"plans": {
+                "free": {"limits": {"memory": 32768, "sandbox_enforced_ttl": 1}},
+                "tiers": {"tier_2": {"limits": {"memory": 32768, "volume_max_size": 8192,
+                                                "sandbox_enforced_ttl": 0}}}}}]
+        with patch.object(client, "get", side_effect=responses) as get:
+            report = operator.plan_report(client)
+        self.assertEqual(report["tier_limits"]["volume_max_size"], 8192)
+        self.assertFalse(report["effective_quota_overrides_verified"])
+        self.assertEqual(report["plan_limits"]["sandbox_enforced_ttl"], 1)
+        self.assertEqual(report["tier_limits"]["sandbox_enforced_ttl"], 0)
+        self.assertNotIn("test-account", str(report))
+        self.assertEqual([call.args[0] for call in get.call_args_list], [
+            "/workspaces/test", "/accounts/test-account", "/accounts/test-account/plan"])
+
 
 if __name__ == "__main__":
     unittest.main()
