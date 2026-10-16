@@ -74,6 +74,7 @@ def arguments(toolchain, project, output, command):
             "--bind", str(Path(output).resolve()), "/output", "--chdir", "/work",
             "--setenv", "HOME", "/home/bc-arena", "--setenv", "USER", "bc-arena",
             "--setenv", "PATH", "/toolchain/bin:/usr/bin:/bin", "--setenv", "LANG", "C.UTF-8",
+            "--setenv", "LD_LIBRARY_PATH", "/toolchain/cache/wasi-sdk-33/lib",
             "--setenv", "DOTNET_PROCESSOR_COUNT", "1", "--setenv", "CMAKE_BUILD_PARALLEL_LEVEL", "1",
             "--remount-ro", "/",
             "--", *command]
