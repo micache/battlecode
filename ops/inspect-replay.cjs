@@ -26,7 +26,7 @@ const fs = require('node:fs');
   page.on('pageerror', error => errors.push(String(error)));
   await page.goto('http://127.0.0.1:7026/?replay=replay.zip&cambc-cli=1');
   try { await page.waitForFunction(round => {
-    const range = document.querySelector('input[aria-label="Seek timeline round"]');
+    const range = document.querySelector('input[aria-label^="Seek timeline"]');
     return range && Number(range.max) >= round && !document.body.innerText.includes('Loading timeline...');
   }, expectedRound, {timeout:90000}); } catch (error) {
     fs.writeFileSync(output + '-incomplete.json', JSON.stringify({body: await page.locator('body').innerText(),
@@ -34,7 +34,7 @@ const fs = require('node:fs');
       errors}, null, 2));
     throw error;
   }
-  const seek = page.locator('input[aria-label="Seek timeline round"]');
+  const seek = page.locator('input[aria-label^="Seek timeline"]');
   await seek.focus();
   await page.keyboard.press('End');
   await page.waitForTimeout(2000);
