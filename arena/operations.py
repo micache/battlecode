@@ -58,7 +58,7 @@ def starter_check(arena, normalize_only=False):
             old = Path(job["artifact"])
             result = normalize_result(old / "artifacts", engine.contract, engine.lock["engine_sha256"])
             # Review creates a new normalization record; raw engine evidence is unchanged.
-            atomic_json(old / "reviewed-normalization.json", result)
+            atomic_json(root / "acceptance" / f"reviewed-{job_id}-{job['attempt_count']}.json", result)
             db.execute("UPDATE match_jobs SET state=?,result=? WHERE id=?", (result["state"], json.dumps(result), job_id))
     else:
         # A parser review can be pending during these first real source-project runs.

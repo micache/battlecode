@@ -15,8 +15,9 @@ def command(*args):
     return subprocess.run(args, check=True, capture_output=True, text=True).stdout.strip()
 
 
-def install(source, revision, persistent_ack, dry=False):
-    required = ("python3", "git", "podman", "systemctl", "runuser", "useradd", "groupadd")
+def install(source, revision, persistent_ack, dry=False, temporary_colab=False):
+    required = ("python3", "git", "runuser", "useradd", "groupadd") + (
+        ("bwrap", "prlimit") if temporary_colab else ("podman", "systemctl"))
     missing = [tool for tool in required if not shutil.which(tool)]
     if missing:
         raise RuntimeError("administrator must install: " + ", ".join(missing))
@@ -26,9 +27,9 @@ def install(source, revision, persistent_ack, dry=False):
                 "services_started": False, "owner_login": "manual, after users exist"}
     if os.geteuid() != 0:
         raise RuntimeError("administrator command required: run with sudo")
-    if Path("/proc/1/comm").read_text().strip() != "systemd":
+    if not temporary_colab and Path("/proc/1/comm").read_text().strip() != "systemd":
         raise RuntimeError("host PID 1 is not systemd; use a persistent systemd VM for this acceptance")
-    if not persistent_ack:
+    if not persistent_ack and not temporary_colab:
         raise RuntimeError("select/mount persistent /srv storage, then pass --ack-persistent-volume")
     if sys.version_info < (3, 11):
         raise RuntimeError("Python 3.11+ required")
@@ -37,7 +38,7 @@ def install(source, revision, persistent_ack, dry=False):
     from provision import provision_users
     provision_users()
     # Rootless Podman requires subordinate IDs and a working user namespace. No privileged socket is used.
-    if not any(line.startswith("bc-arena:") for line in Path("/etc/subuid").read_text().splitlines()):
+    if not temporary_colab and not any(line.startswith("bc-arena:") for line in Path("/etc/subuid").read_text().splitlines()):
         raise RuntimeError("administrator must allocate non-overlapping subuid/subgid ranges for bc-arena; then continue setup manually")
     destination = Path("/opt/battlecode")
     destination.mkdir(mode=0o755)
@@ -79,9 +80,13 @@ def install(source, revision, persistent_ack, dry=False):
     os.chown(model_lock, 0, read_gid)
     model_lock.chmod(0o660)
     etc = Path("/etc/battlecode")
-    etc.mkdir(mode=0o755)
+    etc.mkdir(mode=0o755, exist_ok=True)
     config = json.loads((source / "config/pilot.json").read_text())
     config["infrastructure_commit"] = revision
+    if temporary_colab:
+        config["deployment"] = {"mode": "temporary-colab", "reboot_persistence_verified": False,
+                                "sandbox": "bubblewrap-watchdog-v1"}
+        config["repository_url"] = "git@github.com:micache/battlecode.git"
     (etc / "arena.json").write_text(json.dumps(config, indent=2) + "\n")
     (etc / "arena.json").chmod(0o644)
     for bot in ("alpha", "beta"):
@@ -102,7 +107,8 @@ def install(source, revision, persistent_ack, dry=False):
         if target.exists():
             raise RuntimeError(f"refusing to overwrite existing unit: {target}")
         shutil.copyfile(path, target)
-    command("systemctl", "daemon-reload")
+    if not temporary_colab:
+        command("systemctl", "daemon-reload")
     return {"installed": True, "revision": revision, "services_started": False,
             "next": "Follow /opt/battlecode/ops/OPERATIONS.md: prepare engine, starter checks, branches, owner logins."}
 
@@ -112,13 +118,15 @@ def main():
     parser.add_argument("--source", default=str(Path(__file__).resolve().parent.parent))
     parser.add_argument("--ack-persistent-volume", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--temporary-colab", action="store_true",
+                        help="Explicitly opt into ephemeral storage and process supervision; no reboot guarantee")
     args = parser.parse_args()
     try:
         source = Path(args.source).resolve()
         revision = command("git", "-c", f"safe.directory={source}", "-C", str(source), "rev-parse", "HEAD")
         if command("git", "-c", f"safe.directory={source}", "-C", str(source), "status", "--porcelain"):
             raise RuntimeError("commit infrastructure changes before installation")
-        print(json.dumps(install(source, revision, args.ack_persistent_volume, args.dry_run), indent=2))
+        print(json.dumps(install(source, revision, args.ack_persistent_volume, args.dry_run, args.temporary_colab), indent=2))
     except (OSError, RuntimeError, subprocess.CalledProcessError) as exc:
         print(json.dumps({"installed": False, "error": str(exc)}), file=sys.stderr)
         return 1

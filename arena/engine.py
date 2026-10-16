@@ -120,7 +120,12 @@ class OfficialEngine:
         self.lock_hash = identity(self.lock)
         require(self.lock["engine_sha256"] == config["engine"]["binary_sha256"] and
                 self.lock["version"] == config["engine"]["version"], "engine pin mismatch")
-        require(re.fullmatch(r"sha256:[a-f0-9]{64}", self.lock["image_id"]), "immutable local OCI image required")
+        self.colab = self.lock.get("isolation") == "bubblewrap-watchdog-v1"
+        if self.colab:
+            from .colab_sandbox import validate
+            validate(config, self.lock)
+        else:
+            require(re.fullmatch(r"sha256:[a-f0-9]{64}", self.lock["image_id"]), "immutable local OCI image required")
         require(self.lock.get("compiler_versions") and self.lock.get("recipe_sha256"), "incomplete toolchain lock")
         require(tree_hash(self.lock["project_template"]) == self.lock["template_sha256"], "SDK/template changed")
         self.contract = read_json(config["parser_contract"]) if Path(config["parser_contract"]).exists() else None
@@ -141,6 +146,9 @@ class OfficialEngine:
                 self.lock["image_id"], "cambc"]
 
     def execute(self, project, output, arguments, timeout, name):
+        if self.colab:
+            from .colab_sandbox import execute
+            return execute(self.lock["toolchain"], project, output, ["/toolchain/bin/cambc", *arguments], timeout)
         args = self.container_args(project, output, name) + arguments
         try:
             process = bounded_process(args, project, output, timeout)
@@ -209,6 +217,10 @@ class OfficialEngine:
         return normalize_result(artifacts, self.contract, self.lock["engine_sha256"])
 
     def recover_containers(self):
+        if self.colab:
+            # Supervisor must kill prior service trees before granting the DB lock.
+            # die-with-parent and PID namespace teardown also kill sandbox descendants.
+            return
         names = run(["podman", "--cgroup-manager=cgroupfs", "ps", "-a", "--format", "{{.Names}}"])
         for name in names.splitlines():
             if re.fullmatch(r"bc-(build|match)-[a-f0-9]{24}", name):
