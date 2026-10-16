@@ -33,6 +33,9 @@ int main() {
                     if (target && me.position()!=*target && me.can_move()) {
                         const bool known=cambc::vision::champion_tiles(cambc::team::enemy).is_set(*target);
                         const bool moved=me.move_towards(*target);
+                        if (cambc::round_number()%50==0)
+                            std::cout << "HIDDEN trace round=" << cambc::round_number() << " position=" << me.position().x
+                                      << ',' << me.position().y << " known=" << known << " moved=" << moved << std::endl;
                         if (!blocker && !moved && !known && me.can_move() &&
                             cambc::vision::champion_tiles(cambc::team::enemy).is_set(*target)) {
                             std::cout << "CHECK PASS hidden-obstruction-preserves-move round=" << cambc::round_number() << std::endl;
