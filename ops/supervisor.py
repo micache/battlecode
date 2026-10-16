@@ -135,7 +135,7 @@ def main():
     require(mode in ('temporary-colab', 'blaxel'), 'non-systemd deployment profile required')
     UNITS = ('arena', *config['workers'])
     if mode == 'blaxel':
-        ROOT = Path('/persist/supervisor')
+        ROOT = Path('/var/lib/battlecode-volume/supervisor')
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=["start", "serve", "unit", "status", "stop", "restart"])
     parser.add_argument("--name", choices=UNITS)

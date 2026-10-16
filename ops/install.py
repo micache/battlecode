@@ -91,7 +91,7 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False, 
         if not Path('/persist').is_mount():
             raise RuntimeError('Blaxel persistent /persist volume must be mounted')
         for directory in (root, etc, Path('/home/bc-arena'), Path('/home/bc-alpha'), Path('/home/bc-beta')):
-            if directory.stat().st_dev != Path('/persist').stat().st_dev:
+            if directory.stat().st_dev != Path('/var/lib/battlecode-volume').stat().st_dev:
                 raise RuntimeError(f'{directory} is not on the persistent volume')
         config['deployment'] = {'mode': 'blaxel', 'reboot_persistence_verified': False,
                                 'sandbox': 'rootless-podman', 'volume': 'battlecode-arena-data'}

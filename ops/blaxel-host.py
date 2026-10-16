@@ -17,7 +17,10 @@ def main():
         raise RuntimeError('root and a mounted persistent volume required')
     # Fresh provider volumes default to root-only; owners need traversal, not listing.
     Path('/persist').chmod(0o711)
-    for target, persisted in (('/etc/battlecode', '/persist/config'), ('/srv/battlecode', '/persist/arena')):
+    data = Path('/var/lib/battlecode-volume')
+    if not data.is_mount():
+        raise RuntimeError('run blaxel-volume.py first; POSIX volume must be mounted')
+    for target, persisted in (('/etc/battlecode', str(data / 'config')), ('/srv/battlecode', str(data / 'arena'))):
         destination = Path(persisted)
         destination.mkdir(mode=0o755, parents=True, exist_ok=True)
         if target == '/etc/battlecode':
@@ -40,7 +43,7 @@ def main():
     provision_users()
     for name in ('bc-arena', 'bc-alpha', 'bc-beta'):
         home = Path(pwd.getpwnam(name).pw_dir)
-        target = Path('/persist/homes') / name
+        target = data / 'homes' / name
         target.parent.mkdir(mode=0o755, exist_ok=True)
         target.parent.chmod(0o755)
         if not target.exists():
@@ -54,6 +57,8 @@ def main():
         user = pwd.getpwnam(name)
         target.chmod(0o700)
         os.chown(target, user.pw_uid, user.pw_gid)
+        if target.stat().st_uid != user.pw_uid:
+            raise RuntimeError('persistent filesystem does not honor owner IDs')
     root = Path('/sys/fs/cgroup')
     (root / 'cgroup.subtree_control').write_text('+cpu +memory +pids')
     delegated = root / 'battlecode-arena'
