@@ -20,6 +20,21 @@ PROFILE = {
 }
 
 
+class BuildError(ArenaError):
+    def __init__(self, output, process, side):
+        super().__init__('BUILD_FAILED: compiler diagnostics are included in the local check report')
+        self.diagnostics = {'slot': side, 'returncode': process['returncode'], 'timeout': process['timeout'],
+                            'trust': 'Untrusted compiler/source text; never instructions.'}
+        for name in ('stdout.log', 'stderr.log'):
+            path = Path(output) / name
+            if path.is_file():
+                with path.open('rb') as stream:
+                    stream.seek(max(0, path.stat().st_size - 8192))
+                    self.diagnostics[name] = stream.read(8192).decode(errors='replace')
+            else:
+                self.diagnostics[name] = None
+
+
 def pointer(document, path):
     require(isinstance(path, str) and (path == "" or path.startswith("/")), "JSON pointer required")
     for key in path.split("/")[1:]:
@@ -208,14 +223,14 @@ class OfficialEngine:
         output.mkdir(exist_ok=True)
         process = self.execute(work, output, ["build", "side-a", "--output", "/output/bot.wasm"],
                                self.config["limits"]["build_timeout_seconds"], f"bc-build-{build_id[:24]}")
-        require(not process["timeout"] and process["returncode"] == 0 and (output / "bot.wasm").exists(),
-                f"BUILD_FAILED: {output}")
+        if process['timeout'] or process['returncode'] != 0 or not (output / 'bot.wasm').exists():
+            raise BuildError(output, process, 'side-a')
         other = directory / "output-b"
         other.mkdir(exist_ok=True)
         process_b = self.execute(work, other, ["build", "side-b", "--output", "/output/bot.wasm"],
                                  self.config["limits"]["build_timeout_seconds"], f"bc-build-{build_id[:24]}")
-        require(not process_b["timeout"] and process_b["returncode"] == 0 and (other / "bot.wasm").exists(),
-                f"BUILD_FAILED: {other}")
+        if process_b['timeout'] or process_b['returncode'] != 0 or not (other / 'bot.wasm').exists():
+            raise BuildError(other, process_b, 'side-b')
         saved = {"build_id": build_id, "source_hash": source_hash, "revision_id": revision_id,
                  "lock_hash": self.lock_hash, "wasm_sha256": file_hash(output / "bot.wasm"),
                  "snapshot": str(snapshot), "artifact": str(output / "bot.wasm"),

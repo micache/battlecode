@@ -32,6 +32,7 @@ def new_task(arena, bot, owner="server"):
     accepted = db.one("SELECT * FROM revisions WHERE id=?", (lane["accepted_revision"],))
     task_id = fresh_id("task")
     from .strategy import experiment_context, feedback_token
+    from .memory import handoff
     context = experiment_context(arena, bot)
     envelope = {"protocol_version": 1, "role": "bot_worker", "task_id": task_id, "bot_id": bot,
                 "branch": config["workers"][bot]["branch"], "base_source_hash": lane["accepted_source_hash"],
@@ -40,8 +41,13 @@ def new_task(arena, bot, owner="server"):
                 "engine_version": config["engine"]["version"], "engine_lock_hash": arena.adapter().lock_hash,
                 "evaluation_suite": config["evaluation"]["suite_version"],
                 "feedback_id": feedback_token(arena, bot, latest['evaluation_id']),
-                "feedback": dict(latest["summary"], experiment_context=context), "available_commands": [f"bot-check --owner-config /etc/battlecode/{bot}.json",
+                "feedback": dict(latest["summary"], experiment_context=context,
+                                 handoff=handoff(arena, bot, accepted, latest)),
+                "available_commands": [f"bot-check --owner-config /etc/battlecode/{bot}.json",
                     f"arena-client --config /etc/battlecode/{bot}.json feedback",
+                    f"arena-client --config /etc/battlecode/{bot}.json history --offset 0",
+                    f"arena-client --config /etc/battlecode/{bot}.json history --task-id TASK_ID",
+                    f"arena-client --config /etc/battlecode/{bot}.json check-report --task-id TASK_ID --source-hash HASH",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file final.json",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file bot-a.stdout.log",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file bot-b.stdout.log"],
@@ -57,6 +63,9 @@ def new_task(arena, bot, owner="server"):
                                 "For focused regressions, prefer source-level invariants or use the trusted wrapper; "
                                 "do not try to run the SDK's native imports outside the official engine. "
                                 "Read the compact feedback and owned source, state uncertainty, and select a source-supported hypothesis. "
+                                "Read feedback.handoff and .agent/entry.json first: they state source/SDK/doc identities and prior experiments. "
+                                "Central engine locks and compiler directories are private; do not open them to re-verify identity. "
+                                "Compiler diagnostics are included in the local .agent/check-*.json report on failure. "
                                 + "Matching installed C++ SDK: " + str(Path(arena.adapter().lock.get("project_template", "/unavailable")) / "sdk/cpp")}
     validate_schema(envelope, read_json(Path(config["infrastructure"]) / "schemas/task.schema.json"))
     with db.transaction():
@@ -140,11 +149,14 @@ def check_source(arena, bot, payload):
             report["detail"] = "incomplete/faulty smoke or unverified fault detection"
     except (ArenaError, OSError) as exc:
         report["detail"] = str(exc)
+        if hasattr(exc, 'diagnostics'):
+            report['diagnostics'] = exc.diagnostics
     report["finished"] = time.time()
+    report['report_reference'] = f"check:{task['id']}:{source_hash}"
     report_path = snapshot / "report.json"
     atomic_json(report_path, report)
     arena.db.put(f"check:{task['id']}:{source_hash}", report)
-    return dict(report, report_path=str(report_path))
+    return report
 
 
 def handle_request(arena, bot, request):
@@ -155,6 +167,18 @@ def handle_request(arena, bot, request):
         return {"worker": worker, "bot": db.one("SELECT * FROM bots WHERE id=?", (bot,))}
     if operation == "feedback":
         return read_json(arena.root / "feedback" / bot / "latest.json")
+    if operation == 'history':
+        from .memory import task_history
+        return task_history(arena, bot, payload.get('offset', 0), payload.get('task_id'),
+                            detailed=bool(payload.get('task_id')))
+    if operation == 'check-report':
+        trusted_task(arena, bot, payload['task_id'])
+        source_hash = payload['source_hash']
+        require(isinstance(source_hash, str) and len(source_hash) == 64 and
+                all(c in '0123456789abcdef' for c in source_hash), 'invalid source hash')
+        report = db.get(f"check:{payload['task_id']}:{source_hash}")
+        require(report, 'unknown check for this task/source')
+        return {key: value for key, value in report.items() if key != 'report_path'}
     if operation == "slice":
         job_id = payload["match_id"]
         require(isinstance(job_id, str) and len(job_id) == 64, "match ID required")
@@ -245,6 +269,14 @@ def handle_request(arena, bot, request):
         require(task["state"] in ("DISPATCHED", "PUBLICATION_APPROVED"), "task already terminal")
         next_run = 0
         detail = payload.get("detail")
+        if payload.get('worker_result'):
+            result = payload['worker_result']
+            validate_schema(result, read_json(Path(arena.config['infrastructure']) / 'schemas/worker-result.schema.json'))
+            require(result['task_id'] == task['id'] and result['bot_id'] == bot and
+                    result['base_source_hash'] == envelope['base_source_hash'], 'historical result identity mismatch')
+            require(len(json.dumps(result).encode()) <= 65536, 'oversized historical result')
+            # Published results already exist; all other validated outcomes now survive fresh sessions too.
+            db.execute('UPDATE tasks SET result=COALESCE(result,?) WHERE id=?', (json.dumps(result), task['id']))
         if payload.get("invocation"):
             db.put(f"invocation:{task['id']}", payload["invocation"])
         if state == "QUOTA_WAIT":

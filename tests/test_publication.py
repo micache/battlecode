@@ -111,6 +111,17 @@ class PublicationTests(Harness):
         with self.assertRaisesRegex(ArenaError, "out-of-scope"):
             publish_attempt(config, attempt)
 
+    def test_attempt_entry_attests_source_and_identifies_own_recovery_root(self):
+        bot, task = self.envelope()
+        config = self.owner_configs[bot]
+        Path(config['attempts']).mkdir()
+        attempt = make_attempt(config, task)
+        entry = read_json(attempt / '.agent/entry.json')
+        self.assertTrue(entry['accepted_source_verified'])
+        self.assertEqual(entry['source_hash'], task['base_source_hash'])
+        self.assertEqual(entry['head'], task['input_revision'])
+        self.assertEqual(entry['attempts_root'], config['attempts'])
+
     def test_manual_handoff_retains_lease_and_uses_trusted_publication(self):
         bot = "alpha"
         handle_request(self.arena, bot, {"operation": "pause"})

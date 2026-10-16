@@ -36,11 +36,13 @@ def request(config, operation, payload=None, timeout=1100):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Owner mailbox client; never writes central SQLite")
     parser.add_argument("--config", default="/etc/battlecode/owner.json")
-    parser.add_argument("operation", choices=["status", "feedback", "slice", "pause", "resume", "claim", "release", "publish", "import-external"])
+    parser.add_argument("operation", choices=["status", "feedback", "history", "check-report", "slice", "pause", "resume", "claim", "release", "publish", "import-external"])
     parser.add_argument("--owner")
     parser.add_argument("--attempt")
     parser.add_argument("--metadata")
     parser.add_argument("--match-id")
+    parser.add_argument('--task-id')
+    parser.add_argument('--source-hash')
     parser.add_argument("--file", default="stderr.log")
     parser.add_argument("--offset", type=int, default=0)
     args = parser.parse_args(argv)
@@ -57,6 +59,11 @@ def main(argv=None):
         elif args.operation == "slice":
             require(args.match_id, "--match-id required")
             result = request(config, "slice", {"match_id": args.match_id, "file": args.file, "offset": args.offset})
+        elif args.operation == 'history':
+            result = request(config, 'history', {'task_id': args.task_id, 'offset': args.offset})
+        elif args.operation == 'check-report':
+            require(args.task_id and args.source_hash, '--task-id and --source-hash required')
+            result = request(config, 'check-report', {'task_id': args.task_id, 'source_hash': args.source_hash})
         else:
             payload = {"owner": args.owner} if args.owner else {}
             require(args.operation not in ("claim", "release") or args.owner, "--owner required")
@@ -85,6 +92,7 @@ def check_main(argv=None):
         directory = Path.cwd() / "bots" / task["bot_id"] / "src"
         result = request(config, "check", {"task_id": task["task_id"], "source": encode_source(directory)})
         report = Path(".agent") / f"check-{task['task_id']}.json"
+        result['report_path'] = str(report)
         atomic_json(report, result, 0o600)
         print(json.dumps(dict(result, local_report_path=str(report))))
         return result["exit_code"]

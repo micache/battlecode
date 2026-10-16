@@ -93,6 +93,12 @@ def make_attempt(config, task):
         path.chmod(0o700 if path.is_dir() else 0o600)
     (directory / ".agent").mkdir(mode=0o700)
     atomic_json(directory / ".agent/task.json", task, 0o600)
+    atomic_json(directory / '.agent/entry.json', {
+        'task_id': task['task_id'], 'bot_id': bot, 'branch': task['branch'],
+        'head': commit_id(directory, 'HEAD'), 'source_hash': tree_hash(target),
+        'accepted_source_verified': tree_hash(target) == task['base_source_hash'],
+        'attempts_root': str(Path(config['attempts']).resolve()),
+        'note': 'Trusted preparation verified these identities. Do not search private central state.'}, 0o600)
     return directory
 
 
@@ -151,7 +157,8 @@ def perform_task(config, task):
         attempt = make_attempt(config, task)
         final = attempt / ".agent" / f"final-{task_id}.json"
         prompt = (f"ROLE: bot_worker. Perform exactly one task from .agent/task.json. Follow AGENTS.md, "
-                  f"read NOTES.md and feedback first. Use bot-check --owner-config {config['owner_config_path']} "
+                  f"read .agent/entry.json, feedback.handoff, recent history and NOTES.md first. "
+                  f"Use bot-check --owner-config {config['owner_config_path']} "
                   "for trusted checks. Save one falsifiable hypothesis and compact notes. "
                   "Do not commit, push, start agents, wait for evaluations, or invoke official submissions. "
                   "Return the supplied worker-result schema and stop.")
@@ -171,6 +178,7 @@ def perform_task(config, task):
             validate_schema(result, read_json(Path(config["infrastructure"]) / "schemas/worker-result.schema.json"))
             require(result["task_id"] == task_id and result["bot_id"] == config["bot_id"] and
                     result["base_source_hash"] == task["base_source_hash"], "malformed final identity")
+            validated_result = result
             if result["outcome"] == "READY_FOR_EVAL":
                 outcome = publish_attempt(config, attempt)
             else:
@@ -185,6 +193,8 @@ def perform_task(config, task):
                                   **process, "raw_path": str(private),
                                   "stdout_sha256": file_hash(private / "stdout.log"),
                                   "stderr_sha256": file_hash(private / "stderr.log")}
+    if 'validated_result' in locals():
+        outcome['worker_result'] = validated_result
     atomic_json(outcome_file, outcome, 0o600)
     return outcome
 

@@ -18,7 +18,7 @@ def publish(arena, bot, task, source, notes):
     require(isinstance(notes, dict) and len(notes) <= 128, "oversized experiment history")
     for name, data in notes.items():
         safe_relative(name)
-        require(Path(name).suffix in (".md", ".json", ".txt", ".patch") and len(data) <= 350000,
+        require(Path(name).suffix in (".md", ".json", ".txt", ".patch", ".py") and len(data) <= 350000,
                 "unexpected/oversized experiment artifact")
         decoded_notes[name] = base64.b64decode(data, validate=True)
     require(sum(map(len, decoded_notes.values())) <= 1024 * 1024, "oversized notes")

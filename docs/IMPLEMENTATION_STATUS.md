@@ -7,6 +7,11 @@ metadata feedback and a fail-closed official selection monitor are implemented.
 Actual official mutations remain blocked by missing policy/interface evidence,
 not by lack of owner authorization. See [the integration record](OFFICIAL_AUTOMATION.md).
 
+Fresh-session continuity is documented in [worker memory](WORKER_MEMORY.md):
+bounded structured history, all-outcome result retention, exact accepted versus
+evaluated source identities, own-attempt recovery pointers and readable compiler
+diagnostics. Fresh conversations are retained; no claim of lossless model memory.
+
 The arena is deployed on Blaxel `banabolabs/battlecode-arena` (4 CPU, 8192 MB
 RAM, 8192 MB persistent volume). Both owners completed native ChatGPT logins;
 the repository deploy key is installed. Actual model improvement jobs have
