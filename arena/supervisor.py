@@ -37,7 +37,7 @@ def new_task(arena, bot, owner="server"):
                 "accepted_snapshot": accepted["snapshot"], "infrastructure_commit": config["infrastructure_commit"],
                 "engine_version": config["engine"]["version"], "engine_lock_hash": arena.adapter().lock_hash,
                 "evaluation_suite": config["evaluation"]["suite_version"], "feedback_id": latest["evaluation_id"],
-                "feedback": latest["summary"], "available_commands": ["bot-check",
+                "feedback": latest["summary"], "available_commands": [f"bot-check --owner-config /etc/battlecode/{bot}.json",
                     f"arena-client --config /etc/battlecode/{bot}.json feedback",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file final.json",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file bot-a.stdout.log",
@@ -49,6 +49,10 @@ def new_task(arena, bot, owner="server"):
                                 "Use the supplied arena-client commands for this lane's development evidence; "
                                 "final.json contains complete final statistics, bot-a.stdout.log and bot-b.stdout.log contain bounded bot logs. "
                                 "A missing optional diagnostic is unknown, not a reason to invent evidence. "
+                                "The host intentionally has no bot compiler: compilers live only in the trusted container. "
+                                "Use bot-check for compilation/smoke, never search host /opt or other owners' homes for toolchains. "
+                                "For focused regressions, prefer source-level invariants or use the trusted wrapper; "
+                                "do not try to run the SDK's native imports outside the official engine. "
                                 "Read the compact feedback and owned source, state uncertainty, and select a source-supported hypothesis. "
                                 + "Matching installed C++ SDK: " + str(Path(arena.adapter().lock.get("project_template", "/unavailable")) / "sdk/cpp")}
     validate_schema(envelope, read_json(Path(config["infrastructure"]) / "schemas/task.schema.json"))

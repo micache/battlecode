@@ -12,6 +12,8 @@ and [saved evidence](../evidence/blaxel/). Do not rerun installation on this ser
 - Rootless Podman, immutable local engine image, CLI/SDK 2.1.6, official C++ starter.
 - Codex CLI 0.163.0, pinned executable hash; separate Linux users, private homes,
   native authentication and writable clones. Only `bc-arena` publishes source.
+- Both owners now explicitly select `gpt-6.1-sol`, reasoning effort `high`, in
+  their private native CLI configurations; both have recorded high-effort turns.
 - Three-map wiring suite. Automatic promotion, official operations, model API
   billing and cross-account failover are all disabled.
 - Artifact budget 3 GiB, minimum free space 1 GiB, automatic daily database
@@ -115,6 +117,10 @@ the intended owner approve the displayed device flow in their own browser.
 Never commit temporary login codes or credential output. No Blaxel dashboard
 account or transferred Codex auth cache is needed.
 
+Change future invocations without interrupting an active job (root command):
+`python3 /opt/battlecode-source/ops/set-worker-reasoning.py --model gpt-6.1-sol --effort high`.
+This preserves unrelated native configuration and never opens auth caches.
+
 ## Evidence, recovery and maintenance
 
 Root terminal commands:
@@ -187,3 +193,32 @@ overrides are not readable by this service credential; no denial was bypassed.
 The server reports no expiration, but that is not an unconditional lifetime SLA.
 The previously existing `cpu-box` was never changed. Rotate the API key shared
 in chat through its owner; no copy is installed on the arena or workers.
+
+## Manual contest export and exploratory matches
+
+The source ZIP can be prepared without a contest login or any official mutation:
+
+```bash
+python3 /opt/battlecode/ops/as-arena.py python3 /opt/battlecode-source/ops/export-candidate.py --bot alpha --commit 4922166cd44fa0bc1291cf9ccd9b05125cfcb84a
+```
+
+Exports under `/srv/battlecode/public/exports/` include a manifest recording the
+exact commit, source/ZIP hashes and local evidence. Existing exports are never
+overwritten. The first export is already saved; download that existing file.
+This invokes official `cambc bundle`, not `submit`; it neither activates a bot
+nor claims contest eligibility/production parity. A branch tip is not a selected
+submission. Review the team's current AI/sharing/build rules and submission
+selection effects before manually uploading through its authenticated UI.
+
+Use the user-supplied unranked chooser only after logging into the contest.
+Current challenge quotas/controls and supported automation remain unverified;
+no automatic challenge endpoint is invented or enabled. Start one manual
+challenge, preserve the official submission/match IDs and original replay, and
+record the opponent revision as unknown if not exposed. Existing external import
+stores original files separately; it does not automatically put them into worker
+tasks or count them as frozen local promotion cases.
+
+Exploratory external games can suggest hypotheses, not reveal private opponent
+source or justify live omniscient inputs. Keep a fixed regression benchmark and
+a diverse history pool. Periodic strong and near-peer opponents complement
+incremental local repairs; avoid tuning every iteration to a single top opponent.
