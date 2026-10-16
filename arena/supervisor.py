@@ -40,7 +40,8 @@ def new_task(arena, bot, owner="server"):
                 "feedback": latest["summary"], "available_commands": ["bot-check"],
                 "owned_paths": [f"bots/{bot}/src/", f"experiments/{bot}/"], "wall_timeout_seconds": 1200,
                 "prior_task_id": worker["task_id"],
-                "instructions": "One hypothesis, one experiment. Preserve interrupted work. No agents, daemon, publication or official actions."}
+                "instructions": "One hypothesis, one experiment. Preserve interrupted work. No agents, daemon, publication or official actions. "
+                                + "Matching installed C++ SDK: " + str(Path(arena.adapter().lock.get("project_template", "/unavailable")) / "sdk/cpp")}
     validate_schema(envelope, read_json(Path(config["infrastructure"]) / "schemas/task.schema.json"))
     with db.transaction():
         db.execute("INSERT INTO tasks VALUES(?,?,?,'DISPATCHED',?,NULL,NULL)",
@@ -60,6 +61,10 @@ def dispatch_tasks(arena):
         worker = db.one("SELECT * FROM workers WHERE id=?", (bot,))
         if not settings["enabled"] or not settings["owner_confirmed"] or worker["paused"]:
             continue
+        maximum = config["limits"].get("published_cycles_per_bot")
+        published = db.one("SELECT count(*) AS n FROM tasks WHERE bot_id=? AND state='PUBLISHED'", (bot,))["n"]
+        if maximum is not None and published >= maximum:
+            continue  # Acceptance pilot is bounded; operator must explicitly extend it.
         if worker["state"] not in ("IDLE", "QUOTA_WAIT") or worker["next_run"] > time.time():
             continue
         if worker["lease_owner"] not in (None, "server"):

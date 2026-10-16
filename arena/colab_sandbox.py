@@ -64,7 +64,7 @@ def arguments(toolchain, project, output, command):
     return ["taskset", "--cpu-list", str(cpu), "prlimit", "--nproc=128:128", "--nofile=512:512",
             "--fsize=268435456:268435456", "--core=0:0", "--cpu=600:600", "--",
             "bwrap", "--unshare-all", "--die-with-parent", "--cap-drop", "ALL", "--clearenv",
-            "--ro-bind", "/usr", "/usr", "--symlink", "usr/lib", "/lib",
+            "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin", "--symlink", "usr/lib", "/lib",
             "--symlink", "usr/lib64", "/lib64", "--dir", "/proc", "--dev", "/dev",
             "--bind", str(Path(project).resolve() / ".sandbox-tmp"), "/tmp",
             "--dir", "/home/bc-arena",

@@ -12,6 +12,7 @@ for path in ('/home/bc-alpha', '/home/bc-beta', '/home/bc-arena/.ssh', '/home/bc
              '/etc/battlecode', '/srv/battlecode/state', '/run/battlecode-colab'):
     assert not Path(path).exists(), path
 assert not any('TOKEN' in key or 'API_KEY' in key for key in os.environ)
+assert not list(Path('/proc').iterdir()), 'host process filesystem must not be exposed'
 try:
     socket.create_connection(('1.1.1.1', 443), timeout=1)
     raise AssertionError('network reachable')

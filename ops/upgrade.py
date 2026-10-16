@@ -20,7 +20,12 @@ def main():
             "commit changes before installing")
     handles = []
     for path in ('/srv/battlecode/state/service.lock', '/srv/battlecode/model.lock'):
+        existed = Path(path).exists()
         handle = open(path, 'a')
+        if not existed:
+            parent = Path(path).parent.stat()
+            os.fchown(handle.fileno(), parent.st_uid, parent.st_gid)
+            os.fchmod(handle.fileno(), 0o660)
         fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
         handles.append(handle)
     old = Path('/opt/battlecode')
