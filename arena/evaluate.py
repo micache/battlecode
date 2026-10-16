@@ -11,6 +11,7 @@ def summarize(cases, gate, holdouts, full=False):
     grouped = collections.defaultdict(list)
     missing, faults, unknown_reliability, failures = [], [], [], []
     wins = losses = 0
+    observed = collections.defaultdict(list)
     for case in cases:
         result = case.get("result")
         if not result or result["state"] != "COMPLETED" or not result["completed"]:
@@ -26,10 +27,19 @@ def summarize(cases, gate, holdouts, full=False):
         if case["role"] == "candidate":
             wins += int(won)
             losses += int(not won)
+            if case["map_name"] not in holdouts:
+                for name, measurement in result.get("metrics", {}).items():
+                    if measurement.get("available"):
+                        value = measurement["value"]
+                        if isinstance(value, dict):
+                            value = value.get(case["candidate_side"])
+                        if isinstance(value, (int, float)) and not isinstance(value, bool):
+                            observed[name].append(value)
             if not won and case["map_name"] not in holdouts:
                 failures.append({"match_id": case["job_id"], "side": case["candidate_side"],
                                  "map": case["map_name"], "artifact": case.get("artifact"),
-                                 "round": None, "trace": None})
+                                 "round": result.get("metrics", {}).get("round", {}).get("value"),
+                                 "final_metrics": result.get("metrics", {}), "trace": None})
         grouped[(case["role"], case["map_name"], case["opponent"])].append(
             (case["candidate_side"], int(won)))
     means = {}
@@ -68,6 +78,8 @@ def summarize(cases, gate, holdouts, full=False):
             "unknown_reliability": sorted(set(unknown_reliability)),
             "representative_failures": failures[:3], "case_count": len(cases),
             "paired_cases": len(paired), "per_opponent": per_opponent,
+            "development_metrics": {name: {"available": True, "mean": sum(values) / len(values),
+                                            "observations": len(values)} for name, values in observed.items()},
             "metrics_not_available": ["bag_loss", "capture_completion",
                                                                     "channel_interruptions", "per_turn_damage"]}
 

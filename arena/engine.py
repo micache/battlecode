@@ -65,6 +65,15 @@ def normalize_result(artifacts, contract, engine_hash):
             return dict(result, state="BOT_FAULT" if faults else "TRUNCATED" if truncated else "INFRA_ERROR", bot_faults=faults,
                         detail="missing authoritative final statistics")
         stats = read_json(stats_path)
+        if contract.get("statistics_schema") == "cambc-216-v2":
+            require(stats["schemaVersion"] == 2 and stats["engineVersion"] == "0.0.1" and
+                    stats["engineVersionPacked"] == 65536, "unreviewed statistics/embedded-engine version")
+            by_side = stats["botFaults"]
+            require(isinstance(by_side, list) and len(by_side) == 2 and
+                    all(type(n) is int and n >= 0 for n in by_side), "invalid official botFaults counters")
+            require(type(stats["round"]) is int and 0 <= stats["round"] <= 2000, "invalid official round")
+            require([team["team"] for team in stats["teams"]] == [0, 1], "absolute team order changed")
+            faults = sum(by_side)
         completed = (True if contract.get("completion_mode") == "final_statistics_contract" else
                      pointer(stats, contract["complete_pointer"]) == contract["complete_value"])
         if not completed:
@@ -81,6 +90,15 @@ def normalize_result(artifacts, contract, engine_hash):
                 metrics[name] = {"available": True, "value": pointer(stats, path)}
             except (KeyError, IndexError, TypeError, ValueError):
                 metrics[name] = {"available": False, "value": None}
+        if contract.get("statistics_schema") == "cambc-216-v2":
+            metrics["bot_faults_by_side"] = {"available": True, "value": dict(zip(("A", "B"), by_side))}
+            for name, field in (("lifetime_earned_gold", "earnedGold"), ("champion_kills", "kills"),
+                                ("champion_deaths", "deaths"), ("carried_gems", "gems"),
+                                ("unspent_gold", "gold"), ("collected_gems", "collectedGems")):
+                totals = {side: sum(c[field] for c in stats["champions"] if c["team"] == number)
+                          for number, side in enumerate(("A", "B"))}
+                require(all(isinstance(v, (float, int)) and v >= 0 for v in totals.values()), "invalid official metric")
+                metrics[name] = {"available": True, "value": totals}
         reason = pointer(stats, contract["reason_pointer"]) if contract.get("reason_pointer") else None
         suspensions = None
         if contract.get("fuel_suspension_patterns"):
@@ -174,7 +192,7 @@ class OfficialEngine:
         source_hash = tree_hash(Path(snapshot) / "src")
         build_id = identity({"source": source_hash, "language": "cpp", "engine_lock": self.lock_hash,
                              "infrastructure_commit": self.config["infrastructure_commit"],
-                             "recipe": "official-source-v1"})
+                             "recipe": "official-source-cache-v2"})
         directory = Path(self.config["root"]) / "builds" / build_id
         if (directory / "build.json").exists():
             saved = read_json(directory / "build.json")
@@ -183,19 +201,39 @@ class OfficialEngine:
         directory.mkdir(parents=True, exist_ok=True)
         # Interrupted work is preserved; each preparation has a distinct attempt directory.
         work = directory / f"prepare-{time.time_ns()}"
-        self.prepare_project(work, {"side-a": Path(snapshot) / "src"})
+        self.prepare_project(work, {side: Path(snapshot) / "src" for side in ("side-a", "side-b")})
         output = directory / "output"
         output.mkdir(exist_ok=True)
         process = self.execute(work, output, ["build", "side-a", "--output", "/output/bot.wasm"],
                                self.config["limits"]["build_timeout_seconds"], f"bc-build-{build_id[:24]}")
         require(not process["timeout"] and process["returncode"] == 0 and (output / "bot.wasm").exists(),
                 f"BUILD_FAILED: {output}")
+        other = directory / "output-b"
+        other.mkdir(exist_ok=True)
+        process_b = self.execute(work, other, ["build", "side-b", "--output", "/output/bot.wasm"],
+                                 self.config["limits"]["build_timeout_seconds"], f"bc-build-{build_id[:24]}")
+        require(not process_b["timeout"] and process_b["returncode"] == 0 and (other / "bot.wasm").exists(),
+                f"BUILD_FAILED: {other}")
         saved = {"build_id": build_id, "source_hash": source_hash, "revision_id": revision_id,
                  "lock_hash": self.lock_hash, "wasm_sha256": file_hash(output / "bot.wasm"),
                  "snapshot": str(snapshot), "artifact": str(output / "bot.wasm"),
-                 "mode": "official-source-project; run may recompile; no compiled-input parity claim"}
+                 "cache_project": str(work),
+                 "cache_hashes": {side: tree_hash(work / "bots" / side / ".cambc") for side in ("side-a", "side-b")},
+                 "side_b_wasm_sha256": file_hash(other / "bot.wasm"),
+                 "mode": "official-source-project with verified per-slot CLI build cache; no compiled-input interface"}
         atomic_json(directory / "build.json", saved)
         return saved
+
+    def copy_source_cache(self, project, side, build_id, expected_source):
+        require(re.fullmatch(r"[a-f0-9]{64}", build_id), "invalid frozen build ID")
+        saved = read_json(Path(self.config["root"]) / "builds" / build_id / "build.json")
+        require(saved["source_hash"] == expected_source and saved["lock_hash"] == self.lock_hash, "cache input mismatch")
+        require(file_hash(saved["artifact"]) == saved["wasm_sha256"], "cached output changed")
+        source = Path(saved["cache_project"]) / "bots" / side / ".cambc"
+        require(tree_hash(source) == saved["cache_hashes"][side], "source-project cache changed")
+        # Only trusted compiler outputs, with the identical /work/slot paths.
+        # cambc still receives source bot names and owns all compilation/fuel setup.
+        shutil.copytree(source, Path(project) / "bots" / side / ".cambc")
 
     def run_match(self, spec, output):
         require(spec["engine_lock_hash"] == self.lock_hash, "match engine changed")
@@ -208,6 +246,9 @@ class OfficialEngine:
         project = output / "project"
         self.prepare_project(project, {"side-a": Path(spec["a_snapshot"]) / "src",
                                        "side-b": Path(spec["b_snapshot"]) / "src"})
+        for letter, side in (("a", "side-a"), ("b", "side-b")):
+            if spec.get(f"{letter}_build"):
+                self.copy_source_cache(project, side, spec[f"{letter}_build"], spec[f"{letter}_source_hash"])
         shutil.copyfile(spec["map_path"], project / "frozen.map26a")
         artifacts = output / "artifacts"
         artifacts.mkdir()
