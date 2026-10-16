@@ -34,15 +34,18 @@ def main():
     # Old image versions may not honor the API-isolation environment flag.
     # Explicitly deny workload UIDs and nested/forwarded traffic to the root API.
     for tool in ('iptables', 'ip6tables'):
-      for rule in (['OUTPUT', '-p', 'tcp', '--dport', '8080', '-m', 'owner', '!', '--uid-owner', '0',
-                  '-j', 'REJECT', '--reject-with', 'tcp-reset'],
-                 ['FORWARD', '-p', 'tcp', '--dport', '8080', '-j', 'REJECT', '--reject-with', 'tcp-reset']):
-        check = subprocess.run([tool, '-C', *rule], capture_output=True)
-        if check.returncode:
-            run(tool, '-I', *rule)
+        for rule in (['OUTPUT', '-p', 'tcp', '--dport', '8080', '-m', 'owner', '!', '--uid-owner', '0',
+                      '-j', 'REJECT', '--reject-with', 'tcp-reset'],
+                     ['FORWARD', '-p', 'tcp', '--dport', '8080', '-j', 'REJECT', '--reject-with', 'tcp-reset']):
+            check = subprocess.run([tool, '-C', *rule], capture_output=True)
+            if check.returncode:
+                run(tool, '-I', *rule)
     from provision import provision_users
-    provision_users()
-    for name in ('bc-arena', 'bc-alpha', 'bc-beta'):
+    settings = Path('/etc/battlecode/arena.json')
+    bots = tuple(json.loads(settings.read_text())['workers']) if settings.exists() else ('alpha', 'beta')
+    provision_users(bots)
+    names = ('bc-arena', *(f'bc-{bot}' for bot in bots))
+    for name in names:
         home = Path(pwd.getpwnam(name).pw_dir)
         target = data / 'homes' / name
         target.parent.mkdir(mode=0o755, exist_ok=True)
@@ -84,7 +87,7 @@ def main():
                     raise RuntimeError('subordinate ID range collision')
             with path.open('a') as handle:
                 handle.write('bc-arena:200000:65536\n')
-    print(json.dumps({'users_created': ['bc-arena', 'bc-alpha', 'bc-beta'],
+    print(json.dumps({'users_created': names,
                       'persistent_homes': True, 'local_api_firewall': 'installed',
                       'delegated_cgroup': str(delegated), 'owner_login': 'manual'}))
 

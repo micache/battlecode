@@ -49,10 +49,12 @@ def main():
                     raise RuntimeError('partial migration retained; inspect before continuing')
                 shutil.copytree(source, destination)
         marker.write_text('Initial unauthenticated setup copied; originals retained under /persist.\n')
+    settings = DATA / 'config/arena.json'
+    bots = tuple(__import__('json').loads(settings.read_text())['workers']) if settings.exists() else ('alpha', 'beta')
     for target, old, new in [('/etc/battlecode', '/persist/config', DATA / 'config'),
                              ('/srv/battlecode', '/persist/arena', DATA / 'arena'),
                              *((f'/home/{name}', f'/persist/homes/{name}', DATA / 'homes' / name)
-                               for name in ('bc-arena', 'bc-alpha', 'bc-beta'))]:
+                               for name in ('bc-arena', *(f'bc-{bot}' for bot in bots)))]:
         link = Path(target)
         if not link.exists() and not link.is_symlink():
             # Fresh first installation: homes are created by useradd in blaxel-host.py.

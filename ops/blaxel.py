@@ -35,11 +35,22 @@ class APIError(RuntimeError):
         super().__init__(f"Blaxel HTTP {code}: {message}")
 
 
+def contains_spec(actual, expected):
+    """Server-populated defaults may be extra; requested values may never drift."""
+    if isinstance(expected, dict):
+        return isinstance(actual, dict) and all(contains_spec(actual.get(k, False if k == 'readOnly' else None), v)
+                                                for k, v in expected.items())
+    if isinstance(expected, list):
+        return isinstance(actual, list) and len(actual) == len(expected) and all(
+            contains_spec(a, e) for a, e in zip(actual, expected))
+    return type(actual) is type(expected) and actual == expected
+
+
 class Client:
     def __init__(self, key, workspace):
         self.key, self.workspace = key, workspace
 
-    def request(self, method, path, body=None, base=API):
+    def request(self, method, path, body=None, base=API, raw=False):
         # Never forward an administrator credential to an arbitrary returned URL.
         host = urllib.parse.urlparse(base)
         if host.scheme != "https" or not (host.hostname == "api.blaxel.ai" or
@@ -47,13 +58,15 @@ class Client:
             raise RuntimeError("untrusted Blaxel endpoint")
         headers = {"Authorization": "Bearer " + self.key,
                    "X-Blaxel-Workspace": self.workspace, "Blaxel-Version": "2026-04-28",
-                   "Content-Type": "application/json"}
+                   "Content-Type": "application/json", "Accept": "application/octet-stream" if raw else "application/json"}
         req = urllib.request.Request(base.rstrip("/") + path, headers=headers, method=method,
                                      data=json.dumps(body).encode() if body is not None else None)
         try:
             with urllib.request.build_opener(NoRedirect).open(req, timeout=70) as response:
-                raw = response.read()
-                return json.loads(raw) if raw else {}
+                content = response.read(64 * 1024**2 + 1)
+                if len(content) > 64 * 1024**2:
+                    raise RuntimeError('operator response exceeds 64 MiB; use a bounded archive')
+                return content if raw else json.loads(content) if content else {}
         except urllib.error.HTTPError as exc:
             message = exc.read().decode(errors="replace").replace(self.key, "[REDACTED]")
             raise APIError(exc.code, message[:2000]) from None
@@ -72,7 +85,7 @@ class Client:
         else:
             if existing.get("metadata", {}).get("labels", {}).get("managed-by") != "battlecode-arena":
                 raise RuntimeError(f"refusing to adopt unregistered existing {collection}/{name}")
-            if any(existing.get("spec", {}).get(k) != v for k, v in spec.items()):
+            if not contains_spec(existing.get('spec', {}), spec):
                 raise RuntimeError(f"existing {collection}/{name} differs from requested specification; inspect it")
             return existing
         return self.request("POST", f"/{collection}", {
@@ -123,12 +136,13 @@ def plan_report(client):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["login", "status", "limits", "provision", "run", "process", "logs"])
+    parser.add_argument("command", choices=["login", "status", "limits", "provision", "run", "process", "logs", "download"])
     parser.add_argument("argument", nargs="?")
     parser.add_argument("--workspace", default=os.environ.get("BL_WORKSPACE", "banabolabs"))
     parser.add_argument("--keep-alive", action="store_true")
     parser.add_argument("--name")
     parser.add_argument("--restart-on-failure", action="store_true")
+    parser.add_argument("--output", help="new local file for an arena artifact download")
     args = parser.parse_args()
     if args.command == "login":
         key = getpass.getpass("Blaxel API key (stored locally, mode 0600): ")
@@ -170,7 +184,21 @@ def main():
         result = {"sandbox": summary(box)}
     else:
         endpoint = client.endpoint()
-        if args.command == "run":
+        if args.command == 'download':
+            remote = Path(args.argument or '')
+            allowed = ('/srv/battlecode/matches/', '/srv/battlecode/acceptance/', '/srv/battlecode/public/', '/srv/battlecode/backups/')
+            if not args.output or '..' in remote.parts or not str(remote).startswith(allowed):
+                parser.error('download requires an explicit arena artifact path and --output; owner homes are excluded')
+            content = client.request('GET', '/filesystem/' + urllib.parse.quote(str(remote), safe=''), base=endpoint, raw=True)
+            target = Path(args.output)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with target.open('xb') as stream:
+                stream.write(content)
+                stream.flush()
+                os.fsync(stream.fileno())
+            import hashlib
+            result = {'downloaded': str(target), 'bytes': len(content), 'sha256': hashlib.sha256(content).hexdigest()}
+        elif args.command == "run":
             if not args.argument:
                 parser.error("run requires a command string")
             body = {"command": args.argument, "waitForCompletion": not args.keep_alive,

@@ -11,6 +11,12 @@ spec.loader.exec_module(operator)
 
 
 class BlaxelTests(unittest.TestCase):
+    def test_idempotent_matching_accepts_server_defaults_but_not_drift(self):
+        requested = {'runtime': {'memory':8192}, 'volumes':[{'name':'data','readOnly':False}]}
+        actual = {'runtime': {'memory':8192,'ports':[{'target':8080}]}, 'volumes':[{'name':'data'}]}
+        self.assertTrue(operator.contains_spec(actual, requested))
+        actual['runtime']['memory'] = 4096
+        self.assertFalse(operator.contains_spec(actual, requested))
     def test_administrator_key_never_sent_to_untrusted_endpoint(self):
         client = operator.Client("TEST-NOT-A-REAL-KEY", "test")
         for endpoint in ("http://api.blaxel.ai/v0", "https://evil.example", "https://api.blaxel.ai.evil.example"):

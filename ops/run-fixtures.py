@@ -31,7 +31,9 @@ def main():
                 'a_source_hash': tree_hash(directory / 'a/src'), 'b_source_hash': tree_hash(directory / 'b/src'),
                 'engine_lock_hash': engine.lock_hash, 'fixture': args.name,
                 'infrastructure_commit': config['infrastructure_commit'],
-                'map_path': config['maps'] + '/collision.map26a', 'round_override': None, 'fuel_override': None}
+                'map_path': config['maps'] + '/collision.map26a',
+                'round_override': 1 if args.name == 'truncated' else None, 'fuel_override': None,
+                'wall_timeout_override':0.05 if args.name == 'timeout' else None}
         spec['map_hash'] = file_hash(spec['map_path'])
         spec['job_id'] = identity(spec)
         atomic_json(directory / 'spec.json', spec)
@@ -44,7 +46,6 @@ def main():
                        '--statistics', '/output/final.json']
             if args.name == 'truncated':
                 command += ['--rounds', '1']
-                spec['round_override'] = 1
             engine.execute(project, output, command, 0.05 if args.name == 'timeout' else 300,
                            'bc-match-' + spec['job_id'][:24])
             result = normalize_result(output, engine.contract, engine.lock['engine_sha256'])

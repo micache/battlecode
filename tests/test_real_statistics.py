@@ -28,6 +28,7 @@ class RealStatisticsTests(unittest.TestCase):
             self.assertEqual(result['bot_faults'], 0)
             self.assertIsNone(result['fuel_suspensions'])
             self.assertEqual(result['metrics']['lifetime_earned_gold']['value']['A'], 5140)
+            self.assertEqual(result['metrics']['submitted_gems']['value'], {'A':1012,'B':814})
             stats = read_json(output / 'final.json')
             stats['botFaults'] = [2, 0]
             atomic_json(output / 'final.json', stats)

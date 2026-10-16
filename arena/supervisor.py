@@ -148,7 +148,7 @@ def handle_request(arena, bot, request):
         job = db.one("SELECT * FROM match_jobs WHERE id=?", (job_id,))
         require(job and job["artifact"], "match artifact unavailable")
         filename = payload.get("file", "stderr.log")
-        require(filename in ("stdout.log", "stderr.log", "final.json"), "unsupported slice file")
+        require(filename in ("stdout.log", "stderr.log", "final.json", "bot-a.stdout.log", "bot-b.stdout.log"), "unsupported slice file")
         limit = min(int(payload.get("limit", 8192)), 32768)
         offset = max(0, int(payload.get("offset", 0)))
         require(limit > 0, "invalid slice length")

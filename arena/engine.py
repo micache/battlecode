@@ -92,6 +92,8 @@ def normalize_result(artifacts, contract, engine_hash):
                 metrics[name] = {"available": False, "value": None}
         if contract.get("statistics_schema") == "cambc-216-v2":
             metrics["bot_faults_by_side"] = {"available": True, "value": dict(zip(("A", "B"), by_side))}
+            metrics['submitted_gems'] = {'available': True, 'value': {
+                side: stats['teams'][number]['submittedGems'] for number, side in enumerate(('A', 'B'))}}
             for name, field in (("lifetime_earned_gold", "earnedGold"), ("champion_kills", "kills"),
                                 ("champion_deaths", "deaths"), ("carried_gems", "gems"),
                                 ("unspent_gold", "gold"), ("collected_gems", "collectedGems")):
@@ -255,6 +257,19 @@ class OfficialEngine:
         self.execute(project, artifacts, ["run", "side-a", "side-b", "--map", "/work/frozen.map26a",
                                          "--out-dir", "/output", "--statistics", "/output/final.json"],
                      self.config["limits"]["match_timeout_seconds"], f"bc-match-{spec['job_id'][:24]}")
+        # These documented-by-observation bundle entries are diagnostics, never outcome authority.
+        # Preserve the ZIP unchanged and bound extraction of potentially bot-controlled output.
+        import zipfile
+        for replay in artifacts.glob('*.repl26a'):
+            try:
+                with zipfile.ZipFile(replay) as bundle:
+                    for side in ('a', 'b'):
+                        name = f'team-{side}.stdout'
+                        if name in bundle.namelist() and bundle.getinfo(name).file_size <= 1024**2:
+                            data = bundle.read(name)
+                            (artifacts / f'bot-{side}.stdout.log').write_text(data.decode(errors='replace').replace('\x00', '\\0'))
+            except (zipfile.BadZipFile, OSError):
+                pass  # Normalization still decides from the strict authoritative contract.
         return normalize_result(artifacts, self.contract, self.lock["engine_sha256"])
 
     def recover_containers(self):
