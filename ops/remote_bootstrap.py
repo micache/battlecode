@@ -17,11 +17,11 @@ def main():
     steps = [
         ["apt-get", "update", "-qq"],
         ["apt-get", "install", "-y", "python3.12-venv", "bubblewrap", "build-essential", "cmake", "curl", "xz-utils", "unzip"],
-        ["/usr/bin/python3", "-m", "venv", str(ROOT / "tool-venv")],
-        [str(ROOT / "tool-venv/bin/python"), "-m", "pip", "install", "--only-binary=:all:", "--require-hashes",
+        ["/usr/bin/python3.12", "-m", "venv", str(ROOT / "tool-venv312")],
+        [str(ROOT / "tool-venv312/bin/python"), "-m", "pip", "install", "--only-binary=:all:", "--require-hashes",
          "-r", str(REPOSITORY / "ops/engine-requirements.txt")],
-        [str(ROOT / "tool-venv/bin/cambc"), "--version"],
-        [str(ROOT / "tool-venv/bin/cambc"), "init", "--yes", str(ROOT / "official-project")],
+        [str(ROOT / "tool-venv312/bin/cambc"), "--version"],
+        [str(ROOT / "tool-venv312/bin/cambc"), "init", "--yes", str(ROOT / "official-project")],
     ]
     try:
         for index, args in enumerate(steps):
