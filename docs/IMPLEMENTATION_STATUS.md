@@ -1,5 +1,12 @@
 # Live pilot status — 16 October 2026
 
+Latest maintenance: native official contest login succeeded; the owner now
+authorizes guarded official publishing and unranked exploration. Historical
+training panels, every-fifth-cycle exploration, bounded full suites, external
+metadata feedback and a fail-closed official selection monitor are implemented.
+Actual official mutations remain blocked by missing policy/interface evidence,
+not by lack of owner authorization. See [the integration record](OFFICIAL_AUTOMATION.md).
+
 The arena is deployed on Blaxel `banabolabs/battlecode-arena` (4 CPU, 8192 MB
 RAM, 8192 MB persistent volume). Both owners completed native ChatGPT logins;
 the repository deploy key is installed. Actual model improvement jobs have

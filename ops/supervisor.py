@@ -104,10 +104,21 @@ def unit(name):
         with (ROOT / f"{name}.log").open("ab") as log:
             child = subprocess.Popen(args, env=env, cwd="/opt/battlecode", preexec_fn=identity,
                                      umask=0o027, start_new_session=True, stdout=log, stderr=log)
+            started = time.monotonic()
             while not stopping and child.poll() is None:
                 atomic_json(ROOT / f"{name}.json", {"unit": name, "identity": process_identity(child.pid),
                             "wrapper": process_identity(os.getpid()), "heartbeat": time.time(),
                             "restarts": restarts, "history": history[-20:]}, 0o600)
+                if name == 'arena' and time.monotonic() - started > 1800:
+                    try:
+                        heartbeat = read_json('/srv/battlecode/public/status.json').get('heartbeat') or 0
+                    except (OSError, ValueError):
+                        heartbeat = 0
+                    if time.time() - heartbeat > 1800:
+                        atomic_json(ROOT / 'watchdog.json', {'unit': name, 'at': time.time(),
+                                    'reason': 'scheduler heartbeat stale for over 30 minutes',
+                                    'action': 'terminate descendants and restart; preserve attempts'}, 0o600)
+                        break
                 time.sleep(1)
             history.append({"pid": child.pid, "exit": child.poll(), "at": time.time()})
             terminate_children()

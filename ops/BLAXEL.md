@@ -214,9 +214,16 @@ Use the user-supplied unranked chooser only after logging into the contest.
 Current challenge quotas/controls and supported automation remain unverified;
 no automatic challenge endpoint is invented or enabled. Start one manual
 challenge, preserve the official submission/match IDs and original replay, and
-record the opponent revision as unknown if not exposed. Existing external import
-stores original files separately; it does not automatically put them into worker
-tasks or count them as frozen local promotion cases.
+record the opponent revision as unknown if not exposed. External import stores
+original files separately and now supplies bounded metadata in that lane's next
+task. It never counts as frozen local promotion evidence.
+
+The owner has since authorized guarded automatic publishing, and native official
+CLI login succeeded. [Official integration status](../docs/OFFICIAL_AUTOMATION.md)
+records the implemented selection monitor and remaining platform blockers.
+Enable historical training and bounded full suites only with services stopped:
+`python3 /opt/battlecode/ops/enable-exploration.py`. This does not enable uploads,
+challenges or automatic promotion and does not change any credential.
 
 Exploratory external games can suggest hypotheses, not reveal private opponent
 source or justify live omniscient inputs. Keep a fixed regression benchmark and

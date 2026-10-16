@@ -148,7 +148,8 @@ class Arena:
             candidate = self.build(revision_id)
             incumbent = self.build(bot["accepted_revision"]) if bot["accepted_revision"] else None
             # Configured immutable history plus a pinned starter; never a moving opponent branch.
-            opponent_ids = list(dict.fromkeys([self.db.get("starter_revision")] + self.config["evaluation"]["opponent_revision_ids"]))
+            from .strategy import opponent_panel
+            opponent_ids = opponent_panel(self)
             require(opponent_ids and all(opponent_ids), "pinned starter opponent missing")
             opponents = {rid: self.build(rid) for rid in opponent_ids}
         except ArenaError as exc:
@@ -164,11 +165,11 @@ class Arena:
             self.finish_evaluation(evaluation, metrics, "BUILD_FAILED")
             return evaluation_id
         maps = self.freeze_maps()
-        full = self.config["evaluation"]["automatic_promotion"]
+        full = self.config['evaluation'].get('full_evaluation', False) or self.config['evaluation']['automatic_promotion']
         if full:
             count = self.db.one("SELECT count(*) AS n FROM evaluations WHERE bot_id=? AND stage='promotion' AND created>?",
                                 (bot["id"], time.time() - 86400))["n"]
-            require(count < 2, "daily promotion-check cap reached")
+            full = count < min(2, self.config['evaluation'].get('max_promotion_checks_per_day', 2))
         suite = {"protocol_version": 1, "version": self.config["evaluation"]["suite_version"],
                  "engine_lock_hash": self.adapter().lock_hash, "maps": maps,
                  "opponents": {rid: {"build_id": build["build_id"], "source_hash": build["source_hash"],
@@ -264,7 +265,8 @@ class Arena:
         if state == "ACCEPTED" and evaluation["incumbent_id"]:
             readiness = self.db.get("readiness", {})
             expected_case_count = 9 * 2 * len(suite["opponents"])
-            if not (readiness.get("private_arena_ready") and readiness.get("competition_parity_verified")
+            if not (self.config['evaluation']['automatic_promotion']
+                    and readiness.get("private_arena_ready") and readiness.get("competition_parity_verified")
                     and readiness.get("engine_lock_hash") == suite["engine_lock_hash"]
                     and suite["engine_lock_hash"] == self.adapter().lock_hash
                     and suite.get("infrastructure_commit") == self.config["infrastructure_commit"]
@@ -310,6 +312,8 @@ class Arena:
 
     def export_status(self):
         status = self.status()
+        from .official import selection_status
+        status['official_selection'] = selection_status(self)
         atomic_json(self.root / "public/status.json", status, 0o644)
         from .operations import acceptance_report
         acceptance_report(self)

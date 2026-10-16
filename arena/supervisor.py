@@ -31,13 +31,16 @@ def new_task(arena, bot, owner="server"):
     latest = read_json(arena.root / "feedback" / bot / "latest.json")
     accepted = db.one("SELECT * FROM revisions WHERE id=?", (lane["accepted_revision"],))
     task_id = fresh_id("task")
+    from .strategy import experiment_context, feedback_token
+    context = experiment_context(arena, bot)
     envelope = {"protocol_version": 1, "role": "bot_worker", "task_id": task_id, "bot_id": bot,
                 "branch": config["workers"][bot]["branch"], "base_source_hash": lane["accepted_source_hash"],
                 "accepted_commit": accepted["commit_sha"], "input_revision": lane["latest_tip"],
                 "accepted_snapshot": accepted["snapshot"], "infrastructure_commit": config["infrastructure_commit"],
                 "engine_version": config["engine"]["version"], "engine_lock_hash": arena.adapter().lock_hash,
-                "evaluation_suite": config["evaluation"]["suite_version"], "feedback_id": latest["evaluation_id"],
-                "feedback": latest["summary"], "available_commands": [f"bot-check --owner-config /etc/battlecode/{bot}.json",
+                "evaluation_suite": config["evaluation"]["suite_version"],
+                "feedback_id": feedback_token(arena, bot, latest['evaluation_id']),
+                "feedback": dict(latest["summary"], experiment_context=context), "available_commands": [f"bot-check --owner-config /etc/battlecode/{bot}.json",
                     f"arena-client --config /etc/battlecode/{bot}.json feedback",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file final.json",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file bot-a.stdout.log",
@@ -92,7 +95,8 @@ def dispatch_tasks(arena):
         if not feedback_file.exists():
             continue
         latest = read_json(feedback_file)
-        feedback_id = latest["evaluation_id"]
+        from .strategy import feedback_token
+        feedback_id = feedback_token(arena, bot, latest['evaluation_id'])
         if worker["last_feedback"] == feedback_id:
             continue  # Idle workers consume no model calls.
         new_task(arena, bot)

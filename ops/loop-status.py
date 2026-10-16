@@ -5,6 +5,7 @@ from pathlib import Path
 
 state = json.loads(Path('/srv/battlecode/public/status.json').read_text())
 report = {key: state[key] for key in ('heartbeat', 'paused', 'service_error', 'workers', 'matches', 'disk')}
+report['official_selection'] = state.get('official_selection')
 report['acceptance'] = json.loads(Path('/srv/battlecode/public/acceptance.json').read_text())
 report['attempts'] = {}
 for worker in state['workers']:
