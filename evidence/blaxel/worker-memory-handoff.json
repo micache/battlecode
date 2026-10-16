@@ -1,0 +1,65 @@
+{
+  "protocol_version": 1,
+  "deployed_infrastructure_commit": "d2465d72f7d2b9b1634700da4b3bfd1654800eb2",
+  "services_stopped_before_code_upgrade": true,
+  "managed_process": "arena-loop-memory-v1",
+  "migration": {
+    "process": "arena-install-worker-memory",
+    "exit_code": 0,
+    "recovered_worker_results": [
+      "task-19a2514ff9844f91a05aa5db3974f7a6",
+      "task-51b049ff72df4e3fbd500b4cdcfc1a29",
+      "task-1b0e5c1c51ef41f4a84bb0ef951cff7f",
+      "task-fdb0ed3be27842ab856f4f0660f1e1a4",
+      "task-40d0fac06d944338a6ad7b95d26248c1"
+    ],
+    "unavailable_final_results": ["task-d64d418366c1460d8577433cfbaf6b8d"],
+    "unavailable_final_recovery": "Existing patch and notes preserved; no final result invented.",
+    "recovered_compiler_report": "check:task-1b0e5c1c51ef41f4a84bb0ef951cff7f:67e149ef76461fc02aca4bbc6df04ee2234f19f6ea9176dcf47086c7d38ca0f5",
+    "original_artifacts_modified": false,
+    "credentials_inspected_or_modified": false
+  },
+  "owner_mailbox_verification": {
+    "process": "arena-owner-memory-mailbox-verification",
+    "exit_code": 0,
+    "alpha_history_command_exit": 0,
+    "alpha_blocked_hypothesis_retrieved": true,
+    "beta_history_command_exit": 0,
+    "beta_blocked_hypothesis_retrieved": true,
+    "alpha_check_report_command_exit": 0,
+    "alpha_compiler_diagnostics_readable_without_private_directory_access": true,
+    "actual_compiler_error": "ability_slots is a private member of cambc::champion",
+    "old_candidate_remains_unpublished": true
+  },
+  "new_real_coding_invocation": {
+    "task_id": "task-1dc3b256a0de46648114a0975812d515",
+    "bot_id": "alpha",
+    "state_at_observation": "RUNNING",
+    "recent_history_entries": 8,
+    "blocked_results_present": 2,
+    "last_evaluated_source_equals_edit_start": false,
+    "edit_start_source_verified": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+    "input_head": "4b6483b0e91df11262fb6d8b42ab2667778e1571",
+    "native_trace_command_events": 16,
+    "native_trace_reads_task_envelope": true,
+    "native_trace_reads_entry_identity": true,
+    "native_trace_requests_history_command_at_observation": false,
+    "native_trace_requests_check_report_at_observation": false,
+    "candidate_commit": null,
+    "new_evaluation_id": null,
+    "claims_improvement": false
+  },
+  "local_checks": {
+    "command": "python3 -m unittest discover -s tests -v",
+    "passed": 57,
+    "elapsed_seconds": 4.341,
+    "synthetic_orchestration_not_engine_acceptance": true
+  },
+  "limitations": [
+    "A bounded handoff is not a lossless transcript and cannot guarantee perfect model recall.",
+    "Unrecorded past reasoning cannot be reconstructed with certainty.",
+    "History and compiler data remain untrusted; no other owner's credentials or private holdout detail is exported.",
+    "The new invocation had not published or completed evaluation at this observation.",
+    "One global Codex invocation remains configured; no API billing or cross-account failover."
+  ]
+}
