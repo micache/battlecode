@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "checks": {
+    "bag=1,submitted=0,winning=1000": true,
+    "bag=22,submitted=0,winning=1000": true,
+    "bag=39,submitted=0,winning=1000": true,
+    "bag=40,submitted=0,winning=1000": true,
+    "bag=41,submitted=0,winning=1000": true,
+    "bag=1,submitted=999,winning=1000": true,
+    "bag=22,submitted=978,winning=1000": true,
+    "bag=22,submitted=977,winning=1000": true,
+    "bag=1,submitted=1199,winning=1200": true,
+    "bag=1,submitted=999,winning=1200": true,
+    "parameter_40_recorded": true,
+    "adjacent_tribute_precedes_threshold": true,
+    "small_bag_falls_through_to_farming": true,
+    "channels_and_recall_precede_bank": true,
+    "five_other_sources_unchanged": true
+  },
+  "limits": "Extracted scalar guard and source contracts only; no runtime branch coverage, path safety, fuel or game result."
+}

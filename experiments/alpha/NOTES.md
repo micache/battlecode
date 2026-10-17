@@ -1,82 +1,79 @@
-# Current experiment: task-33024ab941b8430ebfe7042ed223ad18
+# Current experiment: task-16ae09faf2f3493c96020478c07abf26
 
 ## Identity and prior work
-- Bot alpha; branch bot/alpha; input HEAD bf616d85ce50cbb69c611788b2fc1660dbd465a2.
+- Bot alpha; branch bot/alpha; HEAD/input 2922097615b8a32c91fbd02096fab41896c7623c.
 - Accepted edit start c0cebd720fcd55e2bbb51d57dd2c398889d4071e; base source
   9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-- Entry and all six source files matched accepted edit start before editing;
-  initial working diff was trusted source restoration, not unfinished new work.
-  Accepted Git snapshot remains outside this transaction. Previous NOTES saved
-  as task-1d40090f953b4001923fb46ca3b542b8.md; older recovery artifacts retained.
+- Entry identity, branch/HEAD and all six accepted source files verified. Initial
+  diff is trusted restoration, not unfinished work. Accepted Git snapshot remains
+  outside this transaction. Prior NOTES archived as task-33024ab941b8430ebfe7042ed223ad18.md.
 - Latest candidate evaluated INCONCLUSIVE, not pending; eight supplied recent
-  tasks PUBLISHED. No recovery, publication or evaluation requested here.
+  tasks PUBLISHED. Historical recovery artifacts retained; none applied here.
 - Engine/SDK 2.1.6; historical-panels-v1; engine lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-  Installed C++ header SHA256 matches supplied 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-- Documentation manifest verified unchanged; routine iteration consulted compact
-  reference, RESEARCH.md, playbook C, relevant handbook and SDK sections.
+- Documentation and installed C++ header hashes match unchanged handoff manifest.
+  Consulted compact reference, RESEARCH.md, playbook C and relevant rules/SDK.
   Separate organizers' AGENTS.md remains absent and unreviewed.
 
-## One hypothesis: playbook C, interrupted low-health recovery
-Moving toward allied spawn only before retrying an interrupted low-health recall
-will reduce mean champion deaths versus accepted source on matched development
-cases. Unchanged or increased deaths falsifies this prediction. Compare submitted
-and collected gems and outcomes to assess objective cost; compare the prior
-unconditional-retreat candidate descriptively, without pooling source revisions.
+## One hypothesis: playbook C, batch small banking trips
+Requiring at least 40 carried gems before travelling to an altar, except when
+this bag could reach the team's winning total, while preserving immediate tribute
+beside an unlocked altar, will increase mean submitted gems versus accepted source
+on matched development cases. Unchanged or decreased submission falsifies this
+prediction. Compare collection, deaths, carried gems and outcomes for opportunity cost.
 
 ## Evidence and change
-- Evaluation 1304894436dcf2cdb4d134cbbd15c66c9071c59b1eeec55aa44bd1ddc02b9d94
-  evaluates commit bf616d85ce50cbb69c611788b2fc1660dbd465a2 / source
-  0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26,
-  NOT accepted edit start. Development 18W/6L, no faults/missing/unknown;
-  mean deaths 3.2083. Provisional suite, no strength conclusion.
-- Collision B loss 3994df201d3d20795493872243ea7a74003180230571b321bd0768ff75eb0867:
-  round 1083, 10 deaths, 814 collected, 704 submitted vs A's 1012.
-  botFaults [0,0]; outcome teamA. Complete final reconstructed from two bounded
-  arena-client slices, saved in this task's -collision-final.json.
-- Also supplied collision A loss 65af7fb0944b457136f8545ef905473b0859fc80f5a411720a76c351b9851d5a;
-  detailed runtime cause unknown. Both match references belong to the above
-  evaluated source. Aggregate loss/death metrics do not prove interruptions.
-- Reproducible accepted-source behavior: every actionable low-health turn away
-  from spawn recalls without moving. Damage can cancel that channel, leading to
-  stationary retries. Latest unconditional-retreat results motivate refinement:
-  avoid detours on the initial recall attempt while retaining movement on retries.
-- Add one private per-champion boolean, armed only after observing an active
-  recall started by this bot. Existing live/dead/channel guard retains it while
-  unable to act. At the next actionable nonchannel turn, consume the flag;
-  spawn arrival or recovered health expires it without a retreat.
-- On a flagged low-health retry away from spawn, call existing bounded navigation
-  once toward allied spawn. Refresh own position. Start/observe recall only if
-  still away; walking arrival yields through end_turn for spawn healing.
-  A failed move retains recall fallback. Initial attempts remain stationary.
-- No shared-memory layout, draft, combat, shopping, threshold (35%), randomness
-  or runtime settings changed. Four other source files remain accepted-identical.
-- Rules: GameRules.md 116,122,270-274,369-375 (action/channel timing, damage
-  cancellation, spawn healing). SDK cambc.h 3448,3661-3665 (live recall state and
-  self-only void recall command). Only own live state is added as a runtime input.
+- Latest evaluation 52ac2f31210d8284b6d609b1f341d6ac8cff27a9e85123ce7b69638acca52217
+  covers commit 2922097615b8a32c91fbd02096fab41896c7623c / source
+  d08f6defabd911f8664dac894f139d683dcc31c686186d5dbb56c3b1f9b12202,
+  NOT accepted edit start. Development 12W/12L, zero faults/missing/unknown;
+  means 915.4167 collected and 852.3333 submitted gems. Provisional coverage.
+- Collision B loss 304869219d5bacf44c7bd462d9927586991f1462250e6a2cac4702bddf9d23e2,
+  that evaluated source: round 1151, 990 collected, 880 submitted, 12 deaths,
+  no carried gems; A submitted 1012, outcome teamA, botFaults [0,0]. Complete
+  final.json reconstructed from two bounded slices and saved in this task's
+  -collision-final.json. Also supplied collision A loss
+  56c6124966b3835826dadd2075bef552c1c160cc2decf687435c23147889c86e.
+- Aggregate metrics do not establish trip frequency or the cause of either loss.
+  Reproducible source behavior: every positive bag enters altar travel before
+  farming; split camp rewards can trigger a trip for a small bag. Batching tests
+  travel overhead, distinct from prior combat-priority and tribute-on-arrival tests.
+- Single source change: keep existing immediate unlocked-altar tribute loop;
+  gate its travel/return on bag >=40 or bag + allied submitted >= SDK winning_gems.
+  Smaller nonwinning bags fall through to unchanged farming. No parameter sweep.
+- Parameter 40 batches ordinary 22/24/36-gem rewards rather than mandating a trip
+  after one such reward; opportunistic adjacent tribute remains available.
+- Enemy-attack priority, recall, shopping, navigation, channels, draft, shared
+  memory and five other source files remain accepted-identical. No new live
+  hidden information or private state. Winning exception uses public team score.
+- SDK cambc.h 113,4156-4163: engine-configured winning_gems and
+  global_submitted_gems(team). Rules GameRules.md 215-230: carried gems do not
+  score, bags can be stolen, tribute duration and current-bag completion.
 
-## Validation and remaining uncertainty
-- Source contract regression PASSED; report this task's -source-check.json.
-  Checks private state, first-attempt gating, one move, channel preservation,
-  refreshed arrival, observed start, unchanged other sources and official yield.
-  This is source inspection, not runtime branch coverage or fuel measurement.
-- git diff --check PASSED, exit 0; accepted-relative diff reviewed.
+## Validation and uncertainty
+- python3 experiments/alpha/check_bank_batching.py --report
+  experiments/alpha/task-16ae09faf2f3493c96020478c07abf26-source-check.json
+  PASSED, exit 0: extracted scalar predicate covers 39/40 boundary, decisive bags
+  and alternate SDK winning totals; source contracts cover adjacent tribute,
+  farming fallthrough, channels and unchanged other sources. Not C++ runtime coverage.
+- git diff --check PASSED, exit 0; reviewed accepted-relative source diff.
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
-  PASSED, exit 0. Exact checked source
-  d08f6defabd911f8664dac894f139d683dcc31c686186d5dbb56c3b1f9b12202.
-  Report .agent/check-task-33024ab941b8430ebfe7042ed223ad18.json;
-  reference check:task-33024ab941b8430ebfe7042ed223ad18:d08f6defabd911f8664dac894f139d683dcc31c686186d5dbb56c3b1f9b12202.
-  Smoke IDs 4289c931c167d7bee66811a7a61f77f718957c63595a2fe6b0bc17fceb6ca6a0
-  and 73c64b6da10cadc1dd0e044f6155b7c4785149f3c4a3005042b28a019b2c9e0a.
-  Smoke finals/action logs not inspected; no completed-game or branch-coverage
-  claim follows from those IDs. Source unchanged after trusted check.
-- READY_FOR_EVAL; no strength claim, publication or tournament invocation.
-- Mortality cause and actual interruption frequency remain unknown. Retreat may
-  approach threats, reveal blockers, fail, or use fuel; no safety/path monotonicity
-  is claimed. The accepted post-recall early-departure behavior remains a risk.
-- final.json exports engineVersion 0.0.1 / packed 65536 while trusted task pins
-  CLI/SDK 2.1.6. Slice carries no lock identity; relationship of that field to CLI
-  version is unknown, and no engine mismatch is inferred from it alone.
-- Next: supervisor evaluates exact checked candidate against accepted source;
-  compare deaths, submitted/collected gems and outcomes. If mortality does not
-  improve, obtain bounded interruption traces before further recovery changes.
+  PASSED, exit 0; exact checked source
+  bda6b99d4eafb07fc4069caca6abba24dd3c668024f994bd9fa4c9a02717da62.
+  Local report .agent/check-task-16ae09faf2f3493c96020478c07abf26.json;
+  reference check:task-16ae09faf2f3493c96020478c07abf26:bda6b99d4eafb07fc4069caca6abba24dd3c668024f994bd9fa4c9a02717da62.
+  Smoke IDs 08394f160e857d71f278eb061fb15bd53ddbac0bbdd2d7e6ac0bbccaa87cc4ff
+  and cb5847a2a71338d1e8d031bac3e1b9b68dea20c02dd72a61e5be3e0579350a9a.
+  Smoke finals/action logs uninspected; no full-game or branch-coverage claim.
+  No bot source changed after the trusted check. READY_FOR_EVAL; no strength claim,
+  publication, tournament evaluation or official action.
+- Risks: larger lost bags, longer channels, waiting on farming without a reachable
+  camp, and small bags stranded at round limit. Winning-total exception avoids
+  withholding a potentially decisive bag but does not account for teammates'
+  current channels. No threat-aware batching or timeout exception is added.
+- Exact trip frequency, fuel headroom and runtime branch coverage remain unknown.
+- final.json engineVersion 0.0.1 / packed 65536 differs in format from trusted
+  CLI/SDK 2.1.6; its relationship to CLI version is unknown. Slice has no lock ID.
+- Next: supervisor evaluates exact checked source against accepted, comparing
+  submitted/collected gems, deaths, carried gems and outcomes. If submission
+  fails to improve, obtain trip/bag-loss traces before changing this threshold.

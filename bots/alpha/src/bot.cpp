@@ -126,22 +126,12 @@ void Bot::play_turn() {
 
     // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
-    // An observed recall ended away from spawn: move before a low-health retry.
-    const bool retrying_recall = recall_pending && !at_spawn;
-    recall_pending = false;
     if (at_spawn)
         buy_items();
 
-    // Preserve the first attempt; try one retreat before an interrupted retry.
+    // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
-        const auto spawn = cambc::map::spawn_region(team::ally);
-        if (retrying_recall)
-            move_towards_closest(spawn);
-        // Refresh position: walking onto spawn can heal through this turn end.
-        if (!spawn.is_set(me.position())) {
-            me.recall();
-            recall_pending = me.is_recalling();
-        }
+        me.recall();
         return;
     }
 
@@ -150,7 +140,7 @@ void Bot::play_turn() {
         if (attack_if_in_range(enemy))
             return;
 
-    // Bank any carried gems before farming.
+    // Bank beside an altar immediately; batch small bags before travelling.
     if (me.gem_count() > 0) {
         // Union all altar approach tiles: the field chooses the nearest reachable altar.
         cambc::bitboard goals;
@@ -163,8 +153,13 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        move_towards_closest(goals);
-        return;
+        constexpr unsigned bank_travel_minimum = 40;
+        if (me.gem_count() >= bank_travel_minimum
+            || me.gem_count() + cambc::global_submitted_gems(team::ally)
+                >= cambc::constants::winning_gems) {
+            move_towards_closest(goals);
+            return;
+        }
     }
 
     farm_camps();
