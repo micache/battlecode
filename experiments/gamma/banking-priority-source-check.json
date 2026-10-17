@@ -1,0 +1,13 @@
+{
+  "kind": "source invariant only; no runtime safety or strategic result inferred",
+  "bot_cpp_sha256": "fbe53e6637e95498631f6d90ccb1ca0e6832fe1df3fb7cfa49ed1de36a58af12",
+  "checks": {
+    "accepted_source_reproduces_combat_before_carrier_bank": true,
+    "carrier_bank_precedes_enemy_scan_and_farming": true,
+    "carrier_bank_returns_without_falling_into_combat": true,
+    "submission_and_route_logic_preserved": true,
+    "channel_guards_and_recall_still_precede_banking": true,
+    "official_dispatcher_still_yields": true
+  },
+  "passed": true
+}

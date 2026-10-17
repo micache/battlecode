@@ -67,7 +67,7 @@ void Bot::buy_items() {
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
 
-// Basic attack, then use at most one ready reset against a surviving target.
+// Make one basic attack if the target is already in attack range.
 template<class Target>
 bool attack_if_in_range(const Target& target) {
     auto& me = cambc::self();
@@ -76,18 +76,6 @@ bool attack_if_in_range(const Target& target) {
         return false;
     }
     me.attack(target);
-
-    // Do not spend a reset on a kill or query a target that left vision.
-    if (!target.is_visible() || target.health() <= 0)
-        return true;
-    for (const auto& ability : me.abilities()) {
-        if (!ability.is_attack_reset() || !ability.can_target_self() || !ability.is_ready())
-            continue;
-        if (ability.use() && me.can_attack() && target.is_visible() && target.health() > 0
-            && me.attack_tiles().is_set(target.position()))
-            me.attack(target);
-        break; // One cast attempt and at most two basic attacks per decision.
-    }
     return true;
 }
 
@@ -147,12 +135,7 @@ void Bot::play_turn() {
         return;
     }
 
-    // Attack the first enemy champion already in range.
-    for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy))
-            return;
-
-    // Bank any carried gems before farming.
+    // Carriers bank before optional combat so enemies cannot stall the route.
     if (me.gem_count() > 0) {
         // Union all altar approach tiles: the field chooses the nearest reachable altar.
         cambc::bitboard goals;
@@ -168,6 +151,11 @@ void Bot::play_turn() {
         move_towards_closest(goals);
         return;
     }
+
+    // Empty-handed champions attack the first enemy already in range.
+    for (const auto& enemy : cambc::vision::champions(team::enemy))
+        if (attack_if_in_range(enemy))
+            return;
 
     farm_camps();
 

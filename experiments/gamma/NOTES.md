@@ -1,115 +1,61 @@
 # Gamma operational notes
 
-## task-804d38a081924ff980942fe625d276d1 — attack resets
+## task-c5099149f7fa457b85e0b4328c3c47ef — carrier banking priority
 
-- Identity: branch `bot/gamma`, input HEAD
-  `be3946bb49293a4dd646c243717a6a8bf7502204`; all six edit-start files match
-  accepted `1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d`, source
-  `9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f`.
-  Accepted code remains in Git and the trusted accepted snapshot. Initial dirty
-  bot.cpp is the supervisor's accepted-source restoration, not unfinished work.
-- Prior spawn-recovery candidate was evaluated: evaluation
-  `5dc9194a4d7f6c82e015731b478722e72ee5429d5757b29f76dd602698bd2943`,
-  INCONCLUSIVE, 27W/27L, zero recorded faults, full-nine-map coverage. No candidate
-  awaits evaluation. This experiment starts from accepted code, not that candidate.
-- Playbook D. Hypothesis: unused attack-reset abilities waste safe follow-up
-  damage, prolong camp clears and fights, and delay gem conversion. Spending one
-  ready reset after a basic attack on a surviving target should improve tribute.
-- Falsifiable prediction: when a visible target survives an in-range basic and
-  a self-targeted reset is ready, attempt one reset and take a legal second basic.
-  Never cast on a killed/hidden target; at most one cast and two basics per helper.
-  In matched development games versus accepted source, expect higher mean
-  submitted gems with no new bot faults. Equal/lower tribute does not support
-  the predicted objective gain; win rate remains the promotion criterion.
-- Evidence: two completed collision/B losses for the PRIOR candidate/source
-  `439fcfcda990dec5af8bda61db4076330daf5725f267fc75f6a2a71faf55bb97`:
-  `0c4dfc600b817143ab95be0c00a632821a34e9b91873ad7ec26aa4e79ac1bae8`
-  (round 1438, 858 submitted, 36 body deaths), and
-  `ca90f18339461552e38df68f2aab898148c28f068cbabe6500fc288810b58ee4`
-  (round 1158, 528 submitted, 31 body deaths). Both record zero bot faults.
-  Final slices and candidate-only metrics: `attack-reset-evidence.json`.
-  Linked Cassi/Issac deaths are counted per body here, not inferred team kills.
-  These losses motivate the work; they do not prove unused resets caused them.
-- Source mechanism: accepted attack helper returns after one basic; no ability
-  casts exist. Handbook attack economy and reset sections establish self-targeted,
-  walk-compatible resets. Matching SDK: `is_ready()` checks cooldown and live
-  can_cast; `is_attack_reset()` uses cached metadata; `use()` casts untargeted.
-  The compact docs are unchanged, so no full rules/API/SDK reread was needed.
-- Change: extend only the existing champion/camp attack helper. Skip killed or
-  hidden targets, select a ready self-targeted reset in slot order, cast once,
-  revalidate allowance/visibility/health/range, and attack once more. No new
-  persistent state, loops over targets, drafting, navigation or channel changes.
-- Source check: `python3 experiments/gamma/check_attack_reset.py`, exit 0;
-  `attack-reset-source-check.json`. Checks visibility-before-live-state ordering,
-  post-cast legality, finite actions and official yield. Source invariants only,
-  not an engine combat fixture. `git diff --check` passed.
-- First trusted build failed, exit 1, because `ability_slots` is private; corrected
-  the loop to use public `abilities()`. Failed source
-  `fe16248771ad422843b55421df16fcba56943c1f6502fb6d1b80358cfc3d4795`;
-  preserved report `attack-reset-check-initial.json`. Source invariants and
-  whitespace check pass again after the correction.
-- Trusted recheck: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
+- Identity verified: `bot/gamma`, HEAD/input
+  `524b799376d7de344bf6c12c3135149d116adfd8`; all six source files matched
+  trusted accepted edit-start hashes before edits. Base source
+  `9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f`,
+  accepted commit `1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d` remains in Git
+  and the trusted accepted snapshot outside this edit transaction.
+- No candidate awaits evaluation. Previous attack-reset experiment was REJECTED
+  in `cadbbc35adcf7ff4481fcd593999336ca855f867bdd537ce08ec9c8c3de2f967`:
+  28W/44L, matched delta -0.0277778, zero faults/missing/unknown reliability.
+  Its source `fa3daecd898c0a5b98a4028f5368b4507e5db55bd9a7900c752a7769e1f480c7`
+  is distinct from this edit-start. Spawn recovery was INCONCLUSIVE, 27W/27L.
+  Older complete notes preserved under `archive/<task-id>.md`.
+- Playbook C. Hypothesis: in-range enemy attacks starve carriers' banking turns;
+  banking before optional combat should increase submitted gems without new bot
+  faults. Source reproducer: an actionable carrier above the recall threshold,
+  with a visible attackable enemy, always attacks/returns before the bank branch
+  in accepted code. This affects melee too; ranged attacks also consume movement.
+- Falsifiable prediction: such carriers enter the existing altar submission/route
+  branch without attacking enemies, while empty-handed champions retain combat
+  priority over farming. In matched frozen development cases against accepted
+  source, expect higher mean submitted gems and no new bot faults. Equal/lower
+  tribute does not support this prediction; actual win rate decides promotion.
+- Motivation: completed collision/B loss
+  `ca7e4b31883572c867b44da80416f729d61085b4de83bc85156dac899d9ed2df`, round
+  1212, 770 collected / 528 submitted, 37 body deaths, zero bot faults; collision/A
+  loss `247d9521604af60c6894232443c96ea5d684045d039221388cbe1fd1c99868a8`,
+  round 1049, 616 collected / 550 submitted, 16 body deaths, zero bot faults.
+  Both evaluate previous attack-reset commit/source above, NOT the accepted code
+  now being edited. The second identical collision/B summary is not counted as
+  independent evidence. Saved supplied metrics: `banking-priority-evidence.json`.
+  These totals motivate conversion work; no trace proves the hypothesized cause.
+- Change: move the existing enemy-attack loop after the complete carried-gem
+  banking branch. Preserve low-health recall, ongoing-channel guards, bank route,
+  lock handling, farming, legal attack checks and official dispatcher yield.
+  No new state, thresholds, API calls or path searches. Update header priority comment.
+- Source regression: `python3 experiments/gamma/check_banking_priority.py`, exit 0;
+  `banking-priority-source-check.json`. Accepted code reproduces combat-before-bank;
+  candidate satisfies carrier priority, bank-body preservation, channel guards,
+  and official yield. Source invariants only, not an engine scenario. Whitespace
+  check `git diff --check` also passed, exit 0.
+- Trusted check: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
   PASSED, exit 0. Exact candidate source
-  `fa3daecd898c0a5b98a4028f5368b4507e5db55bd9a7900c752a7769e1f480c7`.
-  Report `.agent/check-task-804d38a081924ff980942fe625d276d1.json`;
-  reference `check:task-804d38a081924ff980942fe625d276d1:fa3daecd898c0a5b98a4028f5368b4507e5db55bd9a7900c752a7769e1f480c7`.
-  Two smoke match IDs supplied; no scores, completion or fuel telemetry inferred.
-  READY_FOR_EVAL; no measured strategic improvement or worker-run tournament.
-- Uncertainty: no per-turn ability/fuel trace; conserving resets for another
-  target might be better. Final JSON's internal engineVersion is `0.0.1`, recorded
-  verbatim, while the trusted task pins CLI/SDK 2.1.6. No runtime-version inference.
-  Next: supervisor evaluates exact source versus accepted on frozen development
-  cases; if unsupported, inspect objective delay before adding more ability types.
-
-## task-7e4eb7d70e1d48658283dd9ac19bfb0a — spawn recovery
-
-- Base: accepted/input commit `1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d`,
-  source `9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f`.
-  Branch and all six source file hashes match the trusted handoff. Accepted code
-  remains in Git and the task's accepted snapshot, outside this edit transaction.
-- Prior task `task-f17bcd1d3dad4df8a50a2eaef40fb82d`: inspected its exact notes,
-  final result and empty checkpoint patch. It failed before task reads; the trusted
-  infrastructure finding confirms unchanged source. No candidate awaits evaluation.
-- Playbook C, recovery cost in the farming/banking route.
-- Hypothesis: leaving spawn injured after recall wastes recovery and encourages
-  short low-health excursions or repeated recalls. Waiting on spawn while injured
-  should reduce champion deaths and increase submitted gems on the frozen loss cases.
-- Falsifiable prediction: an actionable, injured champion on allied spawn shops,
-  yields without moving, and resumes the existing policy once fully healed.
-  Development comparison should lower mean deaths below the accepted 28.0 and
-  raise mean submitted gems above 714.67 over the same six cases; otherwise the
-  expected strategic gain is unsupported. No measured improvement yet.
-- Evidence: evaluation `f49c7fcaa2a555312128aa5dc806f4c9737d51fc9a1975e2bf19afc0177a958f`
-  evaluated the base source: 3 wins / 3 losses, zero recorded bot faults.
-  Collision B `be7a20ffb7ecec8faa5301faa76682357f1bcdc5098eb827d37caf47afed7c13`:
-  36 deaths, 814 submitted gems, round 1448. Corners B
-  `aab197827373931960687193e6155be9c43ae29f2d7ee7a902b891d16ce81052`:
-  16 deaths, 110 submitted gems, round 522. Both use the base revision above.
-  These motivate recovery work but do not establish the cause of those deaths.
-  Bounded collision stdout contains shared-round logs, not health/position traces.
-- Source mechanism: the accepted spawn branch only shopped, then proceeded to
-  combat/banking/farming immediately. GameRules.md, Death/recall & recovery, says
-  recall arrives at turn start and healing needs spawn occupancy through turn end.
-- Change: after shopping on spawn, return while health is below maximum. The
-  existing dispatcher then calls official end_turn(). No persistent state needed.
-  Existing early returns preserve ongoing channels and handle dead/stunned turns.
-- Source regression: `python3 experiments/gamma/check_spawn_recovery.py`, exit 0;
-  report `experiments/gamma/spawn-recovery-source-check.json`. It reproduces the
-  accepted source's missing guard, verifies the candidate guard precedes tactical
-  actions, and checks the dispatcher retains official yield. This is a source
-  invariant, not a runtime recall/healing fixture. `git diff --check` passed.
-- Trusted validation: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`
-  passed, exit 0. Exact candidate source:
-  `439fcfcda990dec5af8bda61db4076330daf5725f267fc75f6a2a71faf55bb97`.
-  Report `.agent/check-task-7e4eb7d70e1d48658283dd9ac19bfb0a.json`;
-  reference `check:task-7e4eb7d70e1d48658283dd9ac19bfb0a:439fcfcda990dec5af8bda61db4076330daf5725f267fc75f6a2a71faf55bb97`.
-  Wrapper lists two smoke match IDs but supplies no scores, completion or fuel
-  telemetry here; no such metrics inferred. No tournament evaluation run by this
-  worker. READY_FOR_EVAL; supervisor owns comparison, publication and promotion.
-- Uncertainty: no available per-turn trace proves recall churn in these matches;
-  extra recovery turns may delay a tribute or block an ally's spawn. Interrupted
-  recalls and unsafe recall initiation are unchanged. Next idea, only after this
-  evaluation: diagnose recall interruption if deaths remain high.
+  `df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3`.
+  Report `.agent/check-task-c5099149f7fa457b85e0b4328c3c47ef.json`;
+  reference `check:task-c5099149f7fa457b85e0b4328c3c47ef:df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3`.
+  Two smoke match IDs supplied; no scores, game completion, or fuel telemetry
+  inferred. READY_FOR_EVAL; no worker-run tournament or measured strategic gain.
+- Uncertainty: no bag-loss, interruption or per-turn trace is available. Giving up
+  an attack may let an enemy kill a carrier or block its approach; channels can
+  still be interrupted by stun/death/locks. Known existing all-locked/blocked
+  route behavior is unchanged. No claim of strategic improvement before evaluation.
+- Next: supervisor evaluates this exact checked source versus accepted on frozen
+  development cases. If unsupported, inspect blocked altar approaches before
+  considering a separate route/fallback experiment.
 
 ## Bootstrap documentation review (2026-10-17)
 

@@ -1,0 +1,158 @@
+{
+  "evaluation_id": "cadbbc35adcf7ff4481fcd593999336ca855f867bdd537ce08ec9c8c3de2f967",
+  "candidate": {
+    "build_id": "bf6fad0e5d4b78cd68fe150deb99d0952a3deb4d935fca4be3dac1333139660b",
+    "commit": "524b799376d7de344bf6c12c3135149d116adfd8",
+    "revision_id": "29d2e5ac8e4d416ff098a9f9d80df5bbdd8d1932c601e17efe249ee2f3929e4c",
+    "source_hash": "fa3daecd898c0a5b98a4028f5368b4507e5db55bd9a7900c752a7769e1f480c7"
+  },
+  "decision": "REJECTED",
+  "base_source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "failures": [
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 16,
+            "B": 37
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 14,
+            "B": 9
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1078,
+            "B": 770
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 4840,
+            "B": 3995
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 1212
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 1012,
+            "B": 528
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 550,
+            "B": 725
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "ca7e4b31883572c867b44da80416f729d61085b4de83bc85156dac899d9ed2df",
+      "round": 1212,
+      "side": "B",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 16,
+            "B": 25
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 7,
+            "B": 15
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 616,
+            "B": 1100
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 3075,
+            "B": 5925
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 1049
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 550,
+            "B": 1012
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 405,
+            "B": 375
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "247d9521604af60c6894232443c96ea5d684045d039221388cbe1fd1c99868a8",
+      "round": 1049,
+      "side": "A",
+      "trace": null
+    }
+  ],
+  "metrics_not_available": [
+    "bag_loss",
+    "capture_completion",
+    "channel_interruptions",
+    "per_turn_damage"
+  ],
+  "limits": "Supplied development final metrics, not a causal per-turn trace. Candidate differs from accepted edit-start. Repeated identical collision/B summary omitted."
+}
