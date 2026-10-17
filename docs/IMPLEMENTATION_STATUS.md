@@ -8,6 +8,25 @@ this is not yet a claim of completed model improvement cycles for gamma.
 Completed match working trees are now losslessly archived; raw replay/statistics
 and canonical source evidence remain retained. See [active training](HOURLY_TRAINING.md).
 
+The first new beta/gamma attempts failed before reading their task files because
+the cancelled Claude setup installed a system Bubblewrap that shadowed Codex's
+bundled helper. Services were stopped, the added package removed, and native
+task-read/workspace-write/mailbox-write/outside-write-denial probes passed.
+No directory permissions or sandbox boundaries were relaxed. Both original
+attempts and their unchanged source hashes are preserved in
+[the repair evidence](../evidence/blaxel/native-codex-sandbox-restored.json).
+Their next attempts retain the original hourly clocks, not immediate retries.
+Blocked attempts do not establish that bootstrap documents were reviewed.
+
+[The post-restart snapshot](../evidence/blaxel/three-codex-live-restored.json)
+records all four services alive without unit restarts, scheduling unpaused,
+fresh heartbeats, no service error/disk-pressure flag, and all three native
+model configurations set to `gpt-6.1-sol` / `high`. Completed matches advanced
+from 286 to 296 across independent operator requests after launch. Alpha was
+awaiting evaluation; beta/gamma were resumed and idle until their hourly slots.
+The snapshot is historical evidence, not a real-time status endpoint. Physical
+VM reboot persistence and gamma's first successful improvement remain unverified.
+
 Latest maintenance: native official contest login succeeded; the owner now
 authorizes guarded official publishing and unranked exploration. Historical
 training panels, every-fifth-cycle exploration, bounded full suites, external
@@ -21,9 +40,9 @@ evaluated source identities, own-attempt recovery pointers and readable compiler
 diagnostics. Fresh conversations are retained; no claim of lossless model memory.
 
 The arena is deployed on Blaxel `banabolabs/battlecode-arena` (4 CPU, 8192 MB
-RAM, 8192 MB persistent volume). Both owners completed native ChatGPT logins;
-the repository deploy key is installed. Actual model improvement jobs have
-completed two publication/evaluation cycles per lane. **Formal readiness is not
+RAM, 8192 MB persistent volume). All three owners completed native ChatGPT logins;
+the repository deploy key is installed. Alpha and beta have each
+completed two publication/evaluation cycles. **Formal readiness is not
 yet certified**, for the explicit limits below. No synthetic/manual task is
 counted as a Codex improvement cycle.
 
@@ -61,7 +80,7 @@ sealed match artifacts and replays remain on the server.
 
 ## Pending and explicit limits
 
-- Two actual Codex cycles per lane are complete in `live-cycles.json` and
+- Two actual Codex cycles per original lane (alpha/beta) are complete in `live-cycles.json` and
   `live-evaluations.json`, with frozen suites, real commits and match IDs:
   alpha `4922166cd44fa0bc1291cf9ccd9b05125cfcb84a`, then
   `a27105b001a30fab44c2ed4485f4e2888e25fdb7`; beta

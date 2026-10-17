@@ -75,7 +75,9 @@ creation outcome stops and requires reconciliation; it is never a blind retry.
 **No upload/challenge adapter is enabled or claimed implemented.** The monitor
 always includes a platform-verification blocker. The pinned CLI documents
 `submit BOT` and `bundle BOT --output FILE.zip`, but has no challenge command.
-The official web app script returned HTTP 403; no access check was bypassed.
+The original official web app request returned HTTP 403; a later ordinary
+public landing-page fetch succeeded, but did not establish these interfaces or
+event policies. No access check was bypassed.
 Uploading could affect the active ranked submission, and that effect is not
 verified. Current event AI/sharing/automation rules, organizer AGENTS.md,
 supported challenge requests, quotas, submission selection, polling and replay

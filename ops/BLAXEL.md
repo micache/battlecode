@@ -16,8 +16,9 @@ and [saved evidence](../evidence/blaxel/). Do not rerun installation on this ser
 - Rootless Podman, immutable local engine image, CLI/SDK 2.1.6, official C++ starter.
 - Codex CLI 0.163.0, pinned executable hash; separate Linux users, private homes,
   native authentication and writable clones. Only `bc-arena` publishes source.
-- Both owners now explicitly select `gpt-6.1-sol`, reasoning effort `high`, in
-  their private native CLI configurations; both have recorded high-effort turns.
+- All three owners explicitly select `gpt-6.1-sol`, reasoning effort `high`, in
+  their private native CLI configurations. Alpha and beta have completed real
+  improvement cycles; gamma's first successful improvement remains pending.
 - Three-map wiring suite. Automatic promotion, official operations, model API
   billing and cross-account failover are all disabled.
 - Artifact budget 3 GiB, minimum free space 1 GiB, automatic daily database
