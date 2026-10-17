@@ -1,6 +1,7 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -60,6 +61,20 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
+    // Complete one Jungle emblem in our chosen stat before buying Power.
+    const std::array jungle_items{cambc::item_type::jungle_shard_of_strength,
+        cambc::item_type::jungle_shard_of_focus, cambc::item_type::jungle_shard_of_health};
+    const auto jungle = jungle_items[chosen_stat];
+    const auto info = jungle.info();
+    const auto inventory = me.item_count();
+    if (info.result && inventory[*info.result] == 0) {
+        const unsigned missing = info.combine_count - inventory[jungle];
+        const unsigned count = std::min(me.gold_count() / info.cost, missing);
+        if (!count || !me.can_buy(jungle, count)) return;
+        me.buy(jungle, count);
+        if (count < missing) return;
+    }
+
     const std::array items{cambc::item_type::power_shard_of_strength,
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
@@ -128,10 +143,6 @@ void Bot::play_turn() {
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
     if (at_spawn)
         buy_items();
-
-    // Recall arrives before actions; spawn healing happens at turn end.
-    if (at_spawn && me.health() < me.max_health())
-        return;
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {

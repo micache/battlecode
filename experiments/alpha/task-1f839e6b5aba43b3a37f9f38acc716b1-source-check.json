@@ -1,0 +1,15 @@
+{
+  "task_id": "task-1f839e6b5aba43b3a37f9f38acc716b1",
+  "scope": "source invariants, not runtime or fuel",
+  "checks": {
+    "only_purchase_policy_changed": true,
+    "same_stat_order_as_power": true,
+    "skip_jungle_after_emblem": true,
+    "cap_purchase_at_emblem_completion": true,
+    "refresh_gold_for_power_after_jungle": true,
+    "other_executable_source_unchanged": true,
+    "header_only_comment_changed": true,
+    "official_yield_retained": true
+  },
+  "passed": true
+}

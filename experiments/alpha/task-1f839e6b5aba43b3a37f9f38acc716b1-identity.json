@@ -1,0 +1,27 @@
+{
+  "task_id": "task-1f839e6b5aba43b3a37f9f38acc716b1",
+  "bot_id": "alpha",
+  "base_source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "branch": "bot/alpha",
+  "head": "5765d16e1d7381f1bba26a05d5cbb3245510f65b",
+  "entry_accepted_source_verified": true,
+  "sdk_header_sha256": "90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d",
+  "documentation_hash_matches": {
+    "AGENTS.md": true,
+    "BOT_REFERENCE.md": true,
+    "PLAYBOOKS.md": true,
+    "RESEARCH.md": true,
+    "sources/BotAPIPython.md": true,
+    "sources/GameRules.md": true
+  },
+  "latest_evaluation": {
+    "id": "06a2777c9a47592be795d4c2a5affda07b5ae83a4aaf67740d688c686b18693d",
+    "decision": "INCONCLUSIVE",
+    "candidate": {
+      "build_id": "d6aa20c7b55f610524ae6583ecba6046aa7225d2a130319f614af12b941b29d5",
+      "commit": "5765d16e1d7381f1bba26a05d5cbb3245510f65b",
+      "revision_id": "f5e83ea90c77f6a30568cc8e0ebfa538d71784154478bb53cdab299817443f0b",
+      "source_hash": "4b1ee918038011be24888b3b8e918831c1451e45a07ba9e518647afa93f3e21b"
+    }
+  }
+}
