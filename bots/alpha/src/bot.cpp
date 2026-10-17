@@ -79,24 +79,6 @@ bool attack_if_in_range(const Target& target) {
     return true;
 }
 
-// Take one predicted lethal unit spell before ordinary combat or movement.
-bool finish_enemy_with_spell() {
-    const auto abilities = cambc::self().abilities();
-    for (const auto& enemy : cambc::vision::champions(team::enemy)) {
-        if (!enemy.is_visible() || enemy.health() <= 0)
-            continue;
-        for (const auto& spell : abilities) {
-            if (!spell.is_damage() || !spell.is_ready() || !spell.can_target_enemies()
-                || !spell.valid_tiles().is_set(enemy.position()))
-                continue;
-            // The target-specific query includes mitigation and shields.
-            if (spell.damage_amount(enemy) >= enemy.health())
-                return spell.use(enemy);
-        }
-    }
-    return false;
-}
-
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
     for (const auto& camp : cambc::vision::camps())
@@ -147,15 +129,15 @@ void Bot::play_turn() {
     if (at_spawn)
         buy_items();
 
-    // Recall immediately when badly hurt away from spawn.
+    // Retreat before recall so repeated damage interruptions still allow progress.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
-        me.recall();
+        const auto spawn = cambc::map::spawn_region(team::ally);
+        move_towards_closest(spawn);
+        // Arrival by walking can heal at turn end without starting a channel.
+        if (!spawn.is_set(me.position()))
+            me.recall();
         return;
     }
-
-    // Finish a visible enemy if one direct spell is predicted to kill it.
-    if (finish_enemy_with_spell())
-        return;
 
     // Attack the first enemy champion already in range.
     for (const auto& enemy : cambc::vision::champions(team::enemy))

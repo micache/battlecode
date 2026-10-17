@@ -1,0 +1,22 @@
+{
+  "task_id": "task-1d40090f953b4001923fb46ca3b542b8",
+  "checks": {
+    "task_identity": true,
+    "bot_identity": true,
+    "branch": true,
+    "head": true,
+    "base": true,
+    "source_files": true,
+    "accepted_snapshot": true,
+    "docs": true,
+    "sdk": true,
+    "latest_evaluated": true
+  },
+  "input_revision": "8591c7594ad9fe756ce06c24a4f05aac146396e7",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "base_source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "engine_version": "2.1.6",
+  "engine_lock_hash": "00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668",
+  "evaluation_suite": "historical-panels-v1",
+  "entry_diff": "Trusted accepted-source restoration, not unfinished new work."
+}
