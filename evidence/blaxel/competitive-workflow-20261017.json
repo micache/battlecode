@@ -1,0 +1,329 @@
+{
+  "runtime_commit": "73d20a23d121b412411809ec1c2e0ec2bb6de346",
+  "local_validation": {
+    "command": "python3 -m unittest discover -s tests -q",
+    "tests_run": 99,
+    "exit_code": 0,
+    "skill_validator": "Skill is valid!",
+    "game_strength_improvement_demonstrated": false
+  },
+  "upgrade": {
+    "process_name": "arena-strategy-upgrade-20261017",
+    "status": "completed",
+    "exit_code": 0,
+    "result": {
+      "installed": "73d20a23d121b412411809ec1c2e0ec2bb6de346",
+      "previous_code_retained": "/opt/battlecode.previous-707a137c0a451f615cef589f5ffe174f5aa9e434",
+      "state_and_credentials": "unchanged",
+      "services_started": false
+    }
+  },
+  "bases": {
+    "process_name": "arena-strategy-bases-20261017",
+    "status": "completed",
+    "exit_code": 0,
+    "result": {
+      "alpha": {
+        "commit": "bf616d85ce50cbb69c611788b2fc1660dbd465a2",
+        "source_hash": "0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26",
+        "selection": {
+          "policy": "matched-development-v1",
+          "revision_id": "b443575d8e1fd8f3a42fd588e5f5db1ef9c89d2d22e61e44c45029a96d3dd789",
+          "commit": "bf616d85ce50cbb69c611788b2fc1660dbd465a2",
+          "source_hash": "0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26",
+          "accepted_champion_revision": "a10ff1b6607cfd0036e3bbbbd1c7ab6705e7b8b9c7c6bd6cf7cac5eca7ff7266",
+          "decision_digest": "7a42f0f3795f1cba4ef369c41e3ff81410e1572d488d58b861c5465d57702503",
+          "meaning": "Training edit base only, NOT champion promotion or official readiness. Broader coverage considered first; same-input development comparisons, >=3 maps, both sides, configured gain/drop limits. Holdouts never select this base; ties/regressions keep the prior base."
+        },
+        "advances": [
+          {
+            "from_source": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+            "to_source": "30783869b2a0e1af115e136a2bccea88b4b1b14b0ee0d688382cef8033fd5842",
+            "matched_delta": 0.3541666666666667,
+            "maps": 6,
+            "opponent_sources": 4,
+            "side_pairs": 24
+          },
+          {
+            "from_source": "30783869b2a0e1af115e136a2bccea88b4b1b14b0ee0d688382cef8033fd5842",
+            "to_source": "0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26",
+            "matched_delta": 0.16666666666666666,
+            "maps": 3,
+            "opponent_sources": 3,
+            "side_pairs": 9
+          }
+        ],
+        "recent_task_bases": [
+          {
+            "task_id": "task-2cc2849656a34761861827c63e161a62",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          },
+          {
+            "task_id": "task-16ae09faf2f3493c96020478c07abf26",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          },
+          {
+            "task_id": "task-33024ab941b8430ebfe7042ed223ad18",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          }
+        ]
+      },
+      "beta": {
+        "commit": "6450f60028bac2047cddd8cb8be0710823d583d3",
+        "source_hash": "0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1",
+        "selection": {
+          "policy": "matched-development-v1",
+          "revision_id": "8e99bfc5e9b45ed491550aa05ec38e0d344c7ab252398a6cb9971fa9cfecd549",
+          "commit": "6450f60028bac2047cddd8cb8be0710823d583d3",
+          "source_hash": "0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1",
+          "accepted_champion_revision": "81aa26167e8a921f1546965f95efb3dda21178cdad2679f68bcd32ef08f6acf5",
+          "decision_digest": "eae77e98a23db8e2eeb33e34f73e0e278843a87a9cd3eca15d863a83715c1f6d",
+          "meaning": "Training edit base only, NOT champion promotion or official readiness. Broader coverage considered first; same-input development comparisons, >=3 maps, both sides, configured gain/drop limits. Holdouts never select this base; ties/regressions keep the prior base."
+        },
+        "advances": [
+          {
+            "from_source": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+            "to_source": "02a532272622522f2c853fe557c16d98633bdd7898e75e4a82a03a311968b6b1",
+            "matched_delta": 0.1111111111111111,
+            "maps": 6,
+            "opponent_sources": 3,
+            "side_pairs": 18
+          },
+          {
+            "from_source": "02a532272622522f2c853fe557c16d98633bdd7898e75e4a82a03a311968b6b1",
+            "to_source": "0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1",
+            "matched_delta": 0.25,
+            "maps": 3,
+            "opponent_sources": 2,
+            "side_pairs": 6
+          }
+        ],
+        "recent_task_bases": [
+          {
+            "task_id": "task-a84a38285fa94c9e9fd86b5a7d421ae8",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          },
+          {
+            "task_id": "task-41dc854784904d468837b2cde087ddc6",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          },
+          {
+            "task_id": "task-d5ef7f6c9874483a9382f7fc82e50e1f",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          }
+        ]
+      },
+      "gamma": {
+        "commit": "e9704a214cdc159318c72bf8d0213dd082b8f702",
+        "source_hash": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769",
+        "selection": {
+          "policy": "matched-development-v1",
+          "revision_id": "b3e1029a3513d0d61227bba5921f65f42295b665334f428c8061c31047bf4a42",
+          "commit": "e9704a214cdc159318c72bf8d0213dd082b8f702",
+          "source_hash": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769",
+          "accepted_champion_revision": "ecdee203d2b83b0a567f1145f1b7965b19d7dd8b5490012fdcd6d2bbc4b4811a",
+          "decision_digest": "1fc39a69db2d2cfd2700d007b73571548593e0d239db95204f187531d7deda44",
+          "meaning": "Training edit base only, NOT champion promotion or official readiness. Broader coverage considered first; same-input development comparisons, >=3 maps, both sides, configured gain/drop limits. Holdouts never select this base; ties/regressions keep the prior base."
+        },
+        "advances": [
+          {
+            "from_source": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+            "to_source": "439fcfcda990dec5af8bda61db4076330daf5725f267fc75f6a2a71faf55bb97",
+            "matched_delta": 0.1111111111111111,
+            "maps": 6,
+            "opponent_sources": 3,
+            "side_pairs": 18
+          },
+          {
+            "from_source": "439fcfcda990dec5af8bda61db4076330daf5725f267fc75f6a2a71faf55bb97",
+            "to_source": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769",
+            "matched_delta": 0.3333333333333333,
+            "maps": 3,
+            "opponent_sources": 1,
+            "side_pairs": 3
+          }
+        ],
+        "recent_task_bases": [
+          {
+            "task_id": "task-a1a0fd0bf4a7437389ce07280d8aceee",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          },
+          {
+            "task_id": "task-1f1fb7562f97468e81a02dc8c327f7b5",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          },
+          {
+            "task_id": "task-da79c8f66fb941c29528f7a27187478f",
+            "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+          }
+        ]
+      }
+    }
+  },
+  "readability": {
+    "process_name": "arena-strategy-readability-20261017",
+    "status": "completed",
+    "exit_code": 0,
+    "result": [
+      {
+        "bot": "alpha",
+        "exit": 0,
+        "result": "{\"uid\": 1001, \"all_documents_readable\": true, \"cpp_header_hash_matches\": true}\n",
+        "error": ""
+      },
+      {
+        "bot": "beta",
+        "exit": 0,
+        "result": "{\"uid\": 1002, \"all_documents_readable\": true, \"cpp_header_hash_matches\": true}\n",
+        "error": ""
+      },
+      {
+        "bot": "gamma",
+        "exit": 0,
+        "result": "{\"uid\": 1003, \"all_documents_readable\": true, \"cpp_header_hash_matches\": true}\n",
+        "error": ""
+      }
+    ]
+  },
+  "invocation": {
+    "process_name": "arena-strategy-invocation-20261017",
+    "status": "completed",
+    "exit_code": 0,
+    "result": {
+      "infrastructure": "73d20a23d121b412411809ec1c2e0ec2bb6de346",
+      "task_id": "task-4133354c587642a699e191721aab2290",
+      "phase": "foundation",
+      "state": "DISPATCHED",
+      "base_source": "0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26",
+      "edit_commit": "bf616d85ce50cbb69c611788b2fc1660dbd465a2",
+      "entry_source_verified": true,
+      "preparation_hashes_verified": true,
+      "successful_command_count": 10,
+      "skill_read_command_succeeded": true,
+      "knowledge_read_command_succeeded": true,
+      "frozen_opponents": 4,
+      "opponent_packet_readable_by_users": {
+        "alpha": true,
+        "beta": true,
+        "gamma": true
+      },
+      "actual_source_hash_at_probe": "0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26"
+    }
+  },
+  "live_status": {
+    "timestamp": 1792255229.7414138,
+    "paused": false,
+    "adapter_paused": false,
+    "workers": [
+      {
+        "detail": null,
+        "heartbeat": 1792255144.1262252,
+        "id": "alpha",
+        "last_feedback": "349b6a5ff5e62585ae2c55e35935d6a9e1a355c73429f6ddcc283f59a3c411da",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "RUNNING",
+        "task_id": "task-4133354c587642a699e191721aab2290"
+      },
+      {
+        "detail": null,
+        "heartbeat": 1792253683.0125024,
+        "id": "beta",
+        "last_feedback": "d6686af762b5f8ede88c9dd08958fccfd7234697887ca3a65564acc2819f5d65",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "IDLE",
+        "task_id": "task-a84a38285fa94c9e9fd86b5a7d421ae8"
+      },
+      {
+        "detail": null,
+        "heartbeat": 1792254012.884869,
+        "id": "gamma",
+        "last_feedback": "322271ef54566a308ed0a314061debfb504f4872b7353c8394aaf57e78cdc1ee",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "IDLE",
+        "task_id": "task-a1a0fd0bf4a7437389ce07280d8aceee"
+      }
+    ],
+    "matches": [
+      {
+        "count": 30,
+        "state": "CANCELLED"
+      },
+      {
+        "count": 2475,
+        "state": "COMPLETED"
+      },
+      {
+        "count": 23,
+        "state": "QUEUED"
+      }
+    ],
+    "heartbeat": 1792255228.0006142,
+    "service_error": null,
+    "disk": {
+      "artifact_bytes": 989083031,
+      "free": 1556086784
+    },
+    "continuous_training": {
+      "coding_interval_seconds": 3600,
+      "enabled": true,
+      "independent_reruns": false,
+      "jobs": [
+        {
+          "count": 13,
+          "state": "COMPLETED"
+        },
+        {
+          "count": 23,
+          "state": "QUEUED"
+        }
+      ],
+      "maps": "six development maps; both sides",
+      "model_pauses_do_not_stop_games": true,
+      "priority": "below evaluations and smoke checks",
+      "roster": {
+        "alpha": {
+          "commit_sha": "6a57e28391e9cb003ce0b20c09e7f3a46ca19153",
+          "id": "c559b0bb36acb282a017173cfa2f1ca8a97a736b60bdc78c80d34729ad5e8e7d",
+          "source_hash": "30783869b2a0e1af115e136a2bccea88b4b1b14b0ee0d688382cef8033fd5842"
+        },
+        "beta": {
+          "commit_sha": "7773859f872f54d846088226ef1cf7b855cbb0a6",
+          "id": "d9c45c7001f7ae3d87ce2c4733acd78fc7e00d513a3280944a625f9e486f365c",
+          "source_hash": "bc3f6f13bce3869b6ceb0360eb77cf9789cdfc66dcb05ed978aef306b229a910"
+        },
+        "gamma": {
+          "commit_sha": "4e34fd3f9bb5df6a3adb41d90d7ba7d45894174b",
+          "id": "16fda76d45a334ce1355f148a7326fd619e3bfd5b936d2f023021f37e3159070",
+          "source_hash": "cf45a24a06fc9892ff1f777432b9dc90913169d58740bebac89385b657718f51"
+        }
+      },
+      "round_id": "training-e73b68a6e0784f1ebb28a84c533a9158",
+      "round_state": "RUNNING",
+      "rounds": [
+        {
+          "count": 25,
+          "state": "COMPLETED"
+        },
+        {
+          "count": 1,
+          "state": "RUNNING"
+        },
+        {
+          "count": 1,
+          "state": "SUPERSEDED"
+        }
+      ]
+    },
+    "improvement_interval_seconds": 3600
+  },
+  "limitations": "Live alpha task has read the shared skill and knowledge successfully; no completed new-workflow candidate or stronger win rate claimed. Other lanes adopt the workflow on their next existing hourly slots. Full champion gate, native auth, high reasoning and official-mutation restrictions unchanged."
+}

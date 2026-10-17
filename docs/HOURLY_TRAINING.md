@@ -1,5 +1,12 @@
 # Active training: alpha, beta and gamma
 
+17 October strategy update: all lanes now use the same competitive strategy
+skill, current readable rule/API packet and frozen arena opponent sources.
+Training edits continue from a measured development base, separately from the
+protected champion. New-workflow comparisons include that base on all six
+development maps. See [the improvement workflow](IMPROVEMENT_WORKFLOW.md) and
+[live deployment evidence](../evidence/blaxel/competitive-workflow-20261017.json).
+
 Gamma was initially requested as Claude Code, then corrected by the owner to
 **Codex** before any model task or Claude login completed. All three active
 lanes use native ChatGPT subscription login, `gpt-6.1-sol`, high reasoning,

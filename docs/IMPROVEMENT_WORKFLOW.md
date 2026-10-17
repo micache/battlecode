@@ -107,3 +107,14 @@ framework.
 Tests establish source continuity, frozen identities, isolation and gate
 preservation. They cannot establish that the new prompt produces stronger bots.
 That requires actual new candidate evaluations on saved immutable inputs.
+
+Deployed runtime: `73d20a23d121b412411809ec1c2e0ec2bb6de346`, installed with all
+services stopped. The [live record](../evidence/blaxel/competitive-workflow-20261017.json)
+includes 99 passing orchestration tests, per-user document/SDK access, frozen
+opponent access for all three users, and alpha's real foundation task successfully
+reading the new skill and knowledge. At that snapshot no new-workflow candidate
+had completed evaluation; better win rate is not yet established.
+
+As the arena user or administrator, inspect the recomputed development bases with
+`python3 /opt/battlecode/ops/strategy-report.py`. This command opens SQLite
+read-only; it does not dispatch a model job or change champion pointers.
