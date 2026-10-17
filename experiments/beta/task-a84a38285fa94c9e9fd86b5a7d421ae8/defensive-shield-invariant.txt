@@ -1,0 +1,1 @@
+PASS: legal visible living attack target precedes shield; positive Strength, threat range, shield kind, self permission and readiness required; at most one successful cast; attack allowance refreshed. Baseline and eight unsafe mutations rejected. Only this block differs from accepted bot.cpp. Source invariant only; no runtime survival or fuel claim.

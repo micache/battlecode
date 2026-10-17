@@ -1,75 +1,75 @@
 # Operational summary
 
-## task-41dc854784904d468837b2cde087ddc6 — finish weak camps first
+## task-a84a38285fa94c9e9fd86b5a7d421ae8 — shield before exposed attacks
 
-Playbook D. Hypothesis: selecting the lowest-current-health visible, living
-camp in basic-attack range instead of the first vision entry will finish kills
-sooner, reduce active monster damage, and improve collected/submitted gems.
-Falsifiable invariant: each pre/post-move farming attack chooses minimum
-positive health among currently visible in-range camps; ties retain vision
-order; no attack when unavailable or no legal target exists.
+Playbook D. Hypothesis: casting a ready self-shield immediately before a legal
+basic attack on a positive-Strength target whose attack range includes us will
+absorb incoming damage, reducing recovery interruptions/deaths and improving
+gem throughput. Falsifiable invariant: only an already legal attack can trigger
+one successful self-shield cast; non-damaging or out-of-range threats cannot;
+shield kind, self-target permission and live readiness are required. Basic
+attack allowance is checked again after casting. No shield on travel alone.
 
-Identity: beta; bot/beta; HEAD/input 33d663b92cc2f3a0d73ad340922fefb5e287acc6.
-Accepted edit start 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9; base source
+Identity: beta; bot/beta; HEAD/input 07b24e4a90a72a8ec6f77ae3cf8093a687daf068.
+Accepted edit start 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9, source
 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-All six initial source files matched accepted Git blobs; initial draft diff
+All six source files matched accepted Git blobs at entry. Initial bot.cpp diff
 against HEAD is trusted restoration. Accepted Git preserves the baseline.
-Latest prior task PUBLISHED and evaluated, not awaiting evaluation. Existing
-recovery artifacts preserved; prior notes archived through task-d5ef7f6c9874483a9382f7fc82e50e1f.
+Prior task PUBLISHED and evaluated; no candidate awaits evaluation. Old recovery
+artifacts preserved; prior summary archived through task-41dc854784904d468837b2cde087ddc6.
 Engine/SDK 2.1.6; lock
 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Handoff says docs unchanged. Read compact reference,
-RESEARCH.md, Playbook D, rules camp section and relevant installed C++ bindings.
+suite historical-panels-v1. Handoff says documentation unchanged. Read compact
+reference, RESEARCH.md, Playbooks C/D/F and relevant installed C++ contracts.
 Separate organizer AGENTS.md remains absent.
 
-Evidence: evaluation e1336f6c8b194df9a8157bc1dac04ab94b9b3be81b2aca0f35f5491d35e0eadd
-is INCONCLUSIVE/provisional-three-map-wiring, 4W/20L, zero reported bot faults,
+Evidence: evaluation c2f8a2918dad0f78da1cdf1b14acaf9837fd12d694a5786a9d62846f941c7e26
+REJECTED/full-nine-map, 14W/58L, matched delta 0, zero reported bot faults,
 missing results or unknown reliability. Candidate commit
-33d663b92cc2f3a0d73ad340922fefb5e287acc6, source
-f92d77a6923a38854bbfd899b558bf6762a313a98bd1eafa23baa5ff36f04ff8.
-Collision losses: 62bb059654452273f80002539dbfecb855e47a8ceafd86012ec509c66648949d
-(side B), 2d0104f003e493c691371a6b98e5882022bccff3871c9b1e69ce4d597e051554
-(side A). Development means: 588.08 collected, 453.75 submitted, 28.125 deaths.
-These evaluate the Varg draft candidate, NOT restored accepted source.
-No engine/bot fault evidenced; strategic losses motivate throughput work.
-No match-level targeting trace establishes this cause. Accepted source itself
-reproduces first-entry targeting regardless of relative camp health, both
-before and after moving. Prior archived experiments do not test this priority.
-
-Contracts: GameRules.md:169–205 gives monster damage, death and group capture.
-Installed cambc.h:2931–2960 requires visibility for live health/position;
-:4826–4837 returns a fresh owning vector of visible camps on each call.
-Thus selection pointers remain valid until the local vector is destroyed;
-no persistent camp handle/cache or hidden-state query is introduced.
-
-Change: bot.cpp adds one linear scan for minimum positive health after
-visibility, attack-availability and range guards. One cached range mask per
-selection. Existing attack_if_in_range revalidates the selected camp. Farming
-calls it before movement and again with fresh observations after successful
-movement. No movement/routing, enemy target priority, draft, items, channels,
-shared memory, RNG or main.cpp dispatch/yield changes relative to accepted.
-
-Checks: `python3 experiments/beta/check_weak_camp_targeting.py` PASSED, exit 0;
-report experiments/beta/weak-camp-targeting-invariant.txt. Source checks verify
-strict-minimum ranking, visibility before live queries, range/alive/availability
-guards, fresh post-move selection, stable ties and accepted-source scope.
-Accepted source and six unsafe mutations are rejected. Initial run failed in
-the test harness because one mutation matched the earlier generic helper;
-scoped that mutation to the selector and reran successfully. Bot unchanged.
-`git diff --check` PASSED, exit 0.
-Trusted command:
-`bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED, exit 0, exact candidate source
+07b24e4a90a72a8ec6f77ae3cf8093a687daf068, source
 fc461f9ba86b39b60ee220037052685a761354cf0fc4eb9926c41e01deebeb93.
-Report: .agent/check-task-41dc854784904d468837b2cde087ddc6.json.
-Reference: check:task-41dc854784904d468837b2cde087ddc6:fc461f9ba86b39b60ee220037052685a761354cf0fc4eb9926c41e01deebeb93.
-Smoke IDs: 951ac3e753f23fbbe47d3f7ee45ea9b43d4fd712a781e058437e4599c02b6d94,
-965700180b56d908ebe1dce2ad1feae1875c35ab11389282fc5af1ab2f2f026a.
-Trusted compilation/smoke passed; local summary does not expose completed-game
-outcomes, target-order trace or fuel measurements.
-Uncertainty: lowest health is not minimum hits under target-dependent damage;
-may prefer harmless clusters or switch groups and delay capture. No actual
-kill-order, fuel headroom or strength claim. More visible candidates require
-more health queries; trusted smoke does not measure remaining fuel.
-Next: supervisor evaluates exact checked candidate; compare collected/submitted
-gems and deaths, and first-entry versus selected target/kill timing if available.
+Development collision losses: 965700180b56d908ebe1dce2ad1feae1875c35ab11389282fc5af1ab2f2f026a
+(side B), 90817aa2654ee7e28441514ba5e838244f5a77319bd85ec66e0969b1e4e7d22e
+(side A). Development means: 20.52 deaths, 731.04 collected, 631.63 submitted.
+These evaluate weak-camp targeting, NOT restored accepted source. No fault is
+evidenced; losses/deaths motivate survivability work without proving causation.
+Accepted source never casts any shield. Earlier reset and damage/CC experiments
+explicitly excluded shield abilities; this is a distinct defensive policy.
+
+Contracts: GameRules.md:762–792 makes Varg's self-shield walk compatible,
+2.5*Focus for five turns, cooldown eight owner ticks. C++ unit::strength and
+attack_tiles require visibility; existing attack legality guards precede them.
+ability::is_ready checks cooldown and caster can_cast; can_target_self checks
+target permission; use() is the no-target cast. Attack mask is geometry, not a
+prediction that the target will attack us. Scan is bounded by two ability slots.
+
+Change: attack_if_in_range adds nine lines before the existing basic attack.
+Only targets already passing live visibility, health, range and attack-allowance
+checks can trigger a shield. Require positive target Strength and its attack
+mask to include our tile; scan at most two slots for a ready self-shield, stop
+on successful cast, then refresh basic attack allowance. Varg's shield is walk
+compatible, so the same helper is used before and after movement. No draft,
+shopping, routing, priority, channels, shared-memory or dispatch/yield change
+relative to accepted source.
+
+Checks: `python3 experiments/beta/check_defensive_shield.py` PASSED, exit 0.
+Report: experiments/beta/task-a84a38285fa94c9e9fd86b5a7d421ae8/defensive-shield-invariant.txt.
+Verifies guard/action order, single-success cast and exact accepted-source scope;
+rejects baseline and eight unsafe mutations. Initial source-scope assertion
+failed because the harness retained an inserted blank line; corrected the
+harness boundary and reran successfully without changing bot source.
+`git diff --check` PASSED, exit 0.
+Trusted command: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
+PASSED, exit 0. Exact checked source:
+bc3f6f13bce3869b6ceb0360eb77cf9789cdfc66dcb05ed978aef306b229a910.
+Report: .agent/check-task-a84a38285fa94c9e9fd86b5a7d421ae8.json.
+Reference: check:task-a84a38285fa94c9e9fd86b5a7d421ae8:bc3f6f13bce3869b6ceb0360eb77cf9789cdfc66dcb05ed978aef306b229a910.
+Smoke IDs: 89eb4c60e968a4d4629f28e0f85fa004373fb225e53390f1a085b59c6f9e7561,
+eec2f650cdda93c83d40994ccd012e1f4067b4690eca97290a46c0e073dd9702.
+Trusted compilation/smoke passed; local summary does not establish completed
+game outcomes, shield activation/absorption, Varg presence or fuel headroom.
+Uncertainty: draft may omit Varg; range/Strength do not prove incoming damage
+(camps may sleep or attack another champion). Shield may be spent before a
+lethal hit or before a more valuable fight. No survival, fuel or strength claim.
+Next: supervisor evaluates the exact checked candidate against accepted source;
+compare deaths, collected/submitted gems and recovery frequency if available.
