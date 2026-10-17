@@ -56,6 +56,17 @@ unknown opponent versions stay unknown. Imports do not trigger extra model
 calls: beta consumes this evidence at its next normal hourly improvement task.
 External observations never count toward local promotion scores.
 
+[The post-deployment handoff check](../evidence/blaxel/official-beta-history-import-20261017.json)
+verifies all 150 imported attachment sets against their recorded hashes and
+the next beta context on infrastructure `95b9605`. Its readable loss examples
+are `20783c28-260e-468d-9405-8b29fc15f9be` (expanse),
+`eebb8721-d5fd-48d5-a3bd-45c42255dbb0` (collision), and
+`2252f0b2-0177-4f49-ac65-e1fd4e944ddf` (corners). The normal beta owner
+`external-slice` request for the expanse observation completed successfully.
+The next hourly eligibility is 09:10:44 UTC / 16:10:44 Vietnam time, subject
+to the existing single model slot and lane safety state. This verifies delivery
+inputs, **not** that a later model has already read them or improved the bot.
+
 Private local storage, outside Git:
 
 ```text

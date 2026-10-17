@@ -1,0 +1,17 @@
+{
+  "observed_at": 1792226420.0308485,
+  "acknowledged_batches": 45,
+  "distinct_matches": 540,
+  "entry_count": 540,
+  "redundant_remote_project_bytes_offloaded": 2067458640,
+  "local_archive_bytes": 508631444,
+  "local_archive_root": "/home/micache/.local/share/battlecode-arena-archive",
+  "receipt_location": "/home/micache/.local/share/battlecode-arena-archive/receipts",
+  "acknowledgement_requirement": "Every restored worktree member hash verified; archive and receipt fsynced before server acknowledgement.",
+  "retained_online": "All replays, statistics, diagnostic logs, normalized results, source snapshots and feedback. Only redundant per-match project.zip archives move offline.",
+  "user_timer_enabled": true,
+  "user_timer_active": true,
+  "last_service_result": "success",
+  "logout_persistence": "loginctl reports Linger=yes",
+  "limits": "Local computer must remain powered, awake and connected. Native disk guards remain enabled. This is not a complete off-host replay backup or physical VM reboot test."
+}

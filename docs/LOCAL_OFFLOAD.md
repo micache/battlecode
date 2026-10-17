@@ -1,5 +1,12 @@
 # Local worktree archive relay
 
+17 October live checkpoint: [45 acknowledged batches](../evidence/blaxel/local-offload-20261017.json)
+moved 2,067,458,640 redundant project bytes from 540 distinct matches into
+508,631,444 local archive bytes. All those acknowledgements followed verified,
+fsynced local copies. The enabled timer completed successfully and
+`loginctl show-user micache -p Linger` reported `Linger=yes`. Subsequent timer
+cycles continue the backlog; these counts are a historical checkpoint.
+
 The server's large `project.zip` files contain redundant full per-match working
 directories. The local relay moves those bytes to this operator computer;
 **all replays, statistics, bot/runner diagnostic logs, normalized results,
