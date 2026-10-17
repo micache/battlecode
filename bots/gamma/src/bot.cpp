@@ -60,9 +60,8 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    // This policy never casts: redirect the Focus build to basic-attack damage.
     const std::array items{cambc::item_type::power_shard_of_strength,
-        cambc::item_type::power_shard_of_strength, cambc::item_type::power_shard_of_health};
+        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
     const unsigned count = me.gold_count() / item.cost();
     if (count && me.can_buy(item, count)) me.buy(item, count);
@@ -86,15 +85,21 @@ void farm_camps() {
         if (attack_if_in_range(camp))
             return;
 
-    // Union every group's spawn tiles except visibly respawning groups.
+    // Keep capture/exploration goals, but do not stop at a killed member of a live group.
     cambc::bitboard goals;
     goals.clear();
     const auto visible = cambc::vision::visible_tiles();
+    const auto living_camps = cambc::vision::camp_tiles();
     for (const auto& group : cambc::map::camp_groups()) {
-        const bool group_visible = !(group.spawn_tiles() & visible).is_empty();
-        if (group_visible && std::holds_alternative<cambc::map::camp_group_respawning>(group.state()))
-            continue;
-        goals |= group.spawn_tiles();
+        auto spawns = group.spawn_tiles();
+        if (!(spawns & visible).is_empty()) {
+            const auto state = group.state();
+            if (std::holds_alternative<cambc::map::camp_group_respawning>(state))
+                continue;
+            if (std::holds_alternative<cambc::map::camp_group_alive>(state))
+                spawns &= living_camps | ~visible;
+        }
+        goals |= spawns;
     }
 
     // Fresh vision after movement may reveal a camp already in range.

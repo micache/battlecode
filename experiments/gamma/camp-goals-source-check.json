@@ -1,0 +1,26 @@
+{
+  "kind": "source invariant and finite-set fixtures only; no runtime or strategic result",
+  "base_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "bot_cpp_sha256": "3fdcb203ce2374919a0bcf81cfc2ac8a1a7a147486037f5b8436f2abb3078076",
+  "checks": {
+    "accepted_has_unfiltered_spawn_goals": true,
+    "only_live_group_goal_selection_changed": true,
+    "standing_on_goal_still_preserves_capture": true,
+    "fresh_post_move_camp_scan_preserved": true,
+    "unchanged_bot.h": true,
+    "unchanged_main.cpp": true,
+    "unchanged_draft.h": true,
+    "unchanged_draft.cpp": true,
+    "unchanged_random.h": true,
+    "old_three_member_line_stalls_outside_melee_range": true,
+    "new_line_has_reachable_progress_toward_survivor": true,
+    "reward_group_keeps_current_capture_tile": true,
+    "respawning_group_has_no_goals": true,
+    "partial_vision_retains_unseen_members_only": true,
+    "fully_hidden_group_preserves_exploration_without_state_read": true,
+    "unrelated_live_camp_not_added_as_goal": true,
+    "diff_check": true
+  },
+  "diff_check_exit_code": 0,
+  "passed": true
+}

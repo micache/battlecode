@@ -1,63 +1,65 @@
 # Gamma operational notes
 
-## task-8b7a2f9424dc42e5adc6086e0634544a — useful power builds
+## task-5adc36237ef7478dbc56f4b20a760fb5 — live camp goals
 
-- Identity verified: bot/gamma; HEAD/input b4c6815c3368a346fbe3cffd6d9dc8cfbba20fa2.
-  All six source files match accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d;
-  base source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  Accepted source is preserved in Git and the trusted snapshot outside this edit.
-  No candidate awaits evaluation; latest banking priority was INCONCLUSIVE,
-  evaluation 8cb1fe12a6df7508e0d93a91aa99c1c5895a86d453417fcc8bd8021f0e35e2cf,
-  8W/16L, provisional three-map coverage, zero faults/missing/unknown reliability.
-  Its source df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3
-  differs from this accepted edit-start. Older notes are archived by task ID.
-- Playbook C, item value for the current action policy. Hypothesis: redirecting
-  the Focus-only power build to Strength improves farming and submitted gems,
-  because this policy uses basic attacks and never casts a Focus-scaled ability.
-  Prediction: the old Focus choice buys Strength, the other two choices and RNG
-  draw count stay identical; no Focus purchases occur. Matched development mean
-  camp damage and submitted gems should rise with zero new faults. Equal/lower
-  tribute does not support the strategic prediction; wins determine promotion.
-- Observed failure: collision/B loss
-  b6f042dc013f0e9c024e9eb7f6c2b3171f37678326572a3cbe0619be03c0eb33,
-  round 1352, 660 vs 1012 submitted, zero bot faults. Champion 4 bought 36
-  Power Focus shards (1080g), champion 5 bought 32 (960g); inventory slots 8/9
-  identify Focus in the pinned C++ enum. They submitted 242/176 with 11/8 deaths.
-  Earlier collision/A loss d27e7d44946f0f250584f0ff8d7af5d89596fbf63e8f4ab952be57ebac7bc241,
-  round 1264, 660 vs 1034 submitted, zero faults, had no candidate Focus buyer:
-  it is a control observation, not proof all losses share this cause.
-  Both matches evaluate commit b4c6815c3368a346fbe3cffd6d9dc8cfbba20fa2,
-  source df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3;
-  neither evaluates this edit-start/candidate. Saved power-build-*-evidence.json
-  came from complete final.json slices; no independent repeated games counted.
-- Source/rules mechanism: accepted and evaluated policies contain no ability cast;
-  GameRules.md lines 245-259 and 278-304 define Strength basic damage, Focus spell
-  scaling, and Power's stat-only bonus. No passive converts these Focus purchases
-  into basic damage or health. This is wasted spend under the current policy;
-  final totals alone do not prove it caused the losses.
-- Patch: replace only shop choice 1 (Focus) with Strength; keep random(3),
-  choice 0 Strength, choice 2 Health, buying guards/counts and all turn logic.
-  Effective deterministic policy weights: 2/3 Strength, 1/3 Health. No new search,
-  thresholds, shared state, API calls, ability use or fuel settings.
-- Source invariant: `python3 experiments/gamma/check_power_build.py`, exit 0;
-  power-build-source-check.json. Reproduces accepted Focus choice, verifies only
-  that choice changes, RNG/buy guards stay identical, other five files match
-  accepted, and the policy still has no cast. Source check only, not a game.
-  `git diff --check` passed, exit 0; saved in the same report.
+- Identity: bot/gamma; HEAD/input 9c632dd4030be0ec09e840918cf9ea453653b6f7.
+  All six edit-start source files match accepted commit
+  1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d, base source
+  9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+  The initial dirty bot.cpp is the trusted accepted-source restore, not unfinished
+  work. Accepted code remains preserved in Git and the trusted external snapshot.
+  Recent published candidates have completed evaluations; none awaits evaluation.
+  The old PAUSED infrastructure-only task reports source unchanged and no patch.
+  Documentation manifest is unchanged; prior full review remains recorded below.
+- Playbook C, farming-route clearing versus capture. Hypothesis: excluding known
+  empty spawn tiles from visible alive groups' navigation goals prevents standing
+  indefinitely on a killed member's tile while another member remains out of
+  attack range, increasing collected and submitted gems without new faults.
+  Falsifiable prediction: a current empty spawn tile is not a goal for an alive
+  group; living and unseen member tiles remain goals. Cleared reward groups keep
+  all capture tiles; respawning groups remain excluded. Matched development
+  collected/submitted gems should rise; equal/lower totals do not support the
+  strategic prediction. Tournament wins still determine promotion.
+- Source reproduction: farm_camps unions all group spawn tiles, including cleared
+  members of alive groups; move_towards_closest returns immediately when standing
+  on any goal. A melee champion at the empty end of a three-member cardinal line,
+  with the far survivor two tiles away, cannot attack it and never approaches.
+  This is a source-derived reproducible state, not an observed replay trace.
+- Development context: collision/A losses
+  719b261369cbe24fdba443e9f8e08820a1ea18e365565d67d0db46af7eee8578
+  (round 1021, 352 vs 1012 tribute) and
+  7d946f6572419308162551e024461f8ef0ee2ad7fa6755fa53d2c7f323cd8681
+  (round 1676, 924 vs 1012 tribute), both zero faults. Both evaluate commit
+  9c632dd4030be0ec09e840918cf9ea453653b6f7, source
+  ed64236caac6ed68611f7044742fe7b31f563c56a10c9e523793fd94315413df,
+  not this accepted edit-start. Complete final.json slices are saved in
+  camp-goals-evidence.json. These show the economy gap, not this stall's frequency
+  or cause. Evaluation 0bda0ce76d13bef869cecac6b1ea77e8bb4f92992240af6d80a4947440a29657
+  is INCONCLUSIVE / provisional-three-map-wiring, 14W/10L, no faults/missing/unknown.
+- Patch: query group state only after spawn visibility, omit respawning
+  groups, filter alive groups to visible camp occupancy plus unseen spawn tiles.
+  Preserve reward capture goals, hidden-group exploration and all other policies.
+  No additional path search, shared memory, abilities, thresholds or fuel override.
+- Validation: `python3 experiments/gamma/check_camp_goals.py`, exit 0,
+  camp-goals-source-check.json. Exact accepted-source comparison confirms only
+  the live-group goal block changes; other five source files are unchanged.
+  Finite-set fixtures reproduce the old three-member-line stop and check living,
+  unseen, reward, respawn and fully hidden goals; no SDK/engine simulation claimed.
+  `git diff --check` passed, exit 0, recorded in the same report.
 - Trusted check: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
   PASSED, exit 0. Candidate source
-  ed64236caac6ed68611f7044742fe7b31f563c56a10c9e523793fd94315413df.
-  Report: .agent/check-task-8b7a2f9424dc42e5adc6086e0634544a.json;
-  reference check:task-8b7a2f9424dc42e5adc6086e0634544a:ed64236caac6ed68611f7044742fe7b31f563c56a10c9e523793fd94315413df.
-  Wrapper supplied two smoke match IDs; no scores/completion/fuel headroom
-  inferred from those IDs. READY_FOR_EVAL, no measured strategic gain.
-- Uncertainty: faster clearing can alter routes/encounters; stronger attacks do
-  not guarantee survival or wins. Final exports label engineVersion 0.0.1 while
-  the trusted CLI/SDK identity is 2.1.6; preserve this discrepancy without claiming
-  runtime parity or changing infrastructure. Supervisor can reconcile metadata.
-  Deferred locked-altar routing lacks a demonstrated instance in these matches.
-- Next: supervisor evaluates exact checked source
-  against accepted on frozen development cases. No worker tournament/publication.
+  f81809bac3396a11e5b2c612862f3d0430f2d0bb1f6ea33d212239291f54350c.
+  Report: .agent/check-task-5adc36237ef7478dbc56f4b20a760fb5.json;
+  reference check:task-5adc36237ef7478dbc56f4b20a760fb5:f81809bac3396a11e5b2c612862f3d0430f2d0bb1f6ea33d212239291f54350c.
+  Wrapper supplied two smoke match IDs; no score, completion or fuel headroom
+  inferred from these IDs. READY_FOR_EVAL, no measured strategic gain.
+- Uncertainty: occurrence in these matches and strategic gain remain unmeasured.
+  Final exports say engineVersion 0.0.1 versus trusted CLI/SDK 2.1.6, as previously
+  recorded; no runtime parity claim. Separate organizers' AGENTS.md is unavailable.
+- Next: supervisor evaluates exact checked source against accepted on frozen
+  development cases. If the goal fix does not improve farming, collect bounded
+  decision telemetry before trying another navigation policy. No worker
+  tournament, publication, submission or evaluation waiting.
 
 ## Bootstrap documentation review (2026-10-17)
 
