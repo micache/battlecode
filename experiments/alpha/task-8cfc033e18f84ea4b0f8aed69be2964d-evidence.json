@@ -1,0 +1,110 @@
+{
+  "task_id": "task-8cfc033e18f84ea4b0f8aed69be2964d",
+  "base_source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "input_revision": "e1a911c7fe1e75cab3427f7f729a57ed509054b6",
+  "evaluation_id": "2ddf5eb167ad9e5150dc0b2dfb2abc4a7442989499a95da7ed3f911f70ac6a69",
+  "evaluated_candidate": {
+    "build_id": "fb659704a2ae189889c54ee355ccbc50a007e6f6c7c690328b968e0871094b93",
+    "commit": "e1a911c7fe1e75cab3427f7f729a57ed509054b6",
+    "revision_id": "24729b720012023e6f61458c706b9c7fdafe945c7b9cef5bebbf42c5fb876867",
+    "source_hash": "cf24242fd1696728bbe26f1e416932bc815b950ba63e3c801782276de9df0109"
+  },
+  "decision": "INCONCLUSIVE",
+  "cases": [
+    {
+      "match_id": "620c7c3ba7b002ef9052785532aaac8a3ff003fccef99e211680430556d28d61",
+      "map": "collision",
+      "side": "A",
+      "round": 1341,
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1144,
+            "B": 1122
+          }
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 990,
+            "B": 1012
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 18,
+            "B": 33
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 12,
+            "B": 15
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 1341
+        }
+      }
+    },
+    {
+      "match_id": "9677d8ac726f31425d2bf40544f11479eb70be33d45b023197aa7eacf579e89c",
+      "map": "collision",
+      "side": "A",
+      "round": 1036,
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 792,
+            "B": 1224
+          }
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 572,
+            "B": 1012
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 22,
+            "B": 26
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 7,
+            "B": 17
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 1036
+        }
+      }
+    }
+  ]
+}

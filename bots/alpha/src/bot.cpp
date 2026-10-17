@@ -1,6 +1,7 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
+#include <array>
 #include <iostream>
 #include "random.h"
 #include <cstdint>
@@ -59,8 +60,9 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    // This policy relies on basic attacks, which scale with Strength.
-    const auto item = cambc::item_type::power_shard_of_strength;
+    const std::array items{cambc::item_type::power_shard_of_strength,
+        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
+    const auto item = items[chosen_stat];
     const unsigned count = me.gold_count() / item.cost();
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
@@ -102,9 +104,9 @@ void farm_camps() {
 }
 
 void Bot::play_turn() {
-    // Read the draft message once for this champion.
-    if (!initialized) {
-        initialized = true;
+    // Initialise this champion's build and read the draft message once.
+    if (chosen_stat < 0) {
+        chosen_stat = random_number(3);
         std::cout << "draft: " << std::string(reinterpret_cast<const char*>(cambc::draft_memory.data()), 11) << '\n';
     }
 
@@ -133,10 +135,14 @@ void Bot::play_turn() {
         return;
     }
 
-    // Attack the first enemy champion already in range.
+    // Attack one enemy in range, then use any remaining movement for objectives.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy))
-            return;
+        if (attack_if_in_range(enemy)) {
+            // Ranged attacks consume movement; query the live allowance after the hit.
+            if (!me.can_move())
+                return;
+            break;
+        }
 
     // Bank any carried gems before farming.
     if (me.gem_count() > 0) {

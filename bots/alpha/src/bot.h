@@ -1,10 +1,10 @@
 #pragma once
 
-// Per-champion state survives between turns.
+// Per-champion state survives between turns. Pick one stat and keep buying it.
 class Bot {
-    bool initialized = false;
+    int chosen_stat = -1;
 
-    // Spend only on Power shards of Strength for the basic-attack policy.
+    // Spend only on power shards of the randomly chosen stat.
     void buy_items();
 
 public:
