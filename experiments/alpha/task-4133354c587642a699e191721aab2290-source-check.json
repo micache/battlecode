@@ -1,0 +1,26 @@
+{
+  "kind": "source_contracts_only",
+  "checks": {
+    "deliberate_unique_complete_draft": true,
+    "channels_before_navigation": true,
+    "capture_before_banking": true,
+    "heal_through_spawn_turn_end": true,
+    "only_free_navigation_goals": true,
+    "bounded_hidden_obstruction_retry": true,
+    "movement_exclusivity_checked": true,
+    "visibility_before_live_queries": true,
+    "no_live_shared_memory_protocol": true,
+    "unreachable_goal_expires": true,
+    "official_yield_survives_exception": true,
+    "fuel_observed_without_budget_override": true
+  },
+  "files": {
+    "bots/alpha/src/bot.cpp": "70970601124a3119ca0c67bf5605682211c9b4ee435bf2ad8149fb6e126666e2",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/alpha/src/bot.h": "c82f237a2dd6a5f1ec872a72ace91bfa16a7cee06399aefdb1b1cf83e7f798f7",
+    "bots/alpha/src/main.cpp": "5c36116c4420aa0186e6ba503806d2a88f2ded9b9302379a290e677b7ad31482",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/draft.cpp": "a286823c1eb105e35e13b2a0e3ff341bcbe3e92363a78cc9acedaa0d699e1646"
+  },
+  "passed": true
+}

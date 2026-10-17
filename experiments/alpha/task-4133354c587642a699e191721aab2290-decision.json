@@ -1,0 +1,270 @@
+{
+  "task_id": "task-4133354c587642a699e191721aab2290",
+  "edit_source_hash": "0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26",
+  "edit_commit": "bf616d85ce50cbb69c611788b2fc1660dbd465a2",
+  "input_revision": "6a57e28391e9cb003ce0b20c09e7f3a46ca19153",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "entry_source_comparison": "All six source files matched edit_commit before editing; initial bot.cpp difference from HEAD was trusted preparation.",
+  "prior_work": [
+    [
+      "task-2cc2849656a34761861827c63e161a62",
+      "PUBLISHED"
+    ],
+    [
+      "task-16ae09faf2f3493c96020478c07abf26",
+      "PUBLISHED"
+    ],
+    [
+      "task-33024ab941b8430ebfe7042ed223ad18",
+      "PUBLISHED"
+    ],
+    [
+      "task-1d40090f953b4001923fb46ca3b542b8",
+      "PUBLISHED"
+    ],
+    [
+      "task-7face2cca5374822a1dbfc83b5155bca",
+      "PUBLISHED"
+    ],
+    [
+      "task-adc0e4b46bef4259b242f5d17c07a43b",
+      "PUBLISHED"
+    ],
+    [
+      "task-8cfc033e18f84ea4b0f8aed69be2964d",
+      "PUBLISHED"
+    ],
+    [
+      "task-399d4cbedcc6474aa5171ffffd2c89c4",
+      "PUBLISHED"
+    ]
+  ],
+  "documentation_hash_matches": {
+    "AGENTS.md": true,
+    "BOT_REFERENCE.md": true,
+    "PLAYBOOKS.md": true,
+    "RESEARCH.md": true,
+    "docs/rules/organizer-agents.md": true,
+    "docs/rules/verified.md": true,
+    "skills/battlecode-strategy/SKILL.md": true,
+    "sources/BotAPICpp.md": true,
+    "sources/GameRules.md": true
+  },
+  "opponent_manifest_hash_verified": true,
+  "hypothesis": "Fixed farming composition, legal ability sequencing and capture-aware routing will increase matched development win rate over edit source 0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26; unchanged or lower win rate falsifies this hypothesis.",
+  "prior_candidate_metrics": {
+    "commit": "6a57e28391e9cb003ce0b20c09e7f3a46ca19153",
+    "source_hash": "30783869b2a0e1af115e136a2bccea88b4b1b14b0ee0d688382cef8033fd5842",
+    "evaluation_id": "bcbcd9f7f6a58d66e6c96708d4ebb36c332c3120d6742a4d1eec181ddbf0bde6",
+    "representative_failures": [
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 22,
+              "B": 22
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 6,
+              "B": 28
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 13,
+              "B": 6
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 880,
+              "B": 1188
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 4255,
+              "B": 6120
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 1219
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 836,
+              "B": 1012
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 265,
+              "B": 750
+            }
+          }
+        },
+        "map": "collision",
+        "match_id": "461b2c6737323f728c57e638998a4c218403a6db4e53043793a6eca19f8ced5f",
+        "round": 1219,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 22
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 4,
+              "B": 8
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 4,
+              "B": 4
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 806,
+              "B": 1100
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 3890,
+              "B": 5640
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 1124
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 762,
+              "B": 1034
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 170,
+              "B": 360
+            }
+          }
+        },
+        "map": "collision",
+        "match_id": "4fb603bc4452ab0d11bb76474faa399fe4d9d47b502b3ec2090dffd5487cdc40",
+        "round": 1124,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 22
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 4,
+              "B": 10
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 7,
+              "B": 4
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1012,
+              "B": 814
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 4830,
+              "B": 4510
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 1083
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1012,
+              "B": 704
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 810,
+              "B": 160
+            }
+          }
+        },
+        "map": "collision",
+        "match_id": "6e67d244e2e580a2a2e664bfcb2ded313823eaed1f4ef5a1cf9282f6b746acae",
+        "round": 1083,
+        "side": "B",
+        "trace": null
+      }
+    ],
+    "contrast": "Same prior source: expanse/A 4 wins, 0 losses in the supplied development window. Distinct from current edit base; no causal turn-level claim."
+  }
+}

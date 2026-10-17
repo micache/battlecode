@@ -1,0 +1,30 @@
+{
+  "match_id": "230e5190730ba22105ec46e2c79b2c7cf7a9a8b178e5b19a0b34c4207b42567b",
+  "exports": [
+    {
+      "file": "bot-a-stdout-log",
+      "exit_code": 1,
+      "result": {
+        "ok": false,
+        "error": "only this lane's development evidence may be exported"
+      }
+    },
+    {
+      "file": "bot-b-stdout-log",
+      "exit_code": 1,
+      "result": {
+        "ok": false,
+        "error": "only this lane's development evidence may be exported"
+      }
+    },
+    {
+      "file": "final-json",
+      "exit_code": 1,
+      "result": {
+        "ok": false,
+        "error": "only this lane's development evidence may be exported"
+      }
+    }
+  ],
+  "interpretation": "Optional smoke diagnostics denied by development-evidence export scope. No retry through another route; smoke completion and measured fuel unknown."
+}

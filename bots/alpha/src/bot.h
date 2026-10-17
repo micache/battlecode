@@ -1,13 +1,27 @@
 #pragma once
+#include <cambc.h>
+#include <vector>
 
-// Per-champion state survives between turns. Pick one stat and keep buying it.
 class Bot {
-    int chosen_stat = -1;
-
-    // Spend only on power shards of the randomly chosen stat.
+    struct CampPlan {
+        cambc::map::camp_group group;
+        cambc::bitboard tiles;
+        cambc::vec2 anchor;
+        float health, damage;
+        bool monolith;
+        // Last personally observed respawn deadline; a prediction, never live state.
+        unsigned ready_round = 0;
+        unsigned avoid_until = 0;
+    };
+    std::vector<CampPlan> camps;
+    int target = -1;
+    unsigned role = 0, team_size = 1, failed_moves = 0;
+    bool initialized = false;
+    void initialize();
     void buy_items();
-
+    int choose_camp();
+    bool collect_here();
+    void farm();
 public:
-    // Priorities: shop and recall, attack enemies in range, bank gems, then farm.
     void play_turn();
 };
