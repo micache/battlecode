@@ -1,0 +1,1 @@
+PASS: visible cleared groups with another allied collector are excluded; own captures and hidden/alive groups remain eligible. Accepted source and five guard mutations rejected; all other source unchanged. Source check only.

@@ -60,9 +60,8 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    // Keep the original build draw, but fund basic attacks instead of unused spells.
     const std::array items{cambc::item_type::power_shard_of_strength,
-        cambc::item_type::power_shard_of_strength, cambc::item_type::power_shard_of_health};
+        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
     const unsigned count = me.gold_count() / item.cost();
     if (count && me.can_buy(item, count)) me.buy(item, count);
@@ -86,15 +85,27 @@ void farm_camps() {
         if (attack_if_in_range(camp))
             return;
 
-    // Union every group's spawn tiles except visibly respawning groups.
+    // Route to groups needing work, retaining our own capture region.
     cambc::bitboard goals;
     goals.clear();
     const auto visible = cambc::vision::visible_tiles();
+    auto other_allies = cambc::vision::champion_tiles(team::ally);
+    const auto position = cambc::self().position();
+    other_allies.set(position, false);
     for (const auto& group : cambc::map::camp_groups()) {
-        const bool group_visible = !(group.spawn_tiles() & visible).is_empty();
-        if (group_visible && std::holds_alternative<cambc::map::camp_group_respawning>(group.state()))
-            continue;
-        goals |= group.spawn_tiles();
+        const auto spawns = group.spawn_tiles();
+        const bool group_visible = !(spawns & visible).is_empty();
+        if (group_visible) {
+            const auto state = group.state();
+            if (std::holds_alternative<cambc::map::camp_group_respawning>(state))
+                continue;
+            // One collector suffices. Do not join another ally, but keep our
+            // own occupied region eligible so an ongoing capture is preserved.
+            if (std::holds_alternative<cambc::map::camp_group_reward_available>(state)
+                && !spawns.is_set(position) && !(spawns & other_allies).is_empty())
+                continue;
+        }
+        goals |= spawns;
     }
 
     // Fresh vision after movement may reveal a camp already in range.
