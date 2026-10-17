@@ -9,7 +9,9 @@ matches retain their working-directory archives online too.
 
 Archives live outside Git at
 `/home/micache/.local/share/battlecode-arena-archive`, mode 0700. Every batch
-has its original completion manifests and project-member hashes. The client
+has its original completion manifests and project-member hashes. Batches use
+XZ-compressed TAR to compress repeated SDK/cache bytes across project ZIPs;
+the relay also accepts earlier uncompressed TAR batches after restart. The client
 checks transport SHA-256, manifest attribution and every inner ZIP member,
 fsyncs the archive and receipt, then sends an acknowledgement through the
 trusted operator mailbox. Worker mailboxes cannot acknowledge offloads.

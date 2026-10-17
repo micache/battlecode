@@ -29,7 +29,7 @@ from ops.blaxel import APIError, Client, CREDENTIALS
 def verify_batch(path, plan):
     """Verify transport, original seals and every restored worktree member byte."""
     require(file_hash(path) == plan['archive_sha256'], 'downloaded archive checksum mismatch')
-    with tarfile.open(path, 'r:') as archive:
+    with tarfile.open(path, 'r:*') as archive:
         members = archive.getmembers()
         expected = {'manifest.json'} | {e['job_id'] + '/' + name for e in plan['entries'] for name in e['files']}
         require(len(members) == len(expected) and {m.name for m in members} == expected and
@@ -132,11 +132,13 @@ class Relay:
         plan = self.state['plan']
         batch = plan['batch_id']
         require(len(batch) == 64 and all(c in '0123456789abcdef' for c in batch), 'invalid server batch ID')
-        target = self.root / 'batches' / (batch + '.tar')
+        archive_name = Path(plan['archive_path']).name
+        require(archive_name in (batch + '.tar', batch + '.tar.xz'), 'unexpected archive name')
+        target = self.root / 'batches' / archive_name
         if not target.exists():
             require(shutil.disk_usage(self.root).free > plan['archive_size'] + 2 * 1024**3, 'local archive storage reserve reached')
             import urllib.parse
-            expected_path = '/srv/battlecode/public/offload/' + batch + '.tar'
+            expected_path = '/srv/battlecode/public/offload/' + archive_name
             require(plan['archive_path'] == expected_path and plan['archive_size'] <= 48 * 1024**2, 'unexpected download target')
             data = self.client.request('GET', '/filesystem/' + urllib.parse.quote(expected_path, safe=''),
                                        base=self.endpoint, raw=True)

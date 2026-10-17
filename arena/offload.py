@@ -42,7 +42,8 @@ def prepare(arena, keep_recent=20):
     # A crash after the receipt transaction can leave only this redundant tar.
     for row in arena.db.all("SELECT value FROM meta WHERE key LIKE 'offload_receipt:%'"):
         batch = json.loads(row['value'])['batch_id']
-        (root / (checked_id(batch) + '.tar')).unlink(missing_ok=True)
+        for suffix in ('.tar', '.tar.xz'):
+            (root / (checked_id(batch) + suffix)).unlink(missing_ok=True)
     jobs = arena.db.all("SELECT * FROM match_jobs WHERE state='COMPLETED' AND artifact IS NOT NULL "
                         'ORDER BY created DESC,id DESC')
     entries, total = [], 0
@@ -66,12 +67,14 @@ def prepare(arena, keep_recent=20):
     if not entries:
         return {'batch_id':None, 'entries':[], 'retained_recent_matches':keep_recent}
     batch = identity(entries)
-    target = root / (batch + '.tar')
+    target = root / (batch + '.tar.xz')
     manifest = {'protocol_version':1, 'batch_id':batch, 'entries':entries}
     if not target.exists():
         stage = target.with_suffix('.pending')
         stage.unlink(missing_ok=True)  # Sole-writer, regenerable interrupted batch; originals still exist.
-        with tarfile.open(stage, 'x') as archive:
+        # ZIP members repeat SDK/cache bytes across games. A multi-MiB XZ
+        # dictionary deduplicates these across the batch, unlike ZIP's window.
+        with tarfile.open(stage, 'x:xz', preset=6) as archive:
             data = canonical(manifest)
             info = tarfile.TarInfo('manifest.json')
             info.size, info.mode = len(data), 0o600
@@ -143,7 +146,7 @@ def acknowledge(arena, receipt):
             require(shutil.disk_usage(arena.root).free > 32 * 1024**2, 'insufficient safe staging space')
             shutil.copytree(old, stage, ignore=lambda src,names: ['project.zip', 'completion.json'] if Path(src)==old else [])
             atomic_json(stage / 'project-offload.json', {
-                'batch_id':batch, 'archive_root':destination, 'archive_relative_path':'batches/' + batch + '.tar',
+                'batch_id':batch, 'archive_root':destination, 'archive_relative_path':'batches/' + Path(pending['archive_path']).name,
                 'archive_sha256':pending['archive_sha256'], 'project_sha256':entry['files']['project.zip']['sha256'],
                 'original_completion_sha256':entry['files']['completion.json']['sha256'],
                 'original_completion':read_json(old / 'completion.json'), 'previous_directory':old.name,
