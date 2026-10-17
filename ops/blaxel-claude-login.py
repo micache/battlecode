@@ -63,6 +63,8 @@ def main():
     for _ in range(60):
         status = client.request('GET', f'/process/{name}', base=endpoint)
         if status.get('status') != 'running':
+            if status.get('exitCode') != 0:
+                raise SystemExit('Native login did not succeed. Start a fresh login; do not send codes or tokens.')
             print('Native login finished; exit code:', status.get('exitCode'))
             print('Tell the arena operator "gamma login done". Do not send codes or tokens.')
             return
