@@ -1,0 +1,3 @@
+PASS: only draft preference/comment changed against accepted; legal available-list filtering, guarded iterator, random fallback, one RNG call and one official pick retained. All champion source byte-identical.
+PASS: draft contract covers 5850 distinct legal 3–5-pick rosters, each with exactly one first-pick Varg; opponent picks impose no exclusions. Enumeration models the contract only.
+Baseline permits drafts without Varg; the preference is absent there. No game outcome, clear-time, splash frequency or fuel claim follows from this check.
