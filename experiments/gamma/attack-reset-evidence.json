@@ -1,0 +1,172 @@
+[
+  {
+    "match_id": "0c4dfc600b817143ab95be0c00a632821a34e9b91873ad7ec26aa4e79ac1bae8",
+    "source_hash": "439fcfcda990dec5af8bda61db4076330daf5725f267fc75f6a2a71faf55bb97",
+    "candidate_side": "B",
+    "map": "collision",
+    "reference": "arena-client slice --match-id 0c4dfc600b817143ab95be0c00a632821a34e9b91873ad7ec26aa4e79ac1bae8 --file final.json (offsets 0 and 8192)",
+    "final_summary": {
+      "botFaults": [
+        0,
+        0
+      ],
+      "engineVersion": "0.0.1",
+      "engineVersionPacked": 65536,
+      "outcome": "teamA",
+      "round": 1438,
+      "schemaVersion": 2,
+      "teams": [
+        {
+          "draftPicks": [
+            0,
+            6,
+            5
+          ],
+          "submittedGems": 1012,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            3,
+            10,
+            5
+          ],
+          "submittedGems": 858,
+          "team": 1
+        }
+      ]
+    },
+    "candidate_champions": [
+      {
+        "champion": 3,
+        "team": 1,
+        "type": 3,
+        "deaths": 11,
+        "kills": 0,
+        "collectedGems": 154,
+        "submittedGems": 110,
+        "monsterDamageDone": 12621.5,
+        "monsterDamageTaken": 3380.0
+      },
+      {
+        "champion": 4,
+        "team": 1,
+        "type": 4,
+        "deaths": 11,
+        "kills": 0,
+        "collectedGems": 330,
+        "submittedGems": 242,
+        "monsterDamageDone": 8705.5,
+        "monsterDamageTaken": 6620.0
+      },
+      {
+        "champion": 5,
+        "team": 1,
+        "type": 11,
+        "deaths": 7,
+        "kills": 3,
+        "collectedGems": 88,
+        "submittedGems": 66,
+        "monsterDamageDone": 20077.0,
+        "monsterDamageTaken": 6425.0
+      },
+      {
+        "champion": 6,
+        "team": 1,
+        "type": 6,
+        "deaths": 7,
+        "kills": 12,
+        "collectedGems": 462,
+        "submittedGems": 440,
+        "monsterDamageDone": 37189.0,
+        "monsterDamageTaken": 3565.0
+      }
+    ],
+    "limits": "Final statistics do not expose ability casts or establish the cause of losses. Internal engineVersion is reported verbatim; trusted envelope pins CLI/SDK 2.1.6."
+  },
+  {
+    "match_id": "ca90f18339461552e38df68f2aab898148c28f068cbabe6500fc288810b58ee4",
+    "source_hash": "439fcfcda990dec5af8bda61db4076330daf5725f267fc75f6a2a71faf55bb97",
+    "candidate_side": "B",
+    "map": "collision",
+    "reference": "arena-client slice --match-id ca90f18339461552e38df68f2aab898148c28f068cbabe6500fc288810b58ee4 --file final.json (offsets 0 and 8192)",
+    "final_summary": {
+      "botFaults": [
+        0,
+        0
+      ],
+      "engineVersion": "0.0.1",
+      "engineVersionPacked": 65536,
+      "outcome": "teamA",
+      "round": 1158,
+      "schemaVersion": 2,
+      "teams": [
+        {
+          "draftPicks": [
+            0,
+            6,
+            5
+          ],
+          "submittedGems": 1034,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            3,
+            10,
+            5
+          ],
+          "submittedGems": 528,
+          "team": 1
+        }
+      ]
+    },
+    "candidate_champions": [
+      {
+        "champion": 3,
+        "team": 1,
+        "type": 3,
+        "deaths": 9,
+        "kills": 0,
+        "collectedGems": 66,
+        "submittedGems": 66,
+        "monsterDamageDone": 13285.0,
+        "monsterDamageTaken": 3491.25
+      },
+      {
+        "champion": 4,
+        "team": 1,
+        "type": 4,
+        "deaths": 9,
+        "kills": 3,
+        "collectedGems": 242,
+        "submittedGems": 198,
+        "monsterDamageDone": 6550.0,
+        "monsterDamageTaken": 5590.0
+      },
+      {
+        "champion": 5,
+        "team": 1,
+        "type": 11,
+        "deaths": 7,
+        "kills": 2,
+        "collectedGems": 154,
+        "submittedGems": 110,
+        "monsterDamageDone": 11819.5,
+        "monsterDamageTaken": 4570.0
+      },
+      {
+        "champion": 6,
+        "team": 1,
+        "type": 6,
+        "deaths": 6,
+        "kills": 3,
+        "collectedGems": 242,
+        "submittedGems": 154,
+        "monsterDamageDone": 24986.5,
+        "monsterDamageTaken": 3840.0
+      }
+    ],
+    "limits": "Final statistics do not expose ability casts or establish the cause of losses. Internal engineVersion is reported verbatim; trusted envelope pins CLI/SDK 2.1.6."
+  }
+]

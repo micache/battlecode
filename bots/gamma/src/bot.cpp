@@ -67,7 +67,7 @@ void Bot::buy_items() {
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
 
-// Make one basic attack if the target is already in attack range.
+// Basic attack, then use at most one ready reset against a surviving target.
 template<class Target>
 bool attack_if_in_range(const Target& target) {
     auto& me = cambc::self();
@@ -76,6 +76,18 @@ bool attack_if_in_range(const Target& target) {
         return false;
     }
     me.attack(target);
+
+    // Do not spend a reset on a kill or query a target that left vision.
+    if (!target.is_visible() || target.health() <= 0)
+        return true;
+    for (const auto& ability : me.abilities()) {
+        if (!ability.is_attack_reset() || !ability.can_target_self() || !ability.is_ready())
+            continue;
+        if (ability.use() && me.can_attack() && target.is_visible() && target.health() > 0
+            && me.attack_tiles().is_set(target.position()))
+            me.attack(target);
+        break; // One cast attempt and at most two basic attacks per decision.
+    }
     return true;
 }
 
@@ -124,14 +136,10 @@ void Bot::play_turn() {
         || (!me.can_move() && !me.can_attack()))
         return;
 
-    // Shop before leaving spawn. Recall arrives before end-of-turn healing,
-    // so an injured champion must stay here until recovery has happened.
+    // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
-    if (at_spawn) {
+    if (at_spawn)
         buy_items();
-        if (me.health() < me.max_health())
-            return;
-    }
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {

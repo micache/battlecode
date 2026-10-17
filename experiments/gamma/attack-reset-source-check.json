@@ -1,0 +1,14 @@
+{
+  "kind": "source safety invariants; not runtime combat or match evidence",
+  "bot_cpp_sha256": "5342757fe65fb1274f622851931b6ade3f5a330a9b09c670580b005b8b596fd0",
+  "checks": {
+    "accepted_source_has_no_attack_reset_policy": true,
+    "initial_attack_checks_allowance_visibility_health_range": true,
+    "no_reset_for_dead_or_hidden_target": true,
+    "only_ready_self_targeted_attack_resets": true,
+    "followup_rechecks_allowance_visibility_health_range": true,
+    "bounded_two_attacks_one_cast_attempt": true,
+    "official_dispatcher_yields": true
+  },
+  "passed": true
+}
