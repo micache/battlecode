@@ -126,16 +126,22 @@ void Bot::play_turn() {
 
     // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
+    // An observed recall ended away from spawn: move before a low-health retry.
+    const bool retrying_recall = recall_pending && !at_spawn;
+    recall_pending = false;
     if (at_spawn)
         buy_items();
 
-    // Retreat before recall so repeated damage interruptions still allow progress.
+    // Preserve the first attempt; try one retreat before an interrupted retry.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
         const auto spawn = cambc::map::spawn_region(team::ally);
-        move_towards_closest(spawn);
-        // Arrival by walking can heal at turn end without starting a channel.
-        if (!spawn.is_set(me.position()))
+        if (retrying_recall)
+            move_towards_closest(spawn);
+        // Refresh position: walking onto spawn can heal through this turn end.
+        if (!spawn.is_set(me.position())) {
             me.recall();
+            recall_pending = me.is_recalling();
+        }
         return;
     }
 

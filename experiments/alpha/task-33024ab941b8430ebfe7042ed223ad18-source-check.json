@@ -1,0 +1,19 @@
+{
+  "task_id": "task-33024ab941b8430ebfe7042ed223ad18",
+  "scope": "source contracts, not runtime branch coverage",
+  "checks": {
+    "running_channels_preserved_before_retry_state_consumed": true,
+    "state_consumed_on_next_actionable_turn": true,
+    "first_attempt_never_moves": true,
+    "at_most_one_retreat": true,
+    "arrival_rechecked_before_recall": true,
+    "only_observed_active_recall_arms_retry": true,
+    "private_state_initially_empty": true,
+    "official_yield_retained": true,
+    "main.cpp_unchanged": true,
+    "draft.cpp_unchanged": true,
+    "draft.h_unchanged": true,
+    "random.h_unchanged": true
+  },
+  "passed": true
+}
