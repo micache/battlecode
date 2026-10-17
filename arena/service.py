@@ -149,7 +149,7 @@ class Arena:
             incumbent = self.build(bot["accepted_revision"]) if bot["accepted_revision"] else None
             # Configured immutable history plus a pinned starter; never a moving opponent branch.
             from .strategy import opponent_panel
-            opponent_ids = opponent_panel(self)
+            opponent_ids = opponent_panel(self) if bot['accepted_revision'] else [self.db.get('starter_revision')]
             require(opponent_ids and all(opponent_ids), "pinned starter opponent missing")
             opponents = {rid: self.build(rid) for rid in opponent_ids}
         except ArenaError as exc:
@@ -166,6 +166,7 @@ class Arena:
             return evaluation_id
         maps = self.freeze_maps()
         full = self.config['evaluation'].get('full_evaluation', False) or self.config['evaluation']['automatic_promotion']
+        full = bool(full and incumbent)  # New-lane validity baseline: three maps against the fixed starter.
         if full:
             count = self.db.one("SELECT count(*) AS n FROM evaluations WHERE bot_id=? AND stage='promotion' AND created>?",
                                 (bot["id"], time.time() - 86400))["n"]
@@ -308,6 +309,8 @@ class Arena:
                          "artifact_bytes": sum(p.stat().st_size for p in (self.root / "matches").rglob("*") if p.is_file())},
                 "heartbeat": self.db.get("heartbeat"), "feedback_age_seconds": feedback_ages,
                 "service_error": self.db.get("service_error"), "disk_pressure": self.db.get("disk_pressure", False),
+                'improvement_interval_seconds': self.config['limits'].get('improvement_interval_seconds', 3600),
+                'worker_providers': {bot: setting.get('provider', 'codex') for bot, setting in self.config['workers'].items()},
                 "official_enabled": False}
 
     def export_status(self):
@@ -324,6 +327,9 @@ class Arena:
         self.consume_control()
         consume_messages(self)
         self.db.put("heartbeat", time.time())
+        if self.config['limits'].get('archive_completed_projects', False):
+            from .storage import archive_projects
+            self.db.put('project_archive_maintenance', archive_projects(self))
         status = self.export_status()
         pressure = (status["disk"]["free"] < self.config["limits"]["minimum_free_bytes"] or
                     status["disk"]["artifact_bytes"] >= self.config["limits"]["artifact_budget_bytes"])

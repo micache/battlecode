@@ -58,9 +58,10 @@ class Client:
             raise RuntimeError("untrusted Blaxel endpoint")
         headers = {"Authorization": "Bearer " + self.key,
                    "X-Blaxel-Workspace": self.workspace, "Blaxel-Version": "2026-04-28",
-                   "Content-Type": "application/json", "Accept": "application/octet-stream" if raw else "application/json"}
+                   "Content-Type": "application/octet-stream" if isinstance(body, bytes) else "application/json",
+                   "Accept": "application/octet-stream" if raw else "application/json"}
         req = urllib.request.Request(base.rstrip("/") + path, headers=headers, method=method,
-                                     data=json.dumps(body).encode() if body is not None else None)
+                                     data=body if isinstance(body, bytes) else json.dumps(body).encode() if body is not None else None)
         try:
             with urllib.request.build_opener(NoRedirect).open(req, timeout=70) as response:
                 content = response.read(64 * 1024**2 + 1)

@@ -25,13 +25,14 @@ for bot in config['workers']:
             for key, count in usage['reported_tokens'].items():
                 totals[key] = totals.get(key, 0) + count
             profile = profiles.setdefault(invocation.get('efficiency_profile', 'unknown'),
-                                          {'tasks_with_usage': 0, 'input_tokens_not_read_from_cache': 0, 'output_tokens': 0})
+                                          {'tasks_with_usage': 0, 'reported_tokens': {}})
             profile['tasks_with_usage'] += 1
-            for key in ('input_tokens_not_read_from_cache', 'output_tokens'):
-                profile[key] += usage['reported_tokens'].get(key, 0)
+            for key, count in usage['reported_tokens'].items():
+                profile['reported_tokens'][key] = profile['reported_tokens'].get(key, 0) + count
         commands += usage.get('completed_command_events', 0)
         output_bytes += usage.get('command_output_bytes', 0)
-    report['bots'][bot] = {'tasks': len(rows), 'published': sum(row['state'] == 'PUBLISHED' for row in rows),
+    report['bots'][bot] = {'provider':config['workers'][bot].get('provider', 'codex'),
+                           'tasks': len(rows), 'published': sum(row['state'] == 'PUBLISHED' for row in rows),
                            'usage_known_tasks': known, 'usage_unknown_tasks': len(rows) - known,
                            'reported_tokens': totals or None, 'reported_command_events': commands,
                            'profiles': profiles,

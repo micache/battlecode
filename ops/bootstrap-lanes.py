@@ -59,6 +59,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--export', action='store_true')
     parser.add_argument('--from-export')
+    parser.add_argument('--bot', help='bootstrap only this registered lane')
     args=parser.parse_args()
     if args.from_export:
         local_bootstrap(args.from_export)
@@ -82,7 +83,10 @@ def main():
         if not mirror.exists():
             run(["git", "clone", "--mirror", config["repository_url"], str(mirror)])
         results = []
+        require(not args.bot or args.bot in config['workers'], 'unregistered bot')
         for bot, worker in config["workers"].items():
+            if args.bot and bot != args.bot:
+                continue
             remote = git(mirror, "ls-remote", "--heads", "origin", f"refs/heads/{worker['branch']}")
             if not remote:
                 directory = Path(tempfile.mkdtemp(prefix=f"bootstrap-{bot}-", dir=Path(config["root"]) / "repos"))

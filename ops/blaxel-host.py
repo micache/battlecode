@@ -51,7 +51,7 @@ def main():
         target.parent.mkdir(mode=0o755, exist_ok=True)
         target.parent.chmod(0o755)
         if not target.exists():
-            if (home / '.codex').exists() or (home / '.ssh').exists():
+            if any((home / name).exists() for name in ('.codex', '.claude', '.claude.json', '.ssh')):
                 raise RuntimeError('refusing to copy an authenticated home; use a fresh owner identity')
             shutil.copytree(home, target)
             home.rename(home.with_name(home.name + '.initial-home'))

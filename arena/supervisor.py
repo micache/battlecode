@@ -74,7 +74,7 @@ def new_task(arena, bot, owner="server"):
         db.execute("UPDATE workers SET state=?,task_id=?,lease_owner=?,heartbeat=?,detail=NULL WHERE id=?",
                    ("RUNNING" if owner == "server" else "PAUSED", task_id, owner, time.time(), bot))
     atomic_json(arena.root / "tasks" / bot / f"{task_id}.json", envelope)
-    db.put(f"task-origin:{task_id}", "codex" if owner == "server" else "manual")
+    db.put(f"task-origin:{task_id}", config['workers'][bot].get('provider', 'codex') if owner == "server" else "manual")
     return envelope
 
 
@@ -82,7 +82,12 @@ def dispatch_tasks(arena):
     db, config = arena.db, arena.config
     if not db.get("starter_verified", False) or db.one("SELECT id FROM workers WHERE state='RUNNING'"):
         return
-    for bot, settings in config["workers"].items():
+    interval = config['limits'].get('improvement_interval_seconds', 3600)
+    # Oldest-served first: alphabetical order must not starve a new lane.
+    last_runs = {bot: db.one('SELECT max(created) AS t FROM tasks WHERE bot_id=?', (bot,))['t'] or 0
+                 for bot in config['workers']}
+    for bot in sorted(config['workers'], key=lambda key: (last_runs[key], key)):
+        settings = config['workers'][bot]
         worker = db.one("SELECT * FROM workers WHERE id=?", (bot,))
         if not settings["enabled"] or not settings["owner_confirmed"] or worker["paused"]:
             continue
@@ -93,6 +98,8 @@ def dispatch_tasks(arena):
         if worker["state"] not in ("IDLE", "QUOTA_WAIT") or worker["next_run"] > time.time():
             continue
         if worker["lease_owner"] not in (None, "server"):
+            continue
+        if last_runs[bot] and time.time() < last_runs[bot] + interval:
             continue
         pending = db.one("SELECT id FROM revisions WHERE bot_id=? AND state IN ('PENDING','EVALUATING')", (bot,))
         if pending:
@@ -106,8 +113,8 @@ def dispatch_tasks(arena):
         latest = read_json(feedback_file)
         from .strategy import feedback_token
         feedback_id = feedback_token(arena, bot, latest['evaluation_id'])
-        if worker["last_feedback"] == feedback_id:
-            continue  # Idle workers consume no model calls.
+        if not interval and worker["last_feedback"] == feedback_id:
+            continue  # Legacy event-driven mode, not the hourly schedule.
         new_task(arena, bot)
         return
 

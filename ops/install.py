@@ -44,7 +44,7 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False, 
     destination.mkdir(mode=0o755)
     for name in ("arena", "ops", "schemas", "config", "sources", "evidence", "docs", "fixtures"):
         shutil.copytree(source / name, destination / name, ignore=shutil.ignore_patterns("__pycache__"))
-    for name in ("AGENTS.md", "ARENA.md", "AUTH_AND_OPERATIONS.md", "BOT_REFERENCE.md", "PROMPTS.md",
+    for name in ("AGENTS.md", "CLAUDE.md", "ARENA.md", "AUTH_AND_OPERATIONS.md", "BOT_REFERENCE.md", "PROMPTS.md",
                  "PLAYBOOKS.md", "RESEARCH.md", "RULES_CHECKLIST.md", "pyproject.toml", ".gitignore"):
         shutil.copyfile(source / name, destination / name)
     (destination / "INFRASTRUCTURE_COMMIT").write_text(revision + "\n")

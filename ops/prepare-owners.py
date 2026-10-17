@@ -15,6 +15,8 @@ expected = '399ff69c431c066e40de318fba45c2b07f45a76b19939d247ee4828fc70c4215'
 require(file_hash(binary) == expected, 'review official CLI binary update before pinning')
 config = read_json('/etc/battlecode/arena.json')
 for bot in config['workers']:
+    if config['workers'][bot].get('provider', 'codex') != 'codex':
+        continue  # Never overwrite another provider's pin or native credential settings.
     path = Path(f'/etc/battlecode/{bot}.json')
     owner = read_json(path)
     owner.update(codex_executable=binary, codex_sha256=expected)

@@ -91,6 +91,7 @@ class Harness(unittest.TestCase):
         self.root = self.path / "runtime"
         self.root.mkdir()
         self.config = read_json(PROJECT / "config/pilot.json")
+        self.config['limits']['improvement_interval_seconds'] = 0  # Fast synthetic event-driven fixtures.
         self.config.update({"root": str(self.root), "mirror": str(self.repo), "infrastructure_commit": self.base,
                             "infrastructure": str(PROJECT), "maps": str(self.path / "maps"),
                             "map_manifest": str(self.path / "maps.json"), "config_hash": "c" * 64})

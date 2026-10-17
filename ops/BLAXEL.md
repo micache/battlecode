@@ -8,7 +8,10 @@ and [saved evidence](../evidence/blaxel/). Do not rerun installation on this ser
 
 - Workspace `banabolabs`, sandbox `battlecode-arena`, region `us-pdx-1`.
 - 8,192 MB RAM / four CPU cores; 8,192 MB volume `battlecode-arena-data`.
-- Exactly alpha and beta; one match, build and Codex invocation at a time.
+- Alpha and beta use Codex; gamma is an isolated Claude Code lane (owner login
+  required before enabling). One match, build and model invocation at a time.
+  Each bot receives one improvement job per hour, serialized, with accumulated
+  development feedback. See [setup and safeguards](../docs/CLAUDE_AND_HOURLY.md).
 - Rootless Podman, immutable local engine image, CLI/SDK 2.1.6, official C++ starter.
 - Codex CLI 0.163.0, pinned executable hash; separate Linux users, private homes,
   native authentication and writable clones. Only `bc-arena` publishes source.
@@ -19,6 +22,8 @@ and [saved evidence](../evidence/blaxel/). Do not rerun installation on this ser
 - Artifact budget 3 GiB, minimum free space 1 GiB, automatic daily database
   backup, initial two-experiment cap removed after the four real pilot cycles.
   Each invocation remains bounded to 20 minutes; quota/disk gates still apply.
+  Completed per-match working trees are losslessly archived; replays/statistics
+  are retained. The disk guard still applies to retained evidence.
 
 The provider's virtiofs mount ignores guest `chown`. The installation therefore
 uses a 7 GiB ext4 image, `/persist/battlecode-data.ext4`, mounted nodev,nosuid at

@@ -154,8 +154,9 @@ def acceptance_report(arena):
         rows = arena.db.all("SELECT t.id AS task_id,t.published_commit,r.source_hash,e.id AS evaluation_id,e.state "
                             "FROM tasks t JOIN revisions r ON r.experiment_id=t.id JOIN evaluations e ON e.revision_id=r.id "
                             "WHERE t.bot_id=? AND t.state='PUBLISHED' AND e.finished IS NOT NULL ORDER BY e.created", (bot,))
-        rows = [row for row in rows if arena.db.get(f"task-origin:{row['task_id']}") == "codex" and
-                arena.db.get(f"invocation:{row['task_id']}", {}).get("provider") == "codex"]
+        provider = arena.config['workers'][bot].get('provider', 'codex')
+        rows = [row for row in rows if arena.db.get(f"task-origin:{row['task_id']}") == provider and
+                arena.db.get(f"invocation:{row['task_id']}", {}).get("provider") == provider]
         for row in rows:
             row["matches"] = [case["job_id"] for case in arena.db.all(
                 "SELECT DISTINCT c.job_id FROM evaluation_cases c JOIN match_jobs j ON j.id=c.job_id "

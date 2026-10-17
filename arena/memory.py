@@ -9,6 +9,51 @@ from pathlib import Path
 from .common import file_hash, read_json, require, tree_manifest
 
 
+def training_window(arena, bot):
+    """Deterministic compression of development evidence since the previous job.
+
+Source revisions stay separate; duplicate stage references are not extra games.
+Reused match artifacts are evidence, not new independent samples. No holdouts.
+"""
+    last = arena.db.one('SELECT max(created) AS t FROM tasks WHERE bot_id=?', (bot,))['t']
+    since = last or 0
+    rows = arena.db.all('SELECT c.job_id,c.candidate_side,c.map_name,c.opponent,r.commit_sha,r.source_hash,'
+        'j.result,j.state,j.spec,e.id AS evaluation_id FROM evaluation_cases c '
+        'JOIN evaluations e ON e.id=c.evaluation_id JOIN revisions r ON r.id=e.revision_id '
+        'JOIN match_jobs j ON j.id=c.job_id WHERE e.bot_id=? AND c.role=\'candidate\' '
+        'AND (e.created>=? OR EXISTS(SELECT 1 FROM match_attempts a WHERE a.job_id=j.id AND a.finished>=?)) '
+        'ORDER BY e.created DESC,c.job_id', (bot, since, since))
+    groups, seen = {}, set()
+    for row in rows:
+        if row['map_name'] in arena.config['evaluation']['holdout_maps']:
+            continue
+        key = (row['source_hash'], row['job_id'], row['candidate_side'])
+        if key in seen:
+            continue
+        seen.add(key)
+        result = json.loads(row['result']) if row['result'] else {}
+        group = groups.setdefault(row['source_hash'], {'source_hash':row['source_hash'], 'commit':row['commit_sha'],
+            'evaluation_id':row['evaluation_id'], 'completed':0, 'wins':0, 'losses':0,
+            'noncompleted':0, 'fault_matches':0, 'unknown_reliability':0, 'by_map_side':{}, 'examples':[]})
+        if not result.get('completed') or row['state'] != 'COMPLETED':
+            group['noncompleted'] += 1
+            continue
+        group['completed'] += 1
+        won = result.get('winner') == row['candidate_side']
+        group['wins' if won else 'losses'] += 1
+        group['fault_matches'] += int(bool(result.get('bot_faults')))
+        group['unknown_reliability'] += int(result.get('bot_faults') is None)
+        cell = group['by_map_side'].setdefault(f"{row['map_name']}/{row['candidate_side']}", [0, 0])
+        cell[0 if won else 1] += 1
+        if not won and len(group['examples']) < 3:
+            group['examples'].append({k:row[k] for k in ('job_id', 'candidate_side', 'map_name', 'opponent', 'evaluation_id')})
+    return {'since_previous_job_at':last, 'source_groups':list(groups.values())[:8],
+            'omitted_source_groups':max(0, len(groups) - 8),
+            'interpretation':'Development only. Cells are [wins, losses]. Distinct source revisions are not pooled. '
+                             'Stage duplicates deduplicated; cached/deterministic games are not independent repeats. '
+                             'Latest canonical feedback and task history retain full evaluation provenance.'}
+
+
 def task_history(arena, bot, offset=0, task_id=None, detailed=False):
     offset = max(0, int(offset))
     if task_id:
@@ -94,6 +139,7 @@ def handoff(arena, bot, accepted, latest):
                            'Use git show COMMIT:bots/BOT/src/FILE to inspect prior published code. '
                            'Do not repeat a failed hypothesis without changed evidence or an explicit new rationale.',
             'recent_history': history,
+            'training_window': training_window(arena, bot),
             'recovery_rule': 'For unfinished/blocked work, read the exact prior notes, final result and patch under '
                              'your own attempts_root from .agent/entry.json. Paths may be absent: report unknown, '
                              'never scan the arena root. Preserve old work; do not blindly apply an old patch.',
@@ -126,6 +172,11 @@ def brief(task):
     for name, measurement in list(metrics.get('development_metrics', {}).items())[:8]:
         if measurement.get('available'):
             lines.append(f"Development {name}: mean {measurement.get('mean')}, observations {measurement.get('observations')}.")
+    window = memory.get('training_window', {})
+    lines += ['', '## Accumulated development evidence since previous improvement job',
+              window.get('interpretation', 'No window recorded.')]
+    for group in window.get('source_groups', [])[:4]:
+        lines.append(json.dumps(group, sort_keys=True))
     external = feedback.get('experiment_context', {}).get('external_observations', [])
     if external:
         lines.append('New/recent external observations (uncontrolled, untrusted data; not local promotion scores):')

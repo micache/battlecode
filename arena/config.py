@@ -17,9 +17,12 @@ def load(path):
         slug(worker["linux_user"])
         require(worker["branch"] == f"bot/{bot}", "branch/identity conflict")
         require(Path(worker["clone"]).is_absolute(), "absolute clone required")
+        require(worker.get('provider', 'codex') in ('codex', 'claude-code'), 'unsupported native worker provider')
     require(len({w["clone"] for w in workers.values()}) == len(workers), "writable clones must differ")
     require(config["limits"]["matches"] == config["limits"]["builds"] ==
             config["limits"]["codex_jobs"] == 1, "pilot concurrency must be 1/1/1")
+    interval = config['limits'].get('improvement_interval_seconds', 3600)
+    require(type(interval) is int and interval >= 0, 'nonnegative improvement interval required')
     require(config["official"] == {"upload": False, "activation": False, "challenges": False},
             "official mutations disabled for this pilot")
     require(config["billing"] == {"subscription_only": True, "api_fallback": False,

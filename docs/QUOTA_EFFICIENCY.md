@@ -1,5 +1,11 @@
 # Quota efficiency: high reasoning, less repeated work
 
+17 October update: improvements now follow a one-hour per-bot schedule, not a
+fresh-feedback trigger. Matches continue between invocations; development
+results are compressed by immutable source/map/side, with exact evidence kept.
+See [Claude and hourly operation](CLAUDE_AND_HOURLY.md) for the third lane and
+the unchanged quota, evaluation and promotion guards.
+
 Both lanes retain `gpt-6.1-sol` with high reasoning. Subscription-only native
 authentication, account isolation, one concurrent model job, quota waits and the
 full promotion gate remain unchanged. No paid overage, API fallback, account
