@@ -1,0 +1,151 @@
+{
+  "task_id": "task-adc0e4b46bef4259b242f5d17c07a43b",
+  "evaluation_id": "e922ae87f7fb5e3d2d1c2d6d5a8d423b2128fca0858cf84f2cb0c27d65982906",
+  "candidate": {
+    "build_id": "65154d713c9f8facafe974e0bea80b72111173fabd1cc9fedfafc3faae1d92eb",
+    "commit": "cc18ffa1c572acde39728efc85e75750fc8b436f",
+    "revision_id": "ed4fab158fee24bb8207476dacee98669437ac338afed7ff0d5f36f337863116",
+    "source_hash": "f9b2cc2dc5088ee5110d2b8e6d1ac062b79aa3fef330bf70fd59d85373626706"
+  },
+  "decision": "INCONCLUSIVE",
+  "representative_failures": [
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 18,
+            "B": 31
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 10,
+            "B": 12
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 726,
+            "B": 1100
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 3655,
+            "B": 5755
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 1334
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 638,
+            "B": 1012
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 25,
+            "B": 715
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "27495c84a61f48a2ecad232cf513ad607c88ea5ba508957914a2cf544aefad60",
+      "round": 1334,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 20,
+            "B": 16
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 2,
+            "B": 14
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 418,
+            "B": 1056
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2195,
+            "B": 5265
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 858
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 264,
+            "B": 1012
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 455,
+            "B": 855
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "9edaafa289223d8b724c09f47fbc17897f105f0b19d3fc58555451b696cadd53",
+      "round": 858,
+      "side": "A",
+      "trace": null
+    }
+  ]
+}

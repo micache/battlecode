@@ -135,14 +135,10 @@ void Bot::play_turn() {
         return;
     }
 
-    // Attack one enemy in range, then use any remaining movement for objectives.
+    // Attack the first enemy champion already in range.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy)) {
-            // Ranged attacks consume movement; query the live allowance after the hit.
-            if (!me.can_move())
-                return;
-            break;
-        }
+        if (attack_if_in_range(enemy))
+            return;
 
     // Bank any carried gems before farming.
     if (me.gem_count() > 0) {
@@ -157,7 +153,16 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        move_towards_closest(goals);
+        if (move_towards_closest(goals)) {
+            // Start tribute on arrival using fresh position and lock observations.
+            for (auto altar : cambc::map::altars().positions()) {
+                if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
+                    && !cambc::vision::has_altar_lock(altar)) {
+                    me.submit_gems(altar);
+                    return;
+                }
+            }
+        }
         return;
     }
 
