@@ -6,7 +6,6 @@
 #include "random.h"
 #include <cstdint>
 #include <span>
-#include <type_traits>
 #include <variant>
 
 using cambc::vec2;
@@ -61,37 +60,23 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
+    // Keep the original build draw, but fund basic attacks instead of unused spells.
     const std::array items{cambc::item_type::power_shard_of_strength,
-        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
+        cambc::item_type::power_shard_of_strength, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
     const unsigned count = me.gold_count() / item.cost();
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
 
-// Basic attack first; follow with one legal unit spell if we have not walked.
+// Make one basic attack if the target is already in attack range.
 template<class Target>
-bool attack_if_in_range(const Target& target, bool allow_spell = true) {
+bool attack_if_in_range(const Target& target) {
     auto& me = cambc::self();
     if (!me.can_attack() || !target.is_visible() || target.health() <= 0
         || !me.attack_tiles().is_set(target.position())) {
         return false;
     }
     me.attack(target);
-
-    // Refresh live state: the basic attack or retaliation may have killed a unit.
-    if (!allow_spell || !me.is_alive() || !target.is_visible() || target.health() <= 0)
-        return true;
-    for (const auto& ability : me.abilities()) {
-        if (!(ability.is_damage() || ability.is_cc()) || !ability.is_ready())
-            continue;
-        if constexpr (std::is_same_v<Target, cambc::camp>) {
-            if (!ability.can_target_camps()) continue;
-        } else {
-            if (!ability.can_target_enemies()) continue;
-        }
-        if (!ability.valid_tiles().is_set(target.position())) continue;
-        if (ability.use(target)) break;
-    }
     return true;
 }
 
@@ -115,7 +100,7 @@ void farm_camps() {
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
         for (const auto& camp : cambc::vision::camps())
-            if (attack_if_in_range(camp, false))
+            if (attack_if_in_range(camp))
                 return;
 }
 

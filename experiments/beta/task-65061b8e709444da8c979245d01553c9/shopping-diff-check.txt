@@ -1,0 +1,4 @@
+PASS: compared every owned source file against accepted Git blobs.
+Only behavioral difference is Focus-to-Strength shopping-slot substitution.
+Build indices now map to [Strength, Strength, Health]; RNG, count/permission guard, actions and yield are unchanged.
+Static source comparison only; no runtime or improvement claim.

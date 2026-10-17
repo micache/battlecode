@@ -1,81 +1,75 @@
 # Operational summary
 
-## task-22caf7462e2948bb8845e85c3489e69a — unit spells after stationary attacks
+## task-65061b8e709444da8c979245d01553c9 — fund basic attacks instead of unused spells
 
-Playbook D. Hypothesis: following a stationary basic attack with one ready,
-legal direct-damage/CC spell against its surviving target uses otherwise idle
-Focus and cooldowns, increasing damage/control without changing target choice.
-Falsifiable expectation: a surviving visible target in basic and spell range,
-with a matching target mask and ready damage/CC slot, receives one spell after
-the basic attack; a lethal basic attack, dead caster, no eligible spell, or an
-attack after walking receives no spell. Never cast twice successfully.
-Expected strategic benefit is faster camp clearing and better exchanges;
-win rate, clearing time and survival effects remain unmeasured.
+Playbook C (item value). Hypothesis: redirecting the existing Focus shopping
+slot to Strength, while retaining Health builds and the original RNG sequence,
+will increase basic-attack damage and reduce farming time for those builds in
+the accepted policy, which never casts abilities.
+Falsifiable expectation: selected build indices 0/1 buy Power Strength shards;
+index 2 still buys Power Health. The same gold/count/permission guard applies.
+Every non-shopping decision and RNG call remains identical to accepted source.
+Expected strategic benefit: faster clears and more useful attack damage;
+clear speed, survival, and win-rate effects require supervisor evaluation.
 
-Identity: beta, bot/beta, input/HEAD a347d811a59adb7c2a3f69bedde352ed7bbf1b2e.
-Accepted edit start: commit 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9;
+Identity: beta; bot/beta; task-65061b8e709444da8c979245d01553c9.
+HEAD/input: 6450f60028bac2047cddd8cb8be0710823d583d3.
+Accepted edit start: 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9;
 source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-Entry identity, all six accepted source file hashes and Git blobs verified.
+All six source file hashes and accepted Git blobs match supplied handoff.
+Initial bot.cpp diff from HEAD is trusted restoration of accepted, not this
+experiment. Accepted Git/snapshot preserves baseline outside edit transaction.
+Latest task is evaluated/PUBLISHED, not pending. Prior interrupted recovery
+remains in experiments/beta/recovery/task-40d0fac06d944338a6ad7b95d26248c1/.
+Previous operational notes archived through task-22caf7462e2948bb8845e85c3489e69a.
 Engine/SDK 2.1.6; lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Matching C++ header SHA-256 verified:
+suite historical-panels-v1. C++ header hash matches supplied
 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-All reviewed documentation hashes unchanged. Only relevant rule/API/SDK sections
-consulted this routine task. Separate organizer AGENTS.md remains unavailable.
-Accepted Git/supplied snapshot preserves baseline outside the edit transaction.
-Initial diff from HEAD removes the prior tribute candidate by trusted restoration,
-not by this experiment. Prior notes archived by task ID. No pending evaluation.
-Older interrupted work remains preserved in existing recovery files.
+Reviewed documentation hashes unchanged. Separate organizer AGENTS.md remains
+unavailable. Relevant supplied rules and installed item/shop contracts consulted.
 
-Development context: evaluation
-719be6f1c93a369eb097b155f54882e8990fe86aeab77b77c852e800a657bab7,
-commit a347d811a59adb7c2a3f69bedde352ed7bbf1b2e, source
-a080397e5dc62a5007e7ad5398240f1aea5e9f7a6e67b94f3ce62622041ca310,
-INCONCLUSIVE, provisional three-map coverage, 10W/14L, 0 faults, 0 missing.
-Representative collision B losses:
-064016aab5657c363b87cf6f2199eaa4d0d5e3e4872aed52c344da2fada3e069 and
-280b86ae5b84fc4b33c05167ee41a2474248e47be9eec28411e99124062e97eb.
-Development means: deaths 27.67, kills 6.08, collected gems 774.17, submitted
-664.25 over 24 games. These are strategic-loss context, not proof of unused-spell
-causation, and do not evaluate the restored accepted source or this candidate.
-Source-supported failure: attack_if_in_range always returns after one basic
-attack, and no accepted source path casts any ability. Focus shards can be
-chosen but spell damage is unused. Earlier reset experiment task-32b6f4ccb8f54f1ead2a0e7c4bdcac48
-was INCONCLUSIVE (3W/3L); this tests direct damage/CC, not another reset policy.
-No turn-level damage, cooldown or camp-clear telemetry is supplied.
+Development context: evaluation e45758b294b67c2628adb9cc19e7739c188f6d9dfb570283e7988dad30cd56b3,
+commit 6450f60028bac2047cddd8cb8be0710823d583d3, source
+0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1,
+INCONCLUSIVE/provisional-three-map-wiring, 19W/5L, zero recorded faults/missing.
+Representative losses, both side A:
+32ab393f7995e4359617fc4f1ab81dece28c104fba189f4eea2cb852c918ddfd (corners),
+ca5e1fa20362978daeb63303b6475007e9aca84e9637b2eb2929d7e88b6da6cf (elkring).
+These evaluate the spell candidate, NOT the restored accepted source or this
+candidate. Source-supported failure: accepted buy_items can repeatedly select
+Power Focus shards, but no accepted path casts an ability. Final-stat slice
+for the elkring loss was bounded/truncated; no completed aggregate was derived.
+No turn-level evidence establishes shopping as the cause of those losses.
 
-Contracts: GameRules.md:245–266,416; BOT_REFERENCE.md sections 3,5,6;
-C++ cambc.h ability::is_ready checks cooldown plus caster can_cast; valid_tiles
-checks range only; can_target_camps/enemies supplies the separate category check.
-Unit casts use ability.use(target). Both current slots are examined in index
-order; only damage/CC kinds qualify. We conservatively skip all spells after
-walking, including walk-compatible spells, rather than infer walking from the
-remaining allowance (a stationary ranged attack also consumes movement).
+Contracts: GameRules.md:245–259 (Strength basic damage / Focus spells),
+280–302 (30-gold shards, growth stats, five shards make Power emblem),
+727–762 (Ren retaliation scales with Focus). C++ cambc.h:1449–1459,
+3550–3564 item names, growth and shop/count permissions.
 
-Implemented: bot.cpp adds a guarded single-target spell follow-up after the
-existing basic attack; only damage/CC kinds qualify, with live readiness,
-category and range checks. Refresh survival/visibility after basic damage and
-retaliation. The post-movement camp attack explicitly disables spells. Main's
-end_turn dispatch, channels, target order, draft, shopping and RNG are unchanged.
-Only bot.cpp differs from accepted source (19 insertions, 3 deletions).
+Implementation: remap only the Focus entry of buy_items' three-slot array to
+Power Strength. Preserve initialization's random_number(3) call, build indices,
+Health selection, purchase guard, all tactics, draft, channels, and turn yield.
+This is an independent itemization experiment against accepted; the previous
+spell implementation is not included.
 
-`python3 experiments/beta/check_unit_spells.py` exited 0. Report:
-experiments/beta/task-22caf7462e2948bb8845e85c3489e69a/unit-spells-invariant.txt.
-Checks guarded cast order, target masks/range/readiness, survival/visibility,
-single success and movement exclusion; rejects accepted source and nine
-mutations. Source invariant only, not a simulation or measured spell trace.
-`git diff --check` exited 0.
-Trusted command:
-`bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-exited 0, PASSED, for exact candidate source
-0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1.
-Local report: .agent/check-task-22caf7462e2948bb8845e85c3489e69a.json.
-Reference: check:task-22caf7462e2948bb8845e85c3489e69a:0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1.
-Smoke IDs: 77edcd12ee37b66a10e772dacf23a95694af989d131fc24b3a37a40b86cbd9e0,
-73172cde42a510b26c762c7249dbc18d6a6a2e7b28ccb49b3a63dec521140494.
-Wrapper success alone does not establish completed-game outcomes, tactical
-spell traces, measured fuel headroom, or strategic improvement.
-Remaining uncertainty: extra actions cost fuel and retaliation can kill casters;
-spell use on camps may sacrifice an upcoming defensive stun. Single-target-only
-policy leaves AoE, resets, shields, heals, and longer-range attacks untested.
-Next: supervisor evaluates this exact candidate against accepted; inspect clear
-speed, survival and objective costs before broadening ability use.
+Validation: inline Python comparison against accepted Git blobs passed, exit 0.
+Report: experiments/beta/task-65061b8e709444da8c979245d01553c9/shopping-diff-check.txt.
+All source files match accepted except the one array-entry substitution and
+its comment; no new runtime trace or strategic improvement is established.
+`git diff --check` passed, exit 0.
+Trusted command: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
+passed, exit 0, for exact source
+3b7c5e96f4c06df6f9cbb6905f1f35474d5b0a4ba7c7e03e54da511fbe8288fe.
+Report: .agent/check-task-65061b8e709444da8c979245d01553c9.json.
+Reference: check:task-65061b8e709444da8c979245d01553c9:3b7c5e96f4c06df6f9cbb6905f1f35474d5b0a4ba7c7e03e54da511fbe8288fe.
+Smoke IDs: 0af0f3dfddfbe9da1edba22721168cf3bf1be90936d087b00270842722e812ac,
+7d3dfeb144b7500b44f3688568c6f57fef62d436114e3fa5c70a3720220bdf41.
+Report does not expose completed-game outcomes or measured fuel headroom;
+wrapper success alone does not demonstrate strategic improvement.
+Remaining uncertainty: Ren loses incremental Focus retaliation; Strength may
+change attack/kill timing and future farming routes. Health and Strength builds
+may perform differently by champion/map. Do not combine this experiment with a
+future spell policy without a new evaluation. No measured fuel headroom or
+strategic gain yet.
+Next: supervisor evaluates the exact checked source against accepted; compare
+farming throughput, survival, and submitted gems for former Focus builds.
