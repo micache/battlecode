@@ -15,7 +15,8 @@ each hour, even when feedback is unchanged. The existing global model slot
 serializes these jobs; oldest-served goes first. The durable start timestamp
 prevents duplicate calls after restart, and there are no catch-up bursts.
 
-Games run between jobs. Each handoff includes a compact development summary
+Games run continuously between coding jobs when `limits.continuous_matches`
+is enabled. Each handoff includes a compact development summary
 since the prior job, grouped by source revision, map and side, with reliability
 counts and representative losses. Canonical feedback, commit/evaluation/match
 IDs, replays, statistics, historical notes, check reports and diagnostic slices
@@ -27,6 +28,52 @@ Explicit pauses, authentication/quota/permission waits, and a candidate still
 awaiting evaluation can delay the next job. No work is transferred to another
 account and no paid fallback is enabled to meet a clock deadline. Each model
 invocation keeps its 20-minute wall limit. The full promotion gate is unchanged.
+
+## Continuous self-play is separate from hourly coding
+
+An implementation gap was found on 17 October: the original scheduler ran only
+candidate evaluations and then left the game queue empty. Earlier wording about
+games between jobs did not establish continuous play. The new low-priority
+producer keeps **one frozen round-robin** queued, independent of model cadence
+and the daily promotion-check cap. With three bots this is 36 full games:
+three pairs × both sides × six development maps. After it finishes, another
+round starts without a model call. Evaluations and smoke checks take priority.
+
+Each lane contributes its latest completed reliability-valid evaluated source,
+not a mutable checkout or an unevaluated branch tip. These are training
+candidates, not automatically accepted champions. The engine, maps, commits,
+source/build hashes and pairings remain frozen within a round. New revisions
+enter the next round. Adding an enabled registered lane extends the round-robin.
+
+All games retain normal sealed replays, statistics and logs. The next hourly
+handoff includes a bounded, lane-scoped summary with exact source and opponent
+commits, map/side cells, available final metrics and up to three loss references.
+Workers use the normal `arena-client ... slice` command for those diagnostics.
+Only development maps are played; no reserved-map trace access is added.
+
+There is no public seed flag. Identical-input runs therefore remain **repeated
+executions, not independent evidence**. Feedback reports physical completions
+and repeat counts separately; its win/loss cells deduplicate identical inputs
+within the time window and flag differing repeated outcomes. Training matches
+never enter promotion evaluation cases or certify a submission. Repeats still
+produce useful runtime/reliability evidence, not extra proof of strategic gain.
+
+Global pause, engine-adapter pause and disk guards stop gameplay. A coding CLI
+quota/login wait or owner-model pause does not stop already compiled bots from
+playing. To disable a lane in future training rounds, disable its registration;
+to stop all play immediately use the normal global pause/stop controls.
+
+Enable on this existing deployment only while services are stopped:
+
+```bash
+python3 /opt/battlecode/ops/configure-training.py --interval-seconds 3600 --continuous-matches
+```
+
+Disable with `--no-continuous-matches`; restart afterward. Existing training
+queue entries park without deletion and resume if re-enabled. The status snapshot
+includes `continuous_training` with its frozen roster, round and game counts.
+Concurrency stays one match, one build and one model invocation. The full
+nine-map promotion gate and official upload/challenge restrictions are unchanged.
 
 ## Adding a Codex lane
 

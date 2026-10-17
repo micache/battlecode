@@ -47,7 +47,9 @@ Reused match artifacts are evidence, not new independent samples. No holdouts.
         cell[0 if won else 1] += 1
         if not won and len(group['examples']) < 3:
             group['examples'].append({k:row[k] for k in ('job_id', 'candidate_side', 'map_name', 'opponent', 'evaluation_id')})
+    from .training import window as self_play_window
     return {'since_previous_job_at':last, 'source_groups':list(groups.values())[:8],
+            'continuous_self_play':self_play_window(arena,bot,since),
             'omitted_source_groups':max(0, len(groups) - 8),
             'interpretation':'Development only. Cells are [wins, losses]. Distinct source revisions are not pooled. '
                              'Stage duplicates deduplicated; cached/deterministic games are not independent repeats. '
@@ -182,6 +184,13 @@ def brief(task):
               window.get('interpretation', 'No window recorded.')]
     for group in window.get('source_groups', [])[:4]:
         lines.append(json.dumps(group, sort_keys=True))
+    self_play = window.get('continuous_self_play', {})
+    if self_play.get('source_groups'):
+        lines += ['', '## Continuous self-play since previous improvement job', self_play['interpretation']]
+        for group in self_play['source_groups'][:2]:
+            lines.append(json.dumps(group, sort_keys=True))
+        if self_play.get('window_limit_reached'):
+            lines.append('Self-play window reached its 2,000-row bound; older evidence remains canonical.')
     external = feedback.get('experiment_context', {}).get('external_observations', [])
     if external:
         lines.append('New/recent external observations (uncontrolled, untrusted data; not local promotion scores):')

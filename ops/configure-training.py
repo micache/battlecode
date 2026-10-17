@@ -13,6 +13,7 @@ from arena.common import atomic_json, lock, read_json, require
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--interval-seconds', type=int, default=3600)
+    parser.add_argument('--continuous-matches', action=argparse.BooleanOptionalAction, default=None)
     args = parser.parse_args()
     require(os.geteuid() == 0, 'administrator required; stop services first')
     require(args.interval_seconds >= 60, 'interval must be at least one minute')
@@ -22,10 +23,13 @@ def main():
     with lock(root / 'state/service.lock'), lock(root / 'model.lock'):
         config['limits'].update(improvement_interval_seconds=args.interval_seconds,
                                 archive_completed_projects=True)
+        if args.continuous_matches is not None:
+            config['limits']['continuous_matches'] = args.continuous_matches
         config['official_schedule'] = {'check_interval_seconds':5 * 3600,
                                        'unchanged_recheck_seconds':3 * 3600}
         atomic_json(path, config, 0o644)
     print(json.dumps({'interval_seconds':args.interval_seconds, 'completed_project_archiving':True,
+                      'continuous_matches':config['limits'].get('continuous_matches', False),
                       'concurrency_and_promotion_gate':'unchanged', 'services_started':False}))
 
 

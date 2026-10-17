@@ -1,5 +1,13 @@
 # Live pilot status — 16 October 2026
 
+17 October continuous-play repair: candidate evaluations previously drained the
+game queue between hourly coding jobs. `arena/training.py` now replenishes a
+separate frozen development round-robin, below smoke/evaluation priority. It
+records repeated inputs separately and supplies bounded self-play feedback to
+the next hourly job. Enable with the stopped-service configuration command in
+[active training](HOURLY_TRAINING.md). Live verification is recorded separately;
+an idle coding worker is not evidence that games are running.
+
 17 October storage/results update: verified redundant match worktrees are now
 offloaded automatically to this operator computer by a five-minute user timer;
 logout persistence (`Linger=yes`) is enabled. All gameplay evidence stays online.

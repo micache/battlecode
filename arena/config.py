@@ -23,6 +23,7 @@ def load(path):
             config["limits"]["codex_jobs"] == 1, "pilot concurrency must be 1/1/1")
     interval = config['limits'].get('improvement_interval_seconds', 3600)
     require(type(interval) is int and interval >= 0, 'nonnegative improvement interval required')
+    require(type(config['limits'].get('continuous_matches', False)) is bool, 'continuous_matches must be boolean')
     policy = config.get('official_schedule', {})
     require(type(policy.get('check_interval_seconds', 18000)) is int and
             policy.get('check_interval_seconds', 18000) >= 18000 and

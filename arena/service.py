@@ -54,7 +54,7 @@ class Arena:
                          "VALID", build["artifact"], build["wasm_sha256"], json.dumps(build)))
         return build
 
-    def queue_match(self, a, b, map_info, repetition=None):
+    def queue_match(self, a, b, map_info, repetition=None, training_round=None):
         spec = {"a_build": a["build_id"], "b_build": b["build_id"],
                 "a_snapshot": a["snapshot"], "b_snapshot": b["snapshot"],
                 "a_source_hash": a["source_hash"], "b_source_hash": b["source_hash"],
@@ -63,6 +63,8 @@ class Arena:
                 "round_override": None, "fuel_override": None,
                 "settings_hash": identity(self.adapter().lock.get("effective_profile")),
                 "verification_repetition": repetition}
+        if training_round is not None:
+            spec['training_round'] = training_round
         # Host paths are not semantic input identities.
         job_id = identity({k: v for k, v in spec.items() if not k.endswith("snapshot") and k != "map_path"})
         spec["job_id"] = job_id
@@ -74,7 +76,10 @@ class Arena:
         if self.db.get("adapter_paused", False):
             return False
         job = (self.db.one("SELECT * FROM match_jobs WHERE state='QUEUED' AND id=?", (job_id,)) if job_id else
-               self.db.one("SELECT * FROM match_jobs WHERE state='QUEUED' ORDER BY created LIMIT 1"))
+               self.db.one("SELECT j.* FROM match_jobs j LEFT JOIN training_cases t ON t.job_id=j.id "
+                           "WHERE j.state='QUEUED' AND (t.job_id IS NULL OR ?) "
+                           "ORDER BY (t.job_id IS NOT NULL),j.created,j.id LIMIT 1",
+                           (self.config['limits'].get('continuous_matches',False),)))
         if not job:
             return False
         number = job["attempt_count"] + 1
@@ -317,6 +322,8 @@ class Arena:
         status = self.status()
         from .official import selection_status
         status['official_selection'] = selection_status(self)
+        from .training import status as training_status
+        status['continuous_training'] = training_status(self)
         status['local_offload'] = {'last_completed':self.db.get('offload_last_completed'),
                                   'pending_batch':(self.db.get('offload_pending') or {}).get('batch_id'),
                                   'retained_online':'replays/statistics/logs; only redundant project.zip worktrees move offline'}
@@ -360,6 +367,8 @@ class Arena:
             pending = self.db.one("SELECT id FROM revisions WHERE bot_id=? AND state='PENDING' ORDER BY created DESC LIMIT 1", (bot,))
             if pending and not self.db.one("SELECT id FROM evaluations WHERE bot_id=? AND state='EVALUATING'", (bot,)):
                 self.start_evaluation(pending["id"])
+        from .training import replenish
+        replenish(self)
         self.run_one_match()
         self.advance_evaluations()
         dispatch_tasks(self)

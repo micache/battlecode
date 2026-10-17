@@ -47,6 +47,14 @@ CREATE TABLE IF NOT EXISTS requests(
  id TEXT PRIMARY KEY, bot_id TEXT NOT NULL, operation TEXT NOT NULL, state TEXT NOT NULL, response TEXT);
 CREATE TABLE IF NOT EXISTS external_matches(
  official_id TEXT PRIMARY KEY, metadata TEXT NOT NULL, artifact TEXT NOT NULL, created REAL NOT NULL);
+CREATE TABLE IF NOT EXISTS training_rounds(
+ id TEXT PRIMARY KEY, spec TEXT NOT NULL, state TEXT NOT NULL, created REAL NOT NULL, finished REAL);
+CREATE TABLE IF NOT EXISTS training_cases(
+ job_id TEXT PRIMARY KEY REFERENCES match_jobs(id), round_id TEXT NOT NULL REFERENCES training_rounds(id),
+ a_bot TEXT NOT NULL REFERENCES bots(id), b_bot TEXT NOT NULL REFERENCES bots(id),
+ a_revision TEXT NOT NULL REFERENCES revisions(id), b_revision TEXT NOT NULL REFERENCES revisions(id),
+ map_name TEXT NOT NULL, input_identity TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS training_round_cases ON training_cases(round_id);
 CREATE INDEX IF NOT EXISTS job_queue ON match_jobs(state,created);
 CREATE INDEX IF NOT EXISTS revision_queue ON revisions(bot_id,state,created);
 """

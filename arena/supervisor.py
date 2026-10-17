@@ -216,6 +216,8 @@ def handle_request(arena, bot, request):
         require(isinstance(job_id, str) and len(job_id) == 64, "match ID required")
         allowed = db.all("SELECT c.map_name FROM evaluation_cases c JOIN evaluations e ON e.id=c.evaluation_id "
                          "WHERE c.job_id=? AND e.bot_id=?", (job_id, bot))
+        allowed += db.all('SELECT map_name FROM training_cases WHERE job_id=? AND (a_bot=? OR b_bot=?)',
+                          (job_id,bot,bot))
         require(allowed and not any(row["map_name"] in arena.config["evaluation"]["holdout_maps"] for row in allowed),
                 "only this lane's development evidence may be exported")
         job = db.one("SELECT * FROM match_jobs WHERE id=?", (job_id,))

@@ -18,6 +18,7 @@
     "builds": 1,
     "codex_jobs": 1,
     "improvement_interval_seconds": 3600,
+    "continuous_matches": false,
     "published_cycles_per_bot": 2,
     "match_timeout_seconds": 300,
     "build_timeout_seconds": 300,

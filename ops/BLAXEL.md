@@ -159,6 +159,11 @@ From the operator machine, compact live status needs no console access:
 Improvement is paced once per hour per bot, including unchanged feedback, as
 requested by the owner. A blocked or still-evaluating lane remains parked; no
 additional model call is made merely to poll it.
+Continuous games use a separate low-priority round-robin producer. While
+services are stopped, enable it with
+`python3 /opt/battlecode/ops/configure-training.py --interval-seconds 3600 --continuous-matches`.
+Inspect `continuous_training` in the public status snapshot for actual queued
+and completed self-play, rather than inferring game activity from worker state.
 
 Daily backups are consistent SQLite snapshots plus manifests, **not complete
 off-host replay backups**. Download/copy the referenced source, replay and lock
