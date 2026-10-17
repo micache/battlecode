@@ -1,0 +1,114 @@
+{
+  "match_id": "b6f042dc013f0e9c024e9eb7f6c2b3171f37678326572a3cbe0619be03c0eb33",
+  "candidate_side": "B",
+  "map": "collision",
+  "candidate_commit": "b4c6815c3368a346fbe3cffd6d9dc8cfbba20fa2",
+  "candidate_source_hash": "df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3",
+  "final": {
+    "botFaults": [
+      0,
+      0
+    ],
+    "engineVersion": "0.0.1",
+    "engineVersionPacked": 65536,
+    "outcome": "teamA",
+    "round": 1352,
+    "schemaVersion": 2,
+    "teams": [
+      {
+        "draftPicks": [
+          0,
+          6,
+          5
+        ],
+        "submittedGems": 1012,
+        "team": 0
+      },
+      {
+        "draftPicks": [
+          3,
+          10,
+          5
+        ],
+        "submittedGems": 660,
+        "team": 1
+      }
+    ],
+    "champions": [
+      {
+        "champion": 3,
+        "type": 3,
+        "deaths": 11,
+        "collectedGems": 22,
+        "submittedGems": 0,
+        "monsterDamageDone": 15198.0,
+        "earnedGold": 440,
+        "spentGold": 390,
+        "items": {
+          "10": 3,
+          "11": 2
+        },
+        "itemsBought": {
+          "10": 13,
+          "11": 2
+        }
+      },
+      {
+        "champion": 4,
+        "type": 4,
+        "deaths": 11,
+        "collectedGems": 286,
+        "submittedGems": 242,
+        "monsterDamageDone": 9474.0,
+        "earnedGold": 1170,
+        "spentGold": 1080,
+        "items": {
+          "8": 1,
+          "9": 7
+        },
+        "itemsBought": {
+          "8": 36,
+          "9": 7
+        }
+      },
+      {
+        "champion": 5,
+        "type": 11,
+        "deaths": 8,
+        "collectedGems": 198,
+        "submittedGems": 176,
+        "monsterDamageDone": 14157.5,
+        "earnedGold": 980,
+        "spentGold": 960,
+        "items": {
+          "8": 2,
+          "9": 6
+        },
+        "itemsBought": {
+          "8": 32,
+          "9": 6
+        }
+      },
+      {
+        "champion": 6,
+        "type": 6,
+        "deaths": 9,
+        "collectedGems": 308,
+        "submittedGems": 242,
+        "monsterDamageDone": 27278.0,
+        "earnedGold": 1475,
+        "spentGold": 1380,
+        "items": {
+          "6": 1,
+          "7": 9
+        },
+        "itemsBought": {
+          "6": 46,
+          "7": 9
+        }
+      }
+    ]
+  },
+  "item_index_reference": "Pinned C++ item_type::enum_type: 6/7 Power Strength shard/emblem; 8/9 Focus; 10/11 Health.",
+  "trust": "Historical final statistics; no per-turn causal trace or parity inference."
+}

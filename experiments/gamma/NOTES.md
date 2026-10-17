@@ -1,61 +1,63 @@
 # Gamma operational notes
 
-## task-c5099149f7fa457b85e0b4328c3c47ef — carrier banking priority
+## task-8b7a2f9424dc42e5adc6086e0634544a — useful power builds
 
-- Identity verified: `bot/gamma`, HEAD/input
-  `524b799376d7de344bf6c12c3135149d116adfd8`; all six source files matched
-  trusted accepted edit-start hashes before edits. Base source
-  `9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f`,
-  accepted commit `1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d` remains in Git
-  and the trusted accepted snapshot outside this edit transaction.
-- No candidate awaits evaluation. Previous attack-reset experiment was REJECTED
-  in `cadbbc35adcf7ff4481fcd593999336ca855f867bdd537ce08ec9c8c3de2f967`:
-  28W/44L, matched delta -0.0277778, zero faults/missing/unknown reliability.
-  Its source `fa3daecd898c0a5b98a4028f5368b4507e5db55bd9a7900c752a7769e1f480c7`
-  is distinct from this edit-start. Spawn recovery was INCONCLUSIVE, 27W/27L.
-  Older complete notes preserved under `archive/<task-id>.md`.
-- Playbook C. Hypothesis: in-range enemy attacks starve carriers' banking turns;
-  banking before optional combat should increase submitted gems without new bot
-  faults. Source reproducer: an actionable carrier above the recall threshold,
-  with a visible attackable enemy, always attacks/returns before the bank branch
-  in accepted code. This affects melee too; ranged attacks also consume movement.
-- Falsifiable prediction: such carriers enter the existing altar submission/route
-  branch without attacking enemies, while empty-handed champions retain combat
-  priority over farming. In matched frozen development cases against accepted
-  source, expect higher mean submitted gems and no new bot faults. Equal/lower
-  tribute does not support this prediction; actual win rate decides promotion.
-- Motivation: completed collision/B loss
-  `ca7e4b31883572c867b44da80416f729d61085b4de83bc85156dac899d9ed2df`, round
-  1212, 770 collected / 528 submitted, 37 body deaths, zero bot faults; collision/A
-  loss `247d9521604af60c6894232443c96ea5d684045d039221388cbe1fd1c99868a8`,
-  round 1049, 616 collected / 550 submitted, 16 body deaths, zero bot faults.
-  Both evaluate previous attack-reset commit/source above, NOT the accepted code
-  now being edited. The second identical collision/B summary is not counted as
-  independent evidence. Saved supplied metrics: `banking-priority-evidence.json`.
-  These totals motivate conversion work; no trace proves the hypothesized cause.
-- Change: move the existing enemy-attack loop after the complete carried-gem
-  banking branch. Preserve low-health recall, ongoing-channel guards, bank route,
-  lock handling, farming, legal attack checks and official dispatcher yield.
-  No new state, thresholds, API calls or path searches. Update header priority comment.
-- Source regression: `python3 experiments/gamma/check_banking_priority.py`, exit 0;
-  `banking-priority-source-check.json`. Accepted code reproduces combat-before-bank;
-  candidate satisfies carrier priority, bank-body preservation, channel guards,
-  and official yield. Source invariants only, not an engine scenario. Whitespace
-  check `git diff --check` also passed, exit 0.
+- Identity verified: bot/gamma; HEAD/input b4c6815c3368a346fbe3cffd6d9dc8cfbba20fa2.
+  All six source files match accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d;
+  base source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+  Accepted source is preserved in Git and the trusted snapshot outside this edit.
+  No candidate awaits evaluation; latest banking priority was INCONCLUSIVE,
+  evaluation 8cb1fe12a6df7508e0d93a91aa99c1c5895a86d453417fcc8bd8021f0e35e2cf,
+  8W/16L, provisional three-map coverage, zero faults/missing/unknown reliability.
+  Its source df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3
+  differs from this accepted edit-start. Older notes are archived by task ID.
+- Playbook C, item value for the current action policy. Hypothesis: redirecting
+  the Focus-only power build to Strength improves farming and submitted gems,
+  because this policy uses basic attacks and never casts a Focus-scaled ability.
+  Prediction: the old Focus choice buys Strength, the other two choices and RNG
+  draw count stay identical; no Focus purchases occur. Matched development mean
+  camp damage and submitted gems should rise with zero new faults. Equal/lower
+  tribute does not support the strategic prediction; wins determine promotion.
+- Observed failure: collision/B loss
+  b6f042dc013f0e9c024e9eb7f6c2b3171f37678326572a3cbe0619be03c0eb33,
+  round 1352, 660 vs 1012 submitted, zero bot faults. Champion 4 bought 36
+  Power Focus shards (1080g), champion 5 bought 32 (960g); inventory slots 8/9
+  identify Focus in the pinned C++ enum. They submitted 242/176 with 11/8 deaths.
+  Earlier collision/A loss d27e7d44946f0f250584f0ff8d7af5d89596fbf63e8f4ab952be57ebac7bc241,
+  round 1264, 660 vs 1034 submitted, zero faults, had no candidate Focus buyer:
+  it is a control observation, not proof all losses share this cause.
+  Both matches evaluate commit b4c6815c3368a346fbe3cffd6d9dc8cfbba20fa2,
+  source df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3;
+  neither evaluates this edit-start/candidate. Saved power-build-*-evidence.json
+  came from complete final.json slices; no independent repeated games counted.
+- Source/rules mechanism: accepted and evaluated policies contain no ability cast;
+  GameRules.md lines 245-259 and 278-304 define Strength basic damage, Focus spell
+  scaling, and Power's stat-only bonus. No passive converts these Focus purchases
+  into basic damage or health. This is wasted spend under the current policy;
+  final totals alone do not prove it caused the losses.
+- Patch: replace only shop choice 1 (Focus) with Strength; keep random(3),
+  choice 0 Strength, choice 2 Health, buying guards/counts and all turn logic.
+  Effective deterministic policy weights: 2/3 Strength, 1/3 Health. No new search,
+  thresholds, shared state, API calls, ability use or fuel settings.
+- Source invariant: `python3 experiments/gamma/check_power_build.py`, exit 0;
+  power-build-source-check.json. Reproduces accepted Focus choice, verifies only
+  that choice changes, RNG/buy guards stay identical, other five files match
+  accepted, and the policy still has no cast. Source check only, not a game.
+  `git diff --check` passed, exit 0; saved in the same report.
 - Trusted check: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
-  PASSED, exit 0. Exact candidate source
-  `df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3`.
-  Report `.agent/check-task-c5099149f7fa457b85e0b4328c3c47ef.json`;
-  reference `check:task-c5099149f7fa457b85e0b4328c3c47ef:df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3`.
-  Two smoke match IDs supplied; no scores, game completion, or fuel telemetry
-  inferred. READY_FOR_EVAL; no worker-run tournament or measured strategic gain.
-- Uncertainty: no bag-loss, interruption or per-turn trace is available. Giving up
-  an attack may let an enemy kill a carrier or block its approach; channels can
-  still be interrupted by stun/death/locks. Known existing all-locked/blocked
-  route behavior is unchanged. No claim of strategic improvement before evaluation.
-- Next: supervisor evaluates this exact checked source versus accepted on frozen
-  development cases. If unsupported, inspect blocked altar approaches before
-  considering a separate route/fallback experiment.
+  PASSED, exit 0. Candidate source
+  ed64236caac6ed68611f7044742fe7b31f563c56a10c9e523793fd94315413df.
+  Report: .agent/check-task-8b7a2f9424dc42e5adc6086e0634544a.json;
+  reference check:task-8b7a2f9424dc42e5adc6086e0634544a:ed64236caac6ed68611f7044742fe7b31f563c56a10c9e523793fd94315413df.
+  Wrapper supplied two smoke match IDs; no scores/completion/fuel headroom
+  inferred from those IDs. READY_FOR_EVAL, no measured strategic gain.
+- Uncertainty: faster clearing can alter routes/encounters; stronger attacks do
+  not guarantee survival or wins. Final exports label engineVersion 0.0.1 while
+  the trusted CLI/SDK identity is 2.1.6; preserve this discrepancy without claiming
+  runtime parity or changing infrastructure. Supervisor can reconcile metadata.
+  Deferred locked-altar routing lacks a demonstrated instance in these matches.
+- Next: supervisor evaluates exact checked source
+  against accepted on frozen development cases. No worker tournament/publication.
 
 ## Bootstrap documentation review (2026-10-17)
 

@@ -1,0 +1,23 @@
+{
+  "kind": "source invariants only; no engine behavior or strategic gain inferred",
+  "bot_cpp_sha256": "e58a2ef5db8b59b3ebac97a52872127e943d8ef040d95469a35ea642aba64b9d",
+  "checks": {
+    "accepted_reproduces_focus_spending": true,
+    "every_build_buys_a_used_stat": true,
+    "existing_damage_and_survival_choices_preserved": true,
+    "only_unused_focus_choice_redirected_to_strength": true,
+    "policy_has_no_focus_scaled_cast": true,
+    "no_other_executable_changes_including_rng_and_buy_guards": true,
+    "bot.h_preserved": true,
+    "main.cpp_preserved": true,
+    "draft.cpp_preserved": true,
+    "draft.h_preserved": true,
+    "random.h_preserved": true
+  },
+  "passed": true,
+  "git_diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0,
+    "output": ""
+  }
+}

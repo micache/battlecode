@@ -1,0 +1,96 @@
+{
+  "match_id": "d27e7d44946f0f250584f0ff8d7af5d89596fbf63e8f4ab952be57ebac7bc241",
+  "candidate_side": "A",
+  "map": "collision",
+  "candidate_commit": "b4c6815c3368a346fbe3cffd6d9dc8cfbba20fa2",
+  "candidate_source_hash": "df0f1c4aa044b72a668977305c5d9f7e2d70f0b6c22bdb1f9308ee823bbab6e3",
+  "final": {
+    "botFaults": [
+      0,
+      0
+    ],
+    "engineVersion": "0.0.1",
+    "engineVersionPacked": 65536,
+    "outcome": "teamB",
+    "round": 1264,
+    "schemaVersion": 2,
+    "teams": [
+      {
+        "draftPicks": [
+          0,
+          6,
+          5
+        ],
+        "submittedGems": 660,
+        "team": 0
+      },
+      {
+        "draftPicks": [
+          3,
+          10,
+          5
+        ],
+        "submittedGems": 1034,
+        "team": 1
+      }
+    ],
+    "champions": [
+      {
+        "champion": 0,
+        "type": 0,
+        "deaths": 8,
+        "collectedGems": 506,
+        "submittedGems": 418,
+        "monsterDamageDone": 22457.0,
+        "earnedGold": 2335,
+        "spentGold": 2010,
+        "items": {
+          "6": 2,
+          "7": 13
+        },
+        "itemsBought": {
+          "6": 67,
+          "7": 13
+        }
+      },
+      {
+        "champion": 1,
+        "type": 7,
+        "deaths": 4,
+        "collectedGems": 220,
+        "submittedGems": 176,
+        "monsterDamageDone": 8540.0,
+        "earnedGold": 930,
+        "spentGold": 840,
+        "items": {
+          "10": 3,
+          "11": 5
+        },
+        "itemsBought": {
+          "10": 28,
+          "11": 5
+        }
+      },
+      {
+        "champion": 2,
+        "type": 6,
+        "deaths": 8,
+        "collectedGems": 88,
+        "submittedGems": 66,
+        "monsterDamageDone": 17515.0,
+        "earnedGold": 600,
+        "spentGold": 540,
+        "items": {
+          "10": 3,
+          "11": 3
+        },
+        "itemsBought": {
+          "10": 18,
+          "11": 3
+        }
+      }
+    ]
+  },
+  "item_index_reference": "Pinned C++ item_type::enum_type: 6/7 Power Strength shard/emblem; 8/9 Focus; 10/11 Health.",
+  "trust": "Historical final statistics; no per-turn causal trace or parity inference."
+}
