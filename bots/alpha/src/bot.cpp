@@ -1,7 +1,6 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
-#include <algorithm>
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -61,20 +60,6 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    // Complete one Jungle emblem in our chosen stat before buying Power.
-    const std::array jungle_items{cambc::item_type::jungle_shard_of_strength,
-        cambc::item_type::jungle_shard_of_focus, cambc::item_type::jungle_shard_of_health};
-    const auto jungle = jungle_items[chosen_stat];
-    const auto info = jungle.info();
-    const auto inventory = me.item_count();
-    if (info.result && inventory[*info.result] == 0) {
-        const unsigned missing = info.combine_count - inventory[jungle];
-        const unsigned count = std::min(me.gold_count() / info.cost, missing);
-        if (!count || !me.can_buy(jungle, count)) return;
-        me.buy(jungle, count);
-        if (count < missing) return;
-    }
-
     const std::array items{cambc::item_type::power_shard_of_strength,
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
@@ -94,10 +79,28 @@ bool attack_if_in_range(const Target& target) {
     return true;
 }
 
+// Called only before moving: direct damage spells may exclude walking.
+bool attack_camp_with_damage(const cambc::camp& camp) {
+    if (!attack_if_in_range(camp))
+        return false;
+
+    // A basic hit may kill the camp; refresh visibility before live queries.
+    if (!camp.is_visible() || camp.health() <= 0)
+        return true;
+    for (const auto& ability : cambc::self().abilities()) {
+        if (!ability.is_damage() || !ability.is_ready() || !ability.can_target_camps()
+            || !ability.valid_tiles().is_set(camp.position()))
+            continue;
+        ability.use(camp);
+        break; // One bounded attempt; the basic attack remains our fallback.
+    }
+    return true;
+}
+
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
     for (const auto& camp : cambc::vision::camps())
-        if (attack_if_in_range(camp))
+        if (attack_camp_with_damage(camp))
             return;
 
     // Union every group's spawn tiles except visibly respawning groups.

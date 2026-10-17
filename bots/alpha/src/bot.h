@@ -4,7 +4,7 @@
 class Bot {
     int chosen_stat = -1;
 
-    // Buy one Jungle emblem, then Power shards of the randomly chosen stat.
+    // Spend only on power shards of the randomly chosen stat.
     void buy_items();
 
 public:

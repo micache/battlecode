@@ -1,0 +1,21 @@
+{
+  "accepted_source_verified": true,
+  "attempts_root": "/var/lib/battlecode-volume/homes/bc-alpha/attempts",
+  "bot_id": "alpha",
+  "branch": "bot/alpha",
+  "head": "4d75e3cd3a979ebc2c3b332fb7fda79c5e5383d3",
+  "note": "Trusted preparation verified these identities. Do not search private central state.",
+  "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "task_id": "task-3afe79d6edd04c12b15814296878cc69",
+  "sdk_header_sha256": "90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d",
+  "documentation_hashes_match": true,
+  "source_files_match_accepted_commit": true,
+  "latest_evaluation": "4fc13eb7140afa033901cdc7265a04ec1886e8821bd2bb330633e72aac0e6e83",
+  "latest_candidate_state": "INCONCLUSIVE",
+  "latest_candidate": {
+    "build_id": "0fccad578081a4eec11cd7d6ee78f6c568da1d69b0b0cff815f28543d329618e",
+    "commit": "4d75e3cd3a979ebc2c3b332fb7fda79c5e5383d3",
+    "revision_id": "9ce920873e6ddf0ae4b087adb9d5f690304da82eee2a1814a085a71e9c5b6318",
+    "source_hash": "7ca1f1a701c05af2c3c07f5eb05407f470585fd523a6eed91af5314aeac18741"
+  }
+}
