@@ -1,0 +1,13 @@
+{
+  "kind": "source invariants only; no runtime legality, fuel or strategic result inferred",
+  "bot_cpp_sha256": "794f4800535aea7b61342d2e9310f9b58bc05e27bdc13921d390f8660c2d4ac9",
+  "checks": {
+    "accepted_reproduces_move_then_unconditional_return": true,
+    "arrival_reads_current_position_and_lock_before_submission": true,
+    "one_submission_then_return_per_successful_move": true,
+    "failed_or_nonqualifying_arrival_returns_without_more_actions": true,
+    "only_banking_arrival_changed": true,
+    "other_source_files_and_official_yield_preserved": true
+  },
+  "passed": true
+}

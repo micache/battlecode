@@ -119,13 +119,8 @@ void Bot::play_turn() {
 
     auto& me = cambc::self();
 
-    if (!me.is_alive()) {
-        recall_attempted = false;
-        return;
-    }
-
     // Leave channels running and skip turns where we cannot act.
-    if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
+    if (!me.is_alive() || me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
         || (!me.can_move() && !me.can_attack()))
         return;
 
@@ -134,22 +129,11 @@ void Bot::play_turn() {
     if (at_spawn)
         buy_items();
 
-    // Keep the first recall stationary; retreat on retries after interruption.
+    // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
-        const auto spawn = cambc::map::spawn_region(team::ally);
-        if (recall_attempted)
-            move_towards_closest(spawn);
-        // Re-read position: a retreat step may have reached spawn already.
-        if (!spawn.is_set(me.position())) {
-            me.recall();
-            recall_attempted = true;
-        } else {
-            recall_attempted = false;
-        }
+        me.recall();
         return;
     }
-    // Spawn arrival or recovery above the threshold ends this episode.
-    recall_attempted = false;
 
     // Attack the first enemy champion already in range.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
@@ -169,7 +153,16 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        move_towards_closest(goals);
+        // Start tribute on arrival; movement may reveal a different lock state.
+        if (move_towards_closest(goals)) {
+            for (auto altar : cambc::map::altars().positions()) {
+                if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
+                    && !cambc::vision::has_altar_lock(altar)) {
+                    me.submit_gems(altar);
+                    return;
+                }
+            }
+        }
         return;
     }
 
