@@ -1,75 +1,72 @@
-# Current experiment: task-fc527578bbbf42f5be88544f50e93a50
+# Current experiment: task-2609ebf30ef34c9eb5ec2dfb854822a1
 
 ## Identity and prior work
-- Bot alpha; branch bot/alpha; input HEAD b5ff9f073c01c9bb68360ccaf257dc301a65b7af.
-- Accepted commit c0cebd720fcd55e2bbb51d57dd2c398889d4071e; base source
-  9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-- Six entry files match accepted Git contents and supplied file hashes. Unchanged
-  docs and SDK hash verified in this task's -identity.json. No bootstrap review.
+- Bot alpha; branch bot/alpha; input HEAD bfd7a947b2bc90ab52804ad2ff8730586591b3d3.
+- Edit start accepted commit c0cebd720fcd55e2bbb51d57dd2c398889d4071e;
+  base 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
 - Engine/SDK 2.1.6; suite historical-panels-v1; engine lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-- Latest candidate was evaluated INCONCLUSIVE, not pending. Previous notes archived
-  as task-3afe79d6edd04c12b15814296878cc69.md. Older interrupted work is already
-  preserved and was not applied. Accepted Git snapshot remains outside this edit.
+- Entry identities, six accepted source files, unchanged documentation and installed
+  C++ header verified; saved in this task's -identity.json. Accepted Git snapshot
+  remains outside this edit. No full bootstrap reread on unchanged documentation.
+- Latest candidate evaluated INCONCLUSIVE, not pending. Prior NOTES archived as
+  task-fc527578bbbf42f5be88544f50e93a50.md. Older interrupted patches/notes were
+  already preserved in owned experiments; none recovered/applied in this task.
 
-## One hypothesis: playbook C, finish capture before new fights
-Prioritizing visible cleared camp groups over live-camp attacks and exploration,
-then holding a spawn tile until collection, will increase mean collected gems
-versus accepted source on matched development cases. Unchanged or decreased mean
-collected gems falsifies this prediction. Compare tribute, deaths and outcomes
-for opportunity cost; no improvement is claimed before evaluation.
+## One hypothesis: playbook C, banking before optional combat
+Giving gem carriers priority to submit or move toward an altar before attacking
+an enemy will increase mean submitted gems versus accepted source on matched
+development cases. Unchanged or decreased mean submitted gems falsifies this
+prediction. Compare collected gems, deaths and outcomes for opportunity cost.
 
 ## Evidence and focused change
-- Evaluation b7053d9ac454dc46f479d1e9d96aa3efc6f5d6f3b19b87f264f0f13208d55053:
-  source e34275aad6113db66be4569d8a5ad8b07117fb2636116df8522a586ad3223c3e,
-  revision a58a804523bcb54ed1d781318143c403be6e9b44d746b817b3d94c745b9f38fb,
-  commit equal to input HEAD; this is NOT the restored source edited here.
-- Collision B loss 6328f7f536da56a4bdf5d40eb63badb58ec3129c7b60a292312191ea61f68389:
-  collected 1056 vs 1144, submitted 814 vs 1012, deaths 39, round 1427.
-- Collision B loss d24232c33b8f2e028007d01b2e01cc95d712180d396b9bbbfc91a455c5237763:
-  collected 1144 vs 1166, submitted 858 vs 1012, deaths 35, round 1384.
-  Both have zero faults on both sides. Supplied complete final-metric summaries
-  saved in this task's -evidence.json. Optional final.json slice was truncated;
-  no additional conclusions drawn from it. No engine/arena failure identified.
-- These aggregates establish objective deficits, not missed capture frequency.
-  Runtime traces, abandoned rewards and clear-to-capture delays remain unknown.
-- Accepted source attacks any nearby camp before routing, then gives reward sites
-  and live/hidden groups equal pathfinding priority. A nearer live camp can defer
-  an already-cleared reward, despite clearing alone earning no capture reward.
-- One farming selection change: scan each group's static spawns once; read state
-  only when a spawn is currently visible; collect reward_available spawn goals.
-  Hold if already on such a tile, otherwise try existing legal pathfinder first.
-  Empty/unreachable/blocked reward goals fall back to ordinary attacks/navigation.
-- No post-move live state is reused for an action; successful reward movement
-  returns, failed movement falls back to refreshed vision for camp targeting.
-- Respawning groups remain excluded, allowing departure after collection; hidden
-  groups remain exploration goals without hidden state reads. No new persistent
-  state, parameters or shared-memory layout. Dispatcher still always yields.
-- GameRules.md 191-205: uncontested spawn occupancy starts a five-round capture;
-  leaving resets it; extra allies do not accelerate it. SDK cambc.h 4300-4374:
-  reward_available means all camps defeated; state requires visible spawn.
-- Read compact reference, playbook C, relevant handbook and installed SDK sections,
-  and RESEARCH.md. Separate organizers' AGENTS.md remains unavailable.
+- Evaluation 59f8b837255ea5741a43c9ba25e2decf1021f80085ba5edd5aed7d97bd10bcc2:
+  source de641864b31c9d6705aed5fdb4f9c7c9e5f1a4c643df09a614ba88324dce0f14,
+  commit equal to input HEAD; revision
+  a945c76d5f9ee326e6c26e0b8dc34e9fb1772381da5be6ef2a285126ba5e64dc.
+  This evaluated capture-policy candidate is NOT the accepted source edited here.
+- Collision B losses a5d7998141b8ec5fc8db16146e566a93115cdd7529986eb4d2d826bffe769f6a
+  and d6c71981ae4f2f229f135f48ef91a0ae1893255c57e4d490bf950291afbe24d3:
+  collected 858, submitted 660, carried 22, deaths 36, round 1314; zero faults
+  on both sides. Identical finals are not independent causal observations.
+- Collision A loss 5f0f867895e849a5955a63991814b810600e6334e18221a006c83b482ffe6196:
+  collected 880, submitted 572, carried 22, deaths 21, round 1163, zero faults.
+- Supplied metrics preserved in this task's -evidence.json. These are strategic
+  losses with conversion deficits; no identified engine failure or bot fault.
+  No action trace: missed banking opportunities and bag loss causes are unknown.
+- Accepted source attacks any in-range enemy before banking, always returning.
+  A carrier can repeatedly defer tribute; a ranged basic also consumes walking.
+- Move existing bank block before enemy targeting. Return after tribute start or
+  successful movement. Failed bank movement falls through to a fresh enemy scan;
+  carriers then return instead of farming. Empty champions retain prior behavior.
+- Recall, channel preservation, tribute range/lock checks, navigation and yield
+  dispatcher retained. No added thresholds, shared state or random draws.
+- GameRules.md 116, 217-241: ranged walking/basic share allowance; carried gems
+  do not score; ordinary damage does not cancel tribute. SDK cambc.h 3690-3694:
+  submit_gems returns void. Existing conservative either-team lock policy retained.
+- Read compact reference, playbook C, relevant rules/SDK, and RESEARCH.md.
+  Separate organizers' AGENTS.md remains unavailable.
 
 ## Validation and uncertainty
-- python3 experiments/alpha/check_capture_priority.py PASSED, exit 0; source safety
-  and ordering invariants only. Report: this task's -source-check.json.
-- git diff --check PASSED, exit 0.
+- python3 experiments/alpha/check_banking_priority.py --report
+  experiments/alpha/task-2609ebf30ef34c9eb5ec2dfb854822a1-source-check.json
+  PASSED, exit 0: source ordering, channel/recall guards, fallback and no carrier
+  farming invariants. Static checks do not establish runtime legality or benefit.
+- git diff --check PASSED, exit 0. Accepted-relative diff reviewed.
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
-  PASSED, exit 0; checked source
-  de641864b31c9d6705aed5fdb4f9c7c9e5f1a4c643df09a614ba88324dce0f14.
-  Local report: .agent/check-task-fc527578bbbf42f5be88544f50e93a50.json;
+  PASSED, exit 0; exact checked source
+  4db7aeeb7fca7b20464d7f97c4d79cd29d68cbcaad8080ea5030192fa29fb322.
+  Report: .agent/check-task-2609ebf30ef34c9eb5ec2dfb854822a1.json;
   preserved as this task's -bot-check.json. Trusted reference:
-  check:task-fc527578bbbf42f5be88544f50e93a50:de641864b31c9d6705aed5fdb4f9c7c9e5f1a4c643df09a614ba88324dce0f14.
-- Wrapper smoke IDs 1abe1f3bf1611ddf24ac1769e3b4ec31830736a5dc3140a6d84adaf9414b1970
-  and 20890d81be38ca238303069a1efa55b2c4e1c5ba57c6a51cbc2178142c6e8db1.
-  Smoke finals not inspected; IDs alone do not establish full-game completion.
-- Accepted-relative source diff reviewed: only farming selection changes.
-  Outcome READY_FOR_EVAL; no tournament evaluation, publication or submission.
-- Risks: several allies may converge on the same reward; contested captures may
-  draw champions into danger; holding sacrifices incidental monster damage.
-  Fuel headroom and full-game capture benefit are unmeasured. The group scan now
-  also runs before stationary attacks, but is not duplicated for fallback routing.
-- Next: supervisor evaluates this exact checked source against accepted, comparing
-  collected/submitted gems, deaths and outcomes. If income fails to improve,
-  inspect clear-to-capture delays and duplicate collectors before further changes.
+  check:task-2609ebf30ef34c9eb5ec2dfb854822a1:4db7aeeb7fca7b20464d7f97c4d79cd29d68cbcaad8080ea5030192fa29fb322.
+- Smoke IDs 2fe077d901e43199eb19d052f132f38a609e2025058c7357ac80f4f5d1b4b26b
+  and e582c916948f90167a6a14dae7c421d61090a40d9472fcd1a0c8f61b5f817539.
+  Smoke finals not inspected; IDs alone do not establish completed full games.
+- Outcome READY_FOR_EVAL; no tournament evaluation or improvement claimed.
+- Risks: carriers may walk into hostile pressure instead of finishing a kill;
+  foregoing melee attacks may reduce deterrence. Recall still preempts banking
+  below 35% health. Hidden locks and entirely locked routes remain limitations.
+  Fuel headroom and frequency of delayed-bank situations are unmeasured.
+- Next: supervisor evaluation of exact checked source against
+  accepted source; compare mean submitted gems, collection, deaths and outcomes.
+  If conversion fails to improve, inspect carrier combat/route traces next.

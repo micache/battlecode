@@ -79,35 +79,22 @@ bool attack_if_in_range(const Target& target) {
     return true;
 }
 
-// Collect visible cleared groups before starting another camp fight.
+// Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
-    // Hidden groups remain exploration goals, never sources of live state.
-    cambc::bitboard goals;
-    goals.clear();
-    cambc::bitboard rewards;
-    rewards.clear();
-    const auto visible = cambc::vision::visible_tiles();
-    for (const auto& group : cambc::map::camp_groups()) {
-        const auto spawns = group.spawn_tiles();
-        if (!(spawns & visible).is_empty()) {
-            const auto state = group.state();
-            if (std::holds_alternative<cambc::map::camp_group_respawning>(state))
-                continue;
-            if (std::holds_alternative<cambc::map::camp_group_reward_available>(state))
-                rewards |= spawns;
-        }
-        goals |= spawns;
-    }
-
-    // Stay through capture phases; extra attacks are secondary to collection.
-    // If no reward can be approached, retain the ordinary farming fallback.
-    if (!rewards.is_empty()
-        && (rewards.is_set(cambc::self().position()) || move_towards_closest(rewards)))
-        return;
-
     for (const auto& camp : cambc::vision::camps())
         if (attack_if_in_range(camp))
             return;
+
+    // Union every group's spawn tiles except visibly respawning groups.
+    cambc::bitboard goals;
+    goals.clear();
+    const auto visible = cambc::vision::visible_tiles();
+    for (const auto& group : cambc::map::camp_groups()) {
+        const bool group_visible = !(group.spawn_tiles() & visible).is_empty();
+        if (group_visible && std::holds_alternative<cambc::map::camp_group_respawning>(group.state()))
+            continue;
+        goals |= group.spawn_tiles();
+    }
 
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
@@ -148,12 +135,7 @@ void Bot::play_turn() {
         return;
     }
 
-    // Attack the first enemy champion already in range.
-    for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy))
-            return;
-
-    // Bank any carried gems before farming.
+    // Carriers bank before fighting: ranged attacks can consume their movement.
     if (me.gem_count() > 0) {
         // Union all altar approach tiles: the field chooses the nearest reachable altar.
         cambc::bitboard goals;
@@ -166,9 +148,19 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        move_towards_closest(goals);
-        return;
+        if (move_towards_closest(goals))
+            return;
     }
+
+    // Champions without gems fight normally; blocked carriers retain an attack fallback.
+    // Query fresh vision because an unsuccessful move may reveal an obstruction.
+    for (const auto& enemy : cambc::vision::champions(team::enemy))
+        if (attack_if_in_range(enemy))
+            return;
+
+    // A failed bank route must not send a carrier to another camp.
+    if (me.gem_count() > 0)
+        return;
 
     farm_camps();
 

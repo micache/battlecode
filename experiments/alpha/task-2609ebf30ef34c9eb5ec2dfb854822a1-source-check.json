@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "active_channels_preserved_before_banking": true,
+    "recall_precedes_banking": true,
+    "banking_precedes_enemy_target_selection": true,
+    "successful_bank_movement_returns": true,
+    "failed_bank_route_can_fall_through_to_combat": true,
+    "carrier_guard_prevents_farming_after_failed_route": true,
+    "tribute_keeps_range_and_lock_checks": true,
+    "dispatcher_still_yields": true
+  },
+  "passed": true,
+  "limits": "Source ordering and guard checks; no simulated game or fuel measurement."
+}

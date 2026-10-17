@@ -1,0 +1,14 @@
+{
+  "task_id": "task-2609ebf30ef34c9eb5ec2dfb854822a1",
+  "source_verified": true,
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "files": {
+    "bots/alpha/src/bot.cpp": "3264dea5b4c50c3da23aebf8fa191213a964cc65a8f0bc8394668bf103d3ba70",
+    "bots/alpha/src/bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "documentation_and_sdk_verified": true
+}
