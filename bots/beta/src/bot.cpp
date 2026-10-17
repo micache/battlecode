@@ -79,21 +79,28 @@ bool attack_if_in_range(const Target& target) {
     return true;
 }
 
+// Immutable metadata: do not spend basic attacks on any part of a Monolith group.
+const cambc::bitboard& monolith_group_tiles() {
+    static const auto tiles = [] {
+        cambc::bitboard result;
+        result.clear();
+        for (const auto& group : cambc::map::camp_groups())
+            for (const auto& camp : group.camps())
+                if (camp.is_monolith()) {
+                    result |= group.spawn_tiles();
+                    break;
+                }
+        return result;
+    }();
+    return tiles;
+}
+
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
+    const auto& excluded = monolith_group_tiles();
     for (const auto& camp : cambc::vision::camps())
-        if (attack_if_in_range(camp)) {
-            // Use a remaining move to occupy the group just cleared by this hit.
-            auto& me = cambc::self();
-            if (me.is_alive() && me.can_move()) {
-                const auto group = camp.camp_group();
-                const auto spawns = group.spawn_tiles();
-                if (!(spawns & cambc::vision::visible_tiles()).is_empty()
-                    && std::holds_alternative<cambc::map::camp_group_reward_available>(group.state()))
-                    move_towards_closest(spawns);
-            }
+        if (!excluded.is_set(camp.spawn_position()) && attack_if_in_range(camp))
             return;
-        }
 
     // Union every group's spawn tiles except visibly respawning groups.
     cambc::bitboard goals;
@@ -101,6 +108,10 @@ void farm_camps() {
     const auto visible = cambc::vision::visible_tiles();
     for (const auto& group : cambc::map::camp_groups()) {
         const bool group_visible = !(group.spawn_tiles() & visible).is_empty();
+        // Keep free captures, but never seek an unknown or living Monolith group.
+        if (!(group.spawn_tiles() & excluded).is_empty()
+            && (!group_visible || !std::holds_alternative<cambc::map::camp_group_reward_available>(group.state())))
+            continue;
         if (group_visible && std::holds_alternative<cambc::map::camp_group_respawning>(group.state()))
             continue;
         goals |= group.spawn_tiles();
@@ -109,7 +120,7 @@ void farm_camps() {
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
         for (const auto& camp : cambc::vision::camps())
-            if (attack_if_in_range(camp))
+            if (!excluded.is_set(camp.spawn_position()) && attack_if_in_range(camp))
                 return;
 }
 

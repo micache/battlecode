@@ -1,90 +1,83 @@
 # Operational summary
 
-## task-5f975ba1d49946e4ad80ce19a9aa7fb1 — occupy camp after final hit
+## task-da50c1aeba344934bf1b0d69b529d7be — bypass living Monolith groups
 
-Playbook C (capture throughput). Hypothesis: using movement still available
-immediately after the last basic hit on a camp group to occupy that same cleared
-group removes one idle approach turn and starts capture earlier. Falsifiable
-expectation: after a stationary successful camp attack, an alive champion with
-movement available queries fresh visible group state; only reward-available
-groups trigger movement toward their own spawn tiles. Already occupying a spawn
-tile holds position. Living/hidden/respawning groups and unavailable movement
-retain the old return. No second movement is added after a walking attack.
+Playbook C (farming cost/risk). Hypothesis: excluding Monolith-containing
+camp groups from basic attacks and travel until visibly cleared should reduce
+costly farming attempts and improve collected/submitted gems. Falsifiable
+invariant: neither stationary nor post-movement farming attacks any member
+of those groups; unknown/alive/respawning Monolith groups supply no goals,
+while visible reward-available ones remain capturable. Other groups retain
+existing attack order/routing. This is group-level because all members must
+die before any reward can be captured. No claim of measured benefit yet.
 
-Identity: beta; bot/beta; HEAD/input
-348eaa1827e918ec86d345831e2ad3409f5bc645. Accepted edit start
+Identity: beta; bot/beta; task-da50c1aeba344934bf1b0d69b529d7be.
+HEAD/input d7a41c2ee29b421e252ec28c09acce91f371b1bb; accepted edit start
 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9; base source
 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
 All six source files matched accepted Git blobs before editing. Initial diff
-from HEAD is the trusted restoration of accepted source, not unfinished work.
-Accepted Git/supplied snapshot preserve baseline outside this transaction.
+is trusted restoration, not unfinished work. Accepted Git/supplied snapshot
+preserves baseline. Previous task PUBLISHED and evaluated, not pending;
+prior recovery artifacts preserved. Prior notes archived through task-5f975ba1d49946e4ad80ce19a9aa7fb1.
 Engine/SDK 2.1.6; lock
 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Documentation unchanged per handoff; relevant
-reference/rules/SDK sections consulted. Organizer AGENTS.md remains absent.
+suite historical-panels-v1. Documentation unchanged per handoff; compact
+reference, relevant Playbook C/rules and installed C++ contracts consulted.
+Separate organizer AGENTS.md remains absent.
 
-Latest task-5321a305ac964ce0a15f05e08b7cc449 is PUBLISHED and evaluated, not
-pending. Its notes are archived in archive/through-task-5321a305ac964ce0a15f05e08b7cc449.md.
-Paused task-8f47664e32194d58986ac9ee549f9482 had infrastructure failure before
-reads and unchanged source; earlier recovery artifacts remain preserved.
-Reviewed prior capture experiments: task-3b818b28bcb04cca83683548f6c579dc
-prioritized ANY cleared group BEFORE camp attacks. This experiment only follows
-a successful stationary attack with movement toward THAT newly cleared group;
-it retains target order and never defers a currently available camp attack.
-No repeated spawn-healing, collector-routing, or spell hypothesis.
-
-Evidence: evaluation
-41729874d91f8eb231b3333bc6b60406bd357968e914759709dda6da758c8cd6,
-commit 348eaa1827e918ec86d345831e2ad3409f5bc645, source
-024ec4553ece7e6085c27b673697af98c49bbfa4adfd6f4c7fee0bb1333b837f:
-INCONCLUSIVE/provisional-three-map-wiring; 8W/16L, zero reported faults,
+Context: evaluation
+6340e6381455fa3f1e731f7cf3bf6ee3b67aa3cfbb6dcd52cbf5eaff98cfabe2,
+commit d7a41c2ee29b421e252ec28c09acce91f371b1bb, source
+091246b8a132f0c4e9df4762186e7d7e7ce1f3033f2826bd398629b96b101deb:
+INCONCLUSIVE/provisional-three-map-wiring; 5W/19L, zero reported faults,
 missing or unknown reliability. Collision losses:
-c8faac47a9d06c8753c9007d74e3ed92e0ed1f68247e3c85b2fa2bc9584a7e30 (B),
-9e687ddb773972ff40211ab6753378d0b3f786fd18fd26a99a0ab40f1daea8e3 (A).
-Development means: 721.58 collected, 604.92 submitted gems, 29.08 deaths.
-These evaluate the tribute-arrival candidate, NOT this restored accepted source.
-They motivate objective throughput; they do not prove missed captures caused
-losses. No bot/engine failure is evidenced in this feedback. Source reproduction:
-first in-range camp attack unconditionally returns from farm_camps, even after
-a last hit leaves movement available and a free cleared spawn one step away.
+4e075b7382faa63834ef0327d3cc2df34395c83a8999813234c57b8d936a98a2 (A),
+fbbc56c8f68c326bf4603d909378f21e8d690129e13bdc6900c9cd23f801b491 (B).
+Development means: 29.04 deaths, 673.42 collected and 509.25 submitted gems.
+These evaluate the last-hit candidate, NOT restored accepted/current source.
+A final.json slice for the A loss was bounded/truncated: no complete team
+aggregate or Monolith-specific cause derived. No bot/engine failure evidenced.
+Source reproduces unconditional in-range camp attacks and all-group routing;
+there is no type/cost/risk eligibility check. Monolith presence/fight frequency
+in those matches is unknown; this is a source/rules-supported exploration.
 
-Contracts: GameRules.md:191-205 and BOT_REFERENCE.md:35-39,59-61: capture
-requires uncontested occupancy; extra collectors do not accelerate it; ranged
-movement and basic attacks share allowance. Installed cambc.h:3001-3002 exposes
-camp_group as static identity lookup; 4301-4345 defines reward_available as all
-camps defeated, and requires current spawn visibility for state(). 3441-3442
-can_move queries live availability. Existing movement helper filters current
-blocking tiles and holds if already on a goal. No dead camp health read needed.
+Contracts: GameRules.md:169-206: Monolith has 20,000 HP/200 Strength,
+versus Wolf 1,350/20 and Elk 2,400/60; grouped rewards require all members
+dead and uncontested occupancy. Installed cambc.h:2988-3000: kind and spawn
+position are stored public metadata, not hidden live state. 4310-4374:
+group membership/spawn tiles are immutable metadata; state() requires current
+spawn visibility; reward_available means all members defeated.
 
-Implementation: only bot.cpp differs from accepted (11 insertions, 1 deletion).
-After a successful initial camp attack, check current survival/movement, load
-that camp's static group identity, gate its fresh state on current spawn
-visibility, then approach its spawn tiles only when reward_available. Existing
-movement helper holds on a spawn tile and filters blockers. No post-walk
-continuation, shared state, PRNG calls, or new search algorithm.
+Implementation: bot.cpp adds one lazily cached bitboard built solely from
+static map group membership/type/spawn metadata. All tiles of every group with
+a Monolith are marked. Both farming attack loops skip marked camp spawns.
+Routing skips those groups unless their current visible state is
+reward_available. Short-circuit visibility protects hidden live state reads.
+Existing non-Monolith targeting/order, movement, banking, recall, shops,
+channels, draft, shared memory, PRNG and turn yield remain unchanged.
 
-Focused check: `python3 experiments/beta/check_last_hit_capture.py` PASSED,
-exit 0; report task-5f975ba1d49946e4ad80ce19a9aa7fb1/last-hit-capture-invariant.txt.
-It checks action/survival/movement/visibility/state/group-target guards and the
-unconditional return; rejects accepted source and eight unsafe mutations;
-removing the branch addition exactly restores accepted source. Initial check
-failed because of an extra parenthesis in its regex; corrected the checker,
-with no bot-source correction. This is a source invariant, not engine simulation.
-`git diff --check` PASSED, exit 0.
+`python3 experiments/beta/check_monolith_groups.py` PASSED, exit 0.
+Report: task-da50c1aeba344934bf1b0d69b529d7be/monolith-groups-invariant.txt.
+Source invariants cover both attack paths, group-wide exclusion, visibility
+short-circuit, cleared-group exception and cached metadata-only classification;
+accepted baseline and five unsafe mutations rejected. Removing this policy
+restores accepted source exactly; all other source files match accepted.
+This check does not execute game behavior. `git diff --check` PASSED, exit 0.
 Trusted command:
 `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED, exit 0; exact source
-091246b8a132f0c4e9df4762186e7d7e7ce1f3033f2826bd398629b96b101deb.
-Local report: .agent/check-task-5f975ba1d49946e4ad80ce19a9aa7fb1.json.
-Reference: check:task-5f975ba1d49946e4ad80ce19a9aa7fb1:091246b8a132f0c4e9df4762186e7d7e7ce1f3033f2826bd398629b96b101deb.
+PASSED, exit 0; exact candidate source
+55d70a726fed2422dac95fb0ce87a701fc6a81be3bbb473fa1fa57e2495ce48f.
+Local report: .agent/check-task-da50c1aeba344934bf1b0d69b529d7be.json.
+Reference: check:task-da50c1aeba344934bf1b0d69b529d7be:55d70a726fed2422dac95fb0ce87a701fc6a81be3bbb473fa1fa57e2495ce48f.
 Smoke IDs:
-8e644e40e1c6960381b4376244f8384159fe59e44a326afd52264532f190df67,
-74e98d54da7d8af5271f5550e39e6c6d1127b9abb6273164a2fc08eb94269198.
-Wrapper success establishes trusted compilation/smoke validation. Local summary
-has no game completion fields or per-turn trace; no measured capture timing,
-fuel headroom, full-game result or strength improvement is claimed.
-Uncertainty: no per-turn capture or movement trace is supplied. Benefit depends
-on residual movement, reachable cleared tiles, contest and later occupancy;
-earlier occupancy can expose the champion or duplicate another collector.
-Next: supervisor evaluates the exact checked candidate against accepted;
-compare collected/submitted gems and last-hit-to-occupancy delay if available.
+0f23dea12ace530187b7b147545cf45352b060bafbc5e03f851943370128addf,
+0bb352b7edcc6a49b3b87db090d61b13a59594202cfda05a88aca1d14178ff02.
+Wrapper success establishes trusted compilation/smoke validation. The local
+summary provides no completed-game outcomes or engagement/fuel trace; it does
+not establish improved farming, reduced deaths or strength.
+Uncertainty: exclusion can surrender valuable 200-gem rewards, miss a nearly
+dead Monolith or an ally-assisted clear, and send champions farther away.
+It does not prevent incidental splash damage or walking through danger.
+No full-game, fuel headroom or improved-strength claim.
+Next: supervisor evaluates exact checked source against accepted, comparing
+collected/submitted gems and deaths; inspect Monolith engagement if available.

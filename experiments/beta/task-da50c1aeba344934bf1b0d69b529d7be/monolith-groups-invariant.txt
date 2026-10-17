@@ -1,0 +1,1 @@
+PASS: both farming attack paths exclude all members of Monolith groups; routing retains only visible cleared Monolith groups with visibility short-circuiting before live state reads. Classification uses cached static metadata. Baseline and five unsafe mutations rejected; unrelated source matches accepted. Runtime engagement, fuel and benefit unmeasured.
