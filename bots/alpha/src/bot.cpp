@@ -79,6 +79,24 @@ bool attack_if_in_range(const Target& target) {
     return true;
 }
 
+// Take one predicted lethal unit spell before ordinary combat or movement.
+bool finish_enemy_with_spell() {
+    const auto abilities = cambc::self().abilities();
+    for (const auto& enemy : cambc::vision::champions(team::enemy)) {
+        if (!enemy.is_visible() || enemy.health() <= 0)
+            continue;
+        for (const auto& spell : abilities) {
+            if (!spell.is_damage() || !spell.is_ready() || !spell.can_target_enemies()
+                || !spell.valid_tiles().is_set(enemy.position()))
+                continue;
+            // The target-specific query includes mitigation and shields.
+            if (spell.damage_amount(enemy) >= enemy.health())
+                return spell.use(enemy);
+        }
+    }
+    return false;
+}
+
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
     for (const auto& camp : cambc::vision::camps())
@@ -135,6 +153,10 @@ void Bot::play_turn() {
         return;
     }
 
+    // Finish a visible enemy if one direct spell is predicted to kill it.
+    if (finish_enemy_with_spell())
+        return;
+
     // Attack the first enemy champion already in range.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
         if (attack_if_in_range(enemy))
@@ -153,16 +175,7 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        if (move_towards_closest(goals)) {
-            // Start tribute on arrival using fresh position and lock observations.
-            for (auto altar : cambc::map::altars().positions()) {
-                if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
-                    && !cambc::vision::has_altar_lock(altar)) {
-                    me.submit_gems(altar);
-                    return;
-                }
-            }
-        }
+        move_towards_closest(goals);
         return;
     }
 
