@@ -119,14 +119,8 @@ void Bot::play_turn() {
 
     auto& me = cambc::self();
 
-    // Dead champions can shop without a live position or action allowance.
-    if (!me.is_alive()) {
-        buy_items();
-        return;
-    }
-
     // Leave channels running and skip turns where we cannot act.
-    if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
+    if (!me.is_alive() || me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
         || (!me.can_move() && !me.can_attack()))
         return;
 
@@ -134,6 +128,10 @@ void Bot::play_turn() {
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
     if (at_spawn)
         buy_items();
+
+    // Recall arrives before this turn; spawn healing happens at turn end.
+    if (at_spawn && me.health() < me.max_health())
+        return;
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {

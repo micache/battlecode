@@ -1,0 +1,1 @@
+PASS: spawn recovery guard precedes field actions; accepted source and both condition-removal mutations are rejected.
