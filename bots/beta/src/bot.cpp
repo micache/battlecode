@@ -6,6 +6,7 @@
 #include "random.h"
 #include <cstdint>
 #include <span>
+#include <type_traits>
 #include <variant>
 
 using cambc::vec2;
@@ -67,15 +68,30 @@ void Bot::buy_items() {
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
 
-// Make one basic attack if the target is already in attack range.
+// Basic attack first; follow with one legal unit spell if we have not walked.
 template<class Target>
-bool attack_if_in_range(const Target& target) {
+bool attack_if_in_range(const Target& target, bool allow_spell = true) {
     auto& me = cambc::self();
     if (!me.can_attack() || !target.is_visible() || target.health() <= 0
         || !me.attack_tiles().is_set(target.position())) {
         return false;
     }
     me.attack(target);
+
+    // Refresh live state: the basic attack or retaliation may have killed a unit.
+    if (!allow_spell || !me.is_alive() || !target.is_visible() || target.health() <= 0)
+        return true;
+    for (const auto& ability : me.abilities()) {
+        if (!(ability.is_damage() || ability.is_cc()) || !ability.is_ready())
+            continue;
+        if constexpr (std::is_same_v<Target, cambc::camp>) {
+            if (!ability.can_target_camps()) continue;
+        } else {
+            if (!ability.can_target_enemies()) continue;
+        }
+        if (!ability.valid_tiles().is_set(target.position())) continue;
+        if (ability.use(target)) break;
+    }
     return true;
 }
 
@@ -99,7 +115,7 @@ void farm_camps() {
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
         for (const auto& camp : cambc::vision::camps())
-            if (attack_if_in_range(camp))
+            if (attack_if_in_range(camp, false))
                 return;
 }
 
@@ -135,17 +151,6 @@ void Bot::play_turn() {
         return;
     }
 
-    // Take an immediate banking opportunity before opportunistic combat.
-    if (me.gem_count() > 0) {
-        for (auto altar : cambc::map::altars().positions()) {
-            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
-                && !cambc::vision::has_altar_lock(altar)) {
-                me.submit_gems(altar);
-                return;
-            }
-        }
-    }
-
     // Attack the first enemy champion already in range.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
         if (attack_if_in_range(enemy))
@@ -157,6 +162,11 @@ void Bot::play_turn() {
         cambc::bitboard goals;
         goals.clear();
         for (auto altar : cambc::map::altars().positions()) {
+            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
+                && !cambc::vision::has_altar_lock(altar)) {
+                    me.submit_gems(altar);
+                    return;
+                }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
         move_towards_closest(goals);

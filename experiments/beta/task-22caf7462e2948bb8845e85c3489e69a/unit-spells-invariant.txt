@@ -1,0 +1,1 @@
+PASS: basic attack precedes guarded damage/CC follow-up; live survival, visibility, readiness, category, range and single-success checks present; post-walk spells disabled. Accepted source and nine mutations rejected. Source invariant only; no runtime damage/fuel claim.

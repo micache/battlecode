@@ -1,75 +1,81 @@
 # Operational summary
 
-## task-69ed8873ece54d7aa45cb425b4959440 — immediate tribute before combat
+## task-22caf7462e2948bb8845e85c3489e69a — unit spells after stationary attacks
 
-Playbook C. Hypothesis: when carrying gems already in range of an unlocked
-altar, starting tribute before opportunistic champion attacks removes combat
-starvation of that banking opportunity. Falsifiable expectation: after existing
-channel/alive/action and emergency-recall guards, a positive bag and in-range
-unlocked altar cause submit_gems and return before enemy attacks. Empty bags,
-locked/distant altars and emergency recalls retain the accepted action order.
-No threshold or RNG changes. A stronger win rate is unmeasured.
+Playbook D. Hypothesis: following a stationary basic attack with one ready,
+legal direct-damage/CC spell against its surviving target uses otherwise idle
+Focus and cooldowns, increasing damage/control without changing target choice.
+Falsifiable expectation: a surviving visible target in basic and spell range,
+with a matching target mask and ready damage/CC slot, receives one spell after
+the basic attack; a lethal basic attack, dead caster, no eligible spell, or an
+attack after walking receives no spell. Never cast twice successfully.
+Expected strategic benefit is faster camp clearing and better exchanges;
+win rate, clearing time and survival effects remain unmeasured.
 
-Identity: beta, bot/beta, input/HEAD 24bfa18df6fccba80e40ab9f60b1b72b5e345b7c.
-Edit start is accepted commit 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9,
+Identity: beta, bot/beta, input/HEAD a347d811a59adb7c2a3f69bedde352ed7bbf1b2e.
+Accepted edit start: commit 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9;
 source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-Verified all six source SHA-256 values and accepted Git blobs, task/branch/HEAD,
-unchanged reviewed documentation hashes and installed matching C++ header
+Entry identity, all six accepted source file hashes and Git blobs verified.
+Engine/SDK 2.1.6; lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
+suite historical-panels-v1. Matching C++ header SHA-256 verified:
 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-Engine 2.1.6; trusted lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Separate organizer AGENTS.md remains unavailable.
-Accepted code is preserved in accepted_commit/supplied snapshot; no source copy.
-Initial bot.cpp diff removes the previous candidate's spawn-heal guard as part
-of trusted restoration; it is not an experimental deletion from accepted code.
+All reviewed documentation hashes unchanged. Only relevant rule/API/SDK sections
+consulted this routine task. Separate organizer AGENTS.md remains unavailable.
+Accepted Git/supplied snapshot preserves baseline outside the edit transaction.
+Initial diff from HEAD removes the prior tribute candidate by trusted restoration,
+not by this experiment. Prior notes archived by task ID. No pending evaluation.
+Older interrupted work remains preserved in existing recovery files.
 
-Prior candidate task-3bd44d5f08a2471e9caede76707138de is PUBLISHED and evaluated,
-not awaiting results: INCONCLUSIVE, 27W/27L, delta 0.07407407407407407, faults 0,
-evaluation 873f965eaa5673e7c3cbea20fa845d6e6e6959d946e302c938406636d45baea8,
-commit 24bfa18df6fccba80e40ab9f60b1b72b5e345b7c, source
-02a532272622522f2c853fe557c16d98633bdd7898e75e4a82a03a311968b6b1.
-Its notes archived in archive/through-task-3bd44d5f08a2471e9caede76707138de.md.
-Older interrupted shopping work remains preserved in existing recovery files;
-trusted prior notes establish recovery completed, and shopping was REJECTED.
+Development context: evaluation
+719be6f1c93a369eb097b155f54882e8990fe86aeab77b77c852e800a657bab7,
+commit a347d811a59adb7c2a3f69bedde352ed7bbf1b2e, source
+a080397e5dc62a5007e7ad5398240f1aea5e9f7a6e67b94f3ce62622041ca310,
+INCONCLUSIVE, provisional three-map coverage, 10W/14L, 0 faults, 0 missing.
+Representative collision B losses:
+064016aab5657c363b87cf6f2199eaa4d0d5e3e4872aed52c344da2fada3e069 and
+280b86ae5b84fc4b33c05167ee41a2474248e47be9eec28411e99124062e97eb.
+Development means: deaths 27.67, kills 6.08, collected gems 774.17, submitted
+664.25 over 24 games. These are strategic-loss context, not proof of unused-spell
+causation, and do not evaluate the restored accepted source or this candidate.
+Source-supported failure: attack_if_in_range always returns after one basic
+attack, and no accepted source path casts any ability. Focus shards can be
+chosen but spell damage is unused. Earlier reset experiment task-32b6f4ccb8f54f1ead2a0e7c4bdcac48
+was INCONCLUSIVE (3W/3L); this tests direct damage/CC, not another reset policy.
+No turn-level damage, cooldown or camp-clear telemetry is supplied.
 
-Development context: collision B losses
-41efe090e544212ddd5e6ee89a9f32036948607317379892eb0d0cdf9733bd8a and
-b39b8ee54e3e2a8dbd14824ed8b054ab0144eb2f44e456567284d1c23c6a3dc2,
-from the evaluated source above. Supplied development summary: 36 completed,
-18W/18L, no faults; mean collected 928.83, submitted 851.67, deaths 21.08.
-These are strategic-loss context, not evidence that missed tribute caused those
-matches. Current accepted source deterministically returns from an in-range
-enemy attack before it reaches the existing adjacent-altar submission branch;
-repeated in-range enemies can postpone banking without bound. No turn-level
-missed-window frequency or unbanked death value is available.
+Contracts: GameRules.md:245–266,416; BOT_REFERENCE.md sections 3,5,6;
+C++ cambc.h ability::is_ready checks cooldown plus caster can_cast; valid_tiles
+checks range only; can_target_camps/enemies supplies the separate category check.
+Unit casts use ability.use(target). Both current slots are examined in index
+order; only damage/CC kinds qualify. We conservatively skip all spells after
+walking, including walk-compatible spells, rather than infer walking from the
+remaining allowance (a stationary ranged attack also consumes movement).
 
-Rules GameRules.md:217–241 and BOT_REFERENCE.md section 3: carried gems do not
-score; ordinary damage does not cancel tribute, but stun/death/locks can.
-SDK submit_gems returns void; has_altar_lock checks visible locks of either
-team. Preserve the accepted conservative any-lock exclusion. Preserve existing
-channels, emergency recall, distant-altar combat order, routing and final yield.
+Implemented: bot.cpp adds a guarded single-target spell follow-up after the
+existing basic attack; only damage/CC kinds qualify, with live readiness,
+category and range checks. Refresh survival/visibility after basic damage and
+retaliation. The post-movement camp attack explicitly disables spells. Main's
+end_turn dispatch, channels, target order, draft, shopping and RNG are unchanged.
+Only bot.cpp differs from accepted source (19 insertions, 3 deletions).
 
-Implemented: moved the existing eligible submission scan ahead of champion
-combat; the later banking branch only computes approach goals. One source file
-changed against accepted: 11 added/5 removed lines. No other source changes.
-main.cpp still yields after every normal return or caught action exception.
-
-`python3 experiments/beta/check_immediate_tribute.py` exited 0; report
-experiments/beta/immediate-tribute-invariant.txt. Source-level invariant checks
-eligible tribute before combat, existing guards before tribute, and distant
-routing/farming after combat; rejects accepted source plus four mutations
-removing bag/range/lock eligibility or immediate return. This is not an engine
-trace of tribute success, survival, or channel completion.
+`python3 experiments/beta/check_unit_spells.py` exited 0. Report:
+experiments/beta/task-22caf7462e2948bb8845e85c3489e69a/unit-spells-invariant.txt.
+Checks guarded cast order, target masks/range/readiness, survival/visibility,
+single success and movement exclusion; rejects accepted source and nine
+mutations. Source invariant only, not a simulation or measured spell trace.
 `git diff --check` exited 0.
-Trusted command: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-exited 0, PASSED; exact candidate source
-a080397e5dc62a5007e7ad5398240f1aea5e9f7a6e67b94f3ce62622041ca310.
-Report: .agent/check-task-69ed8873ece54d7aa45cb425b4959440.json.
-Reference: check:task-69ed8873ece54d7aa45cb425b4959440:a080397e5dc62a5007e7ad5398240f1aea5e9f7a6e67b94f3ce62622041ca310.
-Smoke IDs: 1b682eb5bb776dcf8dd8ceb529aa5c3ee2f966440cf4758dedcc30cfee844f22,
-064016aab5657c363b87cf6f2199eaa4d0d5e3e4872aed52c344da2fada3e069.
-No completed-game outcome, turn-level behavior, fuel headroom or strategic
-improvement is inferred from the wrapper summary alone.
-Remaining uncertainty: choosing tribute can forgo a defensive kill and expose
-longer channels to death/stuns. No claim that the policy is universally safer.
-Next: supervisor validates and evaluates this exact checked candidate against
-the accepted baseline; inspect tribute conversion and defensive-combat costs.
+Trusted command:
+`bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
+exited 0, PASSED, for exact candidate source
+0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1.
+Local report: .agent/check-task-22caf7462e2948bb8845e85c3489e69a.json.
+Reference: check:task-22caf7462e2948bb8845e85c3489e69a:0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1.
+Smoke IDs: 77edcd12ee37b66a10e772dacf23a95694af989d131fc24b3a37a40b86cbd9e0,
+73172cde42a510b26c762c7249dbc18d6a6a2e7b28ccb49b3a63dec521140494.
+Wrapper success alone does not establish completed-game outcomes, tactical
+spell traces, measured fuel headroom, or strategic improvement.
+Remaining uncertainty: extra actions cost fuel and retaliation can kill casters;
+spell use on camps may sacrifice an upcoming defensive stun. Single-target-only
+policy leaves AoE, resets, shields, heals, and longer-range attacks untested.
+Next: supervisor evaluates this exact candidate against accepted; inspect clear
+speed, survival and objective costs before broadening ability use.
