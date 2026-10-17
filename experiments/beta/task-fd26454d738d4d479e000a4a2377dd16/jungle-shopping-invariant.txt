@@ -1,0 +1,4 @@
+PASS: one Jungle emblem maximum, missing-shard/affordability cap, chosen stat and can_buy guard.
+PASS: fresh Power shopping and all field decisions/other source preserved against accepted.
+PASS: accepted baseline and six guard/cap/stat mutations rejected.
+Source checks only; auto-combination, runtime fuel and strategic benefit require trusted evidence.
