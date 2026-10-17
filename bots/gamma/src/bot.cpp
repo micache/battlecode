@@ -1,12 +1,12 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
-#include <algorithm>
 #include <array>
 #include <iostream>
 #include "random.h"
 #include <cstdint>
 #include <span>
+#include <type_traits>
 #include <variant>
 
 using cambc::vec2;
@@ -61,21 +61,6 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    // Buy one camp-mitigation emblem; duplicate Jungle passives do not stack.
-    const std::array jungle_items{cambc::item_type::jungle_shard_of_strength,
-        cambc::item_type::jungle_shard_of_focus, cambc::item_type::jungle_shard_of_health};
-    const auto jungle = jungle_items[chosen_stat];
-    const auto inventory = me.item_count();
-    if (const auto emblem = jungle.result(); emblem && inventory[*emblem] == 0) {
-        const auto combine_count = jungle.combine_count();
-        if (inventory[jungle] < combine_count) {
-            const unsigned count = std::min(me.gold_count() / jungle.cost(),
-                combine_count - inventory[jungle]);
-            if (count && me.can_buy(jungle, count)) me.buy(jungle, count);
-        }
-    }
-
-    // After completing Jungle, retain the original Power build for extra stats.
     const std::array items{cambc::item_type::power_shard_of_strength,
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
@@ -85,20 +70,38 @@ void Bot::buy_items() {
 
 // Make one basic attack if the target is already in attack range.
 template<class Target>
-bool attack_if_in_range(const Target& target) {
+bool attack_if_in_range(const Target& target, bool before_movement) {
     auto& me = cambc::self();
     if (!me.can_attack() || !target.is_visible() || target.health() <= 0
         || !me.attack_tiles().is_set(target.position())) {
         return false;
     }
     me.attack(target);
+
+    // Walk-exclusive spells are only considered on the stationary attack paths.
+    if (before_movement && target.is_visible() && target.health() > 0
+        && me.can_cast() && !me.restrictions().contains(cambc::buff_restrictions::cast)) {
+        for (const auto& ability : me.abilities()) {
+            if (!ability.is_damage() || !ability.is_ready())
+                continue;
+            if constexpr (std::is_same_v<Target, cambc::camp>) {
+                if (!ability.can_target_camps()) continue;
+            } else {
+                if (!ability.can_target_enemies()) continue;
+            }
+            if (!ability.valid_tiles().is_set(target.position()))
+                continue;
+            ability.use(target);
+            break; // One bounded cast attempt; keep the basic attack as fallback.
+        }
+    }
     return true;
 }
 
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
     for (const auto& camp : cambc::vision::camps())
-        if (attack_if_in_range(camp))
+        if (attack_if_in_range(camp, true))
             return;
 
     // Union every group's spawn tiles except visibly respawning groups.
@@ -115,7 +118,7 @@ void farm_camps() {
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
         for (const auto& camp : cambc::vision::camps())
-            if (attack_if_in_range(camp))
+            if (attack_if_in_range(camp, false))
                 return;
 }
 
@@ -153,7 +156,7 @@ void Bot::play_turn() {
 
     // Attack the first enemy champion already in range.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy))
+        if (attack_if_in_range(enemy, true))
             return;
 
     // Bank any carried gems before farming.

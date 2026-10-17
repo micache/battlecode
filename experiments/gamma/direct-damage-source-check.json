@@ -1,0 +1,19 @@
+{
+  "scope": "source invariants only; no engine/fuel simulation",
+  "checks": {
+    "visibility_before_initial_live_reads": true,
+    "post_attack_visibility_and_life_gate": true,
+    "readiness_and_restrictions_gate": true,
+    "only_unit_damage_with_category_and_range_checks": true,
+    "bounded_attempt_after_basic": true,
+    "all_calls_accounted_for": true,
+    "movement_disables_casts": true,
+    "shop_navigation_and_turn_priorities_preserved": true,
+    "unchanged_main.cpp": true,
+    "unchanged_draft.cpp": true,
+    "unchanged_draft.h": true,
+    "unchanged_random.h": true,
+    "unchanged_bot.h": true
+  },
+  "bot_cpp_sha256": "b5d7af6f195053e920b30ed3cfe757631847ee0eeb8c6d24bd2caef96f68f804"
+}

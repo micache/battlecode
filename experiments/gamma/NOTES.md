@@ -1,71 +1,77 @@
 # Gamma operational notes
 
-## task-da79c8f66fb941c29528f7a27187478f — one Jungle opening emblem
+## task-1f1fb7562f97468e81a02dc8c327f7b5 — stationary direct damage
 
-- Identity verified: bot/gamma; HEAD/input
-  1592c7696a7e1a7551c6fe5a78d6e2f91aca4a1d. All six source files matched
-  accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d and trusted file
-  hashes before edits. Base source
-  9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  Initial dirty bot.cpp was the trusted restore, not unfinished work. Accepted
-  source remains in Git and the trusted external snapshot. Latest published
-  candidate has a completed evaluation; none awaits evaluation.
-- Engine/SDK 2.1.6; engine lock
+- Playbook D. Hypothesis: one ready unit-targeted direct-damage spell after a
+  stationary basic on a surviving target should speed clearing/fights and increase
+  submitted gems versus accepted source without new bot faults.
+- Falsifiable policy prediction: at most one cast, after a successful basic only;
+  recheck visibility before target health/position, cast readiness, target category,
+  range and cast restrictions. Never cast from the post-movement farming path.
+  No casts on killed targets, no AoE/CC/reset spells, no chase or banking changes.
+  Matched mean submitted gems must rise to support objective benefit; wins govern
+  promotion. This invocation performs no strategic evaluation.
+- Identity verified: bot/gamma; HEAD/input e6f504329b8c234b68b39fd90c25a0bc96560071;
+  task/base match .agent/entry.json. All six edit-start files match accepted
+  commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d and trusted per-file hashes.
+  Base source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+  Initial bot.cpp/bot.h differences from HEAD are the trusted accepted restore;
+  bot.h remains byte-identical to accepted. Accepted source is preserved in Git
+  and the trusted snapshot. No unfinished task or candidate awaiting evaluation.
+- Engine/SDK 2.1.6, lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-  suite historical-panels-v1. Documentation/header hashes unchanged and verified.
-- Playbook C, farming/recovery cost and item value. Hypothesis: buying one Jungle
-  emblem before resuming Power purchases in the same chosen stat should reduce
-  camp damage and deaths, increasing submitted gems versus accepted source.
-  Jungle trades one shard of stat growth for 30% less camp damage at five shards.
-  Cap Jungle purchases at one emblem because duplicate family passives do not
-  stack. Keep existing stat selection, RNG draws and all turn priorities fixed.
-- Falsifiable prediction: before owning the selected Jungle emblem, buy at most
-  the missing shards toward its SDK combine count; after completion, buy Power
-  with remaining gold that same turn. Preserve partial progress across visits
-  via actual inventory. Never buy a second Jungle emblem. On matched development
-  cases expect lower mean monsterDamageTaken/deaths and higher submitted gems;
-  equal/lower tribute does not support the strategic benefit. Wins govern
-  promotion. No gain measured by this worker.
-- Mechanism references: GameRules.md 278-304, BOT_REFERENCE.md section 4;
-  C++ cambc.h item_type Jungle/Power metadata and item_count/can_buy/buy contracts.
-  Passive begins only at emblem completion. No hidden-unit reads or shared state.
-- Previous recall gate evaluation
-  40f171343d76128d49fd4fd610af8cb651ade0bde55444b3f2640c9e2ed6a6f4:
-  INCONCLUSIVE, provisional-three-map-wiring, 13W/11L, delta 0.375,
-  zero faults/missing/unknown reliability. Evaluated commit is HEAD above, source
-  f89c3f951116f0908f9170c310996bde0e8077ce892748efc11d8cc1ed12400c;
-  it differs from accepted edit-start. Collision/A development losses:
-  40dc88184b6f0ecbd4ed7fa801f376ef35a8bb01f7fc7e55b3ca2f065ec02eca,
-  round 1219, 836 vs 1012 tribute, six deaths; and
-  dbb0a72d52fa4f8cd3a127276cb023f0a3580c17db507f716e76d75b62ae52b4,
-  round 1124, 762 vs 1034 tribute, four deaths. Both zero faults.
-  Team A took 12,560 and 16,620 cumulative monster damage respectively, and
-  spent 3,990 / 3,720 gold. This motivates mitigation; totals do not locate
-  interruptions or prove a cause of death. Complete bounded final.json slices
-  saved in jungle-opening-evidence.json. Both exports say engineVersion 0.0.1
-  while trusted CLI/SDK is 2.1.6; metadata discrepancy remains unresolved.
-- Prior spawn recovery and Power-stat experiments already exist; this tests a new
-  item-family opening rather than repeating them. No other past patch imported.
-- Focused validation: `python3 experiments/gamma/check_jungle_opening.py`,
-  PASSED, exit 0; jungle-opening-source-check.json. Verifies exact shop-only
-  bot.cpp patch, unchanged draft/RNG/dispatcher, stat-preserving inventory cap,
-  and 45,015 finite arithmetic cases. Source/arithmetic checks only, not engine
-  simulation. `git diff --check` PASSED, exit 0.
-- Trusted check: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
-  PASSED, exit 0; source
-  2ed65cd1577a4731dc4706f184e838cd899e5550af669036ebcd363b20f1b10e.
-  Report: .agent/check-task-da79c8f66fb941c29528f7a27187478f.json;
-  reference check:task-da79c8f66fb941c29528f7a27187478f:2ed65cd1577a4731dc4706f184e838cd899e5550af669036ebcd363b20f1b10e.
-  Two smoke match IDs supplied; completion, scores and fuel headroom were not
-  supplied and are unknown. READY_FOR_EVAL means a valid checked candidate,
-  not a measured improvement.
-- Uncertainty: one fewer shard of stat growth can slow clearing or weaken champion
-  fights. Camp mitigation cannot prevent enemy damage/stuns, and the existing
-  spawn-healing omission/recall behavior remain. Final export engineVersion has
-  historically differed from trusted CLI/SDK; no runtime parity claimed.
+  suite historical-panels-v1. Supplied documentation and installed header hashes
+  match unchanged handoff; used compact reference and narrow API/SDK sections.
+- Latest evaluation 50d16b89fbc518376766d113845a3e12aac10bd1e09a1aa4b72bd46ceb128ade:
+  INCONCLUSIVE, provisional-three-map-wiring, 7W/17L, delta 0.125,
+  faults/missing/unknown reliability all zero. Evaluates commit HEAD above,
+  source 2ed65cd1577a4731dc4706f184e838cd899e5550af669036ebcd363b20f1b10e,
+  not this edit-start. Continuous self-play pending counts are separate evidence.
+- Completed development loss examples (collision) from that evaluated source:
+  A: 6557ce988674ae2cecb90ad6338332bd19554ae87ec301991584bf499373389d,
+  round 941, 286 vs 1012 tribute, 14 body deaths; Cassi contributes 66 tribute
+  and 4,470 monster damage; Marcella 198 tribute and 10,899 monster damage.
+  B: 00044ef58df5f93c73c71ffde094fbf400699c099b9ec5d27056a6a236c3da86,
+  round 1286, 462 vs 1012 tribute, 35 body deaths. Both sides zero faults.
+  Saved complete final exports (two 8KiB-offset slices each, lengths verified)
+  in direct-damage-evidence.json. Final exports say engineVersion 0.0.1;
+  discrepancy versus trusted CLI/SDK 2.1.6 remains unresolved. Deaths include
+  linked bodies. Totals motivate damage/throughput work, not causal proof.
+- Mechanism: accepted helper uses only one basic and never casts. GameRules.md
+  430-448, 574-600, 636-664 specify Cassi/Stellar/Marcella unit damage, 2x Focus,
+  eight-tick cooldown, no walking. Their starting spell damage is 140/200/100.
+  SDK cambc.h 2497-2530, 3164-3251, 3305-3328, 3861-3868 establishes damage kind,
+  target-category checks, geometric-only range masks, typed use(), and readiness.
+  No reconstructed damage formula used in the runtime policy.
+- Change: helper accepts explicit before_movement flag, spends a ready direct
+  damage ability after a surviving stationary basic, checks restrictions/category/
+  range, and stops after one attempt. Post-movement camp attack passes false.
+  At most two slot inspections, one basic and one spell per helper. Existing
+  channel guards, exception fallback and official end_turn dispatcher remain.
+  No persistent/shared state or changed RNG, draft, shop, navigation priorities.
+- Distinct from earlier attack-reset experiment: uses unit damage, does not
+  restore attack allowances or issue a second basic. Prior item/recall changes
+  are not imported; experiments are not pooled across source revisions.
+- Focused validation: python3 experiments/gamma/check_direct_damage.py PASSED,
+  exit 0; direct-damage-source-check.json, 13 static safety/scope invariants.
+  Source checks only, not an engine action/fuel fixture. git diff --check PASSED.
+- Trusted compilation/smoke:
+  `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
+  PASSED, exit 0. Checked source
+  44e3b60c784fbfa3466e5a3e580c089a9b460c7eaf638d9c7056d9e19b67c48c.
+  Report .agent/check-task-1f1fb7562f97468e81a02dc8c327f7b5.json;
+  reference check:task-1f1fb7562f97468e81a02dc8c327f7b5:44e3b60c784fbfa3466e5a3e580c089a9b460c7eaf638d9c7056d9e19b67c48c.
+  Smoke IDs 5f8e0ea9785a7d37144a3a98e97330f00c1efffb998b0210d6416d59a236cad3
+  and c23834d61df6b2c721f83b90ed406c6c368f7c41a3deca82ffc3857116fffc90.
+  Completion, scores and fuel telemetry absent/unknown; no game outcome inferred.
+  READY_FOR_EVAL means a checked candidate, not measured improvement.
+- Uncertainty: cooldown may be more valuable against a later target; extra damage
+  need not improve collection or tribute. Disabled post-move casts miss legal
+  opportunities on later variants by design. No measured fuel headroom or
+  strategic gain. Recall interruptions and spawn healing omission remain.
 - Next: supervisor evaluates the exact checked candidate against accepted source
-  on frozen development cases. If unsupported, inspect recovery/damage traces
-  before another item-policy refinement. No worker evaluation/publication.
+  on frozen development cases. If unsupported, inspect clearing/capture delays
+  before widening spell selection. No worker evaluation, publication or agents.
 
 ## Bootstrap documentation review (2026-10-17)
 
