@@ -9,6 +9,7 @@ from .common import atomic_json, clean_environment, file_hash, read_json, requir
 
 def environment():
     env = clean_environment(True)
+    env.pop('SSH_AUTH_SOCK', None)
     env.update(USE_BUILTIN_RIPGREP='0', DISABLE_AUTOUPDATER='1')
     return env
 

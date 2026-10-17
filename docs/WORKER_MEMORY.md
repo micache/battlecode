@@ -1,6 +1,6 @@
 # Fresh-session handoff
 
-Each invocation remains one bounded experiment in a fresh native Codex session.
+Each invocation remains one bounded experiment in a fresh native Codex or Claude Code session.
 No API model billing or resumed conversation is required. The supervisor, not
 model memory, carries experimental state forward.
 

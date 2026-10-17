@@ -223,7 +223,7 @@ def perform_task(config, task):
             from .claude import usage_summary
         outcome["invocation"] = {"provider": provider, "binary_sha256": config[prefix + "_sha256"],
                                   **process, "raw_path": str(private),
-                                  'efficiency_profile': 'brief-v1', 'usage': usage_summary(private / 'stdout.log'),
+                                  'efficiency_profile': 'hourly-brief-v2', 'usage': usage_summary(private / 'stdout.log'),
                                   "stdout_sha256": file_hash(private / "stdout.log"),
                                   "stderr_sha256": file_hash(private / "stderr.log")}
     if 'validated_result' in locals():

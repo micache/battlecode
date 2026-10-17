@@ -11,6 +11,7 @@ from arena.supervisor import dispatch_tasks, handle_request
 from arena.claude import finish, usage_summary, verify_subscription
 from arena.storage import archive_projects, verify_project_archive
 from arena.memory import training_window
+from arena.service import Arena
 
 
 class HourlyTests(Harness):
@@ -24,6 +25,8 @@ class HourlyTests(Harness):
             first = self.arena.db.one("SELECT * FROM workers WHERE id='alpha'")['task_id']
             handle_request(self.arena, 'alpha', {'operation':'worker-finished',
                            'payload':{'task_id':first, 'state':'NO_CHANGE'}})
+        self.arena.db.connection.close()
+        self.arena = Arena(self.config, self.engine)  # A restart retains the hourly timer.
         with patch('arena.supervisor.time.time', return_value=2000003599):
             dispatch_tasks(self.arena)
             self.assertEqual(self.arena.db.one('SELECT count(*) AS n FROM tasks')['n'], 1)

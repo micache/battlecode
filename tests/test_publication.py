@@ -8,7 +8,7 @@ from test_arena import Harness, PROJECT
 from arena.common import ArenaError, atomic_json, read_json, tree_hash
 from arena.gitstore import git
 from arena.supervisor import dispatch_tasks, handle_request
-from arena.worker import candidate_payload, make_attempt, publish_attempt
+from arena.worker import candidate_payload, make_attempt, publish_attempt, perform_task
 
 
 class PublicationTests(Harness):
@@ -48,6 +48,26 @@ class PublicationTests(Harness):
 
     def request(self, config, operation, payload=None, **kwargs):
         return handle_request(self.arena, config["bot_id"], {"operation": operation, "payload": payload or {}})
+
+    def test_claude_worker_uses_native_result_without_codex_settings(self):
+        bot, task = self.envelope()
+        config = dict(self.owner_configs[bot], provider='claude-code', claude_executable='/synthetic/claude',
+                      claude_sha256='c' * 64, owner_config_path=f'/etc/battlecode/{bot}.json')
+        result = dict(self.final_result(bot, task), outcome='NO_CHANGE', changed_paths=[])
+        Path(config['attempts']).mkdir()
+        def invoke(args, attempt, directory, timeout, env):
+            self.assertEqual(args[0], '/synthetic/claude')
+            self.assertIn('--restricted', args)
+            self.assertNotIn('--dangerously-skip-permissions', args)
+            (directory / 'stdout.log').write_text(json.dumps({'type':'result', 'subtype':'success',
+                                                           'is_error':False, 'structured_output':result}) + '\n')
+            (directory / 'stderr.log').write_text('')
+            return {'returncode':0, 'timeout':False}
+        with patch('arena.worker.verify_subscription', return_value={}), patch('arena.worker.bounded_process', invoke):
+            outcome = perform_task(config, task)
+        self.assertEqual(outcome['state'], 'NO_CHANGE')
+        self.assertEqual(outcome['invocation']['provider'], 'claude-code')
+        self.assertEqual(outcome['worker_result'], result)
 
     def test_two_published_cycles_per_lane_start_from_accepted_source(self):
         seen = {"alpha": 0, "beta": 0}

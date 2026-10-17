@@ -63,7 +63,7 @@ def recover(config, finals, usage=None):
         for task_id, observation in (usage or {}).items():
             require(db.one('SELECT id FROM tasks WHERE id=?', (task_id,)), 'unknown usage task')
             invocation = db.get(f'invocation:{task_id}')
-            if invocation and invocation.get('provider') == 'codex' and 'usage' not in invocation:
+            if invocation and invocation.get('provider') in ('codex', 'claude-code') and 'usage' not in invocation:
                 invocation.update(usage=observation, efficiency_profile='legacy-jsonl-backfill')
                 db.put(f'invocation:{task_id}', invocation)
                 recovered_usage.append(task_id)
@@ -81,7 +81,12 @@ def collect(config):
     for bot, settings in config['workers'].items():
         owner = read_json('/etc/battlecode/' + bot + '.json')
         require(owner['bot_id'] == bot and owner['linux_user'] == settings['linux_user'], 'owner mismatch')
-        attempts = Path(owner['attempts']).resolve(strict=True)
+        attempts = Path(owner['attempts'])
+        if not attempts.exists():
+            require(not db.execute('SELECT id FROM tasks WHERE bot_id=? LIMIT 1', (bot,)).fetchone(),
+                    'historical attempts missing; preserve and inspect')
+            continue
+        attempts = attempts.resolve(strict=True)
         for task_id, result in db.execute('SELECT id,result FROM tasks WHERE bot_id=?', (bot,)):
             require(re.fullmatch('task-[a-f0-9]{32}', task_id), 'unsafe task ID')
             path = attempts / task_id / '.agent' / f'final-{task_id}.json'
@@ -96,6 +101,8 @@ def collect(config):
                 if log.is_file():
                     require(log.stat().st_size <= 64 * 1024**2, 'oversized native usage log')
                     from arena.usage import usage_summary
+                    if owner.get('provider', 'codex') == 'claude-code':
+                        from arena.claude import usage_summary
                     usage[task_id] = usage_summary(log)
     db.close()
     return {'finals': finals, 'usage': usage}
