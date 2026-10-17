@@ -29,17 +29,6 @@ def main():
         if args.bot and bot != args.bot:
             continue
         owner = read_json(f'/etc/battlecode/{bot}.json')
-        if owner.get('provider', 'codex') == 'claude-code':
-            result = subprocess.run(['runuser', '-l', owner['linux_user'], '-c',
-                'python3 -c ' + __import__('shlex').quote(
-                    "import sys; sys.path.insert(0, '/opt/battlecode'); "
-                    "from arena.common import read_json; from arena.claude import verify_subscription; "
-                    f"verify_subscription(read_json('/etc/battlecode/{bot}.json'))")],
-                capture_output=True, text=True, timeout=40)
-            require(result.returncode == 0, f'{bot}: manual Claude subscription login required; no API fallback')
-            modes[bot] = 'Native claude.ai subscription; owner login confirmed'
-            config['workers'][bot].update(enabled=True, owner_confirmed=True)
-            continue
         require(file_hash(owner['codex_executable']) == owner['codex_sha256'], 'CLI pin mismatch')
         result = subprocess.run(['runuser', '-l', f'bc-{bot}', '-c', '/usr/local/bin/codex login status'],
                                 capture_output=True, text=True, timeout=30)

@@ -22,6 +22,8 @@ def main():
     with lock(root / 'state/service.lock'), lock(root / 'model.lock'):
         config['limits'].update(improvement_interval_seconds=args.interval_seconds,
                                 archive_completed_projects=True)
+        config['official_schedule'] = {'check_interval_seconds':5 * 3600,
+                                       'unchanged_recheck_seconds':3 * 3600}
         atomic_json(path, config, 0o644)
     print(json.dumps({'interval_seconds':args.interval_seconds, 'completed_project_archiving':True,
                       'concurrency_and_promotion_gate':'unchanged', 'services_started':False}))

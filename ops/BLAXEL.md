@@ -1,17 +1,18 @@
-# Blaxel two-owner pilot
+# Blaxel three-owner arena
 
-The server is **deployed**, both owner accounts are authenticated, and two real
-Codex publication/evaluation cycles per bot are saved. See [acceptance status](../docs/IMPLEMENTATION_STATUS.md)
+The server is **deployed**. Alpha and beta have two real Codex
+publication/evaluation cycles saved; gamma's third owner login and three-map
+validity baseline are complete. See [acceptance status](../docs/IMPLEMENTATION_STATUS.md)
 and [saved evidence](../evidence/blaxel/). Do not rerun installation on this server.
 
 ## Installed configuration
 
 - Workspace `banabolabs`, sandbox `battlecode-arena`, region `us-pdx-1`.
 - 8,192 MB RAM / four CPU cores; 8,192 MB volume `battlecode-arena-data`.
-- Alpha and beta use Codex; gamma is an isolated Claude Code lane (owner login
-  required before enabling). One match, build and model invocation at a time.
+- Alpha, beta and gamma use Codex in isolated, natively authenticated owner lanes.
+  One match, build and model invocation at a time.
   Each bot receives one improvement job per hour, serialized, with accumulated
-  development feedback. See [setup and safeguards](../docs/CLAUDE_AND_HOURLY.md).
+  development feedback. See [setup and safeguards](../docs/HOURLY_TRAINING.md).
 - Rootless Podman, immutable local engine image, CLI/SDK 2.1.6, official C++ starter.
 - Codex CLI 0.163.0, pinned executable hash; separate Linux users, private homes,
   native authentication and writable clones. Only `bc-arena` publishes source.

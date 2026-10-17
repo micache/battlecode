@@ -3,7 +3,7 @@
 17 October update: improvements now follow a one-hour per-bot schedule, not a
 fresh-feedback trigger. Matches continue between invocations; development
 results are compressed by immutable source/map/side, with exact evidence kept.
-See [Claude and hourly operation](CLAUDE_AND_HOURLY.md) for the third lane and
+See [hourly operation](HOURLY_TRAINING.md) for the third Codex lane and
 the unchanged quota, evaluation and promotion guards.
 
 Both lanes retain `gpt-6.1-sol` with high reasoning. Subscription-only native

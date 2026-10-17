@@ -42,9 +42,13 @@ def experiment_context(arena, bot):
                               (bot, metadata.get('source_commit')))
         if source:
             # Names, annotations and raw replay text are deliberately not prompt instructions.
-            external.append({key: (metadata.get(key)[:256] if isinstance(metadata.get(key), str) else None)
+            observation = {key: (metadata.get(key)[:256] if isinstance(metadata.get(key), str) else None)
                              for key in ('official_match_id', 'source_commit', 'submission_id', 'outcome',
-                                         'own_side', 'opponent_version')})
+                                         'own_side', 'opponent_version', 'map_name')}
+            observation['available_diagnostics'] = sorted(name for name in metadata.get('file_sha256', {}) if name in
+                ('observations.json', 'final.json', 'stdout.log', 'stderr.log', 'bot-a.stdout.log', 'bot-b.stdout.log')
+                and metadata.get('map_name') in arena.config['evaluation']['development_maps'])
+            external.append(observation)
         if len(external) == 3:
             break
     return {'mode': 'exploration' if explore else 'refinement', 'published_cycle': published + 1,

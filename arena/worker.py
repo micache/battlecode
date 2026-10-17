@@ -45,9 +45,6 @@ def provider_failure(directory, process):
 
 
 def verify_subscription(config):
-    if config.get('provider', 'codex') == 'claude-code':
-        from .claude import verify_subscription as verify_claude
-        return verify_claude(config)
     executable = config["codex_executable"]
     require(file_hash(executable) == config["codex_sha256"], "Codex binary changed; owner must review pin")
     home = Path(os.path.expanduser("~"))
@@ -172,6 +169,9 @@ def perform_task(config, task):
         attempt = make_attempt(config, task)
         final = attempt / ".agent" / f"final-{task_id}.json"
         prompt = (f"ROLE: bot_worker. Perform exactly one task from .agent/task.json. Follow AGENTS.md, "
+                  f"Trusted result identity: task_id={task_id}; bot_id={config['bot_id']}; "
+                  f"base_source_hash={task['base_source_hash']}. "
+                  "If tools cannot read the task, return BLOCKED with these exact identity fields, not guessed values. "
                   f"read .agent/brief.md, .agent/entry.json, own NOTES.md and current source first. "
                   "The complete .agent/task.json is for targeted lookup, not a mandatory bulk dump. "
                   "On unchanged routine iterations, do not reread entire rules/API/SDK or all playbooks. "
@@ -179,26 +179,16 @@ def perform_task(config, task):
                   "for trusted checks. Save one falsifiable hypothesis and compact notes. "
                   "Do not commit, push, start agents, wait for evaluations, or invoke official submissions. "
                   "Return the supplied worker-result schema and stop.")
-        if config.get('provider', 'codex') == 'claude-code':
-            from .claude import command
-            args = command(config, attempt, prompt)
-        else:
-            args = [config["codex_executable"], "-a", "never", "exec", "--sandbox", "workspace-write", "--json",
-                    "--add-dir", str(Path(config["root"]) / "inbox" / config["bot_id"]),
-                    "-c", 'forced_login_method="chatgpt"', "-c", 'model_provider="openai"',
-                    "--output-schema", str(Path(config["infrastructure"]) / "schemas/worker-result.schema.json"),
-                    "-o", str(final), prompt]
-            if config.get("model"):
-                args[-1:-1] = ["--model", config["model"]]
+        args = [config["codex_executable"], "-a", "never", "exec", "--sandbox", "workspace-write", "--json",
+                "--add-dir", str(Path(config["root"]) / "inbox" / config["bot_id"]),
+                "-c", 'forced_login_method="chatgpt"', "-c", 'model_provider="openai"',
+                "--output-schema", str(Path(config["infrastructure"]) / "schemas/worker-result.schema.json"),
+                "-o", str(final), prompt]
+        if config.get("model"):
+            args[-1:-1] = ["--model", config["model"]]
         process = bounded_process(args, attempt, private, 1200, env=env)
         checkpoint(attempt, private / "checkpoint")
-        claude_failure = None
-        if config.get('provider', 'codex') == 'claude-code':
-            from .claude import finish
-            claude_failure = finish(private, process, final)
-        if claude_failure:
-            outcome = dict(claude_failure, task_id=task_id)
-        elif process["returncode"] or process["timeout"] or not final.exists():
+        if process["returncode"] or process["timeout"] or not final.exists():
             outcome = dict(provider_failure(private, process), task_id=task_id)
         else:
             result = read_json(final)
@@ -217,11 +207,7 @@ def perform_task(config, task):
         outcome = {"task_id": task_id, "state": "AUTH_REQUIRED" if "AUTH_REQUIRED" in str(exc) else "PAUSED", "detail": str(exc)}
     if "process" in locals():
         from .usage import usage_summary
-        provider = config.get('provider', 'codex')
-        prefix = 'claude' if provider == 'claude-code' else 'codex'
-        if provider == 'claude-code':
-            from .claude import usage_summary
-        outcome["invocation"] = {"provider": provider, "binary_sha256": config[prefix + "_sha256"],
+        outcome["invocation"] = {"provider": "codex", "binary_sha256": config["codex_sha256"],
                                   **process, "raw_path": str(private),
                                   'efficiency_profile': 'hourly-brief-v2', 'usage': usage_summary(private / 'stdout.log'),
                                   "stdout_sha256": file_hash(private / "stdout.log"),

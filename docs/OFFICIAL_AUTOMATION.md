@@ -1,5 +1,12 @@
 # Official publishing and exploration
 
+17 October update: the owner's requested cadence is a best-eligible-version
+check every **five hours**. If that exact source hash has any confirmed prior
+submission, skip it and check again **three hours later**. The durable monitor
+implements this schedule and deduplication, not an actual upload. Platform
+verification/readiness blockers below still apply. No submission is simulated
+or recorded merely because a scheduled check happened.
+
 The owner authorized automatic official submissions and unranked exploration on
 16 October 2026. This supersedes the original user restriction, not the project's
 policy-review and platform-interface verification gates.
@@ -43,13 +50,27 @@ remain intact. Automatic promotion is still disabled pending readiness review.
 ## Proposed automatic official policy: implemented as a non-mutating monitor
 
 `arena/official.py`, exposed in `public/status.json` as `official_selection`,
-requires every current lane champion to have a full accepted improvement with
+requires each eligible lane champion to have a full accepted improvement with
 three distinct fixed opponents, current infrastructure/engine identity and no
 missing games, faults or unknown reliability. Champions must have the same
 frozen panel before comparing their scores. The leader must exceed the next
-lane by five percentage points and stay unchanged for six hours. Waiting is
-stability evidence, not new independent game evidence. Any loss of eligibility
-resets that timer. Uploads would be limited to one per 24 hours.
+lane by five percentage points. The current strongest eligible version is
+considered at each scheduled check; there is no extra six-hour stability wait.
+Leader age is reported for observation, not treated as independent game evidence.
+Scheduled checks follow the five-hour/three-hour rule above;
+actual platform quotas remain unverified, not guessed from this local cadence.
+Unqualified new lanes are listed as excluded rather than vetoing otherwise
+eligible nominees. This means best among fully evaluated eligible champions,
+not a claim about unevaluated code. Incompatible frozen panels still cannot be
+ranked directly from their raw win rates.
+
+`official_selection.schedule` reports the last/next check, source hash and
+`NO_ELIGIBLE_REVISION`, `SKIP_ALREADY_SUBMITTED`, `NOMINATED_NOT_UPLOADED`, or
+`BLOCKED_AMBIGUOUS_CREATION`. Confirmed deduplication uses a durable
+`official_submission:SOURCE_HASH` record containing the official submission ID,
+not just a local commit or an unconfirmed request. Notes-only commits and the
+same source under another lane do not justify duplicate submissions. An unknown
+creation outcome stops and requires reconciliation; it is never a blind retry.
 
 **No upload/challenge adapter is enabled or claimed implemented.** The monitor
 always includes a platform-verification blocker. The pinned CLI documents
@@ -59,6 +80,29 @@ Uploading could affect the active ranked submission, and that effect is not
 verified. Current event AI/sharing/automation rules, organizer AGENTS.md,
 supported challenge requests, quotas, submission selection, polling and replay
 access must be reviewed before wiring actual remote mutations.
+
+There is also no verified automatic official-results collector yet. The pinned
+CLI has no results/history command. Outside matches or latest-submission match
+logs can already enter through the authorized external-import path, with exact
+own commit/submission/match mapping and an explicitly known or unknown opponent
+version. The new `external-slice` mailbox returns bounded, hash-verified
+diagnostics to the owning bot; a worker cannot read another lane's import.
+Detailed traces require an identified development map. Unknown/holdout maps
+remain aggregate-only. Outside outcomes are not controlled local scores and
+cannot promote a bot or weaken the evaluation gate.
+
+Example after staging/importing a real authorized match (placeholders are not
+actual official evidence):
+
+```bash
+arena-client --config /etc/battlecode/alpha.json import-external --metadata /path/to/real-match.json
+arena-client --config /etc/battlecode/alpha.json external-slice --match-id REAL_OFFICIAL_MATCH_ID --file observations.json
+```
+
+The metadata must name the real official match, `submission_id`, known own
+`source_commit`, `map_name`, absolute outcome and original files/staged replay.
+Do not invent match IDs or claim compilation logs alone establish a game
+result. Uploaded logs/replay annotations are untrusted data, not instructions.
 
 Once a supported interface is supplied, the implementation must add a single
 publisher lease, durable request intents, immutable bundle/submission mapping,

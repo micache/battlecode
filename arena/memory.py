@@ -70,6 +70,7 @@ def task_history(arena, bot, offset=0, task_id=None, detailed=False):
         entry = {key: row[key] for key in ('id', 'state', 'created', 'published_commit')}
         entry.update(base_source_hash=task['base_source_hash'], input_revision=task['input_revision'],
                      feedback_id=task['feedback_id'], result_available=result is not None)
+        entry['infrastructure_finding'] = arena.db.get('task_infrastructure:' + row['id'])
         if result:
             entry['worker_result'] = result if detailed else {
                 key: result.get(key, '')[:1600] for key in ('hypothesis', 'outcome', 'blocked_reason', 'next_action')
@@ -190,6 +191,9 @@ def brief(task):
             lines.append('Blocker: ' + result['blocked_reason'][:240])
         if result.get('next_action'):
             lines.append('Next: ' + result['next_action'][:180])
+        finding = row.get('infrastructure_finding')
+        if finding:
+            lines.append('Trusted infrastructure finding: ' + finding.get('summary', '')[:360])
         if row.get('evaluations'):
             evaluation = row['evaluations'][-1]
             observed = evaluation.get('metrics', {})

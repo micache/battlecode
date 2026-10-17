@@ -1,14 +1,13 @@
-"""Focused scheduler/provider/archive checks; no paid model calls or real games."""
+"""Focused scheduler/archive checks; no model calls or real games."""
 import json
 from pathlib import Path
 from unittest.mock import patch
 import zipfile
 
 from test_arena import Harness
-from arena.common import ArenaError, atomic_json, file_hash, read_json, tree_manifest
+from arena.common import tree_manifest
 from arena.engine import seal_artifacts, verify_artifacts
 from arena.supervisor import dispatch_tasks, handle_request
-from arena.claude import finish, usage_summary, verify_subscription
 from arena.storage import archive_projects, verify_project_archive
 from arena.memory import training_window
 from arena.service import Arena
@@ -45,45 +44,6 @@ class HourlyTests(Harness):
             self.assertEqual(group['completed'], group['wins'] + group['losses'])
             self.assertFalse(any(name.split('/')[0] in self.config['evaluation']['holdout_maps']
                                  for name in group['by_map_side']))
-
-
-class ClaudeTests(Harness):
-    def stream(self, events):
-        directory = self.path / 'claude-output'
-        directory.mkdir(exist_ok=True)
-        (directory / 'stdout.log').write_text('\n'.join(json.dumps(e) for e in events))
-        return directory
-
-    def test_only_native_structured_output_is_accepted(self):
-        final = self.path / 'final.json'
-        directory = self.stream([{'type':'assistant', 'message':{'content':'{"structured_output":{"fake":true}}'}}])
-        process = {'returncode':0, 'timeout':False}
-        self.assertEqual(finish(directory, process, final)['state'], 'PAUSED')
-        self.assertFalse(final.exists())
-        directory = self.stream([{'type':'result', 'subtype':'success', 'is_error':False,
-                                 'structured_output':{'native':True}, 'usage':{'input_tokens':10,
-                                 'cache_read_input_tokens':20, 'output_tokens':3}}])
-        self.assertIsNone(finish(directory, process, final))
-        self.assertEqual(read_json(final), {'native':True})
-        self.assertEqual(usage_summary(directory / 'stdout.log')['reported_tokens']['cache_read_input_tokens'], 20)
-
-    def test_quota_and_permission_park_without_fallback(self):
-        directory = self.stream([{'type':'rate_limit_event', 'rate_limit_info':{'status':'rejected', 'resetsAt':2000000000}}])
-        process = {'returncode':1, 'timeout':False}
-        self.assertEqual(finish(directory, process, self.path / 'final')['state'], 'QUOTA_WAIT')
-        directory = self.stream([{'type':'result', 'subtype':'success', 'permission_denials':[{'tool':'Bash'}]}])
-        self.assertEqual(finish(directory, process, self.path / 'final')['state'], 'PERMISSION_BLOCKED')
-
-    def test_api_auth_is_rejected_without_reading_credential_files(self):
-        binary = self.path / 'claude'
-        binary.write_bytes(b'synthetic not executable')
-        config = {'claude_executable':str(binary), 'claude_sha256':file_hash(binary)}
-        class Status:
-            returncode = 0
-            stdout = b'{"loggedIn":true,"authMethod":"api_key"}'
-        with patch('arena.claude.subprocess.run', return_value=Status()):
-            with self.assertRaisesRegex(ArenaError, 'AUTH_REQUIRED'):
-                verify_subscription(config)
 
 
 class ArchiveTests(Harness):

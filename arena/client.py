@@ -36,7 +36,7 @@ def request(config, operation, payload=None, timeout=1100):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Owner mailbox client; never writes central SQLite")
     parser.add_argument("--config", default="/etc/battlecode/owner.json")
-    parser.add_argument("operation", choices=["status", "feedback", "history", "check-report", "slice", "pause", "resume", "claim", "release", "publish", "import-external"])
+    parser.add_argument("operation", choices=["status", "feedback", "history", "check-report", "slice", "external-slice", "pause", "resume", "claim", "release", "publish", "import-external"])
     parser.add_argument("--owner")
     parser.add_argument("--attempt")
     parser.add_argument("--metadata")
@@ -56,9 +56,9 @@ def main(argv=None):
         elif args.operation == "import-external":
             require(args.metadata, "--metadata required")
             result = request(config, args.operation, read_json(args.metadata))
-        elif args.operation == "slice":
+        elif args.operation in ("slice", "external-slice"):
             require(args.match_id, "--match-id required")
-            result = request(config, "slice", {"match_id": args.match_id, "file": args.file, "offset": args.offset})
+            result = request(config, args.operation, {"match_id": args.match_id, "file": args.file, "offset": args.offset})
         elif args.operation == 'history':
             result = request(config, 'history', {'task_id': args.task_id, 'offset': args.offset})
         elif args.operation == 'check-report':

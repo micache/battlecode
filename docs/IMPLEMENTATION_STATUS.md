@@ -1,5 +1,13 @@
 # Live pilot status — 16 October 2026
 
+17 October update: gamma is provisioned as a third isolated **Codex** lane,
+after the owner corrected the initial Claude request. All lanes use
+`gpt-6.1-sol` with high reasoning and hourly improvement, including unchanged
+feedback. Gamma's native device login and three-map validity baseline completed;
+this is not yet a claim of completed model improvement cycles for gamma.
+Completed match working trees are now losslessly archived; raw replay/statistics
+and canonical source evidence remain retained. See [active training](HOURLY_TRAINING.md).
+
 Latest maintenance: native official contest login succeeded; the owner now
 authorizes guarded official publishing and unranked exploration. Historical
 training panels, every-fifth-cycle exploration, bounded full suites, external

@@ -81,7 +81,8 @@ class OperationsTests(Harness):
             self.assertEqual(replay.read(), b"synthetic replay" * 1000)
         new_path = self.arena.db.one("SELECT artifact FROM match_jobs WHERE id=?", (job,))["artifact"]
         verify_artifacts(new_path, job, 1)
-        self.assertFalse(directory.exists())
+        self.assertTrue(directory.is_symlink())
+        self.assertEqual(directory.resolve(), Path(new_path).resolve())
 
     def test_bounded_child_timeout_retains_process_evidence(self):
         output = self.path / "child-evidence"

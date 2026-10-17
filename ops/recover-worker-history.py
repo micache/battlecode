@@ -63,7 +63,7 @@ def recover(config, finals, usage=None):
         for task_id, observation in (usage or {}).items():
             require(db.one('SELECT id FROM tasks WHERE id=?', (task_id,)), 'unknown usage task')
             invocation = db.get(f'invocation:{task_id}')
-            if invocation and invocation.get('provider') in ('codex', 'claude-code') and 'usage' not in invocation:
+            if invocation and invocation.get('provider') == 'codex' and 'usage' not in invocation:
                 invocation.update(usage=observation, efficiency_profile='legacy-jsonl-backfill')
                 db.put(f'invocation:{task_id}', invocation)
                 recovered_usage.append(task_id)
@@ -101,8 +101,6 @@ def collect(config):
                 if log.is_file():
                     require(log.stat().st_size <= 64 * 1024**2, 'oversized native usage log')
                     from arena.usage import usage_summary
-                    if owner.get('provider', 'codex') == 'claude-code':
-                        from arena.claude import usage_summary
                     usage[task_id] = usage_summary(log)
     db.close()
     return {'finals': finals, 'usage': usage}

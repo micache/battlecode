@@ -16,7 +16,7 @@ from provision import provision_users
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('bot')
-    parser.add_argument('--provider', choices=('codex', 'claude-code'), default='codex')
+    parser.add_argument('--provider', choices=('codex',), default='codex')
     args = parser.parse_args()
     require(os.geteuid() == 0, 'administrator required; stop services first')
     bot = slug(args.bot)
@@ -49,20 +49,19 @@ def main():
         config['workers'][bot] = {'linux_user':user.pw_name, 'branch':f'bot/{bot}',
                                  'clone':str(home / 'battlecode'), 'enabled':False, 'owner_confirmed':False,
                                  'provider':args.provider}
-        binary = '/usr/local/bin/claude' if args.provider == 'claude-code' else '/usr/local/bin/codex'
+        binary = '/usr/local/bin/codex'
         owner = {'protocol_version':1, 'bot_id':bot, 'linux_user':user.pw_name, 'branch':f'bot/{bot}',
                  'root':str(root), 'infrastructure':config['infrastructure'], 'read_repository':config['mirror'],
                  'clone':str(home / 'battlecode'), 'attempts':str(home / 'attempts'),
                  'provider':args.provider, 'model':None}
-        prefix = 'claude' if args.provider == 'claude-code' else 'codex'
-        owner.update({prefix + '_executable':binary, prefix + '_sha256':file_hash(binary)})
+        owner.update(codex_executable=binary, codex_sha256=file_hash(binary))
         if config.get('deployment', {}).get('mode') == 'blaxel':
             owner['read_repository'] = 'https://github.com/micache/battlecode.git'
         atomic_json(path.with_name(f'{bot}.json'), owner, 0o644)
         atomic_json(path, config, 0o644)
     print(json.dumps({'registered':bot, 'enabled':False,
         'next':['Publish/ingest its starter with ops/bootstrap-lanes.py as bc-arena.',
-                f'Owner: runuser -l bc-{bot} -c "{binary} ' + ('auth login"' if prefix == 'claude' else 'login --device-auth"'),
+                f"Owner: runuser -l bc-{bot} -c '{binary} login --device-auth'",
                 'Attest distinct account ownership, establish baseline, then explicitly resume the lane.']}))
 
 
