@@ -1,0 +1,21 @@
+{
+  "task_id": "task-2cc2849656a34761861827c63e161a62",
+  "scope": "source contracts, not runtime coverage",
+  "checks": {
+    "only_threat_helper_and_recall_branch_changed": true,
+    "visibility_short_circuits_all_live_threat_queries": true,
+    "both_enemy_champions_and_camps_checked": true,
+    "channels_guarded_before_new_queries": true,
+    "low_health_and_away_from_spawn_gate_unchanged": true,
+    "single_threat_gated_retreat": true,
+    "fresh_position_guards_recall_after_movement": true,
+    "failed_move_does_not_suppress_recall": true,
+    "official_yield_preserved": true,
+    "bot.h_unchanged": true,
+    "main.cpp_unchanged": true,
+    "draft.cpp_unchanged": true,
+    "draft.h_unchanged": true,
+    "random.h_unchanged": true
+  },
+  "passed": true
+}

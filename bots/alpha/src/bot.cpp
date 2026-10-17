@@ -103,6 +103,19 @@ void farm_camps() {
                 return;
 }
 
+// Range is a conservative threat test, not a prediction of the next attack.
+bool under_basic_attack_threat(vec2 position) {
+    const auto threatens = [position](const auto& unit) {
+        return unit.is_visible() && unit.health() > 0 && unit.strength() > 0
+            && unit.attack_tiles().is_set(position);
+    };
+    for (const auto& enemy : cambc::vision::champions(team::enemy))
+        if (threatens(enemy)) return true;
+    for (const auto& camp : cambc::vision::camps())
+        if (threatens(camp)) return true;
+    return false;
+}
+
 void Bot::play_turn() {
     // Initialise this champion's build and read the draft message once.
     if (chosen_stat < 0) {
@@ -129,9 +142,14 @@ void Bot::play_turn() {
     if (at_spawn)
         buy_items();
 
-    // Recall immediately when badly hurt away from spawn.
+    // Make progress home before a recall that visible basic attacks may interrupt.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
-        me.recall();
+        const auto spawn = cambc::map::spawn_region(team::ally);
+        if (under_basic_attack_threat(me.position()))
+            move_towards_closest(spawn);
+        // Refresh position after movement; arrival must stay through turn end to heal.
+        if (!spawn.is_set(me.position()))
+            me.recall();
         return;
     }
 
@@ -140,7 +158,7 @@ void Bot::play_turn() {
         if (attack_if_in_range(enemy))
             return;
 
-    // Bank beside an altar immediately; batch small bags before travelling.
+    // Bank any carried gems before farming.
     if (me.gem_count() > 0) {
         // Union all altar approach tiles: the field chooses the nearest reachable altar.
         cambc::bitboard goals;
@@ -153,13 +171,8 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        constexpr unsigned bank_travel_minimum = 40;
-        if (me.gem_count() >= bank_travel_minimum
-            || me.gem_count() + cambc::global_submitted_gems(team::ally)
-                >= cambc::constants::winning_gems) {
-            move_towards_closest(goals);
-            return;
-        }
+        move_towards_closest(goals);
+        return;
     }
 
     farm_camps();
