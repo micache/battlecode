@@ -8,3 +8,4 @@ runtime/
 *.wasm
 *.repl26a
 artifacts/submissions/
+artifacts/official-beta-history-import-*.json

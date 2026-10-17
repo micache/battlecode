@@ -1,5 +1,13 @@
 # Official publishing and exploration
 
+17 October results update: authorized own-team browser collection and exact-ZIP
+mapping are now exercised against real games. All 150 completed games for the
+submitted beta revision are downloaded and their compact evidence is imported.
+Older-version download stopped on HTTP 429; no collector retry/timer is enabled.
+Official patch 0.0.3 differs from the pinned local embedded engine 0.0.1.
+See [the evidence record](OFFICIAL_RESULTS.md). This does not enable uploads or
+challenges and does not certify engine parity.
+
 17 October update: the owner's requested cadence is a best-eligible-version
 check every **five hours**. If that exact source hash has any confirmed prior
 submission, skip it and check again **three hours later**. The durable monitor
@@ -83,8 +91,9 @@ verified. Current event AI/sharing/automation rules, organizer AGENTS.md,
 supported challenge requests, quotas, submission selection, polling and replay
 access must be reviewed before wiring actual remote mutations.
 
-There is also no verified automatic official-results collector yet. The pinned
-CLI has no results/history command. Outside matches or latest-submission match
+The pinned CLI has no results/history command. The local read-only browser
+collector uses observed own-team interfaces, with manual authentication and
+access/rate stops; it is not an unattended collection service. Outside matches or latest-submission match
 logs can already enter through the authorized external-import path, with exact
 own commit/submission/match mapping and an explicitly known or unknown opponent
 version. The new `external-slice` mailbox returns bounded, hash-verified

@@ -1,5 +1,15 @@
 # Live pilot status — 16 October 2026
 
+17 October storage/results update: verified redundant match worktrees are now
+offloaded automatically to this operator computer by a five-minute user timer;
+logout persistence (`Linger=yes`) is enabled. All gameplay evidence stays online.
+The computer must remain powered/networked; disk guards remain enabled.
+See [local archives](LOCAL_OFFLOAD.md). The owner-approved contest browser
+downloaded all 150 finished games for the submitted beta ZIP and imported compact
+source-mapped feedback. Older-version collection stopped at HTTP 429; it is not
+claimed complete. See [official results](OFFICIAL_RESULTS.md) for identities,
+counts, patch mismatch, receipts and the next-hourly-task handoff.
+
 17 October update: gamma is provisioned as a third isolated **Codex** lane,
 after the owner corrected the initial Claude request. All lanes use
 `gpt-6.1-sol` with high reasoning and hourly improvement, including unchanged

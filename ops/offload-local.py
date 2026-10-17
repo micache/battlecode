@@ -26,6 +26,19 @@ from arena.common import atomic_bytes, atomic_json, file_hash, identity, read_js
 from ops.blaxel import APIError, Client, CREDENTIALS
 
 
+def safe_get(client, path, endpoint, raw=False):
+    """Only reads retry transport failures; never repeat POST or permission errors."""
+    for attempt in range(3):
+        try:
+            return client.request('GET', path, base=endpoint, raw=raw)
+        except APIError:
+            raise
+        except RuntimeError:
+            if attempt == 2:
+                raise
+            time.sleep(3 * (attempt + 1))
+
+
 def verify_batch(path, plan):
     """Verify transport, original seals and every restored worktree member byte."""
     require(file_hash(path) == plan['archive_sha256'], 'downloaded archive checksum mismatch')
@@ -90,14 +103,14 @@ class Relay:
         while True:
             # A missing named process after an ambiguous POST requires inspection;
             # it is not permission to submit another administrative command.
-            process = self.client.request('GET', '/process/' + pending['process'], base=self.endpoint)
+            process = safe_get(self.client, '/process/' + pending['process'], self.endpoint)
             if process['status'] in ('completed', 'failed', 'killed', 'stopped'):
                 break
             require(time.monotonic() < deadline, 'operator request still pending; next timer reconciles the same ID')
             time.sleep(3)
         import urllib.parse
         result_path = '/srv/battlecode/public/offload/operator-results/' + pending['request_id'] + '.json'
-        data = self.client.request('GET', '/filesystem/' + urllib.parse.quote(result_path, safe=''), base=self.endpoint, raw=True)
+        data = safe_get(self.client, '/filesystem/' + urllib.parse.quote(result_path, safe=''), self.endpoint, raw=True)
         response = json.loads(data)
         if not response['ok']:
             self.state['pending'] = None
@@ -140,8 +153,7 @@ class Relay:
             import urllib.parse
             expected_path = '/srv/battlecode/public/offload/' + archive_name
             require(plan['archive_path'] == expected_path and plan['archive_size'] <= 48 * 1024**2, 'unexpected download target')
-            data = self.client.request('GET', '/filesystem/' + urllib.parse.quote(expected_path, safe=''),
-                                       base=self.endpoint, raw=True)
+            data = safe_get(self.client, '/filesystem/' + urllib.parse.quote(expected_path, safe=''), self.endpoint, raw=True)
             require(len(data) == plan['archive_size'] and hashlib.sha256(data).hexdigest() == plan['archive_sha256'],
                     'transport checksum/size mismatch; remote originals retained')
             atomic_bytes(target, data, 0o600)  # File and directory fsynced before acknowledgement.

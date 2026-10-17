@@ -54,6 +54,23 @@ class StrategyTests(Harness):
         self.assertIsNone(result['candidate'])
         self.assertTrue(any('full-gate' in item for item in result['blockers']))
 
+    def test_external_handoff_prefers_readable_diverse_losses_without_exposing_holdouts(self):
+        alpha, _ = self.establish()
+        self.config['evaluation']['development_maps'] = ['dev-one','dev-two','dev-three']
+        for i, (map_name, outcome) in enumerate([
+                ('dev-one','B'), ('dev-two','B'), ('dev-three','B'),
+                ('dev-one','B'), ('dev-three','A'), ('unknown','B')]):
+            metadata = {'official_match_id':f'external-{i}', 'source_commit':alpha['commit_sha'],
+                        'submission_id':'own-upload', 'own_side':'A','outcome':outcome,
+                        'map_name':map_name,'official_patch':'other-patch',
+                        'file_sha256':{'observations.json':'fixture'},'annotation':'untrusted'}
+            self.arena.db.execute('INSERT INTO external_matches VALUES(?,?,?,?)',
+                                  (f'external-{i}',json.dumps(metadata),'/unused',i))
+        result = experiment_context(self.arena,'alpha')['external_observations']
+        self.assertEqual({item['map_name'] for item in result}, {'dev-one','dev-two','dev-three'})
+        self.assertTrue(all(item['outcome']=='B' and item['available_diagnostics']==['observations.json'] for item in result))
+        self.assertTrue(all(item['official_patch']=='other-patch' and 'annotation' not in item for item in result))
+
     def test_full_evaluation_budget_falls_back_to_screen_without_stalling(self):
         self.establish()
         self.config['evaluation']['full_evaluation'] = True

@@ -156,8 +156,9 @@ completion artifacts; unknown outcomes never become invented losses.
 
 From the operator machine, compact live status needs no console access:
 `python3 ops/blaxel.py run 'python3 /opt/battlecode/ops/loop-status.py'`.
-Continuous dispatch requires fresh evaluation feedback; a NO_CHANGE result
-consumes that feedback and idles instead of repeatedly invoking the model.
+Improvement is paced once per hour per bot, including unchanged feedback, as
+requested by the owner. A blocked or still-evaluating lane remains parked; no
+additional model call is made merely to poll it.
 
 Daily backups are consistent SQLite snapshots plus manifests, **not complete
 off-host replay backups**. Download/copy the referenced source, replay and lock

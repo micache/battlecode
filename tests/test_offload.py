@@ -3,7 +3,7 @@ import importlib.util
 import json
 from pathlib import Path
 import shutil
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from test_arena import Harness, PROJECT
 from arena.common import ArenaError, read_json
@@ -17,6 +17,18 @@ spec.loader.exec_module(operator)
 
 
 class OffloadTests(Harness):
+    def test_transient_read_retry_never_retries_permission_denial_or_writes(self):
+        client = Mock()
+        client.request.side_effect = [RuntimeError('synthetic connection loss'), {'status':'completed'}]
+        with patch.object(operator.time, 'sleep'):
+            self.assertEqual(operator.safe_get(client, '/process/existing-id', 'https://test'), {'status':'completed'})
+        self.assertTrue(all(call.args[0] == 'GET' for call in client.request.call_args_list))
+        client.reset_mock()
+        client.request.side_effect = operator.APIError(403, 'synthetic denial')
+        with self.assertRaises(operator.APIError):
+            operator.safe_get(client, '/process/existing-id', 'https://test')
+        self.assertEqual(client.request.call_count, 1)
+
     def setup_plan(self):
         self.establish()
         job = self.arena.db.one("SELECT * FROM match_jobs WHERE state='COMPLETED' LIMIT 1")
