@@ -1,0 +1,3 @@
+PASS: visible living in-range strict minimum-health scan, stable ties, availability guard, fresh post-move selection.
+PASS: accepted source and six unsafe mutations rejected; only camp target selection differs from accepted.
+Source invariants only; C++ execution, fuel and strategic value require trusted checks/evaluation.

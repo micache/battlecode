@@ -79,11 +79,33 @@ bool attack_if_in_range(const Target& target) {
     return true;
 }
 
+// Finish the lowest-health legal camp first; preserve vision order on ties.
+bool attack_weakest_camp_in_range() {
+    auto& me = cambc::self();
+    if (!me.can_attack())
+        return false;
+    const auto attack_tiles = me.attack_tiles();
+    const auto camps = cambc::vision::camps();
+    const cambc::camp* weakest = nullptr;
+    float weakest_health = 0;
+    for (const auto& camp : camps) {
+        if (!camp.is_visible())
+            continue;
+        const auto health = camp.health();
+        if (health <= 0 || !attack_tiles.is_set(camp.position()))
+            continue;
+        if (!weakest || health < weakest_health) {
+            weakest = &camp;
+            weakest_health = health;
+        }
+    }
+    return weakest && attack_if_in_range(*weakest);
+}
+
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
-    for (const auto& camp : cambc::vision::camps())
-        if (attack_if_in_range(camp))
-            return;
+    if (attack_weakest_camp_in_range())
+        return;
 
     // Union every group's spawn tiles except visibly respawning groups.
     cambc::bitboard goals;
@@ -98,9 +120,7 @@ void farm_camps() {
 
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
-        for (const auto& camp : cambc::vision::camps())
-            if (attack_if_in_range(camp))
-                return;
+        attack_weakest_camp_in_range();
 }
 
 void Bot::play_turn() {
