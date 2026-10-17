@@ -1,80 +1,81 @@
 # Operational summary
 
-## task-fd26454d738d4d479e000a4a2377dd16 — one Jungle emblem before Power
+## task-5321a305ac964ce0a15f05e08b7cc449 — tribute on arrival
 
-Playbook C (item value). Hypothesis: completing one Jungle emblem in the existing
-chosen stat before buying Power shards reduces incoming camp damage by 30%,
-reducing farming deaths/recall pressure and improving collected/submitted gems.
-Falsifiable policy expectation: buy only the missing Jungle shards up to one
-emblem; once owned, buy no more Jungle shards and resume baseline Power shopping.
-When enough gold remains after completion, buy Power shards on the same turn.
-The chosen stat and PRNG sequence remain unchanged.
+Playbook C (banking). Hypothesis: starting tribute immediately after a successful
+banking move reaches an unlocked altar removes one idle owner turn per eligible
+arrival, improving banking throughput. Falsifiable expectation: on an unobstructed
+arrival with gems and an unlocked altar in range, the channel starts in that turn,
+rather than on the next turn. Failed moves, distant arrivals and locked altars
+must not trigger a submission. No change to pre-movement combat/recall priority.
 
-Identity: beta; bot/beta; task-fd26454d738d4d479e000a4a2377dd16.
-HEAD/input d188b69f212ec06e245fadf5fded4014895f4027.
+Identity: beta; bot/beta; task-5321a305ac964ce0a15f05e08b7cc449.
+HEAD/input 3b2d729de06f1a67aed3f4870f712b9414b9353e.
 Accepted edit start 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9; source
 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-All six current source files matched accepted Git blobs before editing; Git and
-the trusted accepted snapshot preserve that baseline. Initial diff from HEAD is
-accepted-source restoration. Engine/SDK 2.1.6, lock
+All six source files matched accepted Git blobs before editing. Existing Git and
+trusted accepted snapshot preserve the baseline; initial diff from HEAD is the
+trusted accepted-source restoration, not unfinished worker edits.
+Engine/SDK 2.1.6; lock
 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Installed header SHA256 matched handoff
-90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-Documentation unchanged per handoff. Separate organizer AGENTS.md is absent.
+suite historical-panels-v1. Documentation unchanged per handoff; routine targeted
+SDK/API reads only. Separate organizer AGENTS.md remains absent.
 
-Latest candidate task-911f8f886a814670b1be3cbd00d28b33 is PUBLISHED/evaluated,
-not awaiting evaluation. Prior paused work remains preserved as described in
-archived notes; no unfinished patch was applied or discarded. Previous operational
-summary archived under archive/through-task-911f8f886a814670b1be3cbd00d28b33.md.
-Prior hypotheses in supplied history/archives were inspected; no Jungle-shopping
-experiment is recorded there. Existing spawn-recovery fixes were already tried.
+Prior task-fd26454d738d4d479e000a4a2377dd16 is PUBLISHED and evaluated, not
+awaiting evaluation. Paused task-8f47664e32194d58986ac9ee549f9482 is recorded as
+infrastructure failure before task reads, source unchanged; no patch to recover.
+Earlier recovery artifacts remain preserved. Previous notes archived under
+archive/through-task-fd26454d738d4d479e000a4a2377dd16.md. Reviewed recent history
+and archive hypotheses: immediate tribute BEFORE combat was tried; this change
+only removes the idle arrival turn AFTER a banking move.
 
-Evidence: evaluation 47a9db4891a456de4438c8208e739b10fceba47ca2d289c23b1a203e75cadf40,
-commit d188b69f212ec06e245fadf5fded4014895f4027, source
-bb36a8534fcffa5fed63040a010a4149ddf21061ff20d32601a753e874096b77:
-INCONCLUSIVE/provisional-three-map-wiring, 6W/18L, zero faults/missing/unknown.
-Collision loss a0fce2951d8808d370e2d3461597876224d1691acec89e908e317b8c658738b1,
-side B: 36 deaths, 990 collected, 814 submitted gems.
-Collision loss 2e5024c5e697c8be7f6948a91b50a02e656950d61a1e4689ad522480e2f2a61a,
-side A: 15 deaths, 462 collected, 352 submitted gems.
-These strategic losses evaluate the collector-filter candidate, not accepted or
-this experiment. No bot/arena failure is evidenced. Death causes, recall counts
-and per-turn damage are unavailable. Aggregate deaths do not prove a camp-damage
-cause. Reproducible accepted-source pattern: buy_items buys only Power shards,
-so every farmer permanently lacks the Jungle passive.
+Evidence: evaluation
+527828ed31cb19579d6997cecb66dcb8198379c696d2cb5389516d31f1fb2377,
+commit 3b2d729de06f1a67aed3f4870f712b9414b9353e, source
+a31a67e3aa3738afd7d36e4fc99d490081d3c2ba599bc8701c2c0cf70a5697b1:
+INCONCLUSIVE/provisional-three-map-wiring, 10W/14L, zero faults/missing/unknown.
+Collision losses: 49dab264af762594507b5a104a3fabf5d50326a5ad8219f911feb71caf291186
+(side A) and 3fb8148e98431f4a4021a3cd6e055319b3a80d8509849235eafa14bf3824c970
+(side B). Aggregate development means: 816.33 collected, 657.33 submitted gems.
+These evaluate the Jungle-shopping candidate, not this restored accepted source.
+Both final.json slices expose zero faults; their default slices are incomplete,
+so no additional final totals or game completion inferred from them. The supplied
+evaluation reports completed games. Losses motivate throughput work but do not
+prove arrival delays caused them. Reproducible source defect: accepted banking
+calls move_towards_closest(goals), then unconditionally returns without tribute.
 
-Contracts: GameRules.md:286–303: five matching shards automatically combine;
-Jungle reduces camp damage 30%; Power instead grants one extra stat shard.
-BOT_REFERENCE.md section 4: duplicate family passives do not stack.
-Installed cambc.h:2171–2204: item metadata includes combination count/result;
-3550–3563: can_buy validates shop/affordability; 3604–3611: item_count indexed by
-item type; 3643–3649: buy accepts an equipment count.
+Contracts: GameRules.md:116,223-230 permits movement before starting a channel;
+starting-turn end ticks tribute. BOT_REFERENCE.md sections 3/6 require refreshed
+observations after moving. Installed cambc.h:3687-3694 submit_gems returns void;
+3728-3732 move_towards can fail without reaching its destination. No can_submit
+helper is exposed. Existing channel/death/action guards remain in place.
 
-Implementation: buy_items inspects current inventory and SDK combination metadata.
-Before the existing Power purchase, cap Jungle purchases at the remaining shard
-count only if no resulting emblem is owned. Both purchases retain nonzero count
-and can_buy guards. Power shopping re-reads gold after Jungle spending. No new
-persistent state or shared-memory writes; field decisions and RNG unchanged.
+Implementation: after successful banking movement, iterate static altar tiles,
+query current me.position() and current has_altar_lock(), then submit once and
+return if in SDK submission range. The failed/distant/locked fallback still yields.
+No new state, shared-memory writes, PRNG calls or routing changes. bot.h remains
+the prepared accepted restoration (it differed from input HEAD before this task).
 
-Focused validation: `python3 experiments/beta/check_jungle_shopping.py` passed,
-exit 0. Report: task-fd26454d738d4d479e000a4a2377dd16/jungle-shopping-invariant.txt
-(relative to this directory). It checks the single-emblem/missing-shard cap,
-affordability and permission guards, unchanged chosen stat, preserved Power
-shopping and all other source against accepted blobs. Accepted and six guard/cap/
-stat mutations are rejected. This is a source invariant, not an engine simulation.
-`git diff --check` passed, exit 0.
+Focused check: `python3 experiments/beta/check_arrival_tribute.py` PASSED, exit 0.
+Report: task-5321a305ac964ce0a15f05e08b7cc449/arrival-tribute-invariant.txt.
+Checks successful-movement gating, fresh position/range/lock checks, single-submit
+return, unchanged behavior elsewhere; rejects accepted source and five mutations.
+This is a source invariant, not engine simulation. `git diff --check` PASSED,
+exit 0.
 Trusted command: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED, exit 0; exact source
-a31a67e3aa3738afd7d36e4fc99d490081d3c2ba599bc8701c2c0cf70a5697b1.
-Report: .agent/check-task-fd26454d738d4d479e000a4a2377dd16.json.
-Reference: check:task-fd26454d738d4d479e000a4a2377dd16:a31a67e3aa3738afd7d36e4fc99d490081d3c2ba599bc8701c2c0cf70a5697b1.
+PASSED, exit 0; checked source
+024ec4553ece7e6085c27b673697af98c49bbfa4adfd6f4c7fee0bb1333b837f.
+Report: .agent/check-task-5321a305ac964ce0a15f05e08b7cc449.json.
+Reference: check:task-5321a305ac964ce0a15f05e08b7cc449:024ec4553ece7e6085c27b673697af98c49bbfa4adfd6f4c7fee0bb1333b837f.
 Smoke match IDs:
-f10b4986278786c29c5e9c9e213cffd38f12b53e1b0c48adaffdc2bdf61c329b,
-d35d680ffe05d58149ff26dfa898276ce6f87ddc7da36f32a2e05111105b3055.
-Wrapper PASSED establishes trusted validation, not completed-game outcomes,
-measured fuel headroom, purchase traces or strategic improvement.
-Uncertainty: sacrificing one Power bonus shard may weaken combat/clear speed;
-Focus builds still lack spell use. Early deaths may precede the 150-gold emblem.
-No measured change in damage, recall pressure, fuel headroom or win rate yet.
-Next: supervisor validates/evaluates the exact checked source against accepted;
-compare deaths, collected/submitted gems and recall pressure if telemetry permits.
+e75d5e439838e1ed0b1929d390c6be4964353f6b5d8cd4517103503f2fc42571,
+c8faac47a9d06c8753c9007d74e3ed92e0ed1f68247e3c85b2fa2bc9584a7e30.
+Wrapper PASSED establishes trusted compilation/smoke validation, not completed
+full games or measured channel timing/strategic improvement.
+Uncertainty: no per-turn arrival/channel trace is available; engine smoke cannot
+establish improved throughput or win rate. Earlier starts also change combat
+exposure and may lock movement one turn sooner. Same-turn tribute after ranged
+movement is not separately traced by the smoke summary. No fuel-headroom measurement claimed.
+Next: validate the focused patch, then supervisor evaluates the exact checked
+source against accepted; compare submitted gems and arrival-to-tribute delay if
+telemetry permits.

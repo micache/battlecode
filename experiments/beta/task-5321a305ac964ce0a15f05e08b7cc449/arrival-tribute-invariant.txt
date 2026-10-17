@@ -1,0 +1,1 @@
+PASS: successful banking arrival checks fresh position, range and lock; starts tribute before returning. Accepted source and five guard/staleness/return mutations rejected. All other source matches accepted. Source invariant only; engine timing and strategic value remain unmeasured.

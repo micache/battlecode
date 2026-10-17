@@ -1,7 +1,6 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
-#include <algorithm>
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -61,18 +60,6 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    // Complete one Jungle emblem, then keep scaling with Power shards.
-    const std::array jungle_items{cambc::item_type::jungle_shard_of_strength,
-        cambc::item_type::jungle_shard_of_focus, cambc::item_type::jungle_shard_of_health};
-    const auto jungle = jungle_items[chosen_stat];
-    const auto inventory = me.item_count();
-    const auto emblem = jungle.result();
-    const auto required = jungle.combine_count();
-    if (emblem && inventory[*emblem] == 0 && inventory[jungle] < required) {
-        const unsigned count = std::min(me.gold_count() / jungle.cost(), required - inventory[jungle]);
-        if (count && me.can_buy(jungle, count)) me.buy(jungle, count);
-    }
-
     const std::array items{cambc::item_type::power_shard_of_strength,
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
@@ -166,7 +153,16 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        move_towards_closest(goals);
+        // Start the countdown on arrival, using position and locks refreshed after movement.
+        if (move_towards_closest(goals)) {
+            for (auto altar : cambc::map::altars().positions()) {
+                if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
+                    && !cambc::vision::has_altar_lock(altar)) {
+                    me.submit_gems(altar);
+                    return;
+                }
+            }
+        }
         return;
     }
 
