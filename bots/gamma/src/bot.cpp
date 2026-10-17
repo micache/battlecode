@@ -85,21 +85,15 @@ void farm_camps() {
         if (attack_if_in_range(camp))
             return;
 
-    // Keep capture/exploration goals, but do not stop at a killed member of a live group.
+    // Union every group's spawn tiles except visibly respawning groups.
     cambc::bitboard goals;
     goals.clear();
     const auto visible = cambc::vision::visible_tiles();
-    const auto living_camps = cambc::vision::camp_tiles();
     for (const auto& group : cambc::map::camp_groups()) {
-        auto spawns = group.spawn_tiles();
-        if (!(spawns & visible).is_empty()) {
-            const auto state = group.state();
-            if (std::holds_alternative<cambc::map::camp_group_respawning>(state))
-                continue;
-            if (std::holds_alternative<cambc::map::camp_group_alive>(state))
-                spawns &= living_camps | ~visible;
-        }
-        goals |= spawns;
+        const bool group_visible = !(group.spawn_tiles() & visible).is_empty();
+        if (group_visible && std::holds_alternative<cambc::map::camp_group_respawning>(group.state()))
+            continue;
+        goals |= group.spawn_tiles();
     }
 
     // Fresh vision after movement may reveal a camp already in range.
@@ -135,9 +129,13 @@ void Bot::play_turn() {
     if (at_spawn)
         buy_items();
 
-    // Recall immediately when badly hurt away from spawn.
+    // Make retreat progress even when incoming damage repeatedly interrupts recall.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
-        me.recall();
+        const auto spawn = cambc::map::spawn_region(team::ally);
+        move_towards_closest(spawn);
+        // Refresh position after movement; arriving on spawn needs only a turn end.
+        if (!spawn.is_set(me.position()))
+            me.recall();
         return;
     }
 

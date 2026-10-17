@@ -1,0 +1,20 @@
+{
+  "kind": "Source invariants only; no engine timing, movement or strategic gain established",
+  "base_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "bot_cpp_sha256": "a5829b73a79d5e846a0abb0ef93ecca9e6f8302ed5bce8aca5972fa08c9ddfab",
+  "checks": {
+    "accepted_reproduces_stationary_recall_initiation": true,
+    "candidate_attempts_one_spawnward_move_before_recall": true,
+    "only_recovery_branch_behavior_changes": true,
+    "existing_channels_preserved_before_recovery": true,
+    "unchanged_bot.h": true,
+    "unchanged_main.cpp": true,
+    "unchanged_draft.h": true,
+    "unchanged_draft.cpp": true,
+    "unchanged_random.h": true,
+    "dispatcher_still_yields_after_fallback_catches": true,
+    "diff_check": true
+  },
+  "diff_check_exit_code": 0,
+  "passed": true
+}
