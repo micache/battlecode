@@ -1,13 +1,13 @@
 #pragma once
 
-// Per-champion state survives between turns. Pick one stat and keep buying it.
+// Per-champion state survives between turns.
 class Bot {
-    int chosen_stat = -1;
+    bool initialized = false;
 
-    // Spend only on power shards of the randomly chosen stat.
+    // Spend only on Power shards of Strength for the basic-attack policy.
     void buy_items();
 
 public:
-    // Priorities: shop and recall, bank carried gems, fight if blocked/empty, farm.
+    // Priorities: shop and recall, attack enemies in range, bank gems, then farm.
     void play_turn();
 };

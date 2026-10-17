@@ -1,7 +1,6 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
-#include <array>
 #include <iostream>
 #include "random.h"
 #include <cstdint>
@@ -60,9 +59,8 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    const std::array items{cambc::item_type::power_shard_of_strength,
-        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
-    const auto item = items[chosen_stat];
+    // This policy relies on basic attacks, which scale with Strength.
+    const auto item = cambc::item_type::power_shard_of_strength;
     const unsigned count = me.gold_count() / item.cost();
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
@@ -104,9 +102,9 @@ void farm_camps() {
 }
 
 void Bot::play_turn() {
-    // Initialise this champion's build and read the draft message once.
-    if (chosen_stat < 0) {
-        chosen_stat = random_number(3);
+    // Read the draft message once for this champion.
+    if (!initialized) {
+        initialized = true;
         std::cout << "draft: " << std::string(reinterpret_cast<const char*>(cambc::draft_memory.data()), 11) << '\n';
     }
 
@@ -135,7 +133,12 @@ void Bot::play_turn() {
         return;
     }
 
-    // Carriers bank before fighting: ranged attacks can consume their movement.
+    // Attack the first enemy champion already in range.
+    for (const auto& enemy : cambc::vision::champions(team::enemy))
+        if (attack_if_in_range(enemy))
+            return;
+
+    // Bank any carried gems before farming.
     if (me.gem_count() > 0) {
         // Union all altar approach tiles: the field chooses the nearest reachable altar.
         cambc::bitboard goals;
@@ -148,19 +151,9 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        if (move_towards_closest(goals))
-            return;
-    }
-
-    // Champions without gems fight normally; blocked carriers retain an attack fallback.
-    // Query fresh vision because an unsuccessful move may reveal an obstruction.
-    for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy))
-            return;
-
-    // A failed bank route must not send a carrier to another camp.
-    if (me.gem_count() > 0)
+        move_towards_closest(goals);
         return;
+    }
 
     farm_camps();
 
