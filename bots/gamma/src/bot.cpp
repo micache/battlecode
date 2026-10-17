@@ -6,7 +6,6 @@
 #include "random.h"
 #include <cstdint>
 #include <span>
-#include <type_traits>
 #include <variant>
 
 using cambc::vec2;
@@ -70,38 +69,20 @@ void Bot::buy_items() {
 
 // Make one basic attack if the target is already in attack range.
 template<class Target>
-bool attack_if_in_range(const Target& target, bool before_movement) {
+bool attack_if_in_range(const Target& target) {
     auto& me = cambc::self();
     if (!me.can_attack() || !target.is_visible() || target.health() <= 0
         || !me.attack_tiles().is_set(target.position())) {
         return false;
     }
     me.attack(target);
-
-    // Walk-exclusive spells are only considered on the stationary attack paths.
-    if (before_movement && target.is_visible() && target.health() > 0
-        && me.can_cast() && !me.restrictions().contains(cambc::buff_restrictions::cast)) {
-        for (const auto& ability : me.abilities()) {
-            if (!ability.is_damage() || !ability.is_ready())
-                continue;
-            if constexpr (std::is_same_v<Target, cambc::camp>) {
-                if (!ability.can_target_camps()) continue;
-            } else {
-                if (!ability.can_target_enemies()) continue;
-            }
-            if (!ability.valid_tiles().is_set(target.position()))
-                continue;
-            ability.use(target);
-            break; // One bounded cast attempt; keep the basic attack as fallback.
-        }
-    }
     return true;
 }
 
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
     for (const auto& camp : cambc::vision::camps())
-        if (attack_if_in_range(camp, true))
+        if (attack_if_in_range(camp))
             return;
 
     // Union every group's spawn tiles except visibly respawning groups.
@@ -118,7 +99,7 @@ void farm_camps() {
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
         for (const auto& camp : cambc::vision::camps())
-            if (attack_if_in_range(camp, false))
+            if (attack_if_in_range(camp))
                 return;
 }
 
@@ -156,7 +137,7 @@ void Bot::play_turn() {
 
     // Attack the first enemy champion already in range.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
-        if (attack_if_in_range(enemy, true))
+        if (attack_if_in_range(enemy))
             return;
 
     // Bank any carried gems before farming.

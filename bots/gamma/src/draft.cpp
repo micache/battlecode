@@ -6,7 +6,7 @@
 #include "random.h"
 
 void play_draft() {
-    // Choose randomly from the champions our team has not picked.
+    // Open with automatic splash damage; keep later picks random and distinct.
     const auto chosen = cambc::draft::current_draft(cambc::team::ally);
     std::vector<cambc::champion_draft> available;
     for (int i = 0; i < 11; ++i) { // Released champions only.
@@ -16,5 +16,7 @@ void play_draft() {
 
     // Draft memory starts at byte zero and is copied to each champion.
     cambc::draft_memory = std::string_view("hello world");
-    cambc::draft::pick(available.at(random_number(available.size())));
+    // Preserve one RNG draw per draft turn, including the deliberate opener.
+    const auto fallback = available.at(random_number(available.size()));
+    cambc::draft::pick(chosen.empty() ? cambc::champion_draft::varg : fallback);
 }

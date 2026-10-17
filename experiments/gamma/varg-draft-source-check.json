@@ -1,0 +1,16 @@
+{
+  "kind": "source isolation and finite legal-draft model, not engine execution",
+  "draft_cpp_sha256": "ada9c4548f31d9970933ea286c19db5d22dca8616c8f26c45116398d798bfb1c",
+  "legal_histories_checked": 9032,
+  "checks": {
+    "only_draft_selection_changed": true,
+    "every_legal_history_has_only_available_outputs": true,
+    "exactly_one_random_draw_retained": true,
+    "bot.cpp_matches_accepted": true,
+    "random.h_matches_accepted": true,
+    "bot.h_matches_accepted": true,
+    "main.cpp_matches_accepted": true,
+    "draft.h_matches_accepted": true
+  },
+  "passed": true
+}

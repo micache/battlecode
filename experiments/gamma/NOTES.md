@@ -1,77 +1,76 @@
 # Gamma operational notes
 
-## task-1f1fb7562f97468e81a02dc8c327f7b5 — stationary direct damage
+## task-a1a0fd0bf4a7437389ce07280d8aceee — Varg opening draft
 
-- Playbook D. Hypothesis: one ready unit-targeted direct-damage spell after a
-  stationary basic on a surviving target should speed clearing/fights and increase
-  submitted gems versus accepted source without new bot faults.
-- Falsifiable policy prediction: at most one cast, after a successful basic only;
-  recheck visibility before target health/position, cast readiness, target category,
-  range and cast restrictions. Never cast from the post-movement farming path.
-  No casts on killed targets, no AoE/CC/reset spells, no chase or banking changes.
-  Matched mean submitted gems must rise to support objective benefit; wins govern
-  promotion. This invocation performs no strategic evaluation.
-- Identity verified: bot/gamma; HEAD/input e6f504329b8c234b68b39fd90c25a0bc96560071;
-  task/base match .agent/entry.json. All six edit-start files match accepted
-  commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d and trusted per-file hashes.
-  Base source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  Initial bot.cpp/bot.h differences from HEAD are the trusted accepted restore;
-  bot.h remains byte-identical to accepted. Accepted source is preserved in Git
-  and the trusted snapshot. No unfinished task or candidate awaiting evaluation.
-- Engine/SDK 2.1.6, lock
+- Playbook E. Hypothesis: deliberately drafting Varg first gives the existing
+  basic-attack policy a guaranteed splash attacker, improving grouped-camp
+  clearing and increasing collected and submitted gems versus accepted source.
+- Falsifiable policy prediction: first legal pick is Varg; later picks retain the
+  existing random, nonduplicate selection. Each draft turn consumes one RNG draw
+  as before, writes the same draft message and deliberately submits one pick.
+  All map-dependent 3–5-pick drafts remain legal. Gameplay is unchanged.
+- Objective prediction: matched mean collected and submitted gems must increase
+  without new bot faults to support the mechanism; actual wins govern promotion.
+  No improvement is claimed from source or smoke checks alone.
+- Identity: task/entry match user; branch bot/gamma, HEAD/input
+  c5c3f4d0e5d5a8b3f9a05ae29643008d6c60e83a. All six edit-start files match
+  accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d and trusted hashes.
+  Base 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+  Initial dirty bot.cpp is the trusted accepted restore. Accepted Git/snapshot
+  preserve the base. Latest candidate evaluated; no unfinished/pending candidate.
+- Engine/SDK 2.1.6; lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-  suite historical-panels-v1. Supplied documentation and installed header hashes
-  match unchanged handoff; used compact reference and narrow API/SDK sections.
-- Latest evaluation 50d16b89fbc518376766d113845a3e12aac10bd1e09a1aa4b72bd46ceb128ade:
-  INCONCLUSIVE, provisional-three-map-wiring, 7W/17L, delta 0.125,
-  faults/missing/unknown reliability all zero. Evaluates commit HEAD above,
-  source 2ed65cd1577a4731dc4706f184e838cd899e5550af669036ebcd363b20f1b10e,
-  not this edit-start. Continuous self-play pending counts are separate evidence.
-- Completed development loss examples (collision) from that evaluated source:
-  A: 6557ce988674ae2cecb90ad6338332bd19554ae87ec301991584bf499373389d,
-  round 941, 286 vs 1012 tribute, 14 body deaths; Cassi contributes 66 tribute
-  and 4,470 monster damage; Marcella 198 tribute and 10,899 monster damage.
-  B: 00044ef58df5f93c73c71ffde094fbf400699c099b9ec5d27056a6a236c3da86,
-  round 1286, 462 vs 1012 tribute, 35 body deaths. Both sides zero faults.
-  Saved complete final exports (two 8KiB-offset slices each, lengths verified)
-  in direct-damage-evidence.json. Final exports say engineVersion 0.0.1;
-  discrepancy versus trusted CLI/SDK 2.1.6 remains unresolved. Deaths include
-  linked bodies. Totals motivate damage/throughput work, not causal proof.
-- Mechanism: accepted helper uses only one basic and never casts. GameRules.md
-  430-448, 574-600, 636-664 specify Cassi/Stellar/Marcella unit damage, 2x Focus,
-  eight-tick cooldown, no walking. Their starting spell damage is 140/200/100.
-  SDK cambc.h 2497-2530, 3164-3251, 3305-3328, 3861-3868 establishes damage kind,
-  target-category checks, geometric-only range masks, typed use(), and readiness.
-  No reconstructed damage formula used in the runtime policy.
-- Change: helper accepts explicit before_movement flag, spends a ready direct
-  damage ability after a surviving stationary basic, checks restrictions/category/
-  range, and stops after one attempt. Post-movement camp attack passes false.
-  At most two slot inspections, one basic and one spell per helper. Existing
-  channel guards, exception fallback and official end_turn dispatcher remain.
-  No persistent/shared state or changed RNG, draft, shop, navigation priorities.
-- Distinct from earlier attack-reset experiment: uses unit damage, does not
-  restore attack allowances or issue a second basic. Prior item/recall changes
-  are not imported; experiments are not pooled across source revisions.
-- Focused validation: python3 experiments/gamma/check_direct_damage.py PASSED,
-  exit 0; direct-damage-source-check.json, 13 static safety/scope invariants.
-  Source checks only, not an engine action/fuel fixture. git diff --check PASSED.
+  suite historical-panels-v1. Documentation unchanged per handoff. Compact
+  reference, Playbook E and narrow roster/draft SDK sections consulted.
+- Development context: evaluation
+  322271ef54566a308ed0a314061debfb504f4872b7353c8394aaf57e78cdc1ee,
+  INCONCLUSIVE / provisional-three-map-wiring, 8W/16L, matched delta 1/6,
+  zero fault/missing/unknown-reliability matches. It evaluates HEAD above,
+  source 44e3b60c784fbfa3466e5a3e580c089a9b460c7eaf638d9c7056d9e19b67c48c,
+  not the accepted edit-start. Self-play pending counts are separate evidence.
+- Two completed collision losses from that evaluated source, with no Varg picks:
+  A b020dfa9636c4ff425032ef0dc0ed9259ea89b2b6fe4c3708f2bf143c1c28295:
+  draft [Ryth, Marcella, Prism], round 870, 418 collected / 264 submitted,
+  opponent 1012 submitted, both sides zero faults.
+  B e5196c5fa551501a9e525d3db4e4094a50a285ae2692482c5701d2973334a029:
+  draft [Cassi & Issac, Tavi, Prism], round 1047, 506 collected / 286 submitted,
+  opponent 1034 submitted, both sides zero faults.
+  Complete final exports, byte lengths verified, saved in varg-draft-evidence.json.
+  These show economy losses and absent splash, not causality or stall frequency.
+  Final engineVersion 0.0.1 differs from trusted CLI/SDK 2.1.6; unresolved.
+- Source mechanism: accepted drafts randomly from all 11 choices and basic-only
+  play makes at most one attack. GameRules.md Varg section specifies automatic
+  Strength splash onto other enemies/camps within radius one, without hitting
+  the primary twice. Installed header has draft Varg=9 / body Varg=10 and
+  current_draft() returning completed picks. No damage formula recreated.
+- This is the first draft-composition experiment in retained history; previous
+  ability/shop/recall/banking changes are not combined. Gameplay remains accepted.
+- Uncertainty: Varg may lose travel time as melee, splash needs clustered targets,
+  replacing another pick may reduce total output, and random later compositions
+  change when Varg is removed from their pool. Smoke cannot establish utility.
+- Change: draft.cpp chooses Varg when completed ally picks are empty, otherwise
+  selects the existing nonduplicate random fallback. The fallback RNG draw is
+  still consumed on the first turn. No gameplay, state, memory layout, policy
+  threshold, path search, abilities, item or fuel-setting changes.
+- Regression: `python3 experiments/gamma/check_varg_draft.py`, PASSED, exit 0;
+  varg-draft-source-check.json. Source isolation proves the unchanged available
+  pool and checks all 9,032 legal histories up to the fifth pick with every
+  fallback choice. Other five source files match accepted. This is a finite
+  draft model/source check, not an engine draft fixture or fuel measurement.
+  `git diff --check`, PASSED, exit 0.
 - Trusted compilation/smoke:
   `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
-  PASSED, exit 0. Checked source
-  44e3b60c784fbfa3466e5a3e580c089a9b460c7eaf638d9c7056d9e19b67c48c.
-  Report .agent/check-task-1f1fb7562f97468e81a02dc8c327f7b5.json;
-  reference check:task-1f1fb7562f97468e81a02dc8c327f7b5:44e3b60c784fbfa3466e5a3e580c089a9b460c7eaf638d9c7056d9e19b67c48c.
-  Smoke IDs 5f8e0ea9785a7d37144a3a98e97330f00c1efffb998b0210d6416d59a236cad3
-  and c23834d61df6b2c721f83b90ed406c6c368f7c41a3deca82ffc3857116fffc90.
-  Completion, scores and fuel telemetry absent/unknown; no game outcome inferred.
-  READY_FOR_EVAL means a checked candidate, not measured improvement.
-- Uncertainty: cooldown may be more valuable against a later target; extra damage
-  need not improve collection or tribute. Disabled post-move casts miss legal
-  opportunities on later variants by design. No measured fuel headroom or
-  strategic gain. Recall interruptions and spawn healing omission remain.
-- Next: supervisor evaluates the exact checked candidate against accepted source
-  on frozen development cases. If unsupported, inspect clearing/capture delays
-  before widening spell selection. No worker evaluation, publication or agents.
+  PASSED, exit 0. Exact checked source
+  cf45a24a06fc9892ff1f777432b9dc90913169d58740bebac89385b657718f51.
+  Report .agent/check-task-a1a0fd0bf4a7437389ce07280d8aceee.json;
+  check:task-a1a0fd0bf4a7437389ce07280d8aceee:cf45a24a06fc9892ff1f777432b9dc90913169d58740bebac89385b657718f51.
+  Smoke IDs 1b6c98c5c1d24797fa4b83f584beee9cc1a5903f1d5516d999c809ff4cc589ba
+  and a9a93bc2feb7861abe6702c38d5eb3de9adb2a37437fefb8dfd6f7b84374d7f0.
+  Completion, scores and fuel telemetry absent/unknown. No outcomes inferred.
+  READY_FOR_EVAL means a checked candidate, not demonstrated improvement.
+- Next: supervisor evaluates the checked cf45a24a source versus accepted on frozen
+  development cases. If unsupported, inspect map-specific camp grouping before
+  considering another composition. No worker publication, evaluation or agents.
 
 ## Bootstrap documentation review (2026-10-17)
 
