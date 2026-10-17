@@ -125,11 +125,15 @@ def handoff(arena, bot, accepted, latest):
     sdk = {'cpp_header': str(Path(template) / 'sdk/cpp/cambc.h') if template else None,
            'cpp_header_sha256': lock.get('sdk_cpp_sha256'), 'engine_lock_hash': arena.adapter().lock_hash}
     history = task_history(arena, bot)
-    previous = (json.loads(arena.db.one('SELECT envelope FROM tasks WHERE id=?',
-                                      (history['entries'][0]['id'],))['envelope']) if history['entries'] else {})
+    # A dispatched/blocked job may never have read its files. Only a valid,
+    # completed experiment can establish the routine-review manifest.
+    prior = arena.db.one("SELECT id,envelope FROM tasks WHERE bot_id=? AND state IN ('PUBLISHED','NO_CHANGE') "
+                         "AND result IS NOT NULL ORDER BY created DESC LIMIT 1", (bot,))
+    previous = json.loads(prior['envelope']) if prior else {}
     old_docs = previous.get('feedback', {}).get('handoff', {}).get('documentation_sha256')
     old_sdk = previous.get('feedback', {}).get('handoff', {}).get('sdk', {})
     return {'protocol_version': 1, 'documentation_sha256': documentation,
+            'documentation_review_basis_task': prior['id'] if prior else None,
             'documentation_changed_or_unrecorded': old_docs != documentation or old_sdk != sdk, 'sdk': sdk,
             'edit_start': {'commit': accepted['commit_sha'], 'source_hash': accepted['source_hash'],
                            'source_file_sha256': tree_manifest(Path(accepted['snapshot']) / 'src')},

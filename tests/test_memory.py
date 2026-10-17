@@ -92,6 +92,8 @@ class MemoryTests(Harness):
     def test_brief_preserves_identity_and_targets_routine_reading(self):
         self.establish()
         first = new_task(self.arena, 'alpha')
+        handle_request(self.arena, 'alpha', {'operation':'worker-finished', 'payload':{
+            'task_id':first['task_id'], 'state':'NO_CHANGE', 'worker_result':self.result(first, 'NO_CHANGE')}})
         second = new_task(self.arena, 'alpha')
         text = brief(second)
         self.assertIn(second['task_id'], text)
@@ -101,6 +103,15 @@ class MemoryTests(Harness):
         self.assertIn(first['task_id'], text)
         self.assertLess(len(text.encode()), 10000)
         self.assertIn('Complete the bootstrap/changed-document review', brief(first))
+
+    def test_blocked_bootstrap_does_not_count_as_completed_document_review(self):
+        self.establish()
+        first = new_task(self.arena, 'alpha')
+        handle_request(self.arena, 'alpha', {'operation':'worker-finished', 'payload':{
+            'task_id':first['task_id'], 'state':'PAUSED', 'worker_result':self.result(first)}})
+        second = new_task(self.arena, 'alpha')
+        self.assertTrue(second['feedback']['handoff']['documentation_changed_or_unrecorded'])
+        self.assertIsNone(second['feedback']['handoff']['documentation_review_basis_task'])
 
     def test_sdk_change_requires_review_and_brief_signals_external_evidence(self):
         self.establish()
