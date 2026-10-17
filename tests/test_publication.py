@@ -58,6 +58,7 @@ class PublicationTests(Harness):
         def invoke(args, attempt, directory, timeout, env):
             self.assertEqual(args[0], '/synthetic/claude')
             self.assertIn('--restricted', args)
+            self.assertEqual(args[-2], '--')
             self.assertNotIn('--dangerously-skip-permissions', args)
             (directory / 'stdout.log').write_text(json.dumps({'type':'result', 'subtype':'success',
                                                            'is_error':False, 'structured_output':result}) + '\n')

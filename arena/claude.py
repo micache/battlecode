@@ -69,7 +69,8 @@ def command(config, attempt, prompt):
         args += ['--add-dir', str(Path(sdk).parent)]
     if config.get('model'):
         args += ['--model', config['model']]
-    return args + [prompt]
+    # Variadic --tools/--add-dir must not consume the positional task prompt.
+    return args + ['--', prompt]
 
 
 def events(path):
