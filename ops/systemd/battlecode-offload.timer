@@ -1,0 +1,10 @@
+[Unit]
+Description=Keep arena worktree archives offloaded to this operator computer
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

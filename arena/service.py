@@ -317,6 +317,9 @@ class Arena:
         status = self.status()
         from .official import selection_status
         status['official_selection'] = selection_status(self)
+        status['local_offload'] = {'last_completed':self.db.get('offload_last_completed'),
+                                  'pending_batch':(self.db.get('offload_pending') or {}).get('batch_id'),
+                                  'retained_online':'replays/statistics/logs; only redundant project.zip worktrees move offline'}
         atomic_json(self.root / "public/status.json", status, 0o644)
         from .operations import acceptance_report
         acceptance_report(self)
@@ -365,7 +368,18 @@ class Arena:
         for path in sorted((self.root / "control").glob("request-*.json")):
             message = read_json(path)
             operation = message["operation"]
-            if operation in ("start", "pause"):
+            if operation in ('offload-plan', 'offload-ack'):
+                response_id = message.get('response_id')
+                import re
+                require(isinstance(response_id, str) and re.fullmatch('[a-f0-9]{32}', response_id), 'invalid operator response ID')
+                try:
+                    from .offload import prepare, acknowledge
+                    result = prepare(self) if operation == 'offload-plan' else acknowledge(self, message['payload'])
+                    response = {'ok':True, 'result':result}
+                except (ArenaError, OSError, ValueError, KeyError) as exc:
+                    response = {'ok':False, 'error':str(exc)}
+                atomic_json(self.root / 'public/offload/operator-results' / (response_id + '.json'), response)
+            elif operation in ("start", "pause"):
                 self.db.put("paused", operation == "pause")
             elif operation == "adapter-resume":
                 self.db.put("adapter_paused", False)

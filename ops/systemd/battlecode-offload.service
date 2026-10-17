@@ -1,0 +1,12 @@
+[Unit]
+Description=Verify local copies of arena worktrees before remote offload acknowledgement
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/micache/workspace/battlecode-arena-design
+ExecStart=/usr/bin/python3 /home/micache/workspace/battlecode-arena-design/ops/offload-local.py --max-batches 16
+UMask=0077
+NoNewPrivileges=true
+TimeoutStartSec=1h

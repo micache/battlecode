@@ -45,6 +45,10 @@ def archive_projects(arena, limit=8):
         old = Path(job['artifact'])
         base = arena.root / 'matches' / job['id']
         require(old.resolve().parent == base.resolve(), 'unexpected completed match path')
+        if (old / 'project-offload.json').exists():
+            from .offload import finish_cleanup
+            finish_cleanup(arena, job)
+            continue
         if (old / 'project-archive.json').exists():
             # Crash after publishing the new pointer but before removing redundancy.
             original = read_json(old / 'project-archive.json')['previous_directory']
