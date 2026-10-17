@@ -124,10 +124,14 @@ void Bot::play_turn() {
         || (!me.can_move() && !me.can_attack()))
         return;
 
-    // Shop before leaving spawn.
+    // Shop before leaving spawn. Recall arrives before end-of-turn healing,
+    // so an injured champion must stay here until recovery has happened.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
-    if (at_spawn)
+    if (at_spawn) {
         buy_items();
+        if (me.health() < me.max_health())
+            return;
+    }
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {

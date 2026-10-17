@@ -1,0 +1,10 @@
+{
+  "kind": "source-level regression; not an engine scenario or match",
+  "bot_cpp_sha256": "591f10767afb0624618cd7f3b326569d153b83391e2e2962ef2000228930525c",
+  "checks": {
+    "accepted_source_reproduces_missing_recovery_guard": true,
+    "candidate_yields_before_tactical_actions_while_injured_on_spawn": true,
+    "official_dispatcher_still_yields": true
+  },
+  "passed": true
+}
