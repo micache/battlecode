@@ -144,6 +144,39 @@ class PublicationTests(Harness):
         self.assertEqual(entry['head'], task['input_revision'])
         self.assertEqual(entry['attempts_root'], config['attempts'])
 
+    def test_old_branch_gets_current_skill_docs_and_override_without_scope_drift(self):
+        from arena.knowledge import DOCUMENTS, SKILL, verify_preparation
+        from arena.gitstore import diff_paths
+        bot, task = self.envelope()
+        config = self.owner_configs[bot]
+        Path(config['attempts']).mkdir()
+        attempt = make_attempt(config, task)
+        self.assertEqual((attempt / 'AGENTS.override.md').read_bytes(), (PROJECT / 'AGENTS.md').read_bytes())
+        self.assertEqual((attempt / '.agents/skills/battlecode-strategy/SKILL.md').read_bytes(),
+                         (PROJECT / SKILL).read_bytes())
+        for name in DOCUMENTS:
+            self.assertEqual((attempt / '.agent/knowledge' / name).read_bytes(), (PROJECT / name).read_bytes())
+        self.assertEqual(diff_paths(attempt), [])
+        verify_preparation(attempt, task)
+        override = attempt / 'AGENTS.override.md'
+        override.chmod(0o600)
+        override.write_text('weakened instructions')
+        with self.assertRaisesRegex(ArenaError, 'instructions were modified'):
+            verify_preparation(attempt, task)
+
+    def test_frozen_opponent_packet_has_exact_source_not_private_worker_state(self):
+        bot, task = self.envelope()
+        packet = read_json(task['strategy']['opponents']['manifest'])
+        for row in packet['opponents']:
+            self.assertEqual(tree_hash(row['path']), row['source_hash'])
+            self.assertEqual(sorted(p.name for p in Path(row['path']).rglob('*') if p.is_file()), ['main.cpp'])
+        frozen = json.dumps(packet, sort_keys=True)
+        other = 'beta' if bot == 'alpha' else 'alpha'
+        self.commit(other, 'opponent changed while agent thinks')
+        self.assertEqual(json.dumps(read_json(task['strategy']['opponents']['manifest']), sort_keys=True), frozen)
+        self.assertNotIn('NOTES.md', frozen)
+        self.assertNotIn('holdout', json.dumps(packet['opponents']))
+
     def test_operator_recovers_artifact_failure_without_another_model(self):
         from arena.protocol import encode_source
         from arena.publisher import recover_publication

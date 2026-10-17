@@ -54,13 +54,13 @@ Keep at most one evaluation running and one newer pending revision per bot. Neve
 The non-LLM worker publisher performs publication:
 
 1. Acquire the bot's single-writer lease and verify the expected remote branch tip.
-2. Create a private attempt workspace. Start the bot subtree from the last accepted source, even if the branch tip contains a rejected candidate. Retain the experiment history.
+2. Create a private attempt workspace. Start the bot subtree from the frozen development base selected by same-input development comparisons, falling back to the accepted source when evidence is insufficient. This is separate from champion promotion: never start blindly from a rejected branch tip. Retain experiment history and record both identities.
 3. Invoke the coding CLI with a fixed task envelope and approved tools.
 4. Validate the result, changed paths, source limits, and smoke checks. Require the returned task ID, bot ID, and base hash to match the trusted envelope. Derive changed paths from the actual working-tree diff; do not trust the model's list. Use task-specific result files so a stale result cannot be mistaken for a new one.
 5. Create a normal commit with the current branch tip as parent, containing the new owned source and notes. Push without force. Record the resulting SHA and source hash.
 6. On a non-fast-forward conflict, preserve the patch and pause for lease/conflict resolution. Do not silently rebase onto another writer's work.
 
-Compare the candidate to the accepted source hash, not merely to the previous branch tip. A notes-only commit does not trigger another match suite. Credentials for Git publication belong to the trusted wrapper, not to the game sandbox.
+Compare the candidate to its task's edit-base source hash, not merely to the previous branch tip. The full champion gate still compares against the accepted source. A notes-only candidate does not trigger another match suite. Credentials for Git publication belong to the trusted wrapper, not to the game sandbox.
 
 ## 4. Official engine adapter
 

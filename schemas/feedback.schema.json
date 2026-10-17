@@ -57,6 +57,7 @@
       "type": "string",
       "enum": [
         "full-nine-map",
+        "development-six-map",
         "provisional-three-map-wiring"
       ]
     },

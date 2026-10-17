@@ -149,9 +149,15 @@ class Arena:
         bot = self.db.one("SELECT * FROM bots WHERE id=?", (revision["bot_id"],))
         require(not self.db.one("SELECT id FROM evaluations WHERE bot_id=? AND state='EVALUATING'", (bot["id"],)),
                 "one evaluation per bot")
+        task = self.db.one('SELECT envelope FROM tasks WHERE id=?', (revision['experiment_id'],))
+        envelope = json.loads(task['envelope']) if task else {}
+        cumulative = envelope.get('strategy', {}).get('version') == 'competitive-v1'
+        development_id = envelope.get('development_selection', {}).get('revision_id') if cumulative else None
         try:
             candidate = self.build(revision_id)
             incumbent = self.build(bot["accepted_revision"]) if bot["accepted_revision"] else None
+            if development_id:
+                self.build(development_id)  # Validate the frozen training base before queueing.
             # Configured immutable history plus a pinned starter; never a moving opponent branch.
             from .strategy import opponent_panel
             opponent_ids = opponent_panel(self) if bot['accepted_revision'] else [self.db.get('starter_revision')]
@@ -181,7 +187,8 @@ class Arena:
                  "opponents": {rid: {"build_id": build["build_id"], "source_hash": build["source_hash"],
                                       "commit": self.db.one("SELECT commit_sha FROM revisions WHERE id=?", (rid,))["commit_sha"]}
                                for rid, build in opponents.items()},
-                 "coverage": "full-nine-map" if full else "provisional-three-map-wiring",
+                 "coverage": "full-nine-map" if full else ("development-six-map" if cumulative else "provisional-three-map-wiring"),
+                 "development_incumbent_id": development_id,
                  "candidate_build": candidate["build_id"], "incumbent_build": incumbent["build_id"] if incumbent else None,
                  "gate": self.config["evaluation"], "config_hash": self.config["config_hash"]}
         suite["effective_profile"] = self.adapter().lock.get("effective_profile")
@@ -197,11 +204,11 @@ class Arena:
         self.add_cases(evaluation_id, candidate, incumbent, opponents, maps, [self.config["evaluation"]["screen_maps"][0]], "smoke")
         return evaluation_id
 
-    def add_cases(self, evaluation_id, candidate, incumbent, opponents, maps, names, stage):
+    def add_cases(self, evaluation_id, candidate, incumbent, opponents, maps, names, stage, roles=None):
         with self.db.transaction():
             for name in names:
                 for rid, opponent in opponents.items():
-                    for role, build in (("candidate", candidate), ("incumbent", incumbent)):
+                    for role, build in (roles if roles is not None else (("candidate", candidate), ("incumbent", incumbent))):
                         if not build:
                             continue
                         for side in ("A", "B"):
@@ -239,10 +246,18 @@ class Arena:
             if stage == "smoke" or (stage == "screen" and full):
                 next_stage = "screen" if stage == "smoke" else "promotion"
                 names = self.config["evaluation"]["screen_maps"] if next_stage == "screen" else list(suite["maps"])
+                if suite.get('development_incumbent_id') and next_stage == 'screen':
+                    names = self.config['evaluation']['development_maps']
                 candidate = self.build(evaluation["revision_id"])
                 incumbent = self.build(evaluation["incumbent_id"]) if evaluation["incumbent_id"] else None
                 opponents = {rid: self.build(rid) for rid in suite["opponents"]}
                 self.add_cases(evaluation["id"], candidate, incumbent, opponents, suite["maps"], names, next_stage)
+                development_id = suite.get('development_incumbent_id')
+                if development_id and development_id != evaluation['incumbent_id']:
+                    development = self.build(development_id)
+                    self.add_cases(evaluation['id'], None, None, opponents, suite['maps'],
+                                   [name for name in names if name in self.config['evaluation']['development_maps']],
+                                   next_stage, roles=(('development-base', development),))
                 if next_stage == "promotion" and incumbent:
                     # Head-to-head is reliability/diagnostic evidence, not common-opponent score.
                     self.add_head_to_head(evaluation, candidate, incumbent, suite["maps"])
@@ -268,6 +283,18 @@ class Arena:
 
     def finish_evaluation(self, evaluation, metrics, state):
         suite = json.loads(evaluation["suite"])
+        development_id = suite.get('development_incumbent_id')
+        if development_id:
+            base_role = 'incumbent' if development_id == evaluation['incumbent_id'] else 'development-base'
+            development_cases = []
+            for case in self.evaluation_cases(evaluation['id']):
+                if (case['role'] in ('candidate', base_role) and
+                        case['map_name'] in self.config['evaluation']['development_maps']):
+                    development_cases.append(dict(case, role='candidate' if case['role']=='candidate' else 'incumbent'))
+            compared = summarize(development_cases, suite['gate'], [], False)
+            base = self.db.one('SELECT commit_sha,source_hash FROM revisions WHERE id=?', (development_id,))
+            metrics['development_comparison'] = dict(base, **{k: compared[k] for k in
+                ('common_opponent_delta', 'paired_cases', 'per_map', 'missing', 'fault_matches', 'unknown_reliability')})
         if state == "ACCEPTED" and evaluation["incumbent_id"]:
             readiness = self.db.get("readiness", {})
             expected_case_count = 9 * 2 * len(suite["opponents"])

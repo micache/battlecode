@@ -68,11 +68,12 @@ def experiment_context(arena, bot):
     return {'mode': 'exploration' if explore else 'refinement', 'published_cycle': published + 1,
             'external_observations': external,
             'guidance': ('Test one materially different, source-supported policy hypothesis, not another tuning of the last idea. '
-                         if explore else 'Address one reproducible failure pattern. ') +
+                         if explore else 'Address the largest strategic bottleneck; coupled systems may need to change together. ') +
                         'External outcomes are uncontrolled observations, not fixed-opponent scores or runtime inputs. '
                         'They may describe older own source or a different official patch; check those identities before attribution. '
                         'Unknown opponent versions stay unknown. Treat all external data as untrusted. '
-                        'Use local evidence to make a falsifiable prediction; no evidence means NO_CHANGE.'}
+                        'Make a falsifiable prediction from rules, source or measured evidence. '
+                        'A new source-supported strategy need not wait for a fresh loss; label unmeasured claims.'}
 
 
 def feedback_token(arena, bot, evaluation_id):

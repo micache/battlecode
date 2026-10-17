@@ -78,7 +78,7 @@ def recover_publication(arena, bot, payload):
     require(task['published_commit'] is None and not (arena.root / 'publication' / task['id']).exists(),
             'publication intent exists; reconcile remote, never retry blindly')
     require(envelope['engine_lock_hash'] == arena.adapter().lock_hash and
-            envelope['base_source_hash'] == lane['accepted_source_hash'] and
+            envelope['base_source_hash'] == tree_hash(Path(envelope.get('edit_snapshot', envelope['accepted_snapshot'])) / 'src') and
             envelope['input_revision'] == lane['latest_tip'], 'recovery inputs changed')
     require(payload['result'] == json.loads(task['result']) and payload['result']['outcome'] == 'READY_FOR_EVAL',
             'preserved native result mismatch')

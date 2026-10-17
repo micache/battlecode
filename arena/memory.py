@@ -119,8 +119,8 @@ def task_history(arena, bot, offset=0, task_id=None, detailed=False):
 
 
 def handoff(arena, bot, accepted, latest):
-    docs = ('AGENTS.md', 'BOT_REFERENCE.md', 'PLAYBOOKS.md', 'RESEARCH.md',
-            'sources/GameRules.md', 'sources/BotAPIPython.md')
+    from .knowledge import DOCUMENTS
+    docs = DOCUMENTS
     documentation = {name: file_hash(Path(arena.config['infrastructure']) / name) for name in docs}
     lock = arena.adapter().lock
     template = lock.get('project_template')
@@ -134,14 +134,18 @@ def handoff(arena, bot, accepted, latest):
     previous = json.loads(prior['envelope']) if prior else {}
     old_docs = previous.get('feedback', {}).get('handoff', {}).get('documentation_sha256')
     old_sdk = previous.get('feedback', {}).get('handoff', {}).get('sdk', {})
+    gameplay_docs = ('sources/GameRules.md', 'sources/BotAPICpp.md')
     return {'protocol_version': 1, 'documentation_sha256': documentation,
             'documentation_review_basis_task': prior['id'] if prior else None,
             'documentation_changed_or_unrecorded': old_docs != documentation or old_sdk != sdk, 'sdk': sdk,
+            'gameplay_review_required': (not old_docs or old_sdk != sdk or
+                                        any(old_docs.get(name) != documentation[name] for name in gameplay_docs)),
             'edit_start': {'commit': accepted['commit_sha'], 'source_hash': accepted['source_hash'],
                            'source_file_sha256': tree_manifest(Path(accepted['snapshot']) / 'src')},
             'last_evaluated_source_is_edit_start': latest['summary']['candidate']['source_hash'] == accepted['source_hash'],
             'automatic_promotion_enabled': arena.config['evaluation']['automatic_promotion'],
-            'source_rule': 'HEAD is input_revision; owned source is restored from accepted_commit, NOT necessarily HEAD. '
+            'source_rule': 'HEAD is input_revision; owned source is restored from edit_commit (development base), NOT necessarily HEAD '
+                           'or the accepted competition champion. The latter is protected separately. '
                            'The latest feedback evaluates its named candidate, not the code now on disk. '
                            'Use git show COMMIT:bots/BOT/src/FILE to inspect prior published code. '
                            'Do not repeat a failed hypothesis without changed evidence or an explicit new rationale.',
@@ -162,7 +166,8 @@ def brief(task):
     sdk = memory.get('sdk', {})
     lines = [f"# One experiment: {task['bot_id']} / {task['task_id']}",
              f"Branch {task['branch']}; HEAD/input {task['input_revision']}.",
-             f"Edit source is restored accepted commit {task['accepted_commit']}; hash {task['base_source_hash']}.",
+             f"Edit source is development commit {task.get('edit_commit', task['accepted_commit'])}; hash {task['base_source_hash']}.",
+             f"Protected accepted champion: {task['accepted_commit']} (not automatically promoted).",
              'The latest evaluated candidate below is NOT automatically the source now being edited.',
              f"Engine {task['engine_version']}; lock {task['engine_lock_hash']}; suite {task['evaluation_suite']}.",
              f"Matching C++ header: {sdk.get('cpp_header')}; SHA256 {sdk.get('cpp_header_sha256')}.",
@@ -176,9 +181,27 @@ def brief(task):
              f"missing {len(metrics.get('missing', []))}; unknown reliability {len(metrics.get('unknown_reliability', []))}."]
     for failure in metrics.get('representative_failures', [])[:2]:
         lines.append(f"Development loss {failure.get('match_id')}: side {failure.get('side')}, map {failure.get('map')}.")
+    compared = metrics.get('development_comparison')
+    if compared:
+        lines.append(f"Matched development-base comparison against {compared['commit_sha']} / {compared['source_hash']}: "
+                     f"delta {compared['common_opponent_delta']}, side-paired cases {compared['paired_cases']}. "
+                     'This is separate from the protected champion comparison.')
     for name, measurement in list(metrics.get('development_metrics', {}).items())[:8]:
         if measurement.get('available'):
             lines.append(f"Development {name}: mean {measurement.get('mean')}, observations {measurement.get('observations')}.")
+    strategy = task.get('strategy', {})
+    if strategy:
+        lines += ['', '## Shared competitive strategy task',
+                  f"Phase: {strategy['phase']}. Skill: {strategy['skill']} (read completely).",
+                  'Foundation: design and implement a coherent contender using contest mechanics; do not stop at starter correctness. '
+                  'Later tasks: exploit measured weaknesses, learn frozen arena strategies, and explore alternatives.',
+                  'Coordinated multi-file behavioral upgrades are allowed within this one experiment. No minimum/maximum diff size.',
+                  'Current instructions: AGENTS.override.md; current docs: .agent/knowledge/. Ignore stale instruction copies in branch HEAD.',
+                  'Base strategy notes: .agent/base-notes.md. Own NOTES.md at HEAD may describe a later rejected experiment; '
+                  'retain those negative findings without mistaking them for the current source.',
+                  f"Frozen opponent manifest: {strategy['opponents']['manifest']}; SHA256 {strategy['opponents']['sha256']}; "
+                  f"{strategy['opponents']['count']} sources. Read relevant source there; no private homes or holdout traces.",
+                  'Development selection: ' + task['development_selection']['meaning']]
     window = memory.get('training_window', {})
     lines += ['', '## Accumulated development evidence since previous improvement job',
               window.get('interpretation', 'No window recorded.')]
@@ -212,7 +235,7 @@ def brief(task):
             observed = evaluation.get('metrics', {})
             lines.append(f"Measured {evaluation['state']} / {evaluation.get('coverage')}: "
                          f"{observed.get('wins')}W/{observed.get('losses')}L, delta {observed.get('common_opponent_delta')}.")
-    changed = memory.get('documentation_changed_or_unrecorded', True)
+    changed = memory.get('gameplay_review_required', memory.get('documentation_changed_or_unrecorded', True))
     lines += ['', '## Efficient read/act policy',
               f"Documentation manifest changed/unrecorded: {str(changed).lower()}.",
               ('Complete the bootstrap/changed-document review required by AGENTS.md; record material findings, '
@@ -221,9 +244,10 @@ def brief(task):
                'Consult BOT_REFERENCE.md and only the relevant playbook/API sections; use rg -n then a narrow sed range.'),
               'Read this brief, own NOTES.md and current owned source first. Full .agent/task.json and paged history '
               'are available when needed; do not dump all history or reload feedback already supplied.',
-              'Spend high reasoning on one causal hypothesis and its falsifiable prediction. Choose expected strategic '
-              'value over cosmetic changes; reject repeated failed ideas unless evidence or rationale changed.',
-              'One focused patch. Use bot-check once, repeating only after a source correction. No model status polling '
+              'Spend high reasoning on the strongest coherent strategy hypothesis and its falsifiable prediction; '
+              'consider alternatives internally and save concise decisions, not reasoning transcripts. '
+              'Choose expected strategic value over cosmetic changes; reject repeated failed ideas unless evidence or rationale changed.',
+              'One coherent candidate, not necessarily a small patch. Use bot-check on final source, repairing actual failures as needed. No model status polling '
               'or waiting for tournament evaluation. Trusted exact-source validation remains mandatory.',
               'Avoid redundant source backups, copied SDK/docs, bulk replay dumps or verbose narration. Existing Git '
               'snapshots and automatic checkpoints already preserve code. Save compact decisions and evidence references.',

@@ -86,19 +86,30 @@ def make_attempt(config, task):
     target = directory / "bots" / bot / "src"
     require(target.is_dir() and not target.is_symlink(), "source path missing/unsafe")
     shutil.rmtree(target)
-    require(tree_hash(Path(task["accepted_snapshot"]) / "src") == task["base_source_hash"], "accepted source changed")
-    shutil.copytree(Path(task["accepted_snapshot"]) / "src", target)
-    # The accepted snapshot stays read-only; only this private edit transaction is writable.
+    base = Path(task.get('edit_snapshot', task['accepted_snapshot']))
+    require(tree_hash(base / 'src') == task['base_source_hash'], 'edit base source changed')
+    shutil.copytree(base / 'src', target)
+    # The development base and accepted champion remain immutable.
     for path in [target, *target.rglob("*")]:
         path.chmod(0o700 if path.is_dir() else 0o600)
     (directory / ".agent").mkdir(mode=0o700)
     atomic_json(directory / ".agent/task.json", task, 0o600)
+    from .knowledge import prepare
+    preparation = prepare(directory, config, task)
+    base_notes = subprocess.run(['git', '-C', str(directory), 'show',
+                                f"{task.get('edit_commit', task['accepted_commit'])}:experiments/{bot}/NOTES.md"],
+                               capture_output=True, env=clean_environment(True))
+    atomic_bytes(directory / '.agent/base-notes.md', base_notes.stdout if base_notes.returncode == 0 else
+                 b'No notes saved at the frozen development base; consult source and task history.\n', 0o400)
     from .memory import brief
     atomic_bytes(directory / '.agent/brief.md', brief(task).encode(), 0o600)
     atomic_json(directory / '.agent/entry.json', {
         'task_id': task['task_id'], 'bot_id': bot, 'branch': task['branch'],
         'head': commit_id(directory, 'HEAD'), 'source_hash': tree_hash(target),
         'accepted_source_verified': tree_hash(target) == task['base_source_hash'],
+        'edit_source_verified': tree_hash(target) == task['base_source_hash'],
+        'edit_commit': task.get('edit_commit', task['accepted_commit']),
+        'preparation_sha256': preparation,
         'attempts_root': str(Path(config['attempts']).resolve()),
         'note': 'Trusted preparation verified these identities. Do not search private central state.'}, 0o600)
     return directory
@@ -123,6 +134,8 @@ def candidate_payload(config, attempt):
     task_id = attempt.name
     # Trusted envelope is read from arena-owned, read-only task delivery, not model-writable .agent.
     task = read_json(Path(config["root"]) / "tasks" / bot / f"{task_id}.json")
+    from .knowledge import verify_preparation
+    verify_preparation(attempt, task)
     require(git(attempt, "branch", "--show-current") == task["branch"] == config["branch"], "wrong publication branch")
     require(commit_id(attempt, "HEAD") == task["input_revision"], "worker committed or changed HEAD")
     result = read_json(attempt / ".agent" / f"final-{task_id}.json")
@@ -168,12 +181,17 @@ def perform_task(config, task):
         env = verify_subscription(config)
         attempt = make_attempt(config, task)
         final = attempt / ".agent" / f"final-{task_id}.json"
-        prompt = (f"ROLE: bot_worker. Perform exactly one task from .agent/task.json. Follow AGENTS.md, "
+        prompt = (f"ROLE: bot_worker. Use $battlecode-strategy from .agents/skills/battlecode-strategy/SKILL.md "
+                  "for exactly one task from .agent/task.json. Follow the current AGENTS.override.md. "
                   f"Trusted result identity: task_id={task_id}; bot_id={config['bot_id']}; "
                   f"base_source_hash={task['base_source_hash']}. "
                   "If tools cannot read the task, return BLOCKED with these exact identity fields, not guessed values. "
                   f"read .agent/brief.md, .agent/entry.json, own NOTES.md and current source first. "
                   "The complete .agent/task.json is for targeted lookup, not a mandatory bulk dump. "
+                  "Current shared game documents are in .agent/knowledge/, not stale branch instruction copies. "
+                  "Inspect the frozen opponent manifest from the brief to learn our arena opponents' strategies. "
+                  "A foundation task should build a coherent contender from rules and code; later tasks use measured feedback. "
+                  "Coordinated multi-file strategy upgrades are allowed; optimize wins, not patch size. "
                   "On unchanged routine iterations, do not reread entire rules/API/SDK or all playbooks. "
                   f"Use bot-check --owner-config {config['owner_config_path']} "
                   "for trusted checks. Save one falsifiable hypothesis and compact notes. "
@@ -209,7 +227,7 @@ def perform_task(config, task):
         from .usage import usage_summary
         outcome["invocation"] = {"provider": "codex", "binary_sha256": config["codex_sha256"],
                                   **process, "raw_path": str(private),
-                                  'efficiency_profile': 'hourly-brief-v2', 'usage': usage_summary(private / 'stdout.log'),
+                                  'efficiency_profile': 'competitive-v1', 'usage': usage_summary(private / 'stdout.log'),
                                   "stdout_sha256": file_hash(private / "stdout.log"),
                                   "stderr_sha256": file_hash(private / "stderr.log")}
     if 'validated_result' in locals():

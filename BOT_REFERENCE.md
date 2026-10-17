@@ -1,5 +1,14 @@
 # Bot reference grounded in the supplied handbook
 
+Current access addendum, 17 October 2026: the organizer's LLM-download page is now
+accessible and its GameRules.md is byte-identical to the reviewed supplied file.
+The current C++ API export is `sources/BotAPICpp.md`; use it with the pinned
+installed C++ header, not Python examples. See `docs/rules/organizer-agents.md`
+for provenance and remaining policy/SDK limits. The “not yet executed” statements
+below describe the original design review, not the subsequently running arena;
+actual execution evidence lives under `evidence/blaxel/`. Production parity and
+automatic champion promotion are still not certified.
+
 Reviewed 16 October 2026, Asia/Saigon. Read the complete [GameRules.md](sources/GameRules.md) and [BotAPIPython.md](sources/BotAPIPython.md) at bootstrap, then consult this reference and relevant sections on demand. These are user-supplied exports of the event handbook/API, not an independently retrieved live website. Their byte hashes are pinned in config/arena.example.json. They do not include the separate organizers' AGENTS.md, event participation/AI policies, submission constraints, or challenge automation documentation.
 
 This is our derived guidance. Preserve the exports unchanged. If an SDK update disagrees with them, record the disagreement, check the current authorized source and run a small engine fixture; do not silently substitute assumptions. The arena remains an implementation specification and has not run a complete game.

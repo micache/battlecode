@@ -98,7 +98,7 @@ Keep one long-lived branch per bot and add one normal commit per candidate updat
 4. The non-LLM wrapper verifies changed paths and runs the approved smoke checks. It commits and pushes the candidate to the worker's branch. It does not force-push.
 5. The arena detects that immutable revision, compiles it once per build identity, and schedules evaluation against frozen opponents with both side assignments.
 6. The arena publishes feedback atomically. A tested candidate becomes that lane's accepted champion only if the configured promotion gate passes. Rejected candidates remain recorded.
-7. The next CLI invocation starts from the accepted source and the new feedback. A candidate, a lane champion, and the team's official submission are three different things.
+7. The next CLI invocation starts from the frozen measured development base and new feedback, not automatically from the starter or latest rejected branch tip. The protected champion and official submission remain separate. See [the shared improvement workflow](docs/IMPROVEMENT_WORKFLOW.md).
 
 AGENTS.md does not keep a process running. The supervisor and systemd do that. Do not ask one chat session to remain alive and think forever.
 

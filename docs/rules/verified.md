@@ -1,3 +1,13 @@
+Current addendum, 17 October 2026: the official Agents.md page is accessible and
+is a download hub. Live GameRules.md matches the supplied reviewed bytes exactly.
+Current C++ and newer Python API exports are retained with provenance in
+`docs/rules/organizer-agents.md` and `evidence/handbook-live-20261017.json`.
+All prepared workers receive these files without browser login. Complete games,
+native model iterations and restart recovery have since run on Blaxel; see
+`evidence/blaxel/`. This does not certify production parity or official automation.
+The table below is the historical 16 October implementation review, not a live
+statement that the currently deployed arena has never executed games.
+
 Reviewed for this implementation on 16 October 2026. Gameplay/API exports were read completely and retained unchanged. These are supplied exports, not a live production-settings measurement or the separate organizers' instructions.
 
 | Evidence | Observed conclusion |

@@ -25,6 +25,10 @@
     "instructions"
   ],
   "properties": {
+    "edit_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "edit_snapshot": {"type": "string"},
+    "development_selection": {"type": "object"},
+    "strategy": {"type": "object"},
     "protocol_version": {
       "type": "integer",
       "enum": [

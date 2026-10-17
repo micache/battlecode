@@ -52,17 +52,21 @@ commands for an owner to install and start the first lane.
 ```text
 ROLE: bot_worker
 
-Perform the bootstrap task in .agent/task.json. Follow AGENTS.md.
-Confirm my bot ID, owned branch/path, accepted source hash, and engine version.
-Read PLAYBOOKS.md A, BOT_REFERENCE.md and the complete supplied GameRules.md and
-BotAPIPython.md at bootstrap, plus the matching installed language binding. If an existing playable bot
+Use $battlecode-strategy for the foundation task in .agent/task.json.
+Follow current AGENTS.override.md when prepared, otherwise AGENTS.md.
+Confirm my bot ID, owned branch/path, edit-base source hash, and engine version.
+Read PLAYBOOKS.md A, BOT_REFERENCE.md, complete GameRules.md and the applicable
+API export (BotAPICpp.md for C++) at bootstrap, plus the matching installed binding. If an existing playable bot
 is assigned, preserve its language and establish its baseline. Otherwise create
 a valid complete bot from the pinned official starter in my owned bot directory.
 
-First prioritize correct draft handling, legal actions, yielding, bounded fuel,
-basic navigation, camp farming, gem submission, and a safe fallback. Use current
-SDK calls and settings. Do not copy assumptions from the older Cambridge game.
-Do not optimize several systems before a measured baseline exists.
+Design the strongest coherent objective-winning strategy you can implement within
+this invocation: draft/roles, efficient economy and capture, banking, combat and
+abilities, recovery/items, navigation and bounded coordination. The starter is a
+starting implementation, not a strategic ceiling. Coupled multi-file upgrades are
+allowed. Preserve legal actions, yielding, normal fuel and a safe fallback. Use
+current SDK calls/settings, not assumptions from the older Cambridge game. State
+which claims follow from rules/source and which have been measured.
 Choose free reachable approach tiles, complete uncontested captures, and let
 useful channels finish at the next turn start after their timer reaches zero.
 Budget only 8 writable live shared bytes for the entire team. Yield before fuel
@@ -78,17 +82,23 @@ Stop after this one task. Do not publish to the official competition platform.
 ```text
 ROLE: bot_worker
 
-Perform exactly one improvement task from .agent/task.json under AGENTS.md.
+Use $battlecode-strategy for exactly one task from .agent/task.json.
+Follow current AGENTS.override.md when prepared, otherwise AGENTS.md.
 Read my NOTES.md and the supplied latest completed feedback. Verify the feedback
 belongs to the recorded candidate, opponents, maps, and engine settings.
 
-Select one high-value failure pattern and use the matching PLAYBOOKS.md procedure.
+Choose the highest-value coherent strategy upgrade using relevant PLAYBOOKS.md.
 Consult BOT_REFERENCE.md and relevant source sections without rereading the whole
 API every time. Re-read complete exports when their hashes change. Preserve the
 documented win/tie semantics, fuel behavior and memory limits in all changes.
-Inspect only the relevant code and at most three representative replay/log slices.
-State a falsifiable hypothesis, make the smallest useful change in my owned paths,
-run the approved checks, and save what you learned, including negative evidence.
+Read current documentation under .agent/knowledge/ and inspect supplied frozen
+arena opponent sources to infer strategies and counters. Start with representative
+development losses and contrasting wins; fetch further targeted evidence only
+when it changes the decision. Consider alternatives internally, then record a
+concise strategy hypothesis, evidence, expected gain, risks and falsifier, not a
+reasoning transcript. Implement a complete coherent candidate in owned paths;
+multiple coupled systems/files may change. There is no diff-size target. Run the
+approved checks and save lessons, current strategy and negative evidence.
 
 Return the worker-result schema. READY_FOR_EVAL is a proposal for evaluation, not
 a claim of improvement. Return NO_CHANGE if evaluation is pending or no useful

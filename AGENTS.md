@@ -14,23 +14,25 @@ Bot workers cannot edit the engine, maps used for scoring, opponents, evaluation
 
 ## Read at the start
 
-Read the task envelope, the assigned bot's short NOTES.md, current source, and the supplied feedback summary. Consult the relevant section of PLAYBOOKS.md. At bootstrap or when documentation hashes change, read the complete sources/GameRules.md, sources/BotAPIPython.md, BOT_REFERENCE.md, and the applicable installed language SDK. These supplied exports have been reviewed in full for this pack. Read RESEARCH.md for evidence limits. On routine iterations, consult the compact reference and relevant API sections; do not reread both full exports every time.
+Read the task envelope, the assigned bot's short NOTES.md, current source, and the supplied feedback summary. Consult the relevant section of PLAYBOOKS.md. At bootstrap or when applicable gameplay/SDK hashes change, read complete sources/GameRules.md, BOT_REFERENCE.md, the applicable API export (sources/BotAPICpp.md for C++; sources/BotAPIPython.md for the originally reviewed Python binding), and the matching installed language SDK. Do not additionally reread an unrelated language's full export. Read RESEARCH.md and docs/rules/organizer-agents.md for evidence limits. On routine iterations, consult the compact reference and relevant API sections; do not reread full unchanged exports every time.
 
-The organizers' separate AGENTS.md was not supplied. This file is our project instruction, not their official file. When that file becomes available, preserve it under docs/rules/organizer-agents.md, record its hash, reconcile its game/build guidance, and record any conflicts. Its absence must not be disguised as a completed review of all event documents.
+Prepared arena attempts use current `AGENTS.override.md` and the shared `$battlecode-strategy` skill. Resolve documentation paths above against `.agent/knowledge/` when supplied, not stale copies in the bot branch. The brief identifies the matching installed SDK and hash. All workers use the same skill; bot identity comes only from the trusted envelope.
 
-The task must identify the bot, branch, task ID, accepted source hash, input revision, engine/SDK version, evaluation suite, and available commands. If any identity conflicts with the working copy, stop with BLOCKED. Never infer that a result for an older commit evaluates the code now on disk.
+The organizer's Agents.md webpage has now been accessed: it is an LLM Markdown-download hub, not a separate agent-policy file. docs/rules/organizer-agents.md records the page, hashes and reconciliation limits. This file is our project instruction, not theirs. Do not present the download hub as a review of all event policies; preserve/reconcile any additional official instructions if supplied later.
+
+The task must identify the bot, branch, task ID, edit-base source hash, accepted champion, input revision, engine/SDK version, evaluation suite, and available commands. `base_source_hash` describes the actual edit base; `edit_commit` can be a measured development incumbent rather than the protected accepted champion or HEAD. If any identity conflicts with the working copy, stop with BLOCKED. Never infer that a result for an older commit evaluates the code now on disk.
 
 ## Bounded bot improvement cycle
 
 1. Check for incomplete prior work. Preserve its patch and notes before recovery. If the latest candidate is still awaiting evaluation, return NO_CHANGE; do not poll through model turns.
-2. Separate engine/arena failures from bot faults and strategic losses. Pick one high-value, reproducible failure pattern. Name the relevant match IDs, sides, maps, and source revisions.
-3. Write a short hypothesis and a falsifiable expected change. Select one playbook. Prefer a minimal behavioral change over an unrelated rewrite.
+2. Separate engine/arena failures from bot faults and strategic losses. In foundation mode, derive a coherent winning strategy from contest rules and audit the current bot's missing capabilities. Later, identify the highest-value strategic bottleneck from rules, source and measured games. Name match IDs, sides, maps and source revisions when using game evidence; distinguish an unmeasured rules-based deduction.
+3. Write a concise hypothesis and falsifiable expected change. Use the shared strategy skill and relevant playbooks. A coherent strategy upgrade may span multiple coupled systems/files; there is no line-count target or requirement to make only a tiny repair. Avoid unrelated rewrites. Inspect frozen arena opponent sources when supplied to understand, counter or adapt their strategies, not their private worker state.
 4. Implement within owned paths. Add focused regression checks when the failure can be expressed as a stable invariant. Preserve the last accepted bot outside your edit transaction.
 5. Use the approved `bot-check` wrapper for compilation and smoke checks. Record its exact command, exit status, and report path. If unavailable, return BLOCKED rather than claiming a test ran. The trusted wrapper, not the model, runs tournament evaluation.
 6. Update `experiments/<bot_id>/NOTES.md` with the hypothesis, code change, observed evidence, remaining uncertainty, and next idea. Keep the operational summary under about 150 lines; archive older experiments by ID.
 7. Return the structured worker-result object. READY_FOR_EVAL means there is a valid candidate to evaluate; it does not mean it is stronger. The supervisor validates, commits, and pushes. Do not start another agent, publish an official submission, or wait indefinitely for matches.
 
-The supervisor owns repetition, source publication, evaluation, and promotion. One invocation performs one experiment.
+The supervisor owns repetition, source publication, evaluation, and promotion. One invocation produces one coherent candidate, including a substantial strategy construction when appropriate. Development continuation never bypasses the full champion promotion gate.
 
 ## Game-specific engineering rules
 

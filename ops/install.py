@@ -42,7 +42,7 @@ def install(source, revision, persistent_ack, dry=False, temporary_colab=False, 
         raise RuntimeError("administrator must allocate non-overlapping subuid/subgid ranges for bc-arena; then continue setup manually")
     destination = Path("/opt/battlecode")
     destination.mkdir(mode=0o755)
-    for name in ("arena", "ops", "schemas", "config", "sources", "evidence", "docs", "fixtures"):
+    for name in ("arena", "ops", "schemas", "config", "sources", "evidence", "docs", "fixtures", "skills"):
         shutil.copytree(source / name, destination / name, ignore=shutil.ignore_patterns("__pycache__"))
     for name in ("AGENTS.md", "CLAUDE.md", "ARENA.md", "AUTH_AND_OPERATIONS.md", "BOT_REFERENCE.md", "PROMPTS.md",
                  "PLAYBOOKS.md", "RESEARCH.md", "RULES_CHECKLIST.md", "pyproject.toml", ".gitignore"):

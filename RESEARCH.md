@@ -1,5 +1,13 @@
 # Research record and limits
 
+17 October 2026 addendum: the official LLM-download hub is now accessible through
+the approved browser. Live GameRules.md is byte-identical to the reviewed export;
+current C++ and newer Python exports are saved separately. See
+`docs/rules/organizer-agents.md` for precise review limits and byte provenance.
+This document's initial execution/access table below is historical. The live
+arena's real-game/model/recovery evidence is under `evidence/blaxel/`; that does
+not establish official production parity or automation permissions.
+
 Initial online research: 15 October 2026 UTC / 16 October 2026 local time. Revised 16 October 2026, Asia/Saigon, after reading both user-supplied exports in full. Distinguish inspected evidence from recommendations in README.md. All supplied gameplay rules/API text was read; this pack does not certify that every event policy or the separate organizers' AGENTS.md was read.
 
 ## Access and verification record

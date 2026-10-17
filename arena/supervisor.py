@@ -33,16 +33,29 @@ def new_task(arena, bot, owner="server"):
     task_id = fresh_id("task")
     from .strategy import experiment_context, feedback_token
     from .memory import handoff
+    from .development import select_base
+    from .knowledge import freeze_opponents
+    edit_base, selection = select_base(arena, bot)
+    require(edit_base, 'validated development base required')
     context = experiment_context(arena, bot)
+    prior_strategy = db.one("SELECT id FROM tasks WHERE bot_id=? AND state='PUBLISHED' "
+                            "AND json_extract(envelope,'$.strategy.version')='competitive-v1' LIMIT 1", (bot,))
+    phase = context['mode'] if prior_strategy else 'foundation'
     envelope = {"protocol_version": 1, "role": "bot_worker", "task_id": task_id, "bot_id": bot,
-                "branch": config["workers"][bot]["branch"], "base_source_hash": lane["accepted_source_hash"],
+                "branch": config["workers"][bot]["branch"], "base_source_hash": edit_base['source_hash'],
                 "accepted_commit": accepted["commit_sha"], "input_revision": lane["latest_tip"],
                 "accepted_snapshot": accepted["snapshot"], "infrastructure_commit": config["infrastructure_commit"],
+                "edit_commit": edit_base['commit_sha'], "edit_snapshot": edit_base['snapshot'],
+                "development_selection": selection,
+                "strategy": {'version': 'competitive-v1', 'phase': phase,
+                             'knowledge_root': '.agent/knowledge',
+                             'skill': '.agents/skills/battlecode-strategy/SKILL.md',
+                             'opponents': freeze_opponents(arena, bot, task_id)},
                 "engine_version": config["engine"]["version"], "engine_lock_hash": arena.adapter().lock_hash,
                 "evaluation_suite": config["evaluation"]["suite_version"],
                 "feedback_id": feedback_token(arena, bot, latest['evaluation_id']),
                 "feedback": dict(latest["summary"], experiment_context=context,
-                                 handoff=handoff(arena, bot, accepted, latest)),
+                                 handoff=handoff(arena, bot, edit_base, latest)),
                 "available_commands": [f"bot-check --owner-config /etc/battlecode/{bot}.json",
                     f"arena-client --config /etc/battlecode/{bot}.json feedback",
                     f"arena-client --config /etc/battlecode/{bot}.json history --offset 0",
@@ -54,7 +67,9 @@ def new_task(arena, bot, owner="server"):
                     f"arena-client --config /etc/battlecode/{bot}.json external-slice --match-id OFFICIAL_MATCH_ID --file observations.json"],
                 "owned_paths": [f"bots/{bot}/src/", f"experiments/{bot}/"], "wall_timeout_seconds": 1200,
                 "prior_task_id": worker["task_id"],
-                "instructions": "One hypothesis, one experiment. Preserve interrupted work. No agents, daemon, publication or official actions. "
+                "instructions": "Use $battlecode-strategy for one coherent strategic experiment; coupled multi-file changes are allowed. "
+                                "No diff-size target. Build a complete contender in foundation mode, then improve from evidence. "
+                                "Preserve interrupted work. No agents, daemon, publication or official actions. "
                                 "Raw matches/, evaluations/, checks/ and state/ are arena-private: do not open or list them. "
                                 "Use the supplied arena-client commands for this lane's development evidence; "
                                 "final.json contains complete final statistics, bot-a.stdout.log and bot-b.stdout.log contain bounded bot logs. "
@@ -322,7 +337,9 @@ def handle_request(arena, bot, request):
             require(revision["commit_sha"] == payload["commit"], "published commit attribution mismatch")
             require(revision["source_hash"] == db.get(f"publication-source:{task['id']}"), "published source was not approved")
             db.execute("UPDATE tasks SET published_commit=? WHERE id=?", (payload["commit"], task["id"]))
-            db.execute("UPDATE revisions SET experiment_id=? WHERE id=?", (task["id"], revision["id"]))
+            db.execute("UPDATE revisions SET experiment_id=?,base_source_hash=?,"
+                       "state=CASE WHEN state='NO_CHANGE' THEN 'PENDING' ELSE state END WHERE id=?",
+                       (task["id"], envelope['base_source_hash'], revision["id"]))
         with db.transaction():
             db.execute("UPDATE tasks SET state=? WHERE id=?", (state, task["id"]))
             db.execute("UPDATE workers SET state=?,next_run=?,quota_count=?,detail=?,heartbeat=?,last_feedback=? WHERE id=?",

@@ -6,7 +6,7 @@ These are task procedures shared by Codex and Claude Code. They need no installe
 
 Use during bootstrap, after a rules/SDK update, or when an API behavior is unclear.
 
-1. Confirm the event and inspect current authorized rules, changelog, official CLI help, generated SDK, and starter. At bootstrap, read the complete supplied sources/GameRules.md and sources/BotAPIPython.md, then BOT_REFERENCE.md. Read updated linked sections when access permits. Record the source, retrieval date, version/hash, and any disagreement. The separate organizers' AGENTS.md remains a missing source, not a file we have already reviewed.
+1. Confirm the event and inspect current authorized rules, changelog, official CLI help, generated SDK, and starter. At bootstrap, read complete sources/GameRules.md, the applicable API export (BotAPICpp.md for C++), then BOT_REFERENCE.md and the matching SDK. Read updated linked sections when access permits. Record source, retrieval date, version/hash and disagreements. docs/rules/organizer-agents.md records that the official Agents.md page is a download hub; do not invent additional organizer instructions or claim complete event-policy review.
 2. Build a compact mechanic table: objective and tiebreakers; draft order and valid picks; turn scheduling; movement and collision; attack/ability legality; visibility; channels; rewards; items; death/respawn; memory; and execution limits.
 3. Separate authoritative game rules, SDK behavior, starter heuristics, and your own hypothesis. A starter's random draft or 35% recall threshold is an example policy, not a rule.
 4. Check the exact language API. For example, a collection of champion handles is not necessarily a collection of visible current states. Do not transfer semantics between C++ and Python without reading their declarations.
@@ -21,11 +21,11 @@ Output: a versioned rules note, source references, API invariants, and an explic
 Use for crashes, invalid actions, inexplicable losses, stalled agents, or a performance regression.
 
 1. Verify candidate, opponent, map, side, engine, and settings identities. Check whether the game completed. Read fault logs before diagnosing strategy.
-2. Select at most three representative cases. Prefer a common failure cluster over a spectacular isolated loss.
+2. Start with a few representative losses and contrasting wins. Prefer a common failure cluster over a spectacular isolated loss; request more targeted evidence when it can change the decision.
 3. Reconstruct the decision using only observations the bot could have had at that turn. Offline full-state information can explain an event, but must be labeled hindsight.
 4. Locate the first meaningful divergence: bad target selection, avoidable path block, missed bank window, cancelled channel, poor draft, illegal call, or fuel suspension. Exhaustion resumes later and is not automatically a crash; repeated suspension can waste turns or resume a stale plan. Later symptoms may follow from this one event.
 5. Reproduce with the frozen inputs. If the run is deterministic, one exact replay is stronger debugging evidence than dozens of identical reruns.
-6. State a causal hypothesis and change one component. Add a compact regression fixture or invariant if practical. Compare the affected cases and the broader fixed suite.
+6. State a causal hypothesis and implement the coherent behavioral change it needs, including coupled components when necessary. Add a compact regression fixture or invariant if practical. Compare affected cases and the broader fixed suite. Do not minimize line count at the expense of fixing the strategy.
 
 Output: case IDs, observation/action evidence, suspected cause, patch, actual checks, and a statement of what the evidence cannot establish. Do not claim that a loss proves a particular strategic cause without tracing it.
 
@@ -42,7 +42,7 @@ The supplied rules specify 1,000 tributed gems for an immediate win. At 2,000 ro
 5. Value items through the champion's actual abilities and objective role. Spend when useful; do not equate maximum gold expenditure with maximum performance.
 6. Compare gems submitted, time to first submission, unbanked value at death if available, idle travel, and final outcome. Missing telemetry remains unknown.
 
-Output: one explicit policy change, bounded parameter ranges, expected mechanism, and comparison against the unchanged accepted bot. Any parameter sweep is a new source/config identity and must be evaluated normally.
+Output: an explicit coherent policy, bounded parameters, expected mechanism, and comparison against the named unchanged development base. Champion promotion still compares against the accepted champion. Any parameter sweep is a new source/config identity and must be evaluated normally.
 
 ## D. Combat and ability use
 
@@ -62,7 +62,7 @@ Output: a small tactical rule or search improvement, its fallback behavior, a tr
 Use when independently reasonable champions duplicate work, interfere with each other, or have weak team composition.
 
 1. Query the current team size and legal draft state. The rules give 3–5 picks per team. Cassi and Issac share one choice but get separate bodies/turns with linked death; five picks can produce six instances. Do not size per-body data from pick count alone.
-2. Begin with a stable, explicit composition. Compare map-dependent and opponent-dependent draft changes only after keeping gameplay policy fixed.
+2. Begin with a stable, explicit composition and roles. In foundation mode, design draft and gameplay together when they depend on each other. For later draft-only experiments hold gameplay fixed where possible; identify deliberate coupling rather than pretending to isolate its effect.
 3. Assign a small set of roles based on observed strengths, such as farming, contesting, escorting, scouting, or banking. These are design choices, not official required roles.
 4. Store a compact draft plan within 1,024 draft bytes. Use a separate versioned live layout only if useful: there are 8 shared bytes for the entire team. Define offsets, bit widths, capacity checks, writer ownership, validity, observation round and expiry; fall back independently when stale or partially written. Vision and private instance state are not automatically shared. Do not attempt a rich per-body message array in those eight bytes.
 5. Coordinate targets and reservations to reduce duplicate farming and blocked movement. Interpret turn priority according to the SDK; a new priority applies on the following round in the inspected API.
