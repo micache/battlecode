@@ -1,0 +1,68 @@
+{
+  "task_id": "task-fc527578bbbf42f5be88544f50e93a50",
+  "bot_id": "alpha",
+  "branch": "bot/alpha",
+  "head": "b5ff9f073c01c9bb68360ccaf257dc301a65b7af",
+  "source_files": {
+    "bot.cpp": {
+      "sha256": "3264dea5b4c50c3da23aebf8fa191213a964cc65a8f0bc8394668bf103d3ba70",
+      "matches": true,
+      "accepted_git_matches": true
+    },
+    "bot.h": {
+      "sha256": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+      "matches": true,
+      "accepted_git_matches": true
+    },
+    "draft.cpp": {
+      "sha256": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+      "matches": true,
+      "accepted_git_matches": true
+    },
+    "draft.h": {
+      "sha256": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+      "matches": true,
+      "accepted_git_matches": true
+    },
+    "main.cpp": {
+      "sha256": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+      "matches": true,
+      "accepted_git_matches": true
+    },
+    "random.h": {
+      "sha256": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+      "matches": true,
+      "accepted_git_matches": true
+    }
+  },
+  "docs": {
+    "AGENTS.md": {
+      "sha256": "f5d6701a97ed814a22adc41ad7cfb41cd7a88674b3bc552097c016ed39b7449e",
+      "matches": true
+    },
+    "BOT_REFERENCE.md": {
+      "sha256": "7d483da98c0360a9c9b186f46f9aa4408539c7c4be96682791f30b9d65c3829f",
+      "matches": true
+    },
+    "PLAYBOOKS.md": {
+      "sha256": "fd5b062f88c28195224c972b28f440a9fc27fe2d250afa18389811a2f1daf5d5",
+      "matches": true
+    },
+    "RESEARCH.md": {
+      "sha256": "cd6ee75a2700f9edfb10dc5220090f41cd20e00afee537a00015614c8cdcfd61",
+      "matches": true
+    },
+    "sources/BotAPIPython.md": {
+      "sha256": "3013fde86080e89ebf109357d4b8ca913babcb4592be542d92df0fadd542772f",
+      "matches": true
+    },
+    "sources/GameRules.md": {
+      "sha256": "1c7fcf111d95b4734070f8f676cd50a48154feb0673de73a31c79845afa34732",
+      "matches": true
+    }
+  },
+  "sdk": {
+    "sha256": "90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d",
+    "matches": true
+  }
+}

@@ -79,40 +79,35 @@ bool attack_if_in_range(const Target& target) {
     return true;
 }
 
-// Called only before moving: direct damage spells may exclude walking.
-bool attack_camp_with_damage(const cambc::camp& camp) {
-    if (!attack_if_in_range(camp))
-        return false;
-
-    // A basic hit may kill the camp; refresh visibility before live queries.
-    if (!camp.is_visible() || camp.health() <= 0)
-        return true;
-    for (const auto& ability : cambc::self().abilities()) {
-        if (!ability.is_damage() || !ability.is_ready() || !ability.can_target_camps()
-            || !ability.valid_tiles().is_set(camp.position()))
-            continue;
-        ability.use(camp);
-        break; // One bounded attempt; the basic attack remains our fallback.
-    }
-    return true;
-}
-
-// Attack a camp already in range, otherwise move toward the nearest camp tiles.
+// Collect visible cleared groups before starting another camp fight.
 void farm_camps() {
-    for (const auto& camp : cambc::vision::camps())
-        if (attack_camp_with_damage(camp))
-            return;
-
-    // Union every group's spawn tiles except visibly respawning groups.
+    // Hidden groups remain exploration goals, never sources of live state.
     cambc::bitboard goals;
     goals.clear();
+    cambc::bitboard rewards;
+    rewards.clear();
     const auto visible = cambc::vision::visible_tiles();
     for (const auto& group : cambc::map::camp_groups()) {
-        const bool group_visible = !(group.spawn_tiles() & visible).is_empty();
-        if (group_visible && std::holds_alternative<cambc::map::camp_group_respawning>(group.state()))
-            continue;
-        goals |= group.spawn_tiles();
+        const auto spawns = group.spawn_tiles();
+        if (!(spawns & visible).is_empty()) {
+            const auto state = group.state();
+            if (std::holds_alternative<cambc::map::camp_group_respawning>(state))
+                continue;
+            if (std::holds_alternative<cambc::map::camp_group_reward_available>(state))
+                rewards |= spawns;
+        }
+        goals |= spawns;
     }
+
+    // Stay through capture phases; extra attacks are secondary to collection.
+    // If no reward can be approached, retain the ordinary farming fallback.
+    if (!rewards.is_empty()
+        && (rewards.is_set(cambc::self().position()) || move_towards_closest(rewards)))
+        return;
+
+    for (const auto& camp : cambc::vision::camps())
+        if (attack_if_in_range(camp))
+            return;
 
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))

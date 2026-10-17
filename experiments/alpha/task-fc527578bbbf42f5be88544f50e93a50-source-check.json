@@ -1,0 +1,14 @@
+{
+  "task_id": "task-fc527578bbbf42f5be88544f50e93a50",
+  "scope": "source invariants only; no runtime or fuel claims",
+  "checks": {
+    "only_farming_selection_changed": true,
+    "live_group_state_guarded_by_visibility": true,
+    "reward_mask_only_from_cleared_visible_groups": true,
+    "respawning_groups_excluded": true,
+    "hold_or_move_before_attacks_with_failure_fallback": true,
+    "other_source_unchanged": true,
+    "official_yield_retained": true
+  },
+  "passed": true
+}
