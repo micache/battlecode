@@ -50,6 +50,11 @@ def archive_projects(arena, limit=8):
             original = read_json(old / 'project-archive.json')['previous_directory']
             require(original == Path(original).name and original != old.name, 'unsafe recovery directory')
             leftover = base / original
+            if leftover.is_symlink():
+                target = leftover.readlink()
+                require(not target.is_absolute() and target.name == str(target) and leftover.resolve() == old.resolve(),
+                        'unexpected legacy artifact alias')
+                continue
             if leftover.exists():
                 verify_artifacts(old, job['id'], job['attempt_count'])
                 manifest = verify_project_archive(old)
@@ -57,6 +62,9 @@ def archive_projects(arena, limit=8):
                     require(file_hash(leftover / 'completion.json') == manifest['previous_completion_sha256'],
                             'original completion changed; preserve redundant copy')
                 remove_redundant(leftover)
+            # Parser/readiness records can name exact historical raw-file paths.
+            # Keep their locations valid without duplicating retained bytes.
+            leftover.symlink_to(old.name, target_is_directory=True)
             continue
         if not (old / 'project').is_dir():
             continue
@@ -98,5 +106,6 @@ def archive_projects(arena, limit=8):
             arena.db.execute('UPDATE match_attempts SET artifact=? WHERE job_id=? AND number=?',
                              (str(final), job['id'], job['attempt_count']))
         remove_redundant(old)
+        old.symlink_to(final.name, target_is_directory=True)
         changed.append(job['id'])
     return {'archived_projects':changed, 'replays_statistics_and_source_snapshots':'unchanged'}

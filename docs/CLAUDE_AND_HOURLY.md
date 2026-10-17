@@ -115,6 +115,8 @@ are retained. A new completion manifest records archive hashes, original
 completion provenance and the original attempt identity. SQLite pointers are
 updated only after verification; only then is the redundant uncompressed copy
 removed. Interrupted staging/pointer/cleanup steps are restart-recoverable.
+The old attempt directory becomes a relative alias to the new sealed attempt,
+so existing parser/readiness references to exact raw-file paths remain valid.
 
 To recover the working tree in a **new operator-owned scratch directory**:
 

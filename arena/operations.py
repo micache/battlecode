@@ -221,11 +221,23 @@ def compact(arena, days=14):
             arena.db.execute("UPDATE match_jobs SET artifact=? WHERE id=?", (str(final), job["id"]))
             arena.db.execute("UPDATE match_attempts SET artifact=? WHERE job_id=? AND number=?",
                              (str(final), job["id"], job["attempt_count"]))
+        archive_record = final / 'project-archive.json'
+        if archive_record.exists():
+            previous = read_json(archive_record)['previous_directory']
+            require(previous == Path(previous).name, 'unsafe legacy artifact alias')
+            alias = directory.parent / previous
+            if alias.is_symlink():
+                require(alias.resolve() == directory.resolve(), 'legacy artifact alias changed')
+                pending_alias = alias.with_name('.alias-' + alias.name)
+                require(not pending_alias.exists() and not pending_alias.is_symlink(), 'interrupted alias update; inspect')
+                pending_alias.symlink_to(final.name, target_is_directory=True)
+                os.replace(pending_alias, alias)
         def writable_retry(function, path, error):
             Path(path).parent.chmod(0o700)
             Path(path).chmod(0o700)
             function(path)
         shutil.rmtree(directory, onerror=writable_retry)
+        directory.symlink_to(final.name, target_is_directory=True)
     return {"compressed_replays": changed, "recovery": "gzip -dk FILE.repl26a.gz; bytes preserved"}
 
 
