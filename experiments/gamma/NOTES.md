@@ -1,75 +1,71 @@
 # Gamma operational notes
 
-## task-d0c7e96901174e80a58874326056fe19 — retreat from observed attack range
+## task-da79c8f66fb941c29528f7a27187478f — one Jungle opening emblem
 
-- Identity: bot/gamma; HEAD/input 2aa847284d093b82e68f565e8b74e21e62acdf04.
-  Edit start: accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d;
-  base source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  All six initial source files match accepted Git blobs and trusted file hashes.
-  Initial diff was the trusted restore. Accepted source remains in Git and the
-  trusted external snapshot. Latest candidate evaluated; no pending source work.
-  Prior notes archived by task ID. Engine/SDK 2.1.6; lock
+- Identity verified: bot/gamma; HEAD/input
+  1592c7696a7e1a7551c6fe5a78d6e2f91aca4a1d. All six source files matched
+  accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d and trusted file
+  hashes before edits. Base source
+  9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+  Initial dirty bot.cpp was the trusted restore, not unfinished work. Accepted
+  source remains in Git and the trusted external snapshot. Latest published
+  candidate has a completed evaluation; none awaits evaluation.
+- Engine/SDK 2.1.6; engine lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
   suite historical-panels-v1. Documentation/header hashes unchanged and verified.
-- Playbook C: recall/recovery cost in the farming/banking route.
-- Hypothesis: taking one spawnward step before low-health recall only when a
-  visible living enemy or camp has us in basic-attack range should avoid repeated
-  damage cancellations while retaining stationary recalls outside observed attack
-  ranges, reducing deaths and increasing submitted gems versus accepted source.
-- Falsifiable prediction: at the unchanged 35% recall threshold away from spawn,
-  inspect only visible living units' current attack masks. With no mask covering
-  our position, recall without moving. Otherwise attempt one spawnward move,
-  refresh position, and recall unless already on spawn. Failed/unavailable moves
-  still fall through to recall. Ongoing channels are preserved by the existing
-  early guard. No history flags, thresholds or shared-memory changes.
-  Matched development deaths must decrease and submitted gems increase to support
-  the proposed benefit; wins still govern promotion. No strategic result yet.
-- Mechanism: accepted source restarts recall at the same position even within a
-  monster's attack range. Damage interrupts recall (GameRules.md 270-274, 369-375).
-  Matching C++ cambc.h 2938-2956: attack_tiles is a Chebyshev range mask, not attack
-  availability; hidden live state can throw. Explicit is_visible precedes health
-  and attack_tiles. This is a source/rules scenario, not a traced loss event.
-- Development context: evaluation
-  5b361c70c13d014c511552bcf8594544be08fb30cdb4464480a80904fda0966a,
-  INCONCLUSIVE / provisional-three-map-wiring, 8W/16L, no faults/missing/unknown.
-  Evaluated tribute-arrival source
-  207a94cfd490b8d4d4d2b2029a01cd4dbcfa485156868465f1eb60e39f96edae
-  at input commit differs from this edit start. Collision B loss
-  08eb5c59e2352aca13ea6346a8d6f569133cc392233b65a5c79b54f49adea5ff:
-  35 deaths, 902 collected, 660 submitted vs 1012, round 1311, zero faults.
-  Collision A loss
-  36a0c409f9ec24ed89adec379ddb944a48a57ad4eaf51809497dd52e82406853:
-  19 deaths, 484 collected, 352 submitted vs 1012, round 880, zero faults.
-  These are strategic losses; totals do not attribute deaths or recall failures.
-  Saved bounded feedback/provenance: recall-threat-evidence.json.
-- Refinement rationale: unconditional retreat source 3ddcabd5... scored 20W/4L,
-  delta 0.5416666667 (evaluation 3f4ce1ba...); retry-only source e4346181...
-  scored 15W/9L, delta 0.4166666667 (evaluation cee2f976...). Both INCONCLUSIVE
-  with provisional coverage. This tests current geometric exposure rather than
-  unconditionally moving or waiting for an inferred first interruption. It is a
-  new gate, not a repeat of either policy. Different revisions are not pooled.
-- Change limited to low-health recovery branch in bot.cpp. Current visibility
-  gates all new live queries; loops stop at the first observed range overlap.
-  Existing movement helper supplies legal steps and refreshes position afterward.
-- Verification: identity/documentation/patch-scope checks PASSED, exit 0;
-  recall-threat-source-check.json. Only the recovery branch differs from accepted;
-  other five source files unchanged. No simulated engine fixture was run.
+- Playbook C, farming/recovery cost and item value. Hypothesis: buying one Jungle
+  emblem before resuming Power purchases in the same chosen stat should reduce
+  camp damage and deaths, increasing submitted gems versus accepted source.
+  Jungle trades one shard of stat growth for 30% less camp damage at five shards.
+  Cap Jungle purchases at one emblem because duplicate family passives do not
+  stack. Keep existing stat selection, RNG draws and all turn priorities fixed.
+- Falsifiable prediction: before owning the selected Jungle emblem, buy at most
+  the missing shards toward its SDK combine count; after completion, buy Power
+  with remaining gold that same turn. Preserve partial progress across visits
+  via actual inventory. Never buy a second Jungle emblem. On matched development
+  cases expect lower mean monsterDamageTaken/deaths and higher submitted gems;
+  equal/lower tribute does not support the strategic benefit. Wins govern
+  promotion. No gain measured by this worker.
+- Mechanism references: GameRules.md 278-304, BOT_REFERENCE.md section 4;
+  C++ cambc.h item_type Jungle/Power metadata and item_count/can_buy/buy contracts.
+  Passive begins only at emblem completion. No hidden-unit reads or shared state.
+- Previous recall gate evaluation
+  40f171343d76128d49fd4fd610af8cb651ade0bde55444b3f2640c9e2ed6a6f4:
+  INCONCLUSIVE, provisional-three-map-wiring, 13W/11L, delta 0.375,
+  zero faults/missing/unknown reliability. Evaluated commit is HEAD above, source
+  f89c3f951116f0908f9170c310996bde0e8077ce892748efc11d8cc1ed12400c;
+  it differs from accepted edit-start. Collision/A development losses:
+  40dc88184b6f0ecbd4ed7fa801f376ef35a8bb01f7fc7e55b3ca2f065ec02eca,
+  round 1219, 836 vs 1012 tribute, six deaths; and
+  dbb0a72d52fa4f8cd3a127276cb023f0a3580c17db507f716e76d75b62ae52b4,
+  round 1124, 762 vs 1034 tribute, four deaths. Both zero faults.
+  Team A took 12,560 and 16,620 cumulative monster damage respectively, and
+  spent 3,990 / 3,720 gold. This motivates mitigation; totals do not locate
+  interruptions or prove a cause of death. Complete bounded final.json slices
+  saved in jungle-opening-evidence.json. Both exports say engineVersion 0.0.1
+  while trusted CLI/SDK is 2.1.6; metadata discrepancy remains unresolved.
+- Prior spawn recovery and Power-stat experiments already exist; this tests a new
+  item-family opening rather than repeating them. No other past patch imported.
+- Focused validation: `python3 experiments/gamma/check_jungle_opening.py`,
+  PASSED, exit 0; jungle-opening-source-check.json. Verifies exact shop-only
+  bot.cpp patch, unchanged draft/RNG/dispatcher, stat-preserving inventory cap,
+  and 45,015 finite arithmetic cases. Source/arithmetic checks only, not engine
+  simulation. `git diff --check` PASSED, exit 0.
 - Trusted check: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
-  PASSED, exit 0. Exact candidate source
-  f89c3f951116f0908f9170c310996bde0e8077ce892748efc11d8cc1ed12400c.
-  Report: .agent/check-task-d0c7e96901174e80a58874326056fe19.json;
-  reference check:task-d0c7e96901174e80a58874326056fe19:f89c3f951116f0908f9170c310996bde0e8077ce892748efc11d8cc1ed12400c.
-  Two smoke match IDs supplied; scores, completed-game status and fuel headroom
-  are not supplied. `git diff --check` PASSED, exit 0. READY_FOR_EVAL means a
-  checked candidate, not a measured gain.
-- Uncertainty: range overlap does not prove a camp is awake or an enemy will
-  attack. Spells, hidden enemies and future movement are not predicted. A step
-  may retain exposure or approach another threat; safe channels may still be
-  interrupted. Additional queries cost fuel; headroom is unknown. Existing spawn
-  healing omission persists. Separate organizer AGENTS.md remains unavailable.
+  PASSED, exit 0; source
+  2ed65cd1577a4731dc4706f184e838cd899e5550af669036ebcd363b20f1b10e.
+  Report: .agent/check-task-da79c8f66fb941c29528f7a27187478f.json;
+  reference check:task-da79c8f66fb941c29528f7a27187478f:2ed65cd1577a4731dc4706f184e838cd899e5550af669036ebcd363b20f1b10e.
+  Two smoke match IDs supplied; completion, scores and fuel headroom were not
+  supplied and are unknown. READY_FOR_EVAL means a valid checked candidate,
+  not a measured improvement.
+- Uncertainty: one fewer shard of stat growth can slow clearing or weaken champion
+  fights. Camp mitigation cannot prevent enemy damage/stuns, and the existing
+  spawn-healing omission/recall behavior remain. Final export engineVersion has
+  historically differed from trusted CLI/SDK; no runtime parity claimed.
 - Next: supervisor evaluates the exact checked candidate against accepted source
-  on frozen development cases. If unsupported, obtain bounded recall/threat traces
-  before another recovery-policy refinement.
+  on frozen development cases. If unsupported, inspect recovery/damage traces
+  before another item-policy refinement. No worker evaluation/publication.
 
 ## Bootstrap documentation review (2026-10-17)
 

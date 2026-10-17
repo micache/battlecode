@@ -1,0 +1,14 @@
+{
+  "kind": "source and finite arithmetic checks; not an engine fixture",
+  "bot_cpp_sha256": "4e586e0f5312c7eee2cbe2a25ac8e9811a9f9a0adeb2f808901f883358dbad92",
+  "arithmetic_cases": 45015,
+  "checks": {
+    "only_shop_opening_and_algorithm_include_change_in_bot_cpp": true,
+    "same_stat_and_inventory_backed_completion": true,
+    "all_three_original_stat_choices_retained": true,
+    "dispatcher_draft_rng_unchanged": true,
+    "bounded_inventory_and_gold_cases": true,
+    "git_diff_check": true
+  },
+  "passed": true
+}

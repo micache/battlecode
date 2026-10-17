@@ -1,6 +1,7 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -60,6 +61,21 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
+    // Buy one camp-mitigation emblem; duplicate Jungle passives do not stack.
+    const std::array jungle_items{cambc::item_type::jungle_shard_of_strength,
+        cambc::item_type::jungle_shard_of_focus, cambc::item_type::jungle_shard_of_health};
+    const auto jungle = jungle_items[chosen_stat];
+    const auto inventory = me.item_count();
+    if (const auto emblem = jungle.result(); emblem && inventory[*emblem] == 0) {
+        const auto combine_count = jungle.combine_count();
+        if (inventory[jungle] < combine_count) {
+            const unsigned count = std::min(me.gold_count() / jungle.cost(),
+                combine_count - inventory[jungle]);
+            if (count && me.can_buy(jungle, count)) me.buy(jungle, count);
+        }
+    }
+
+    // After completing Jungle, retain the original Power build for extra stats.
     const std::array items{cambc::item_type::power_shard_of_strength,
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
@@ -131,27 +147,6 @@ void Bot::play_turn() {
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
-        // Damage cancels recall: retreat first when a visible basic attack can reach us.
-        bool exposed = false;
-        for (const auto& enemy : cambc::vision::champions(team::enemy))
-            if (enemy.is_visible() && enemy.health() > 0
-                && enemy.attack_tiles().is_set(me.position())) {
-                exposed = true;
-                break;
-            }
-        if (!exposed)
-            for (const auto& camp : cambc::vision::camps())
-                if (camp.is_visible() && camp.health() > 0
-                    && camp.attack_tiles().is_set(me.position())) {
-                    exposed = true;
-                    break;
-                }
-        if (exposed) {
-            const auto spawn = cambc::map::spawn_region(team::ally);
-            move_towards_closest(spawn);
-            if (spawn.is_set(me.position()))
-                return;
-        }
         me.recall();
         return;
     }
