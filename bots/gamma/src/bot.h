@@ -3,6 +3,8 @@
 // Per-champion state survives between turns. Pick one stat and keep buying it.
 class Bot {
     int chosen_stat = -1;
+    // Private to this body; retained only during a low-health recall episode.
+    bool recall_attempted = false;
 
     // Spend only on power shards of the randomly chosen stat.
     void buy_items();

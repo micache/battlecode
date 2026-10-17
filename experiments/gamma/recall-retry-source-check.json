@@ -1,0 +1,21 @@
+{
+  "scope": "Source invariants; no engine movement, channel timing or strength inferred",
+  "base_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "bot_cpp_sha256": "8b65c870c263d290334e68c6700d828930b78900549270e9571a4227e4b3f628",
+  "checks": {
+    "first_attempt_cannot_walk_and_retry_attempts_at_most_one_move": true,
+    "movement_failure_still_allows_recall_and_position_is_refreshed": true,
+    "flag_set_only_after_successful_recall": true,
+    "arrival_and_episode_exit_clear_flag": true,
+    "death_clears_flag_before_preserved_channel_guard": true,
+    "channels_and_inaction_return_before_recovery": true,
+    "only_recovery_behavior_changed": true,
+    "one_private_initialized_body_flag_only": true,
+    "unchanged_main.cpp": true,
+    "unchanged_draft.cpp": true,
+    "unchanged_draft.h": true,
+    "unchanged_random.h": true,
+    "dispatcher_yields_after_exception_handlers": true
+  },
+  "passed": true
+}

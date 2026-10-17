@@ -1,70 +1,72 @@
 # Gamma operational notes
 
-## task-53dae71709bd49f58e9741404bfa9d54 — retreat before recall
+## task-c7e46ff6b4b94082bebd57efb6c3f78d — retreat after interrupted recall
 
-- Identity: bot/gamma; HEAD/input 458bca7f7d892178c2defffbede7305af4d2a0b7;
-  accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d, source
+- Identity: bot/gamma; input/HEAD e9704a214cdc159318c72bf8d0213dd082b8f702;
+  accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d, base source
   9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  All six edit-start files match accepted Git blobs and entry.json. The initial
-  bot.cpp diff is the trusted accepted-source restore, not unfinished work.
-  Accepted source remains preserved in Git and the trusted external snapshot.
-  Recent published candidates have completed evaluations. Old PAUSED task has an
-  unchanged-source infrastructure finding; no candidate awaits evaluation.
-  Engine/SDK 2.1.6; suite historical-panels-v1; documentation unchanged.
-- Playbook C, recall/recovery cost in the farming/banking route.
-- Hypothesis: stationary low-health recall attempts can be interrupted repeatedly
-  by incoming damage. Taking one spawnward step before each initiation makes
-  retreat progress during such interruptions, reducing deaths and increasing
-  submitted gems relative to the accepted policy on matched development cases.
-- Falsifiable prediction: each actionable, low-health turn away from spawn attempts
-  one existing legal spawnward movement before recall; after arrival it returns
-  for spawn healing without starting recall. Existing channels remain untouched.
-  If matched deaths do not decrease and submitted gems do not increase, the
-  expected strategic gain is unsupported; wins still govern promotion.
-- Source reproduction: the accepted low-health branch only calls recall and
-  returns. With an awakened camp continually damaging the stationary champion,
-  each interrupted initiation can repeat at the same position until death.
-  This is a source/rules-derived scenario, not a traced event in the loss games.
-  GameRules.md lines 270-274, 371-375: damage cancels recall, five owner turn-end
-  ticks normally required; spawn arrival/healing timing also matters.
-- Development context: evaluation
-  2410874ef8c9177f24dcb39fe5a263a4cabc3f9a03a0f1b8949d7f9b8a3dbeb2
-  is INCONCLUSIVE / provisional-three-map-wiring, 7W/17L, zero faults/missing/
-  unknown reliability. Its source f81809bac3396a11e5b2c612862f3d0430f2d0bb1f6ea33d212239291f54350c
-  at commit 458bca7f7d892178c2defffbede7305af4d2a0b7 differs from edit-start.
-  Collision B loss 196ee225e7733f3aecb9bb5ae6624c50f383b0aeb459c8402bcb976abcf90c8f:
-  36 deaths, 814 vs 1012 tribute, round 1448, zero faults.
-  Collision A loss 8e661a794eb436adc3fdd40c92c055fb8f2ec5195c6ccff5dce217313b49a27b:
-  15 deaths, 352 vs 1012 tribute, round 1021, zero faults.
-  Complete final statistics saved in recall-step-evidence.json. These show losses
-  and deaths, not the occurrence/frequency of interrupted recalls.
-- Change: reuse move_towards_closest with allied spawn goals before low-health
-  recall, then re-read position and skip recall if already on spawn. One movement
-  attempt; failed/unavailable movement falls through to the existing recall.
-  No new persistent state, thresholds, combat, build, draft or farming policy.
-  This is distinct from the earlier spawn-wait experiment (439fcfcd..., evaluated
-  INCONCLUSIVE) which waited after arrival but never retreated before recall.
-- Validation: `python3 experiments/gamma/check_recall_step.py`, PASSED, exit 0;
-  recall-step-source-check.json. Detects the accepted stationary initiation,
-  requires one move before recall with fresh spawn-position guard, verifies all
-  other code against accepted source, and preserves channel guards and dispatcher
-  yield. Source invariant only; no engine behavior inferred. `git diff --check`
-  PASSED, exit 0.
+  All six edit-start files match handoff hashes and accepted Git blobs. Initial
+  diff is the trusted restore, not unfinished work. Accepted source is preserved
+  in Git and the trusted snapshot. Latest candidate has completed evaluation;
+  older PAUSED infrastructure task had no source changes. No pending candidate.
+  Engine/SDK 2.1.6; lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
+  suite historical-panels-v1. Documentation unchanged; relevant bindings reviewed.
+- Playbook C: recovery cost in the farming/banking route.
+- Hypothesis: retaining stationary first recalls but stepping spawnward on retries
+  after interruption should escape repeated damage-cancel loops while preserving
+  the initial safe-recall route, reducing deaths and increasing submitted gems
+  versus accepted source on matched development cases.
+- Falsifiable policy prediction: first low-health recall in an episode attempts
+  no move. After a successful initiation, an actionable low-health turn with no
+  running channel and away from spawn attempts at most one spawnward move before
+  restarting recall. Re-read position after moving; reaching spawn skips recall.
+  A failed move still permits recall. Channels leave the flag alone. Death,
+  arrival or recovery to at least the existing 35% threshold clears the flag.
+  If matched deaths do not decrease and submitted gems do not increase versus
+  accepted source, the expected benefit is unsupported; wins govern promotion.
+- Source mechanism: accepted code unconditionally restarts recall without moving
+  on every actionable low-health turn. Damage/stun cancels recall, so this loop
+  can recur at one position. This is reproducible from source/rules, not a traced
+  event in the supplied losses. GameRules.md 270-274, 369-375; matching C++ header
+  3447-3448 and 3661-3665: active-channel query and checked, void recall method.
+- Prior evidence: evaluation
+  3f4ce1baf874f5d4285cbcc6a02256573ddacc61dbe6fc0231ca6af4fca131f2,
+  INCONCLUSIVE / provisional-three-map-wiring, 20W/4L, matched delta 0.5416666667,
+  zero faults/missing/unknown reliability. Evaluated unconditional-retreat source
+  3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769,
+  commit e9704a214cdc159318c72bf8d0213dd082b8f702, differs from edit-start/current.
+  Collision A loss 3ec136b6335cdeb14cc350c052a00f22f22fcdcdb8137a63220b83a339e5e6b1:
+  11 deaths, 858 vs 1012 submitted, round 1206, zero faults.
+  Elkring A loss c3fc95ae46b74b7f6c4ed2f1817b27cdf990e8bb0d24c97b76a97799c4bbb087:
+  12 deaths, 774 vs 1008 submitted, round 934, zero faults.
+  These are strategic losses; they do not show interruption frequency or prove
+  retreat caused the outcomes. Bounded provenance: recall-retry-evidence.json.
+- Refinement rationale: prior movement-on-every-initiation was promising overall
+  but safe first recalls can lose position unnecessarily. This experiment uses
+  observed channel history to gate retreat. It does not repeat that exact policy
+  or combine the independent spawn-healing experiment. No combat/draft/threshold/
+  farming/build changes. One private bool per body; no shared-memory expansion.
+- Source validation: `python3 experiments/gamma/check_recall_retry.py`, PASSED,
+  exit 0; recall-retry-source-check.json. Verifies first/retry gating, reset
+  lifetime, fresh position, fallback recall, preserved channels/yield, and only
+  intended recovery edits versus accepted source. Source invariant only.
+  `git diff --check`, PASSED, exit 0.
 - Trusted check: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
   PASSED, exit 0. Exact candidate source
-  3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769.
-  Report: .agent/check-task-53dae71709bd49f58e9741404bfa9d54.json;
-  reference check:task-53dae71709bd49f58e9741404bfa9d54:3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769.
-  Wrapper supplied two smoke match IDs; no scores, completion or fuel headroom
-  inferred from IDs alone. READY_FOR_EVAL; no measured strategic gain.
-- Uncertainty: retreat can approach other threats, be blocked, or fail to escape
-  before death; moving before a safe recall may cost fuel without benefit. The
-  accepted start-on-spawn healing omission is unchanged. No per-turn trace or
-  measured strength improvement. Final exports say engineVersion 0.0.1 versus
-  trusted 2.1.6; runtime parity not claimed. Organizer AGENTS.md remains absent.
+  e43461817a5c4c96349f0b79c358e81ab909b7fd26421d3ea194e4b4f662d23c.
+  Report: .agent/check-task-c7e46ff6b4b94082bebd57efb6c3f78d.json;
+  reference check:task-c7e46ff6b4b94082bebd57efb6c3f78d:e43461817a5c4c96349f0b79c358e81ab909b7fd26421d3ea194e4b4f662d23c.
+  Wrapper supplied two smoke match IDs; scores, completed-game status and fuel
+  headroom are not supplied by this report. READY_FOR_EVAL, no measured gain.
+- Uncertainty: delaying retreat until the first interruption may lose a turn;
+  moving may approach another threat or fail to escape. Lack of current channel
+  away from spawn is only an interruption inference, not damage attribution.
+  Earlier beneficial outcomes may depend on unconditional first movement. Existing
+  start-on-spawn healing omission is unchanged. Fuel headroom and strategic gain
+  remain unknown. Organizer AGENTS.md remains absent; no runtime parity claim.
 - Next: supervisor evaluates the exact checked candidate against accepted source
-  on frozen development cases; if unsupported, collect bounded health/position/
-  recall telemetry before another recovery-policy change.
+  on frozen development cases; compare the prior unconditional-retreat results
+  descriptively without pooling different revisions/opponents as repeated trials.
 
 ## Bootstrap documentation review (2026-10-17)
 
