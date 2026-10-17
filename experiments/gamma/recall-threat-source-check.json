@@ -1,0 +1,19 @@
+{
+  "kind": "Identity, documentation and patch-scope verification; no engine behavior or strength established",
+  "checks": {
+    "trusted_identity": true,
+    "input_revision": true,
+    "branch": true,
+    "documentation_hashes": true,
+    "sdk_hash": true,
+    "only_recovery_branch_changed": true,
+    "unchanged_bot.h": true,
+    "unchanged_draft.cpp": true,
+    "unchanged_draft.h": true,
+    "unchanged_main.cpp": true,
+    "unchanged_random.h": true
+  },
+  "passed": true,
+  "bot_cpp_sha256": "73d5fd23e0f472a75fddafcaf83df21ce94f2200e37bd7279d84d5e2be17710e",
+  "trusted_checked_source_hash": "f89c3f951116f0908f9170c310996bde0e8077ce892748efc11d8cc1ed12400c"
+}

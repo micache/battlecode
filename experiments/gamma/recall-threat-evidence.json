@@ -1,0 +1,298 @@
+{
+  "task_id": "task-d0c7e96901174e80a58874326056fe19",
+  "base_source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "accepted_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "evaluated_candidate": {
+    "build_id": "fb58c9cbe70337bb01ac4f54a77683f62eee848e0e4fe523df19d854cd3039c7",
+    "commit": "2aa847284d093b82e68f565e8b74e21e62acdf04",
+    "revision_id": "630486ee8f6e6d2a84e8d5ba1b61647f4e42e3e234a6a4db19590ef8eabe2ad9",
+    "source_hash": "207a94cfd490b8d4d4d2b2029a01cd4dbcfa485156868465f1eb60e39f96edae"
+  },
+  "evaluation_id": "5b361c70c13d014c511552bcf8594544be08fb30cdb4464480a80904fda0966a",
+  "decision": "INCONCLUSIVE",
+  "coverage": "provisional-three-map-wiring",
+  "development_metrics": {
+    "bot_faults_by_side": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 24
+    },
+    "carried_gems": {
+      "available": true,
+      "mean": 13.833333333333334,
+      "observations": 24
+    },
+    "champion_deaths": {
+      "available": true,
+      "mean": 29.083333333333332,
+      "observations": 24
+    },
+    "champion_kills": {
+      "available": true,
+      "mean": 5.125,
+      "observations": 24
+    },
+    "collected_gems": {
+      "available": true,
+      "mean": 721.5833333333334,
+      "observations": 24
+    },
+    "lifetime_earned_gold": {
+      "available": true,
+      "mean": 3159.5833333333335,
+      "observations": 24
+    },
+    "round": {
+      "available": true,
+      "mean": 915.125,
+      "observations": 24
+    },
+    "submitted_gems": {
+      "available": true,
+      "mean": 604.9166666666666,
+      "observations": 24
+    },
+    "unspent_gold": {
+      "available": true,
+      "mean": 467.0833333333333,
+      "observations": 24
+    }
+  },
+  "representative_failures": [
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 22
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 20,
+            "B": 35
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 11,
+            "B": 14
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1078,
+            "B": 902
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 4870,
+            "B": 4995
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 1311
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 1012,
+            "B": 660
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 730,
+            "B": 135
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "08eb5c59e2352aca13ea6346a8d6f569133cc392233b65a5c79b54f49adea5ff",
+      "round": 1311,
+      "side": "B",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 22
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 19,
+            "B": 17
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 5,
+            "B": 14
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 484,
+            "B": 1056
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2560,
+            "B": 5425
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 880
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 352,
+            "B": 1012
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 160,
+            "B": 925
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "36a0c409f9ec24ed89adec379ddb944a48a57ad4eaf51809497dd52e82406853",
+      "round": 880,
+      "side": "A",
+      "trace": null
+    }
+  ],
+  "metrics_not_available": [
+    "bag_loss",
+    "capture_completion",
+    "channel_interruptions",
+    "per_turn_damage"
+  ],
+  "prior_recall_evaluations": [
+    {
+      "task_id": "task-c7e46ff6b4b94082bebd57efb6c3f78d",
+      "evaluations": [
+        {
+          "commit_sha": "09b4f9d1c26f8700a8a7c7017e4977e79e013abb",
+          "coverage": "provisional-three-map-wiring",
+          "engine_lock_hash": "00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668",
+          "id": "cee2f9767e9104640561ae0baa81ebce5f8374bf56e86c26005313d6821fe9ac",
+          "metrics": {
+            "common_opponent_delta": 0.4166666666666667,
+            "holdout_delta": null,
+            "losses": 9,
+            "paired_cases": 12,
+            "wins": 15
+          },
+          "opponents": {
+            "30a901fb37260fb2b6ce5f932060e0c80822c4f49b11d3120654b0f8f070aaa1": {
+              "commit": "144ab5a958a81ea546ee67d7821751a65b962906",
+              "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+            },
+            "8e99bfc5e9b45ed491550aa05ec38e0d344c7ab252398a6cb9971fa9cfecd549": {
+              "commit": "6450f60028bac2047cddd8cb8be0710823d583d3",
+              "source_hash": "0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1"
+            },
+            "a945c76d5f9ee326e6c26e0b8dc34e9fb1772381da5be6ef2a285126ba5e64dc": {
+              "commit": "bfd7a947b2bc90ab52804ad2ff8730586591b3d3",
+              "source_hash": "de641864b31c9d6705aed5fdb4f9c7c9e5f1a4c643df09a614ba88324dce0f14"
+            },
+            "b3e1029a3513d0d61227bba5921f65f42295b665334f428c8061c31047bf4a42": {
+              "commit": "e9704a214cdc159318c72bf8d0213dd082b8f702",
+              "source_hash": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769"
+            }
+          },
+          "reliability": {
+            "fault_matches": 0,
+            "missing": 0,
+            "unknown_reliability": 0
+          },
+          "source_hash": "e43461817a5c4c96349f0b79c358e81ab909b7fd26421d3ea194e4b4f662d23c",
+          "state": "INCONCLUSIVE",
+          "suite_hash": "a7fcd5253f946bfff5854ce215be82d87b4e7283722e33800a7d4fa24c2cec9b"
+        }
+      ]
+    },
+    {
+      "task_id": "task-53dae71709bd49f58e9741404bfa9d54",
+      "evaluations": [
+        {
+          "commit_sha": "e9704a214cdc159318c72bf8d0213dd082b8f702",
+          "coverage": "provisional-three-map-wiring",
+          "engine_lock_hash": "00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668",
+          "id": "3f4ce1baf874f5d4285cbcc6a02256573ddacc61dbe6fc0231ca6af4fca131f2",
+          "metrics": {
+            "common_opponent_delta": 0.5416666666666666,
+            "holdout_delta": null,
+            "losses": 4,
+            "paired_cases": 12,
+            "wins": 20
+          },
+          "opponents": {
+            "30a901fb37260fb2b6ce5f932060e0c80822c4f49b11d3120654b0f8f070aaa1": {
+              "commit": "144ab5a958a81ea546ee67d7821751a65b962906",
+              "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+            },
+            "8e99bfc5e9b45ed491550aa05ec38e0d344c7ab252398a6cb9971fa9cfecd549": {
+              "commit": "6450f60028bac2047cddd8cb8be0710823d583d3",
+              "source_hash": "0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1"
+            },
+            "a04ad4ca72fdaea9c6ed079b37b2ad88e12b63f9973fa38b8736b2d93bd47cb3": {
+              "commit": "9c632dd4030be0ec09e840918cf9ea453653b6f7",
+              "source_hash": "ed64236caac6ed68611f7044742fe7b31f563c56a10c9e523793fd94315413df"
+            },
+            "a945c76d5f9ee326e6c26e0b8dc34e9fb1772381da5be6ef2a285126ba5e64dc": {
+              "commit": "bfd7a947b2bc90ab52804ad2ff8730586591b3d3",
+              "source_hash": "de641864b31c9d6705aed5fdb4f9c7c9e5f1a4c643df09a614ba88324dce0f14"
+            }
+          },
+          "reliability": {
+            "fault_matches": 0,
+            "missing": 0,
+            "unknown_reliability": 0
+          },
+          "source_hash": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769",
+          "state": "INCONCLUSIVE",
+          "suite_hash": "618519f80a469915a9232cac4b20cf898e54e2d618456faf696c62d2ce5b785f"
+        }
+      ]
+    }
+  ],
+  "limitation": "Final totals do not trace interrupted recalls or prove this mechanism caused any loss. Different source revisions are not pooled."
+}

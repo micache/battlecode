@@ -1,65 +1,75 @@
 # Gamma operational notes
 
-## task-37a2c7761ec24fbc83a0b91519f80cb4 — tribute on arrival
+## task-d0c7e96901174e80a58874326056fe19 — retreat from observed attack range
 
-- Identity: bot/gamma; input/HEAD 09b4f9d1c26f8700a8a7c7017e4977e79e013abb.
+- Identity: bot/gamma; HEAD/input 2aa847284d093b82e68f565e8b74e21e62acdf04.
   Edit start: accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d;
   base source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  All six source hashes and accepted Git blobs match the handoff. Initial diff
-  is the trusted restore. Accepted source remains in Git and trusted snapshot.
-  Latest candidate evaluated; no pending or incomplete source work to recover.
-  Previous notes archived by task ID. Engine/SDK 2.1.6; lock
+  All six initial source files match accepted Git blobs and trusted file hashes.
+  Initial diff was the trusted restore. Accepted source remains in Git and the
+  trusted external snapshot. Latest candidate evaluated; no pending source work.
+  Prior notes archived by task ID. Engine/SDK 2.1.6; lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-  suite historical-panels-v1. Documentation unchanged; targeted API review only.
-- Playbook C: reduce the banking leg's avoidable delay.
-- Hypothesis: starting tribute on the turn movement reaches an unlocked altar
-  approach removes one idle pre-channel turn per successful approach, increasing
-  submitted gems versus accepted source without introducing bot faults.
-- Falsifiable policy prediction: only after successful banking movement, refresh
-  position and lock observations; if within the SDK tribute range of an unlocked
-  altar, start tribute once and return. A failed move, out-of-range arrival or
-  locked altar starts no channel. Existing adjacent submission, recall, combat
-  priority, ongoing channels and route remain unchanged. No new policy threshold.
-  Expected matched development result: higher mean submitted gems and zero new
-  faults; equal/lower submitted gems fails to support the objective benefit.
-  Wins govern promotion; no tournament result has been measured for this source.
-- Source reproducer: accepted banking branch unconditionally returns after
-  move_towards_closest(goals), even when the refreshed position is in altar range.
-  Tribute ticks at starting turn end, so waiting delays completion by one owner
-  turn absent intervening events. GameRules.md 116, 219-231; C++ cambc.h 3690-3694:
-  submit_gems is a checked void action, not a boolean or a basic attack.
-- Motivation: latest evaluated recall-retry source
-  e43461817a5c4c96349f0b79c358e81ab909b7fd26421d3ea194e4b4f662d23c,
-  commit 09b4f9d1c26f8700a8a7c7017e4977e79e013abb, differs from edit start.
-  Evaluation cee2f9767e9104640561ae0baa81ebce5f8374bf56e86c26005313d6821fe9ac:
-  INCONCLUSIVE, provisional-three-map-wiring, 15W/9L, no faults/missing/unknown.
-  Collision A loss a503289405677a32258a2a2ae57be0c8ba509c79b4bce5129222eae667159d0e:
-  902 collected, 792 submitted, 66 carried, four body deaths, round 1324.
-  Collision B loss 472aa71bd07294f66a66c362fcb054fd00efb7d00eb29d0399902786a6a210d9:
-  990 collected, 880 submitted, zero carried, 12 body deaths, round 1151.
-  Both sides have zero faults. Strategic losses, not engine failures; final
-  totals do not attribute delays or prove this mechanism caused either loss.
-  Saved bounded supplied metrics and provenance: tribute-arrival-evidence.json.
-- Refinement: distinct from prior combat-before-banking reorder and recall work.
-  This tests only the gap between arrival and starting tribute on accepted code.
-- Source validation: `python3 experiments/gamma/check_tribute_arrival.py`, PASSED,
-  exit 0; tribute-arrival-source-check.json. Verifies refreshed position/locks,
-  successful-move gating, one submission then return, and all other source tokens
-  preserved versus accepted. First test run failed only because its comparison
-  retained comment whitespace; fixed checker normalization, with bot unchanged.
-  `git diff --check`, PASSED, exit 0. These are source checks, not engine fixtures.
+  suite historical-panels-v1. Documentation/header hashes unchanged and verified.
+- Playbook C: recall/recovery cost in the farming/banking route.
+- Hypothesis: taking one spawnward step before low-health recall only when a
+  visible living enemy or camp has us in basic-attack range should avoid repeated
+  damage cancellations while retaining stationary recalls outside observed attack
+  ranges, reducing deaths and increasing submitted gems versus accepted source.
+- Falsifiable prediction: at the unchanged 35% recall threshold away from spawn,
+  inspect only visible living units' current attack masks. With no mask covering
+  our position, recall without moving. Otherwise attempt one spawnward move,
+  refresh position, and recall unless already on spawn. Failed/unavailable moves
+  still fall through to recall. Ongoing channels are preserved by the existing
+  early guard. No history flags, thresholds or shared-memory changes.
+  Matched development deaths must decrease and submitted gems increase to support
+  the proposed benefit; wins still govern promotion. No strategic result yet.
+- Mechanism: accepted source restarts recall at the same position even within a
+  monster's attack range. Damage interrupts recall (GameRules.md 270-274, 369-375).
+  Matching C++ cambc.h 2938-2956: attack_tiles is a Chebyshev range mask, not attack
+  availability; hidden live state can throw. Explicit is_visible precedes health
+  and attack_tiles. This is a source/rules scenario, not a traced loss event.
+- Development context: evaluation
+  5b361c70c13d014c511552bcf8594544be08fb30cdb4464480a80904fda0966a,
+  INCONCLUSIVE / provisional-three-map-wiring, 8W/16L, no faults/missing/unknown.
+  Evaluated tribute-arrival source
+  207a94cfd490b8d4d4d2b2029a01cd4dbcfa485156868465f1eb60e39f96edae
+  at input commit differs from this edit start. Collision B loss
+  08eb5c59e2352aca13ea6346a8d6f569133cc392233b65a5c79b54f49adea5ff:
+  35 deaths, 902 collected, 660 submitted vs 1012, round 1311, zero faults.
+  Collision A loss
+  36a0c409f9ec24ed89adec379ddb944a48a57ad4eaf51809497dd52e82406853:
+  19 deaths, 484 collected, 352 submitted vs 1012, round 880, zero faults.
+  These are strategic losses; totals do not attribute deaths or recall failures.
+  Saved bounded feedback/provenance: recall-threat-evidence.json.
+- Refinement rationale: unconditional retreat source 3ddcabd5... scored 20W/4L,
+  delta 0.5416666667 (evaluation 3f4ce1ba...); retry-only source e4346181...
+  scored 15W/9L, delta 0.4166666667 (evaluation cee2f976...). Both INCONCLUSIVE
+  with provisional coverage. This tests current geometric exposure rather than
+  unconditionally moving or waiting for an inferred first interruption. It is a
+  new gate, not a repeat of either policy. Different revisions are not pooled.
+- Change limited to low-health recovery branch in bot.cpp. Current visibility
+  gates all new live queries; loops stop at the first observed range overlap.
+  Existing movement helper supplies legal steps and refreshes position afterward.
+- Verification: identity/documentation/patch-scope checks PASSED, exit 0;
+  recall-threat-source-check.json. Only the recovery branch differs from accepted;
+  other five source files unchanged. No simulated engine fixture was run.
 - Trusted check: `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
   PASSED, exit 0. Exact candidate source
-  207a94cfd490b8d4d4d2b2029a01cd4dbcfa485156868465f1eb60e39f96edae.
-  Report: .agent/check-task-37a2c7761ec24fbc83a0b91519f80cb4.json;
-  reference check:task-37a2c7761ec24fbc83a0b91519f80cb4:207a94cfd490b8d4d4d2b2029a01cd4dbcfa485156868465f1eb60e39f96edae.
+  f89c3f951116f0908f9170c310996bde0e8077ce892748efc11d8cc1ed12400c.
+  Report: .agent/check-task-d0c7e96901174e80a58874326056fe19.json;
+  reference check:task-d0c7e96901174e80a58874326056fe19:f89c3f951116f0908f9170c310996bde0e8077ce892748efc11d8cc1ed12400c.
   Two smoke match IDs supplied; scores, completed-game status and fuel headroom
-  are not supplied. READY_FOR_EVAL means checked candidate, not measured gain.
-- Uncertainty: no per-turn tribute trace or fuel telemetry. Earlier commitment
-  can expose the channel to a new lock/stun, and earlier bag timing may change
-  later captures. No claim of gain or runtime parity. Organizer AGENTS.md absent.
-- Next: supervisor evaluates the exact checked source against accepted source on
-  frozen development cases. If unsupported, inspect route/lock blockage evidence.
+  are not supplied. `git diff --check` PASSED, exit 0. READY_FOR_EVAL means a
+  checked candidate, not a measured gain.
+- Uncertainty: range overlap does not prove a camp is awake or an enemy will
+  attack. Spells, hidden enemies and future movement are not predicted. A step
+  may retain exposure or approach another threat; safe channels may still be
+  interrupted. Additional queries cost fuel; headroom is unknown. Existing spawn
+  healing omission persists. Separate organizer AGENTS.md remains unavailable.
+- Next: supervisor evaluates the exact checked candidate against accepted source
+  on frozen development cases. If unsupported, obtain bounded recall/threat traces
+  before another recovery-policy refinement.
 
 ## Bootstrap documentation review (2026-10-17)
 

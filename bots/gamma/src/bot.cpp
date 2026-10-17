@@ -131,6 +131,27 @@ void Bot::play_turn() {
 
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
+        // Damage cancels recall: retreat first when a visible basic attack can reach us.
+        bool exposed = false;
+        for (const auto& enemy : cambc::vision::champions(team::enemy))
+            if (enemy.is_visible() && enemy.health() > 0
+                && enemy.attack_tiles().is_set(me.position())) {
+                exposed = true;
+                break;
+            }
+        if (!exposed)
+            for (const auto& camp : cambc::vision::camps())
+                if (camp.is_visible() && camp.health() > 0
+                    && camp.attack_tiles().is_set(me.position())) {
+                    exposed = true;
+                    break;
+                }
+        if (exposed) {
+            const auto spawn = cambc::map::spawn_region(team::ally);
+            move_towards_closest(spawn);
+            if (spawn.is_set(me.position()))
+                return;
+        }
         me.recall();
         return;
     }
@@ -153,16 +174,7 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        // Start tribute on arrival; movement may reveal a different lock state.
-        if (move_towards_closest(goals)) {
-            for (auto altar : cambc::map::altars().positions()) {
-                if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
-                    && !cambc::vision::has_altar_lock(altar)) {
-                    me.submit_gems(altar);
-                    return;
-                }
-            }
-        }
+        move_towards_closest(goals);
         return;
     }
 
