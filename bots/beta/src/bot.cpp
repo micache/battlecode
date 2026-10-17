@@ -129,14 +129,21 @@ void Bot::play_turn() {
     if (at_spawn)
         buy_items();
 
-    // Recall arrives before this turn; spawn healing happens at turn end.
-    if (at_spawn && me.health() < me.max_health())
-        return;
-
     // Recall immediately when badly hurt away from spawn.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
         me.recall();
         return;
+    }
+
+    // Take an immediate banking opportunity before opportunistic combat.
+    if (me.gem_count() > 0) {
+        for (auto altar : cambc::map::altars().positions()) {
+            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
+                && !cambc::vision::has_altar_lock(altar)) {
+                me.submit_gems(altar);
+                return;
+            }
+        }
     }
 
     // Attack the first enemy champion already in range.
@@ -150,11 +157,6 @@ void Bot::play_turn() {
         cambc::bitboard goals;
         goals.clear();
         for (auto altar : cambc::map::altars().positions()) {
-            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
-                && !cambc::vision::has_altar_lock(altar)) {
-                    me.submit_gems(altar);
-                    return;
-                }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
         move_towards_closest(goals);

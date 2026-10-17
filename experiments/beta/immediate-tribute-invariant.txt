@@ -1,0 +1,1 @@
+PASS: eligible immediate tribute precedes combat after existing guards; accepted source and four eligibility/return mutations rejected. Distant routing and farming remain after combat. Source invariant only.
