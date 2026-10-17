@@ -82,8 +82,18 @@ bool attack_if_in_range(const Target& target) {
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
     for (const auto& camp : cambc::vision::camps())
-        if (attack_if_in_range(camp))
+        if (attack_if_in_range(camp)) {
+            // Use a remaining move to occupy the group just cleared by this hit.
+            auto& me = cambc::self();
+            if (me.is_alive() && me.can_move()) {
+                const auto group = camp.camp_group();
+                const auto spawns = group.spawn_tiles();
+                if (!(spawns & cambc::vision::visible_tiles()).is_empty()
+                    && std::holds_alternative<cambc::map::camp_group_reward_available>(group.state()))
+                    move_towards_closest(spawns);
+            }
             return;
+        }
 
     // Union every group's spawn tiles except visibly respawning groups.
     cambc::bitboard goals;
@@ -153,16 +163,7 @@ void Bot::play_turn() {
                 }
             if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
         }
-        // Start the countdown on arrival, using position and locks refreshed after movement.
-        if (move_towards_closest(goals)) {
-            for (auto altar : cambc::map::altars().positions()) {
-                if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
-                    && !cambc::vision::has_altar_lock(altar)) {
-                    me.submit_gems(altar);
-                    return;
-                }
-            }
-        }
+        move_towards_closest(goals);
         return;
     }
 

@@ -1,0 +1,1 @@
+PASS: successful stationary camp attack gates an alive/movement check, fresh visibility and cleared state before approaching that same group; already-on-goal holds. Accepted source and eight mutations rejected. All other source matches accepted. Source invariant only; actual capture timing, fuel headroom and strategic value remain unmeasured.
