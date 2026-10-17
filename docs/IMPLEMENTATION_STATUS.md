@@ -7,6 +7,10 @@ records repeated inputs separately and supplies bounded self-play feedback to
 the next hourly job. Enable with the stopped-service configuration command in
 [active training](HOURLY_TRAINING.md). Live verification is recorded separately;
 an idle coding worker is not evidence that games are running.
+The deployed `707a137` observation now records a finished 36-game round and
+automatic replenishment while all coding workers remained idle, without adding
+a model task. Full replays/statistics and next-hourly feedback were verified;
+see the linked live reports in active training.
 
 17 October storage/results update: verified redundant match worktrees are now
 offloaded automatically to this operator computer by a five-minute user timer;

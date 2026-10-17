@@ -58,10 +58,11 @@ within the time window and flag differing repeated outcomes. Training matches
 never enter promotion evaluation cases or certify a submission. Repeats still
 produce useful runtime/reliability evidence, not extra proof of strategic gain.
 
-Global pause, engine-adapter pause and disk guards stop gameplay. A coding CLI
+Global pause, engine-adapter pause and disk guards stop new gameplay. A coding CLI
 quota/login wait or owner-model pause does not stop already compiled bots from
 playing. To disable a lane in future training rounds, disable its registration;
-to stop all play immediately use the normal global pause/stop controls.
+to pause new play use global pause; to interrupt an active game use full service
+stop. In-progress attempts remain recoverable rather than becoming invented losses.
 
 Enable on this existing deployment only while services are stopped:
 
@@ -74,6 +75,25 @@ queue entries park without deletion and resume if re-enabled. The status snapsho
 includes `continuous_training` with its frozen roster, round and game counts.
 Concurrency stays one match, one build and one model invocation. The full
 nine-map promotion gate and official upload/challenge restrictions are unchanged.
+
+### Real deployment evidence
+
+Infrastructure `707a137c0a451f615cef589f5ffe174f5aa9e434` was installed with all
+services stopped, then enabled with `--continuous-matches` and restarted under
+the managed supervisor. [The live observation](../evidence/blaxel/continuous-self-play-live-20261017.json)
+records a complete 36-game round and automatic creation/execution of the next
+round while all three coding workers remained IDLE and the task count stayed 49.
+The model clocks were not reset or forced. Exact match IDs, pairings and frozen
+commit/build/map identities are preserved in that report.
+
+[The feedback/artifact check](../evidence/blaxel/continuous-self-play-feedback-20261017.json)
+verifies three real completed replay/statistics artifact sets and confirms that
+each worker's prospective brief includes self-play. These are previews of the
+normal next-hourly-task inputs, not extra dispatched model jobs. The sampled
+complete briefs were about 10–12 KB, including existing history and external
+feedback, rather than raw game transcripts. Restart/publication/priority/pause/
+repeat-count behavior also passed focused synthetic tests; they are not claimed
+as additional real-engine games. Ninety local tests passed before deployment.
 
 ## Adding a Codex lane
 
