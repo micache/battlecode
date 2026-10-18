@@ -38,3 +38,21 @@ operator receipt makes repeated recovery idempotent for that task.
 Restart the managed supervisor and send `arena start` to resume the continuous
 loop. Hourly per-lane model spacing and the single global model slot are
 unchanged; games continue between model jobs.
+
+## Live verification, 18 October 2026
+
+Runtime `13ad10e00bd1fe44b2c5e3f0cc276e607932c717` is installed. All 114
+automated orchestration checks passed. Twelve reads of the previously blocked
+smoke statistics/log files succeeded, as did requests through both owners'
+normal clients. Beta recovered the exact preserved source, passed a new check,
+read both smoke logs, and published `d2d57274232ca7cead5bacf650d6f51fd5b3bc3d`.
+Its full nine-map evaluation is running; no win-rate claim is made yet.
+
+At the recorded snapshot gamma's recovery task was RUNNING, alpha and beta
+were WAITING_EVALUATION, and the continuous loop had completed 5,430 games
+(up from 5,420 before the final restart). All four service units had zero
+unexpected restarts, no lane was paused, and about 3.34 GB remained free.
+Both lanes' prior smoke files were still available and protected across the
+handoff. See the [exact live record](../evidence/blaxel/smoke-access-recovery-20261018.json).
+No owner login was needed. Physical provider reboot persistence is still
+unverified; this record demonstrates controlled service restarts, not a reboot.

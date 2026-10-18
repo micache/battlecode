@@ -1,0 +1,174 @@
+{
+  "runtime": "13ad10e00bd1fe44b2c5e3f0cc276e607932c717",
+  "status": {
+    "timestamp": 1792313034.218602,
+    "paused": false,
+    "adapter_paused": false,
+    "disk_pressure": false,
+    "service_error": null,
+    "workers": [
+      {
+        "detail": null,
+        "heartbeat": 1792312089.539747,
+        "id": "alpha",
+        "last_feedback": "089fa436cc9f5a5b0108459554430b05581849083c8235228c59e16c52b7b587",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "WAITING_EVALUATION",
+        "task_id": "task-ce64d208150c47a39aaaad25caf3695a"
+      },
+      {
+        "detail": null,
+        "heartbeat": 1792312679.438039,
+        "id": "beta",
+        "last_feedback": "bee9fc33d2640658c92ff3fd1da9b77d9d70d2be4c6d0595f264ea4f8b5cadfc",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "WAITING_EVALUATION",
+        "task_id": "task-bc8c3246ad3449e39155d369ae07c9e0"
+      },
+      {
+        "detail": null,
+        "heartbeat": 1792312964.9714806,
+        "id": "gamma",
+        "last_feedback": "322271ef54566a308ed0a314061debfb504f4872b7353c8394aaf57e78cdc1ee",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "RUNNING",
+        "task_id": "task-74db5e961da646ab895aa56505d86528"
+      }
+    ],
+    "matches": [
+      {
+        "count": 79,
+        "state": "CANCELLED"
+      },
+      {
+        "count": 5430,
+        "state": "COMPLETED"
+      },
+      {
+        "count": 136,
+        "state": "QUEUED"
+      }
+    ],
+    "disk": {
+      "artifact_bytes": 774220800,
+      "free": 3337568256
+    }
+  },
+  "recovery_evidence": {
+    "beta": {
+      "prior_task": "task-8fbe93005e2745df8b10d8b9da49fea8",
+      "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e",
+      "matches": [
+        "b6fe9cfe9267912a59d012c2377473703227cfbb8df32810667c8af907d2515a",
+        "ded639c3e7eded8c10bd6b7e01342d06373e01b6e7286d5be9b28a3568a1ed24"
+      ],
+      "all_protected": true,
+      "all_raw_available": true
+    },
+    "gamma": {
+      "prior_task": "task-9ae6a622bdd841fbb6bd9e2cf6338e03",
+      "source_hash": "197bec154516a17926028ab2fa5c9572571ffd7e2ac1f94a66aea43936ddc02f",
+      "matches": [
+        "15228ea17c4b294bf3c47db055c6974a61e89ae7e88acc9cb522ea366145e619",
+        "0fc4f4841f03443d4d742b70faedf860146a6d5ebd5fd1dfe945283614218226"
+      ],
+      "all_protected": true,
+      "all_raw_available": true
+    }
+  },
+  "latest_tasks": [
+    {
+      "bot": "alpha",
+      "task_id": "task-ce64d208150c47a39aaaad25caf3695a",
+      "state": "PUBLISHED",
+      "commit": "0b61a3d4f68afab876f551d852202c983703aa28",
+      "recovery_finding_supplied": false,
+      "evaluation": {
+        "id": "3a0d6ab081fe17e2c57f886e47cfc10a0bbdd3c0fa5c41dc2a799d7ee83c3e2d",
+        "state": "EVALUATING",
+        "commit": "0b61a3d4f68afab876f551d852202c983703aa28",
+        "experiment_id": "task-ce64d208150c47a39aaaad25caf3695a",
+        "coverage": "development-six-map",
+        "development_incumbent_id": "8bdabe809d2e9bfa47c670cdb6d1c70b2d6d5e824c0bff186fe45f52829e145c"
+      }
+    },
+    {
+      "bot": "beta",
+      "task_id": "task-bc8c3246ad3449e39155d369ae07c9e0",
+      "state": "PUBLISHED",
+      "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "recovery_finding_supplied": true,
+      "evaluation": {
+        "id": "8874fe2cae89ba66b875b2082e00e01e0257b80aaf09fa757c1c5f24f9cd0178",
+        "state": "EVALUATING",
+        "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+        "experiment_id": "task-bc8c3246ad3449e39155d369ae07c9e0",
+        "coverage": "full-nine-map",
+        "development_incumbent_id": "8e99bfc5e9b45ed491550aa05ec38e0d344c7ab252398a6cb9971fa9cfecd549"
+      }
+    },
+    {
+      "bot": "gamma",
+      "task_id": "task-74db5e961da646ab895aa56505d86528",
+      "state": "DISPATCHED",
+      "commit": null,
+      "recovery_finding_supplied": true
+    }
+  ],
+  "supervisor_running": true,
+  "unit_restarts": {
+    "arena": 0,
+    "alpha": 0,
+    "beta": 0,
+    "gamma": 0
+  },
+  "recorded_at": 1792313035.6340792,
+  "cause": "Slice authorization omitted own smoke checks that have not yet joined an evaluation or training case.",
+  "tests": {
+    "command": "python3 -m unittest discover -s tests",
+    "passed": 114,
+    "failures": 0,
+    "scope": "Synthetic orchestration/security/recovery regressions, not a game-strength proof."
+  },
+  "live_verification": {
+    "prior_smoke_file_reads_passed": 12,
+    "owner_client_checks": [
+      {
+        "bot": "beta",
+        "match_id": "b6fe9cfe9267912a59d012c2377473703227cfbb8df32810667c8af907d2515a",
+        "file": "final.json",
+        "exit_code": 0
+      },
+      {
+        "bot": "gamma",
+        "match_id": "15228ea17c4b294bf3c47db055c6974a61e89ae7e88acc9cb522ea366145e619",
+        "file": "final.json",
+        "exit_code": 0
+      }
+    ],
+    "beta_recovered_exact_preserved_source": true,
+    "beta_actual_new_smoke_slices_succeeded": true,
+    "historical_blocked_results_unchanged": true,
+    "services_stopped_before_each_runtime_install": true,
+    "old_managed_supervisors_exited_cleanly": true,
+    "managed_supervisor": "arena-smoke-recovery-supervisor-20261018",
+    "model_cadence_and_isolation_changed": false,
+    "official_actions_performed": false,
+    "owner_login_required": false
+  },
+  "limits": [
+    "Gamma's recovery invocation was still running at this snapshot; no claim that it has published or improved.",
+    "No guarantee of indefinite fault-free operation; physical provider reboot persistence remains unverified.",
+    "New evaluation results were pending; no strength/promotion claim.",
+    "The additional 19 cancelled jobs during upgrade were obsolete training inputs, not scored bot losses."
+  ]
+}
