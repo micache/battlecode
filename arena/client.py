@@ -6,8 +6,8 @@ import pwd
 import sys
 import time
 
-from .common import ArenaError, atomic_json, fresh_id, read_json, require
-from .protocol import encode_source
+from .common import ArenaError, atomic_json, canonical, fresh_id, read_json, require
+from .protocol import MAX_MESSAGE_BYTES, encode_source
 
 
 def owner_config(path):
@@ -21,6 +21,8 @@ def request(config, operation, payload=None, timeout=1100):
     root = Path(config["root"])
     message = {"protocol_version": 1, "id": request_id, "bot_id": config["bot_id"],
                "operation": operation, "payload": payload or {}}
+    require(len(canonical(message)) + 1 <= MAX_MESSAGE_BYTES,
+            'request exceeds 2 MiB mailbox bound; preserve candidate and reduce this transaction')
     atomic_json(root / "inbox" / config["bot_id"] / f"{request_id}.json", message, 0o640)
     response = root / "outbox" / config["bot_id"] / f"{request_id}.json"
     until = time.monotonic() + timeout

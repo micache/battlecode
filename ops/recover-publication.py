@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recover a valid candidate after the known experiment-artifact publisher bug.
+"""Recover a checked candidate after known pre-push note-publication failures.
 
 Run as root with services stopped. Capture runs under its owner; the central
 writer runs as bc-arena. No Codex invocation or credential-cache access.
@@ -41,7 +41,8 @@ else:
     from arena.publisher import recover_publication
     from arena.service import Arena
     require(os.geteuid() != 0, 'central writer must be non-root')
-    with lock(Path(config['root']) / 'state/service.lock'), lock(Path(config['root']) / 'model.lock'):
+    with lock(Path(config['root']) / 'state/service.lock', blocking=False), \
+            lock(Path(config['root']) / 'model.lock', blocking=False):
         arena = Arena(load('/etc/battlecode/arena.json'))
         result = recover_publication(arena, args.bot, json.load(sys.stdin))
         arena.export_status()

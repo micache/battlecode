@@ -10,7 +10,7 @@ import time
 
 from .common import (ArenaError, atomic_json, fresh_id, identity, read_json, require,
                      validate_schema)
-from .protocol import decode_source, save_source
+from .protocol import MAX_MESSAGE_BYTES, decode_source, save_source
 
 
 BACKOFF = (1800, 3600, 7200, 14400)
@@ -330,7 +330,8 @@ def handle_request(arena, bot, request):
         db.execute("UPDATE tasks SET state='PUBLICATION_APPROVED',result=? WHERE id=?", (json.dumps(result), task["id"]))
         db.put(f"publication-source:{task['id']}", source_hash)
         from .publisher import publish
-        return publish(arena, bot, envelope, payload["source"], payload.get("notes", {}))
+        return publish(arena, bot, envelope, payload["source"], payload.get("notes", {}),
+                       payload.get('notes_deleted', ()), payload.get('notes_mode', 'snapshot-v1'))
     if operation == "worker-finished":
         task, envelope = trusted_task(arena, bot, payload["task_id"])
         require(worker["task_id"] == task["id"], "stale worker result")
@@ -394,7 +395,7 @@ def consume_messages(arena):
             fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
             try:
                 info = os.fstat(fd)
-                require(stat.S_ISREG(info.st_mode) and info.st_size <= 2 * 1024 * 1024, "unsafe mailbox request")
+                require(stat.S_ISREG(info.st_mode) and info.st_size <= MAX_MESSAGE_BYTES, "unsafe mailbox request")
                 with os.fdopen(fd, "rb", closefd=False) as stream:
                     request = json.load(stream)
                 require(request["protocol_version"] == 1 and request["bot_id"] == bot and request["id"] == path.stem,

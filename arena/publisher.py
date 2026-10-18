@@ -2,27 +2,20 @@
 from pathlib import Path
 import time
 
-from .common import atomic_json, identity, require, run, safe_relative, sha, tree_hash
+from .common import atomic_json, identity, require, run, sha, tree_hash
 from .gitstore import commit_id, git, source_files, validate_worktree
 from .protocol import decode_source, save_source
 
 
-def publish(arena, bot, task, source, notes):
+def publish(arena, bot, task, source, notes, notes_deleted=(), notes_mode='snapshot-v1'):
     expected = task["input_revision"]
     branch = task["branch"]
     config = arena.config
     files, source_hash = decode_source(source)
-    # Notes and source-level regression/reference fixtures are data, never build recipes.
-    import base64
-    decoded_notes = {}
-    require(isinstance(notes, dict) and len(notes) <= 128, "oversized experiment history")
-    for name, data in notes.items():
-        safe_relative(name)
-        require(Path(name).suffix in (".md", ".json", ".txt", ".patch", ".py", ".cpp", ".cc", ".cxx", ".h", ".hpp")
-                and len(data) <= 350000,
-                "unexpected/oversized experiment artifact")
-        decoded_notes[name] = base64.b64decode(data, validate=True)
-    require(sum(map(len, decoded_notes.values())) <= 1024 * 1024, "oversized notes")
+    from .notes import apply_edits, decode_edits
+    require(notes_mode in ('snapshot-v1', 'delta-v1'), 'unknown experiment edit format')
+    require(notes_mode == 'delta-v1' or not notes_deleted, 'snapshot cannot include note deletions')
+    decoded_notes = decode_edits(notes, notes_deleted)
     def remote_tip():
         result = git(config["mirror"], "ls-remote", "--heads", "origin", f"refs/heads/{branch}")
         require(len(result.splitlines()) == 1, "branch missing/ambiguous")
@@ -36,12 +29,19 @@ def publish(arena, bot, task, source, notes):
     run(["git", "clone", "--no-hardlinks", "--no-checkout", config["mirror"], str(directory)])
     git(directory, "checkout", "-B", branch, expected)
     git(directory, "remote", "set-url", "origin", config["repository_url"])
+    validate_worktree(directory, bot)  # Reject inherited symlinks before applying any edits.
     import shutil
-    for prefix, decoded in ((f"bots/{bot}/src", files), (f"experiments/{bot}", decoded_notes)):
-        target = directory / prefix
-        if target.exists():
-            shutil.rmtree(target)
-        save_source(decoded, target)
+    target = directory / f'bots/{bot}/src'
+    if target.exists():
+        shutil.rmtree(target)
+    save_source(files, target)
+    history = directory / f'experiments/{bot}'
+    if notes_mode == 'delta-v1':
+        apply_edits(history, decoded_notes, notes_deleted)
+    else:  # Backward compatibility for an old, bounded snapshot client.
+        if history.exists():
+            shutil.rmtree(history)
+        save_source(decoded_notes, history)
     actual_paths = validate_worktree(directory, bot)
     require(actual_paths and tree_hash(directory / "bots" / bot / "src") == source_hash, "publication source mismatch")
     git(directory, "add", "--", f"bots/{bot}/src", f"experiments/{bot}")
@@ -74,7 +74,9 @@ def recover_publication(arena, bot, payload):
     lane = arena.db.one('SELECT * FROM bots WHERE id=?', (bot,))
     require(arena.db.get('paused', True), 'pause scheduling before operator recovery')
     require(task['state'] == 'PAUSED' and worker['state'] == 'PAUSED' and worker['task_id'] == task['id']
-            and worker['detail'] == 'unexpected/oversized experiment artifact', 'not the known recoverable publisher failure')
+            and worker['lease_owner'] == 'server' and not worker['paused']
+            and worker['detail'] in ('unexpected/oversized experiment artifact', 'oversized experiment history',
+                                     'oversized notes'), 'not the known recoverable publisher failure')
     require(task['published_commit'] is None and not (arena.root / 'publication' / task['id']).exists(),
             'publication intent exists; reconcile remote, never retry blindly')
     require(envelope['engine_lock_hash'] == arena.adapter().lock_hash and
@@ -87,7 +89,8 @@ def recover_publication(arena, bot, payload):
     require(old_check and old_check['state'] == 'PASSED', 'no exact-source previously passed candidate')
     arena.db.put(f"operator-publication-recovery:{task['id']}", {'at': time.time(), 'old_state': task['state'],
                  'source_hash': source_hash, 'infrastructure_commit': arena.config['infrastructure_commit'],
-                 'model_invocations': 0, 'reason': 'preserve valid native candidate after artifact allowlist repair'})
+                 'model_invocations': 0, 'original_detail': worker['detail'],
+                 'reason': 'recover exact checked native candidate after bounded note-publication repair'})
     arena.db.execute("UPDATE tasks SET state='DISPATCHED' WHERE id=?", (task['id'],))
     arena.db.execute("UPDATE workers SET state='RUNNING' WHERE id=?", (bot,))
     try:

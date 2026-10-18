@@ -145,11 +145,10 @@ def candidate_payload(config, attempt):
     actual_paths = validate_worktree(attempt, bot)
     require(result["outcome"] == "READY_FOR_EVAL" and actual_paths, "no valid proposed edit")
     source = encode_source(attempt / "bots" / bot / "src")
-    notes = encode_source(attempt / 'experiments' / bot)
-    # Generated Python bytecode is ignored by Git too; retain it in private checkpoints, not publication.
-    notes = {name: data for name, data in notes.items()
-             if '__pycache__' not in Path(name).parts and Path(name).suffix not in ('.pyc', '.pyo')}
-    return {'task_id': task_id, 'result': result, 'source': source, 'notes': notes}
+    from .notes import encode_edits
+    notes, deleted = encode_edits(attempt, bot, actual_paths)
+    return {'task_id': task_id, 'result': result, 'source': source,
+            'notes': notes, 'notes_deleted': deleted, 'notes_mode': 'delta-v1'}
 
 
 def publish_attempt(config, attempt, owner=None):

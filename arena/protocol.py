@@ -5,6 +5,9 @@ from pathlib import Path
 from .common import identity, require, safe_relative, sha, tree_manifest
 
 
+MAX_MESSAGE_BYTES = 2 * 1024 * 1024
+
+
 def encode_source(directory):
     directory = Path(directory)
     files = tree_manifest(directory)
