@@ -59,7 +59,10 @@ class OperationsTests(Harness):
 
     def test_latest_smoke_evidence_survives_rolling_retention(self):
         from arena.retention import protected_jobs
+        from arena.supervisor import new_task
         _, job, _, _ = self.smoke_fixture()
+        self.assertIn(job, protected_jobs(self.arena))
+        new_task(self.arena, 'alpha')
         self.assertIn(job, protected_jobs(self.arena))
 
     def test_smoke_recovery_verifies_access_and_preserves_blocked_history(self):

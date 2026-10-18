@@ -10,8 +10,9 @@ The gate now also recognizes arena-written `check:TASK:SOURCE` reports joined
 to the lane's trusted task and exact match/source identity. This includes old
 reports without a schema migration. Development-map restrictions, holdout
 denial, bounded file allowlists and cross-lane privacy remain enforced. The
-latest task's four most recent smoke checks per lane are retained so ordinary
-history pruning does not destroy evidence during a pause.
+current and immediate prior tasks' four most recent smoke checks per lane are
+retained so ordinary pruning does not destroy evidence during a pause or the
+handoff to the recovery task.
 
 An adjacent publication race is fixed: ingestion now links a trusted published
 commit to its approved task and edit-base hash before any evaluation can start.

@@ -105,13 +105,18 @@ def protected_jobs(arena):
             protected.update(r['match_id'] for r in metrics.get('representative_failures', []))
         task = db.one('SELECT id,envelope FROM tasks WHERE bot_id=? ORDER BY created DESC LIMIT 1', (bot,))
         if task:
-            # The latest worker may still need smoke logs, including after an
-            # infrastructure pause. Bound this to four recent checks per lane.
-            for check in db.all('SELECT value FROM meta WHERE key LIKE ? '
-                                "ORDER BY json_extract(value,'$.finished') DESC LIMIT 4",
-                                (f"check:{task['id']}:%",)):
-                protected.update(json.loads(check['value']).get('matches', []))
-            rid = json.loads(task['envelope']).get('development_selection', {}).get('revision_id')
+            envelope = json.loads(task['envelope'])
+            # Keep recovery evidence through the handoff to the next task,
+            # not just until that task is dispatched. Still bounded: at most
+            # four checks from the current and immediate prior task per lane.
+            for task_id in (task['id'], envelope.get('prior_task_id')):
+                if not task_id or not db.one('SELECT id FROM tasks WHERE id=? AND bot_id=?', (task_id,bot)):
+                    continue
+                for check in db.all('SELECT value FROM meta WHERE key LIKE ? '
+                                    "ORDER BY json_extract(value,'$.finished') DESC LIMIT 4",
+                                    (f"check:{task_id}:%",)):
+                    protected.update(json.loads(check['value']).get('matches', []))
+            rid = envelope.get('development_selection', {}).get('revision_id')
             row = db.one('SELECT id FROM evaluations WHERE revision_id=? AND finished IS NOT NULL ORDER BY created DESC LIMIT 1', (rid,))
             if row:
                 evaluations.add(row['id'])
