@@ -1,0 +1,172 @@
+{
+  "task_id": "task-9485272c218a4db2a10b11a83cae45f1",
+  "bot_id": "beta",
+  "base_source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+  "edit_commit": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+  "input_revision": "70df708b437891ab92be59390d10168bf2ffb9e0",
+  "accepted_commit": "0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9",
+  "engine_version": "2.1.6",
+  "engine_lock_hash": "00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668",
+  "suite": "historical-panels-v1",
+  "edit_file_identity_matches": true,
+  "initial_status": "bot.cpp differs from HEAD due to trusted restoration; all six files matched edit_start",
+  "documentation_changed": false,
+  "gameplay_review_required": false,
+  "prior_task_status": "PUBLISHED",
+  "latest_evaluation": {
+    "id": "be4e11d000572084736bc2295e8f3ce91ad44c4e0c2354e643cf3d78a6a85a84",
+    "candidate": {
+      "build_id": "c64d43cc13af29e061017f5a794c5a782dc7210d1a1fb89dd92af8a66f29bc82",
+      "commit": "70df708b437891ab92be59390d10168bf2ffb9e0",
+      "revision_id": "f9be1493abea40457e59ea023c64c5bc87feafb5c63538f874fa4be4fad296b6",
+      "source_hash": "f3a34040840ca797a84b12e2ae9a0ed6992ce47fbaf58fe37bb568bb2e0df897"
+    },
+    "decision": "INCONCLUSIVE",
+    "coverage": "development-six-map",
+    "wins": 42,
+    "losses": 6,
+    "development_comparison": {
+      "commit_sha": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+      "common_opponent_delta": 0.0,
+      "fault_matches": [],
+      "missing": [],
+      "paired_cases": 24,
+      "per_map": {
+        "collision": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.625,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 1.0,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 1.0,
+          "incumbent": 1.0,
+          "pairs": 4
+        }
+      },
+      "source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+      "unknown_reliability": []
+    }
+  },
+  "self_play": [
+    {
+      "commit": "70df708b437891ab92be59390d10168bf2ffb9e0",
+      "source_hash": "f3a34040840ca797a84b12e2ae9a0ed6992ce47fbaf58fe37bb568bb2e0df897",
+      "unique_input_cells": 24,
+      "wins": 15,
+      "losses": 9,
+      "repeat_matches": 179,
+      "fault_matches": 0,
+      "metrics": {
+        "bot_faults_by_side": {
+          "mean": 0.0,
+          "observations": 24
+        },
+        "carried_gems": {
+          "mean": 29.333333333333332,
+          "observations": 24
+        },
+        "champion_deaths": {
+          "mean": 1.1666666666666667,
+          "observations": 24
+        },
+        "champion_kills": {
+          "mean": 2.2916666666666665,
+          "observations": 24
+        },
+        "collected_gems": {
+          "mean": 953.25,
+          "observations": 24
+        },
+        "lifetime_earned_gold": {
+          "mean": 2811.0416666666665,
+          "observations": 24
+        },
+        "round": {
+          "mean": 505.5416666666667,
+          "observations": 24
+        },
+        "submitted_gems": {
+          "mean": 898.9166666666666,
+          "observations": 24
+        },
+        "unspent_gold": {
+          "mean": 367.7083333333333,
+          "observations": 24
+        }
+      }
+    },
+    {
+      "commit": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+      "source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+      "unique_input_cells": 24,
+      "wins": 19,
+      "losses": 5,
+      "repeat_matches": 2,
+      "fault_matches": 0,
+      "metrics": {
+        "bot_faults_by_side": {
+          "mean": 0.0,
+          "observations": 24
+        },
+        "carried_gems": {
+          "mean": 27.75,
+          "observations": 24
+        },
+        "champion_deaths": {
+          "mean": 1.0833333333333333,
+          "observations": 24
+        },
+        "champion_kills": {
+          "mean": 2.75,
+          "observations": 24
+        },
+        "collected_gems": {
+          "mean": 1002.5833333333334,
+          "observations": 24
+        },
+        "lifetime_earned_gold": {
+          "mean": 2867.0833333333335,
+          "observations": 24
+        },
+        "round": {
+          "mean": 511.2083333333333,
+          "observations": 24
+        },
+        "submitted_gems": {
+          "mean": 963.5,
+          "observations": 24
+        },
+        "unspent_gold": {
+          "mean": 392.5,
+          "observations": 24
+        }
+      }
+    }
+  ],
+  "opponent_manifest": {
+    "count": 5,
+    "manifest": "/srv/battlecode/public/strategy/task-9485272c218a4db2a10b11a83cae45f1/manifest.json",
+    "sha256": "c5cb5e9c7c1526a84a350ea6b371198cd86b24b6483dff6bc4851d8d76a0aed7"
+  },
+  "limits": "Final statistics are hindsight; no per-turn shopping traces or causal proof. Self-play sources remain separate; deterministic repeats are not independent evidence."
+}

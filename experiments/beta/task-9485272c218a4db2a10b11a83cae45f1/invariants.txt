@@ -1,0 +1,4 @@
+PASS: shopping safety contracts; ten unsafe mutations rejected.
+PASS: banking, camp policy, combat, items, draft and official yield preserved.
+Policy budget boundaries are static_asserts compiled by the trusted wrapper.
+Static contracts do not establish recall coverage, fuel headroom or strength.

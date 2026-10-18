@@ -16,6 +16,7 @@ class Bot {
     bool initialized = false;
     bool recovering = false;
     void buy_items();
+    bool return_to_shop();
     void farm_camps();
 public:
     void play_turn();
