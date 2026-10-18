@@ -1,13 +1,22 @@
 #pragma once
+#include <cambc.h>
+#include <vector>
 
-// Per-champion state survives between turns. Pick one stat and keep buying it.
+// Private instance state only; no live shared-memory protocol.
 class Bot {
-    int chosen_stat = -1;
-
-    // Spend only on power shards of the randomly chosen stat.
+    struct Group {
+        cambc::map::camp_group group;
+        cambc::bitboard spawns;
+        cambc::vec2 center;
+        float initial_health;
+        unsigned retry_round = 0;
+    };
+    std::vector<Group> groups;
+    int target_group = -1;
+    bool initialized = false;
+    bool recovering = false;
     void buy_items();
-
+    void farm_camps();
 public:
-    // Priorities: shop and recall, attack enemies in range, bank gems, then farm.
     void play_turn();
 };

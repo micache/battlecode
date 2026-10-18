@@ -1,75 +1,106 @@
 # Operational summary
 
-## task-a84a38285fa94c9e9fd86b5a7d421ae8 — shield before exposed attacks
+## task-bc8c3246ad3449e39155d369ae07c9e0 — recover integrated farming contender
 
-Playbook D. Hypothesis: casting a ready self-shield immediately before a legal
-basic attack on a positive-Strength target whose attack range includes us will
-absorb incoming damage, reducing recovery interruptions/deaths and improving
-gem throughput. Falsifiable invariant: only an already legal attack can trigger
-one successful self-shield cast; non-damaging or out-of-range threats cannot;
-shield kind, self-target permission and live readiness are required. Basic
-attack allowance is checked again after casting. No shield on travel alone.
+Hypothesis: a deliberate farming roster with active combat kits, useful item
+passives, explicit group capture and complete recovery will increase collected
+and submitted gems while reducing deaths against development base 6450f600.
+Falsifier: no objective/win gain in matched development games, or losses from
+recovery cost, routing collisions or fuel suspension. This is an unmeasured
+rules/source deduction. Decision/audit: this task's decision.md.
 
-Identity: beta; bot/beta; HEAD/input 07b24e4a90a72a8ec6f77ae3cf8093a687daf068.
-Accepted edit start 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9, source
-9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-All six source files matched accepted Git blobs at entry. Initial bot.cpp diff
-against HEAD is trusted restoration. Accepted Git preserves the baseline.
-Prior task PUBLISHED and evaluated; no candidate awaits evaluation. Old recovery
-artifacts preserved; prior summary archived through task-41dc854784904d468837b2cde087ddc6.
-Engine/SDK 2.1.6; lock
-00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Handoff says documentation unchanged. Read compact
-reference, RESEARCH.md, Playbooks C/D/F and relevant installed C++ contracts.
-Separate organizer AGENTS.md remains absent.
+Identity: beta; bot/beta; task as above. HEAD/input
+7773859f872f54d846088226ef1cf7b855cbb0a6; edit commit
+6450f60028bac2047cddd8cb8be0710823d583d3; base hash
+0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1.
+Entry verifies edit and accepted source; all six owned files matched edit Git
+blobs on entry. Initial bot.cpp difference from HEAD was trusted preparation.
+Accepted champion 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains protected
+in Git/snapshot. No commit, branch change, publication or evaluation invoked.
 
-Evidence: evaluation c2f8a2918dad0f78da1cdf1b14acaf9837fd12d694a5786a9d62846f941c7e26
-REJECTED/full-nine-map, 14W/58L, matched delta 0, zero reported bot faults,
-missing results or unknown reliability. Candidate commit
-07b24e4a90a72a8ec6f77ae3cf8093a687daf068, source
-fc461f9ba86b39b60ee220037052685a761354cf0fc4eb9926c41e01deebeb93.
-Development collision losses: 965700180b56d908ebe1dce2ad1feae1875c35ab11389282fc5af1ab2f2f026a
-(side B), 90817aa2654ee7e28441514ba5e838244f5a77319bd85ec66e0969b1e4e7d22e
-(side A). Development means: 20.52 deaths, 731.04 collected, 631.63 submitted.
-These evaluate weak-camp targeting, NOT restored accepted source. No fault is
-evidenced; losses/deaths motivate survivability work without proving causation.
-Accepted source never casts any shield. Earlier reset and damage/CC experiments
-explicitly excluded shield abilities; this is a distinct defensive policy.
+Recovery: prior task-8fbe93005e2745df8b10d8b9da49fea8 was PAUSED, unpublished,
+after optional smoke stdout export denial; not awaiting evaluation. Its exact
+own source, notes, final result and checkpoint patch were inspected. Trusted
+history says the access gate is repaired. Restored its reviewed bot.cpp, bot.h
+and draft.cpp, with unchanged main dispatch/catch/yield. All six source files
+now byte-match that candidate; fresh check below confirms the same source hash.
+Old attempt, patch and notes remain untouched. Prior HEAD operational notes,
+including negative findings, are archived in this task's prior-notes.md.
 
-Contracts: GameRules.md:762–792 makes Varg's self-shield walk compatible,
-2.5*Focus for five turns, cooldown eight owner ticks. C++ unit::strength and
-attack_tiles require visibility; existing attack legality guards precede them.
-ability::is_ready checks cooldown and caster can_cast; can_target_self checks
-target permission; use() is the no-target cast. Attack mask is geometry, not a
-prediction that the target will attack us. Scan is bounded by two ability slots.
+Evidence context: evaluation 7f75f3277bf710ea352706ce5476e1d1fc7523dc6ae95894f656b8fb3475e921
+was INCONCLUSIVE, 6W/18L, zero reported faults, for shield commit 7773859f /
+source bc3f6f13, not today's edit base or recovered candidate. Its collision
+losses eec2f650cdda93c83d40994ccd012e1f4067b4690eca97290a46c0e073dd9702
+(side B) and fdedefd480b828e41cf97462ac1c8f3ef1a7253dcda78e7f0430eafea47b0848
+(side A) motivate throughput/survival investigation, not a causal claim.
+Self-play 16W/68L likewise evaluates bc3f6f13; repeated executions are not
+independent evidence. External older unknown-opponent results are uncontrolled.
 
-Change: attack_if_in_range adds nine lines before the existing basic attack.
-Only targets already passing live visibility, health, range and attack-allowance
-checks can trigger a shield. Require positive target Strength and its attack
-mask to include our tile; scan at most two slots for a ready self-shield, stop
-on successful cast, then refresh basic attack allowance. Varg's shield is walk
-compatible, so the same helper is used before and after movement. No draft,
-shopping, routing, priority, channels, shared-memory or dispatch/yield change
-relative to accepted source.
+Current frozen manifest fa8fcec025d810dc27b754a72cb02ae5af01b08e29d3a53ac7c217ca70fa25d2
+was inspected. Gamma e9704a21 / 3ddcabd5 walks before recall; alpha 6af1685b /
+87b9be45 uses separate basic and combat spell allowances; alpha 2e82fe18 /
+eee9346f adds opportunistic altar locks. They retain random draft/build and
+nearest-camp routes. Candidate keeps retreat progress and legal lock clearing,
+while composing its own farming, capture and recovery policy. No private state
+or official opponent code was read. Full source findings are in decision.md.
 
-Checks: `python3 experiments/beta/check_defensive_shield.py` PASSED, exit 0.
-Report: experiments/beta/task-a84a38285fa94c9e9fd86b5a7d421ae8/defensive-shield-invariant.txt.
-Verifies guard/action order, single-success cast and exact accepted-source scope;
-rejects baseline and eight unsafe mutations. Initial source-scope assertion
-failed because the harness retained an inserted blank line; corrected the
-harness boundary and reran successfully without changing bot source.
-`git diff --check` PASSED, exit 0.
-Trusted command: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED, exit 0. Exact checked source:
-bc3f6f13bce3869b6ceb0360eb77cf9789cdfc66dcb05ed978aef306b229a910.
-Report: .agent/check-task-a84a38285fa94c9e9fd86b5a7d421ae8.json.
-Reference: check:task-a84a38285fa94c9e9fd86b5a7d421ae8:bc3f6f13bce3869b6ceb0360eb77cf9789cdfc66dcb05ed978aef306b229a910.
-Smoke IDs: 89eb4c60e968a4d4629f28e0f85fa004373fb225e53390f1a085b59c6f9e7561,
-eec2f650cdda93c83d40994ccd012e1f4067b4690eca97290a46c0e073dd9702.
-Trusted compilation/smoke passed; local summary does not establish completed
-game outcomes, shield activation/absorption, Varg presence or fuel headroom.
-Uncertainty: draft may omit Varg; range/Strength do not prove incoming damage
-(camps may sleep or attack another champion). Shield may be spent before a
-lethal hit or before a more valuable fight. No survival, fuel or strength claim.
-Next: supervisor evaluates the exact checked candidate against accepted source;
-compare deaths, collected/submitted gems and recovery frequency if available.
+Engine 2.1.6, lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
+suite historical-panels-v1. Bootstrap/changed-doc audit used current knowledge
+GameRules, C++ export, BOT_REFERENCE, RESEARCH, organizer record, ledger and
+Playbooks A/C/D/E/F. Matching installed cambc.h SHA256 verified:
+90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
+Newer exported camp wake/state, positions_into and debug_block APIs are absent
+from the pinned header and unused. Objective is 1,000 tributed gems; 2,000-round
+ties compare tributed gems, lifetime gold, kills, then Team B. Organizer page is
+a download hub, not a separate policy review. Production parity remains unknown.
+
+Recovered policy:
+- Roster Varg, Tavi, Ryth, Vendetta, Marcella, with legal fallbacks. Team-size
+  query and own-pick exclusion support map-dependent draft. No draft data needed.
+- Complete Jungle Strength, Monster Strength, Durability Health once each, then
+  Power Strength. can_buy supports dead shopping and Tavi's field exception.
+- Basics plus shield/reset/unit damage/CC/ground AoE; refresh live target state,
+  attack allowance and caster survival after actions. Skip exclusive spells
+  after movement; one successful cast, legal follow-up reset attack.
+- Cache static groups; rank travel, workload and gems with soft visible allied
+  congestion. Commitment bonus 12; inspect at most 12 groups, stop scans at 45k
+  fuel, reserve 18k before moving, retry failed routes after 12 rounds. Native
+  free-root fields and at most two movement attempts; refresh vision after move.
+- Hold own cleared camp occupancy through capture; skip rewards with another
+  visible collector and visibly respawning groups. No hidden live state queries.
+- Bank every bag before unrelated fights; friendly locks permit submission,
+  hostile locks use the SDK's tribute-to-lock-attack fallback. Preserve channels.
+- Retreat at 45% health, walk before safe recall, continue recovery to full on
+  spawn. Safe empty-bag shopping recall at >=150 gold and <80% health.
+- No live shared-memory writes, shared-round spam or random priority changes.
+
+Checks actually run:
+`python3 experiments/beta/task-bc8c3246ad3449e39155d369ae07c9e0/check_invariants.py`
+PASSED, exit 0; report this task's invariants.txt. Covers channel/spawn/capture
+preservation, dead shopping, visibility, free roots, bounded retries, movement
+exclusions and reset guards; rejects seven unsafe source mutations. Not a game
+simulation or measurement of actual fuel use.
+`bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
+PASSED, exit 0, source
+7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e.
+Report .agent/check-task-bc8c3246ad3449e39155d369ae07c9e0.json;
+reference check:task-bc8c3246ad3449e39155d369ae07c9e0:7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e.
+Smoke IDs a7c4d563cf8f1b61e6122fe1d8364e08dba66b8df6cb8849b9857d1ee264c197
+and c9741b96598e19d0ffa225d9023bbe080b717278134189f7180b6c8b659b47d4.
+check-report confirmed the exact-source PASSED record. Approved stdout exports
+now exit 0: first smoke A log and second smoke B log are empty (reported size 0);
+first smoke B export is an 8,192-character bounded slice of a 56,138-byte log.
+No bot-error marker appears in those exports. Files are saved in this task's
+directory. This resolves the historical access blocker; empty logs do not prove
+completion, strategic success or absence of fuel suspensions. No score inferred.
+`git diff --check` PASSED, exit 0. No source changes after trusted compilation.
+
+Risks: limited geometric ranking can miss further available/cleared groups;
+hidden allies are uncoordinated. Recovery overhead, conservative sleeping-camp
+threat estimates, shield/reset competition, initialization and path fuel remain
+unmeasured. Earlier Varg-first, weak-camp-only, Jungle-only and shield-only
+experiments did not establish additive gains; retain these negative findings.
+Next: supervisor evaluates exact checked source on matched maps, both sides and
+frozen opponents, comparing wins, submitted/collected gems, deaths and any idle
+or suspension telemetry. If routing stalls, inspect timestamped respawn-aware
+ranking. Promotion still requires the full accepted-champion gate.
