@@ -1,5 +1,6 @@
 #include <cambc.h>
 #include "bot.h"
+#include "circuit_policy.h"
 #include <algorithm>
 #include <array>
 #include <limits>
@@ -18,6 +19,21 @@ constexpr std::uint64_t planning_reserve = 18000;
 constexpr std::uint64_t scan_reserve = 45000;
 constexpr std::size_t max_group_checks = 12;
 int distance(vec2 a, vec2 b) { return static_cast<int>(a.chebyshev_distance(b)); }
+
+int altar_distance(vec2 position) {
+    int result = std::numeric_limits<int>::max();
+    for (auto altar : cambc::map::altars().positions())
+        result = std::min(result, std::max(0,
+            distance(position, altar) - cambc::constants::submit_gems_range));
+    return result;
+}
+
+bool enemy_nearby() {
+    for (const auto& enemy : cambc::vision::champions(team::enemy))
+        if (enemy.is_visible() && enemy.health() > 0
+            && distance(cambc::self().position(), enemy.position()) <= 8) return true;
+    return false;
+}
 
 cambc::bitboard around(vec2 p, int range) {
     cambc::bitboard result;
@@ -129,7 +145,7 @@ bool fight(const Target& target, bool walked = false) {
     return acted || cast;
 }
 
-bool bank() {
+bool bank(bool allow_move = true) {
     auto& me = cambc::self();
     if (me.gem_count() == 0) return false;
     auto enemy_locks = cambc::vision::altar_lock_tiles(team::enemy);
@@ -145,6 +161,7 @@ bool bank() {
         if (enemy_locks.is_set(altar)) locked |= around(altar, cambc::constants::submit_gems_range);
         else unlocked |= around(altar, cambc::constants::submit_gems_range);
     }
+    if (!allow_move) return false;
     if (!unlocked.is_empty() && move_to(unlocked)) return true;
     if (!locked.is_empty()) move_to(locked);
     return true;
@@ -171,7 +188,7 @@ void Bot::buy_items() {
     if (n && me.can_buy(I::power_shard_of_strength, n)) me.buy(I::power_shard_of_strength, n);
 }
 
-void Bot::farm_camps() {
+bool Bot::farm_camps(bool carrying) {
     auto& me = cambc::self();
     const auto visible = cambc::vision::visible_tiles();
     const auto allies = cambc::vision::champion_tiles(team::ally);
@@ -210,13 +227,30 @@ void Bot::farm_camps() {
             if (std::holds_alternative<cambc::map::camp_group_respawning>(state)) continue;
             available = std::holds_alternative<cambc::map::camp_group_reward_available>(state);
         }
-        if (available && g.spawns.is_set(me.position())) return; // Keep capture timer intact.
+        if (available && g.spawns.is_set(me.position())) return true; // Keep capture timer intact.
         if (available && !(g.spawns & allies).is_empty()) continue; // One collector suffices.
         float hp = g.initial_health;
         if (seen) {
             hp = 0;
             for (const auto& c : g.group.camps())
                 hp += c.is_visible() ? std::max(0.0f, c.health()) : c.base_stats().base_health;
+        }
+        if (carrying) {
+            // Only top up from an actually observed safe group. Hidden monsters
+            // are unknown, not absent. Geometry below is a detour estimate only.
+            if (!seen || g.group.gem_value() == 0
+                || distance(position, g.center) > circuit::radius) continue;
+            bool safe = true;
+            for (const auto& c : g.group.camps()) {
+                if (!c.is_visible()) { safe = false; break; }
+                if (c.health() > 0 && c.strength() > 0) { safe = false; break; }
+            }
+            if (!safe) continue;
+            const float work = distance(position, g.center)
+                + hp / strength + cambc::constants::capture_time + 1;
+            const auto age = round - bag_started_round;
+            if (!circuit::admits(safe, g.group.gem_value(), distance(position, g.center),
+                altar_distance(g.center), altar_distance(position), work, age)) continue;
         }
         // Travel and expected clearing work, with a strong preference for free rewards.
         float score = distance(position, g.center) * 3.0f
@@ -227,13 +261,13 @@ void Bot::farm_camps() {
             && !around(g.center, 2).is_set(me.position())) score += 8;
         if (score < best_score) { best_score = score; chosen = i; reward = available; }
     }
-    if (chosen < 0) return;
+    if (chosen < 0) return false;
     target_group = chosen;
     auto& g = groups[chosen];
     if (!reward) {
         // Stay focused on one physical group; Varg splash and Ryth AoE clear it together.
         for (const auto& camp : camps)
-            if (g.spawns.is_set(camp.spawn_position()) && fight(camp)) return;
+            if (g.spawns.is_set(camp.spawn_position()) && fight(camp)) return true;
     }
     auto goals = g.spawns;
     if (!reward) {
@@ -243,22 +277,28 @@ void Bot::farm_camps() {
                 approaches |= around(camp.position(), me.attack_range());
         if (!approaches.is_empty()) goals = std::move(approaches);
     }
-    if (cambc::fuel_remaining() < planning_reserve) return;
+    if (cambc::fuel_remaining() < planning_reserve) return true;
     if (move_to(goals)) {
         // Movement changes visibility. Rebuild handles and prohibit exclusive spells.
         for (const auto& camp : cambc::vision::camps())
-            if (g.spawns.is_set(camp.spawn_position()) && fight(camp, true)) return;
+            if (g.spawns.is_set(camp.spawn_position()) && fight(camp, true)) return true;
     } else if (!goals.is_set(me.position())) {
         g.retry_round = round + retry_delay;
         target_group = -1;
+        return false;
     }
+    return true;
 }
 
 void Bot::play_turn() {
     auto& me = cambc::self();
     // can_buy handles dead shopping and Tavi's field exception without live position queries.
     buy_items();
-    if (!me.is_alive()) { recovering = false; target_group = -1; return; }
+    if (!me.is_alive()) {
+        recovering = false; target_group = -1;
+        bag_started_round = 0; bank_committed = false;
+        return;
+    }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
     if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
 
@@ -276,8 +316,29 @@ void Bot::play_turn() {
             && !me.restrictions().contains(cambc::buff_restrictions::move)) me.recall();
         return;
     }
-    // Secure bags before accepting unrelated fights.
-    if (bank()) return;
+    const auto now = cambc::round_number();
+    if (me.gem_count() == 0) { bag_started_round = 0; bank_committed = false; }
+    else if (bag_started_round == 0) bag_started_round = now;
+    if (me.gem_count() > 0 && circuit::must_bank(me.gem_count(), now - bag_started_round,
+        me.health() / me.max_health(), enemy_nearby() || exposed(me.position()),
+        cambc::global_submitted_gems(team::ally), cambc::constants::winning_gems,
+        now, cambc::constants::max_rounds)) bank_committed = true;
+    // A top-up circuit can carry an earlier reward during its next capture.
+    // Our own occupied spawn is visible. Preserve safe progress, but a threat
+    // or deadline must still be able to force a return even if contested.
+    if (me.gem_count() > 0 && !bank_committed && target_group >= 0
+        && groups[target_group].spawns.is_set(me.position())
+        && std::holds_alternative<cambc::map::camp_group_reward_available>(groups[target_group].group.state())) return;
+    // Secure an immediate submission before considering a local circuit.
+    if (bank(false)) return;
+    if (me.gem_count() > 0) {
+        // Once returning, do not oscillate back to farming on the next turn.
+        if (bank_committed || !initialized || !farm_camps(true)) {
+            bank_committed = true;
+            if (cambc::fuel_remaining() >= planning_reserve) bank();
+        }
+        return;
+    }
     for (const auto& enemy : cambc::vision::champions(team::enemy))
         if (enemy.is_visible() && enemy.health() > 0
             && distance(me.position(), enemy.position()) <= me.attack_range()

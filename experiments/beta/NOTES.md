@@ -1,106 +1,99 @@
 # Operational summary
 
-## task-bc8c3246ad3449e39155d369ae07c9e0 — recover integrated farming contender
+## task-4acc026b087b4a278e69d874a032cb52 — bounded local harvest circuits
 
-Hypothesis: a deliberate farming roster with active combat kits, useful item
-passives, explicit group capture and complete recovery will increase collected
-and submitted gems while reducing deaths against development base 6450f600.
-Falsifier: no objective/win gain in matched development games, or losses from
-recovery cost, routing collisions or fuel suspension. This is an unmeasured
-rules/source deduction. Decision/audit: this task's decision.md.
+Hypothesis: healthy carriers can improve submitted-gem throughput and wins by
+collecting a short, fully observed, non-damaging nearby group before returning to
+an altar. This is an unmeasured source/rules deduction. Falsifier: matched wins
+or bag conversion regress, deaths/stranded gems increase, or fuel suspension
+increases. Decision, evidence identities and alternatives: this task's decision.md.
 
-Identity: beta; bot/beta; task as above. HEAD/input
-7773859f872f54d846088226ef1cf7b855cbb0a6; edit commit
-6450f60028bac2047cddd8cb8be0710823d583d3; base hash
-0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1.
-Entry verifies edit and accepted source; all six owned files matched edit Git
-blobs on entry. Initial bot.cpp difference from HEAD was trusted preparation.
-Accepted champion 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains protected
-in Git/snapshot. No commit, branch change, publication or evaluation invoked.
+Identity verified on entry: beta, bot/beta, HEAD/input/edit
+ d2d57274232ca7cead5bacf650d6f51fd5b3bc3d; edit source
+7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e.
+Clean entry working tree; trusted entry verifies accepted/edit snapshots.
+Protected accepted champion 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 stays in Git.
+Prior recovered contender has completed evaluation; no unpublished pending
+candidate was found. Self-play pending games concern the already evaluated edit
+source and were neither polled nor treated as a pending candidate experiment.
 
-Recovery: prior task-8fbe93005e2745df8b10d8b9da49fea8 was PAUSED, unpublished,
-after optional smoke stdout export denial; not awaiting evaluation. Its exact
-own source, notes, final result and checkpoint patch were inspected. Trusted
-history says the access gate is repaired. Restored its reviewed bot.cpp, bot.h
-and draft.cpp, with unchanged main dispatch/catch/yield. All six source files
-now byte-match that candidate; fresh check below confirms the same source hash.
-Old attempt, patch and notes remain untouched. Prior HEAD operational notes,
-including negative findings, are archived in this task's prior-notes.md.
+Baseline evidence: evaluation 8874fe2cae89ba66b875b2082e00e01e0257b80aaf09fa757c1c5f24f9cd0178,
+INCONCLUSIVE full-nine-map report; development-only window 43W/5L, zero faults,
+48 completed games of d2d57274/source 7daa9117. Lanes aggregate A/B 4W/0L each
+contrasts collision A/B 3W/1L each. Collision losses
+35a896c482526b964ff9dfbfa6d79461021f3494e7fb9d1106bf6311acc0a975 (beta A)
+and 5f8eb6f279d9e66464f9c21f475bcede83dbbc40e6282fd8534579c5a3cc1595 (beta B)
+versus alpha 6af1685b/source 87b9be45 had 13 and 9 beta deaths respectively.
+Self-play corners loss
+1ec0801d0d9c8709490ea3a3afe88f4add3494c28266ff9bdcb1681364cabd72,
+beta B vs alpha 0b61a3d4/source 7a14708a, ended round 444 with no B champion
+deaths in the final slices. No per-turn travel/capture attribution is available.
+Broader self-play window: 12W/12L unique cells; repeated games not independent.
+Older external official observations have different own revisions/unknown
+opponents and do not provide controlled evidence for today's policy.
 
-Evidence context: evaluation 7f75f3277bf710ea352706ce5476e1d1fc7523dc6ae95894f656b8fb3475e921
-was INCONCLUSIVE, 6W/18L, zero reported faults, for shield commit 7773859f /
-source bc3f6f13, not today's edit base or recovered candidate. Its collision
-losses eec2f650cdda93c83d40994ccd012e1f4067b4690eca97290a46c0e073dd9702
-(side B) and fdedefd480b828e41cf97462ac1c8f3ef1a7253dcda78e7f0430eafea47b0848
-(side A) motivate throughput/survival investigation, not a causal claim.
-Self-play 16W/68L likewise evaluates bc3f6f13; repeated executions are not
-independent evidence. External older unknown-opponent results are uncontrolled.
+Frozen manifest 345bc0171ed5d4cb6d7d3c4b7ed1f44565f7a2aeb1570ee83fbebe4d25bea74c
+inspected: gamma 1b34f42a/3ce565f6 ranks value/time, remembers observed respawns,
+uses melee farmers and banks each bag. Alpha 6af1685b/87b9be45 uses random
+roster/builds, nearest-camp unions, enemy-first combat, and banks each bag.
+The new circuit policy differs from both; no private notes/state were accessed.
 
-Current frozen manifest fa8fcec025d810dc27b754a72cb02ae5af01b08e29d3a53ac7c217ca70fa25d2
-was inspected. Gamma e9704a21 / 3ddcabd5 walks before recall; alpha 6af1685b /
-87b9be45 uses separate basic and combat spell allowances; alpha 2e82fe18 /
-eee9346f adds opportunistic altar locks. They retain random draft/build and
-nearest-camp routes. Candidate keeps retreat progress and legal lock clearing,
-while composing its own farming, capture and recovery policy. No private state
-or official opponent code was read. Full source findings are in decision.md.
+Current strategy retains the recovered contender's roster Varg/Tavi/Ryth/
+Vendetta/Marcella; Jungle Strength, Monster Strength, Durability Health then
+Power Strength; active kits; bounded group ranking; explicit capture; full
+spawn recovery. Prior baseline notes and detailed audit remain in
+ task-bc8c3246ad3449e39155d369ae07c9e0/decision.md and its Git revision.
 
-Engine 2.1.6, lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Bootstrap/changed-doc audit used current knowledge
-GameRules, C++ export, BOT_REFERENCE, RESEARCH, organizer record, ledger and
-Playbooks A/C/D/E/F. Matching installed cambc.h SHA256 verified:
-90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-Newer exported camp wake/state, positions_into and debug_block APIs are absent
-from the pinned header and unused. Objective is 1,000 tributed gems; 2,000-round
-ties compare tributed gems, lifetime gold, kills, then Team B. Organizer page is
-a download hub, not a separate policy review. Production parity remains unknown.
+Changes this invocation:
+- Small healthy bags can top up only at positive-gem, fully observed groups
+  with no living damaging camps, within radius 6 and estimated extra detour 6.
+- Travel + health/Strength clearing estimate + capture + one turn must fit the
+  remaining 24-round circuit budget. Hidden state never counts as safe/empty.
+- Force banking at >=96 gems, <75% health, enemy within 8, immediate camp
+  exposure, sufficient winning bag, or 34-round endgame reserve. Return stays
+  committed until empty/death; an unproductive circuit immediately returns.
+- Preserve a safe ongoing capture before incidental adjacent banking; threat
+  and deadline gates override this hold, preventing contested capture stalls.
+- Keep channel/recovery precedence, native free-goal navigation, scan reserves,
+  bounded retries, final yield, and no live shared-memory writes. Reserve fuel
+  before an additional bank path after a failed circuit route.
+- circuit_policy.h contains pure policy plus thirteen compile-time regression
+  cases: normal opportunity, unknown/damaging state, zero value, radius/detour/
+  deadline limits, health/threat, large/winning bags, and endgame banking.
 
-Recovered policy:
-- Roster Varg, Tavi, Ryth, Vendetta, Marcella, with legal fallbacks. Team-size
-  query and own-pick exclusion support map-dependent draft. No draft data needed.
-- Complete Jungle Strength, Monster Strength, Durability Health once each, then
-  Power Strength. can_buy supports dead shopping and Tavi's field exception.
-- Basics plus shield/reset/unit damage/CC/ground AoE; refresh live target state,
-  attack allowance and caster survival after actions. Skip exclusive spells
-  after movement; one successful cast, legal follow-up reset attack.
-- Cache static groups; rank travel, workload and gems with soft visible allied
-  congestion. Commitment bonus 12; inspect at most 12 groups, stop scans at 45k
-  fuel, reserve 18k before moving, retry failed routes after 12 rounds. Native
-  free-root fields and at most two movement attempts; refresh vision after move.
-- Hold own cleared camp occupancy through capture; skip rewards with another
-  visible collector and visibly respawning groups. No hidden live state queries.
-- Bank every bag before unrelated fights; friendly locks permit submission,
-  hostile locks use the SDK's tribute-to-lock-attack fallback. Preserve channels.
-- Retreat at 45% health, walk before safe recall, continue recovery to full on
-  spawn. Safe empty-bag shopping recall at >=150 gold and <80% health.
-- No live shared-memory writes, shared-round spam or random priority changes.
+Engine 2.1.6 / lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
+suite historical-panels-v1. Documentation/SDK unchanged from recorded full audit.
+Consulted current BOT_REFERENCE, RESEARCH, organizer record, Playbooks B/C/F,
+relevant handbook channel/capture text and installed C++ settings/objective API.
+Header SHA256 remains pinned by brief as 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
+Organizer page is a download hub; production parity remains unknown.
 
 Checks actually run:
-`python3 experiments/beta/task-bc8c3246ad3449e39155d369ae07c9e0/check_invariants.py`
-PASSED, exit 0; report this task's invariants.txt. Covers channel/spawn/capture
-preservation, dead shopping, visibility, free roots, bounded retries, movement
-exclusions and reset guards; rejects seven unsafe source mutations. Not a game
-simulation or measurement of actual fuel use.
 `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED, exit 0, source
-7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e.
-Report .agent/check-task-bc8c3246ad3449e39155d369ae07c9e0.json;
-reference check:task-bc8c3246ad3449e39155d369ae07c9e0:7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e.
-Smoke IDs a7c4d563cf8f1b61e6122fe1d8364e08dba66b8df6cb8849b9857d1ee264c197
-and c9741b96598e19d0ffa225d9023bbe080b717278134189f7180b6c8b659b47d4.
-check-report confirmed the exact-source PASSED record. Approved stdout exports
-now exit 0: first smoke A log and second smoke B log are empty (reported size 0);
-first smoke B export is an 8,192-character bounded slice of a 56,138-byte log.
-No bot-error marker appears in those exports. Files are saved in this task's
-directory. This resolves the historical access blocker; empty logs do not prove
-completion, strategic success or absence of fuel suspensions. No score inferred.
-`git diff --check` PASSED, exit 0. No source changes after trusted compilation.
+PASSED, exit 0; final source
+7a4e377b08086313f1a977afbf99e27c450f80d4a98215cb965f6973c9d21191.
+Report .agent/check-task-4acc026b087b4a278e69d874a032cb52.json;
+check:task-4acc026b087b4a278e69d874a032cb52:7a4e377b08086313f1a977afbf99e27c450f80d4a98215cb965f6973c9d21191.
+Thirteen constexpr policy regressions compiled. Smoke IDs
+f8f912f59a7645c6c3e66763a0ca66f8a619525f8dda72c74c0f537269429d31 and
+ead4c04c797a28f432397f695e555da58e3b564d90efb45588a7654240556c1a.
+Exact-source check-report confirmed PASSED, exit 0. Both approved own-side
+stdout exports exited 0; details saved in this task's smoke-a.json/smoke-b.json.
+An earlier preliminary check passed be51f8c3 before review found that capture
+holding could bypass the deadline/threat gate. Moved forced-bank evaluation
+before capture holding, then reran trusted checks for the final hash above.
+`git diff --check` PASSED, exit 0. No source edits after final trusted check.
+Smoke validity and compile-time bounds do not establish strategy improvement,
+actual fuel headroom, complete tournament outcomes or official parity.
 
-Risks: limited geometric ranking can miss further available/cleared groups;
-hidden allies are uncoordinated. Recovery overhead, conservative sleeping-camp
-threat estimates, shield/reset competition, initialization and path fuel remain
-unmeasured. Earlier Varg-first, weak-camp-only, Jungle-only and shield-only
-experiments did not establish additive gains; retain these negative findings.
-Next: supervisor evaluates exact checked source on matched maps, both sides and
-frozen opponents, comparing wins, submitted/collected gems, deaths and any idle
-or suspension telemetry. If routing stalls, inspect timestamped respawn-aware
-ranking. Promotion still requires the full accepted-champion gate.
+Risks: unseen enemies, geometric estimates across walls, larger/longer exposed
+channels, missed opportunities outside the bounded scan, interrupted captures,
+and additional planning fuel. No measured gain claimed. Earlier weak-camp-only,
+shield-only and isolated draft/item experiments did not establish additive gains;
+retain their negative findings. Broad risky batching and wholesale gamma routing
+were rejected for this experiment.
+
+Next: supervisor compares this exact checked source with d2d57274 on matched
+maps, both sides and frozen opponents. Inspect wins, submitted/collected gems,
+round, deaths, final bags and available suspension telemetry, especially corners
+throughput and collision safety. Full champion gate remains separate.

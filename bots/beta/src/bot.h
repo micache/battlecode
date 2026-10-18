@@ -15,8 +15,10 @@ class Bot {
     int target_group = -1;
     bool initialized = false;
     bool recovering = false;
+    unsigned bag_started_round = 0;
+    bool bank_committed = false;
     void buy_items();
-    void farm_camps();
+    bool farm_camps(bool carrying = false);
 public:
     void play_turn();
 };
