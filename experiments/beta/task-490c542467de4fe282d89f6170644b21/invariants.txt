@@ -1,0 +1,1 @@
+PASS: refreshed combat targets, reset validity, visibility, restrictions, bounded scans/casts, unchanged channel/capture/recovery/free-root contracts; eight unsafe mutations rejected. Six hit-value static assertions compiled by bot-check. Source contracts only.

@@ -1,94 +1,98 @@
 # Operational summary
 
-## task-c28fb5b460264834ae1f67c600db2eae — reachable camp scheduling
+## task-490c542467de4fe282d89f6170644b21 — bounded combat retargeting
 
-Hypothesis: remembering observed camp cooldowns and ranking reachable travel,
-clearing and capture cost per reward increases submitted gems and matched wins,
-especially corners. This is an unmeasured rules/source deduction. Falsifier:
-matched win/throughput regression or increased fuel suspension. Decision and
-saved development metrics: task-c28fb5b460264834ae1f67c600db2eae/decision.md
-and development-evidence.json.
+Hypothesis: selecting useful damage/finishes across the current camp group or
+eligible visible threats, then refreshing targets after each basic/cast, will
+increase clearing/defensive combat efficiency, submitted gems and matched wins.
+Falsifier: matched win/throughput regression or more deaths/fuel suspension.
+Mechanism is a source/rules deduction; no per-turn trace establishes causation.
+Decision and full final-statistics artifacts: task-490c542467de4fe282d89f6170644b21/.
 
-Identity: beta, bot/beta; input/HEAD aa89dd9b284e35125c9e218d79a6e0c7ae380183.
-Trusted edit d2d57274232ca7cead5bacf650d6f51fd5b3bc3d / base source
+Identity: beta, bot/beta; task as above. HEAD/input
+27dedf6219cbf10a44f92bbe76d1a328f1d8adab. Trusted edit
+ d2d57274232ca7cead5bacf650d6f51fd5b3bc3d / base source
 7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e.
-All six source files matched edit Git blobs on entry. Initial differences from
-HEAD, including absent circuit_policy.h, were trusted preparation. Accepted
-champion 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 is preserved in Git.
-Latest candidate evaluation completed; pending self-play for that already
-measured source is not a pending unpublished experiment. No recovery needed.
+All six files matched edit Git blobs at entry; prepared bot.cpp/bot.h differences
+and absent HEAD farm_policy.h were intentional. No incomplete unpublished work.
+Latest candidate evaluation completed; no evaluation was awaited or started.
+Protected champion 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains in Git.
 
-Evidence: evaluation e151696ef79a97a3a76652ed6f71c443041bf017fccd9261401932315f3ab80f
-measured aa89dd9b/source 7a4e377b (harvest circuits), not today's edit source.
-Development-six-map: 33W/15L, zero faults; comparison against today's edit base
-was delta 0.0 over 24 side-paired cases. Corners 3W/5L contrasts lanes and
-interlock at 7W/1L each. Collision loss ac40ab67 (beta A, round 684) had 13 deaths,
-352 collected/176 submitted; c886ab82 (beta B, round 740) had 9 deaths, 594/418.
-No per-turn trace establishes their causal mechanism. Full IDs in saved JSON.
-Base-source self-play has 10W/9L across 19 unique cells, zero faults; older
-external observations have different sources/unknown opponents and patch.
+Evidence: evaluation 858f5f0f30f93eaca6b10cb4f5ca1adb64dd102b5b41a4d7a09c9e0951bc5a3a
+measured 27dedf62 / ec6ad44a, not this edit base or new candidate. Development
+35W/13L, zero faults; matched edit-base delta +0.041667 with interlock regression.
+Collision losses 19bdaff916c9c5c9d84a2a686bc0ac3e97832b8b236fb28e023b098b58944f73
+(beta A, round 627, 132 submitted/386 collected, 7 deaths) and
+774bf8fc72bf6a8aad68066c56e6abe7f07a9b01a892d24c46150c03540ca2f6
+(beta B, round 899, 788/912, 8 deaths) motivate combat/survival investigation.
+Contrasting final b6788e499d20fca9766f4075be19301f06142fa66aa53f716283d46658e9f937
+(A, round 573, 1030 submitted, zero deaths) is listed in development-selection
+evidence for that evaluation, but map and exact own source are unknown in its
+final artifact. Do not treat it as a controlled current-source win. Final files
+are hindsight, never runtime inputs. Embedded engineVersion 0.0.1 does not by
+itself certify parity with the pinned runner/SDK version 2.1.6.
 
-Frozen manifest 5f1d852bc02f2028f069e4a0a444450add0da587ca0596044e410e399a645d8d
-inspected. Gamma 1b34f42a/3ce565f6 uses observed respawn deadlines and reachable
-value/time. Alpha 6af1685b/87b9be45 uses enemy-first combat, random roster/stats
-and nearest-camp unions. Adapted gamma's compatible observation discipline;
-beta retains its own bounded shortlist and farming strategy. No private state.
+Frozen manifest 0bc95225443049e87bc4c0460a6ddb7d423dffc0f3a13d7866ee6a89ca3166e9
+inspected. Alpha 6af1685b / 87b9be45 refreshes targets after casts, compares
+capped damage/reset, uses enemy-first combat, random roster/stats and camp unions.
+Gamma 1b34f42a / 3ce565f6 focuses a target, tracks observed respawn deadlines
+and reachable value/time. Adopted alpha's compatible action-refresh idea only;
+no private worker state, opponent edits or assumptions about official opponents.
 
-Current strategy: roster Varg/Tavi/Ryth/Vendetta/Marcella; Jungle Strength,
-Monster Strength, Durability Health then Power Strength; active combat kits;
-explicit capture; bank each bag; full spawn recovery; no live shared memory.
-This experiment changes only camp scheduling and its observation/action flow:
-- Remember visible respawn deadlines; filter before the 12-group shortlist.
-  At expiry state is unknown again, not assumed respawned.
-- Native forward field measures free reachable attack/capture/scouting goals.
-  Unknown camps use unseen spawn goals; visible empty spawns do not cause a
-  zero-distance scouting stall. Temporarily defer unreachable entries 12 rounds.
-- Score (ceil(path/move speed) + health/Strength + capture_time+1) /
-  (gems + 0.12*gold); commitment x0.85, visible allied congestion x1.35.
-  Unknown health remains a static design estimate; no hidden live reads.
-- Preserve own capture and avoid extra collectors. Vacate collected spawns when
-  no work is selected. Refresh combat observations after successful moves and
-  failed hidden-blocker reveals; respect actual movement for exclusive spells.
-- Start new fields only with at least 65k fuel; stop scans at 45k, reserve 18k for
-  actions. Discard incomplete estimates. Bounded combat fallback and final yield.
-- farm_policy.h contains ten compile-time lifecycle/ranking regressions.
+Current strategy: Varg/Tavi/Ryth/Vendetta/Marcella farming roster; Jungle Strength,
+Monster Strength, Durability Health, then Power Strength. Explicit camp capture;
+bank each bag; complete spawn healing; no live shared memory. Routing, draft,
+shopping, shield use, banking and recovery policy remain as in edit base.
+This experiment changes only combat targeting/action sequencing:
+- Snapshot at most 16 visible live targets, checking visibility before health
+  and position. Keep snapshots within one action phase, never across turns.
+- Rank basic targets by capped damage plus 0.5 Strength for finishes; include
+  observed Varg splash. Ground AoE compares visible damage across aim points.
+- Refresh after the initial basic even if it killed the previous target. Select
+  resets only with a surviving in-range target and available attack permission.
+- After successful cast, reacquire/rank targets for a fresh basic. Check engine
+  allowances/restrictions; do not assume kills restore cast allowance.
+- At most one initial basic, one cast (including existing shield), one follow-up
+  basic. Preserve movement exclusions and do not walk after successful combat.
+- Stop optional scans below 30k fuel; retain 18k action reserve and fixed scans.
+  These are planning reserves, not measured suspension-free headroom.
+- combat_policy.h has six constexpr hit-value regressions, compiled by bot-check.
 
-Engine 2.1.6 / lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Current docs/SDK unchanged. Consulted BOT_REFERENCE,
-RESEARCH, organizer record, Playbooks B/C/F, handbook camp lifecycle, current
-C++ API and pinned header's camp-group/distance-field contracts. SDK SHA256
-90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-Organizer page is a download hub; production parity/additional policy unknown.
+Engine 2.1.6; lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
+suite historical-panels-v1. Documentation/SDK unchanged per trusted handoff.
+Consulted BOT_REFERENCE, RESEARCH, organizer record, Playbooks B/C/D/E/F/G and
+relevant handbook/C++ API/pinned-header combat, visibility and action contracts.
+Pinned header SHA256 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
+Organizer page is a download hub; production parity/additional policies unknown.
 
-Checks:
+Checks on final bot source (no source changes afterward):
 `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED, exit 0; final source
-ec6ad44a1d7a1ed8bea0e6e3eaefdc8fcf8a51be85b94a0702f41be777df2633.
-Report .agent/check-task-c28fb5b460264834ae1f67c600db2eae.json;
-check:task-c28fb5b460264834ae1f67c600db2eae:ec6ad44a1d7a1ed8bea0e6e3eaefdc8fcf8a51be85b94a0702f41be777df2633.
-Exact-source check-report independently returned PASSED, exit 0. Ten constexpr
-regressions compiled. Smoke IDs 3f90a9ace98cc760b00e76039b8d658043f22bdb840f56c28195245d4ab9fa55
-and 854e4b3e5cc7f59e3ef8a94bb994760537e6a12c6f64bb6452580735fd968ea6.
-`python3 experiments/beta/task-bc8c3246ad3449e39155d369ae07c9e0/check_invariants.py`
-PASSED, exit 0, report task-c28fb5b460264834ae1f67c600db2eae/invariants.txt;
-existing source contracts cover observation, capture/channel preservation,
-recovery, free roots, bounded retry, spell exclusions/reset and draft. Seven
-unsafe source mutations rejected. These are contracts, not a game simulation.
-`git diff --check` PASSED, exit 0; report this task's diff-check.txt.
-Both approved own-side smoke stdout exports exited 0 and are empty (size 0);
-saved as this task's smoke-a.json and smoke-b.json. Empty logs do not establish
-complete games, no suspensions or comparative gains.
-No source edits after trusted check. Notes/artifacts do not change bot source.
+PASSED, exit 0; source
+6d52acdbd7f1a71f6fa9ef3592dfd6ecf3a82ccbcee05d33d335460f0355bc75.
+Report .agent/check-task-490c542467de4fe282d89f6170644b21.json;
+check:task-490c542467de4fe282d89f6170644b21:6d52acdbd7f1a71f6fa9ef3592dfd6ecf3a82ccbcee05d33d335460f0355bc75.
+Exact-source check-report independently returned PASSED/0. Smoke IDs
+c0653c7bec77f1cdf2fadbb36e431f1231e8fcc18a07b30ff14e6c2de5af2e62
+and 5c84f2a787ca7235be5416050182d8cfb437c598c3a69533fa58819d58e1d67f.
+Permitted own-side stdout exports exited 0 and contain zero bytes, saved as
+smoke-a.json/smoke-b.json. They do not prove complete games or no suspensions.
+`python3 experiments/beta/task-490c542467de4fe282d89f6170644b21/check_combat_contracts.py`
+PASSED/0, report invariants.txt in that directory. Source safety contracts cover
+fresh targets, visibility, reset validity, restrictions, bounded casts/scans,
+channels, capture, recovery and free roots; eight unsafe mutations rejected.
+The first harness run raised ValueError when a mutation removed a required guard;
+the harness now treats that as rejection. No bot fault or source repair involved.
+These are source contracts, not a game simulation. `git diff --check` PASSED/0;
+report diff-check.txt in this task directory.
 
-Risks: extra field/query fuel, conservative clear estimates, missed distant
-opportunities beyond the bounded shortlist, dynamic blockers and unseen enemies.
-Actual fuel headroom and comparative win/objective gains remain unmeasured.
-Harvest circuits had zero matched gain; prior isolated weak-camp, draft, item
-and shield variants did not establish additive gains. Prior full notes preserved
-in archive/through-task-4acc026b087b4a278e69d874a032cb52.md. Rejected a repeated
-banking experiment and speculative combat/roster changes for this invocation.
+Risks: additional live queries, 16-target cap, damage estimates ignore mitigation
+and shields, finish/splash ranking may split focus, existing shield competes with
+reset. Comparative gains, fuel headroom and effect on survival remain unmeasured.
+Prior scheduling gained only +0.041667 with interlock regression and was not the
+selected edit base; harvest circuits had zero matched gain. Prior isolated draft,
+item, weak-camp and shield variants did not establish additive gains. Previous
+notes including negative findings archived in archive/through-task-c28fb5b460264834ae1f67c600db2eae.md.
 
-Next: supervisor evaluates exact checked source against d2d57274 on matched
-maps, both sides and frozen opponents. Compare wins, submitted/collected gems,
-round, deaths and suspension telemetry. Inspect corners route throughput and
-collision survival separately; full accepted-champion gate remains mandatory.
+Next: supervisor evaluates exact checked source against d2d57274 on matched maps,
+both sides and frozen opponents. Compare wins, submitted/collected gems, deaths
+and available fuel telemetry. Keep the full accepted-champion gate mandatory.
