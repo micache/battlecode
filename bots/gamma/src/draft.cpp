@@ -1,22 +1,20 @@
 #include <cambc.h>
 #include "draft.h"
 #include <algorithm>
-#include <string_view>
-#include <vector>
-#include "random.h"
+#include <array>
 
 void play_draft() {
-    // Open with automatic splash damage; keep later picks random and distinct.
+    using D = cambc::champion_draft;
+    // Durable melee farmers can walk, basic attack and reset in one turn.
+    // Varg supplies splash; Vendetta can reset again after a monster kill.
+    constexpr std::array order{D::varg, D::vendetta, D::marcella, D::ryth,
+        D::tavi, D::vesper_vale, D::ren, D::stellar, D::prism,
+        D::willow, D::cassi_and_issac};
     const auto chosen = cambc::draft::current_draft(cambc::team::ally);
-    std::vector<cambc::champion_draft> available;
-    for (int i = 0; i < 11; ++i) { // Released champions only.
-        auto pick = static_cast<cambc::champion_draft>(i);
-        if (std::find(chosen.begin(), chosen.end(), pick) == chosen.end()) available.push_back(pick);
+    for (auto pick : order) {
+        if (std::find(chosen.begin(), chosen.end(), pick) == chosen.end()) {
+            cambc::draft::pick(pick);
+            return;
+        }
     }
-
-    // Draft memory starts at byte zero and is copied to each champion.
-    cambc::draft_memory = std::string_view("hello world");
-    // Preserve one RNG draw per draft turn, including the deliberate opener.
-    const auto fallback = available.at(random_number(available.size()));
-    cambc::draft::pick(chosen.empty() ? cambc::champion_draft::varg : fallback);
 }

@@ -1,97 +1,139 @@
 # Gamma operational notes
 
-## task-a1a0fd0bf4a7437389ce07280d8aceee — Varg opening draft
+## task-74db5e961da646ab895aa56505d86528 — recovered capture-aware melee economy
 
-- Playbook E. Hypothesis: deliberately drafting Varg first gives the existing
-  basic-attack policy a guaranteed splash attacker, improving grouped-camp
-  clearing and increasing collected and submitted gems versus accepted source.
-- Falsifiable policy prediction: first legal pick is Varg; later picks retain the
-  existing random, nonduplicate selection. Each draft turn consumes one RNG draw
-  as before, writes the same draft message and deliberately submits one pick.
-  All map-dependent 3–5-pick drafts remain legal. Gameplay is unchanged.
-- Objective prediction: matched mean collected and submitted gems must increase
-  without new bot faults to support the mechanism; actual wins govern promotion.
-  No improvement is claimed from source or smoke checks alone.
-- Identity: task/entry match user; branch bot/gamma, HEAD/input
-  c5c3f4d0e5d5a8b3f9a05ae29643008d6c60e83a. All six edit-start files match
-  accepted commit 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d and trusted hashes.
-  Base 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  Initial dirty bot.cpp is the trusted accepted restore. Accepted Git/snapshot
-  preserve the base. Latest candidate evaluated; no unfinished/pending candidate.
-- Engine/SDK 2.1.6; lock
-  00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-  suite historical-panels-v1. Documentation unchanged per handoff. Compact
-  reference, Playbook E and narrow roster/draft SDK sections consulted.
-- Development context: evaluation
-  322271ef54566a308ed0a314061debfb504f4872b7353c8394aaf57e78cdc1ee,
-  INCONCLUSIVE / provisional-three-map-wiring, 8W/16L, matched delta 1/6,
-  zero fault/missing/unknown-reliability matches. It evaluates HEAD above,
-  source 44e3b60c784fbfa3466e5a3e580c089a9b460c7eaf638d9c7056d9e19b67c48c,
-  not the accepted edit-start. Self-play pending counts are separate evidence.
-- Two completed collision losses from that evaluated source, with no Varg picks:
-  A b020dfa9636c4ff425032ef0dc0ed9259ea89b2b6fe4c3708f2bf143c1c28295:
-  draft [Ryth, Marcella, Prism], round 870, 418 collected / 264 submitted,
-  opponent 1012 submitted, both sides zero faults.
-  B e5196c5fa551501a9e525d3db4e4094a50a285ae2692482c5701d2973334a029:
-  draft [Cassi & Issac, Tavi, Prism], round 1047, 506 collected / 286 submitted,
-  opponent 1034 submitted, both sides zero faults.
-  Complete final exports, byte lengths verified, saved in varg-draft-evidence.json.
-  These show economy losses and absent splash, not causality or stall frequency.
-  Final engineVersion 0.0.1 differs from trusted CLI/SDK 2.1.6; unresolved.
-- Source mechanism: accepted drafts randomly from all 11 choices and basic-only
-  play makes at most one attack. GameRules.md Varg section specifies automatic
-  Strength splash onto other enemies/camps within radius one, without hitting
-  the primary twice. Installed header has draft Varg=9 / body Varg=10 and
-  current_draft() returning completed picks. No damage formula recreated.
-- This is the first draft-composition experiment in retained history; previous
-  ability/shop/recall/banking changes are not combined. Gameplay remains accepted.
-- Uncertainty: Varg may lose travel time as melee, splash needs clustered targets,
-  replacing another pick may reduce total output, and random later compositions
-  change when Varg is removed from their pool. Smoke cannot establish utility.
-- Change: draft.cpp chooses Varg when completed ally picks are empty, otherwise
-  selects the existing nonduplicate random fallback. The fallback RNG draw is
-  still consumed on the first turn. No gameplay, state, memory layout, policy
-  threshold, path search, abilities, item or fuel-setting changes.
-- Regression: `python3 experiments/gamma/check_varg_draft.py`, PASSED, exit 0;
-  varg-draft-source-check.json. Source isolation proves the unchanged available
-  pool and checks all 9,032 legal histories up to the fifth pick with every
-  fallback choice. Other five source files match accepted. This is a finite
-  draft model/source check, not an engine draft fixture or fuel measurement.
-  `git diff --check`, PASSED, exit 0.
-- Trusted compilation/smoke:
-  `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`,
-  PASSED, exit 0. Exact checked source
-  cf45a24a06fc9892ff1f777432b9dc90913169d58740bebac89385b657718f51.
-  Report .agent/check-task-a1a0fd0bf4a7437389ce07280d8aceee.json;
-  check:task-a1a0fd0bf4a7437389ce07280d8aceee:cf45a24a06fc9892ff1f777432b9dc90913169d58740bebac89385b657718f51.
-  Smoke IDs 1b6c98c5c1d24797fa4b83f584beee9cc1a5903f1d5516d999c809ff4cc589ba
-  and a9a93bc2feb7861abe6702c38d5eb3de9adb2a37437fefb8dfd6f7b84374d7f0.
-  Completion, scores and fuel telemetry absent/unknown. No outcomes inferred.
-  READY_FOR_EVAL means a checked candidate, not demonstrated improvement.
-- Next: supervisor evaluates the checked cf45a24a source versus accepted on frozen
-  development cases. If unsupported, inspect map-specific camp grouping before
-  considering another composition. No worker publication, evaluation or agents.
+- One foundation candidate (brief also labels experiment mode refinement).
+  Branch bot/gamma; HEAD/input 4e34fd3f9bb5df6a3adb41d90d7ba7d45894174b.
+  Edit base e9704a214cdc159318c72bf8d0213dd082b8f702, source
+  3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769.
+  All six initial source files matched that Git commit and frozen gamma hashes.
+  Initial bot.cpp/draft.cpp diffs are the trusted restore. Protected champion
+  1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d remains preserved in Git.
+- History lookup confirmed task-9ae6a622bdd841fbb6bd9e2cf6338e03 was PAUSED,
+  unpublished, with no evaluation pending. Trusted infrastructure finding repairs
+  its smoke-log access and explicitly requests recovery. Its original source,
+  patch and notes remain in the prior own attempt/checkpoint. Prior notes copied
+  to archive/task-9ae6a622bdd841fbb6bd9e2cf6338e03.md before recovery; previous
+  operational summary retained in archive/task-a1a0fd0bf4a7437389ce07280d8aceee.md.
+- Hypothesis: coupling melee reset/splash combat, Strength purchases and
+  capture-aware routing will increase matched mean collected AND submitted gems
+  versus the edit base without new bot faults. If either mean fails to rise or
+  new bot faults appear, this throughput claim is unsupported. Wins govern
+  selection/promotion; this is a coherent coupled experiment, not an ablation.
+- Playbooks A/C/D/E/F. Source audit: random draft/stat, basic-only combat,
+  implicit capture routing and absent spawn-healing wait limit the old loop.
+  Recover prior checked source 197bec154516a17926028ab2fa5c9572571ffd7e2ac1f94a66aea43936ddc02f;
+  harden action restrictions and forbid post-combat walking even when a spell
+  kills the last monster (can_move alone does not encode walk exclusion).
 
-## Bootstrap documentation review (2026-10-17)
+## Policy and deterministic parameters
 
-Read the complete supplied GameRules.md, BotAPIPython.md, BOT_REFERENCE.md and
-matching installed C++ cambc.h/imports.h; also RESEARCH.md and playbooks A/C.
-Supplied documentation and header hashes match the trusted handoff:
+- Draft Varg, Vendetta, Marcella, Ryth, Tavi; complete nonduplicate fallback
+  roster covers all 11 choices and map-dependent 3–5 picks. No memory writes.
+- Buy one Jungle Strength emblem, one Monster Strength emblem, then Power
+  Strength indefinitely. Query costs/combination sizes and can_buy. Shop on
+  spawn, while dead, or in field where Tavi permits it. No duplicate passives.
+- Camp selection minimizes (reachable travel + estimated clear + capture)/
+  (gems + 0.12 * gold); estimate basic DPS as 1.12 * Strength, retain target
+  with 0.85 score multiplier. Unseen HP uses static design as uncertain estimate.
+  Avoid living monoliths; permit their cleared rewards. Private camp cache only.
+- Preserve capture occupancy through reward collection. Visible uncontested
+  allied collectors reserve cleared groups; others rotate. Vacate after capture
+  to permit respawn. Respawn observations expire at observed round + timer,
+  at least one round; group state requires a currently visible original spawn.
+- Attack, then ready self reset and fresh basic; otherwise legal damage/CC/AoE.
+  Shield below 75% HP against dangerous nearby targets without replacing a shield.
+  Refresh visibility/life/allowances after actions. Never chase enemy champions;
+  defend against adjacent enemies or cheap in-range finishes (<=2 * Strength).
+- Bank before incidental combat, including arrival; friendly locks allow tribute,
+  hostile locks can be hit rather than excluded forever. Retain all-bag banking.
+- Preserve channels; retreat before recall below 35% HP. Stay on spawn until
+  at least 98% HP. Empty-bag safe recall at 300 gold converts savings to damage.
+- Explicit move/attack/cast restrictions, stun guard before channel initiation.
+  Free approach/capture goals; hidden bumps allow one refreshed alternative and
+  fresh combat scan even if movement failed. No walk after any combat action;
+  capture movement after a last-monster kill replans on the next owner turn.
+- Native bitboards/fields. Stop optional selection below 30k fuel; movement
+  requires 10k, at most two attempts. Cheap fallback checks at most eight camps.
+  Dispatcher catches invalid actions and intentionally yields. Bounded logs every
+  100 rounds include fuel/minimum; crossed-round decisions log suspension.
+  No fuel/settings overrides. No live shared-memory protocol or hidden ally vision.
 
-| Source | SHA-256 |
-| --- | --- |
-| GameRules.md | `1c7fcf111d95b4734070f8f676cd50a48154feb0673de73a31c79845afa34732` |
-| BotAPIPython.md | `3013fde86080e89ebf109357d4b8ca913babcb4592be542d92df0fadd542772f` |
-| BOT_REFERENCE.md | `7d483da98c0360a9c9b186f46f9aa4408539c7c4be96682791f30b9d65c3829f` |
-| C++ cambc.h (2.1.6) | `90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d` |
+## Evidence and negative findings
 
-Reviewed profile: 1,000 tributed gems wins; at 2,000 rounds use tribute, lifetime
-earned gold, champion kills, then B. SDK settings are engine-loaded, not evidence
-that every executed suite uses handbook defaults. Draft has 3–5 picks; Cassi/Issac
-have two bodies. Live memory is 8 team bytes; draft memory 1,024. Visibility gates
-live state. Captures require uncontested occupancy; channels resolve at owner
-turn start after their zero timer. Damage interrupts recall, not tribute/teleport.
-Normal C++ fuel is 100k; exhaustion suspends execution. No fuel override added.
-The separate organizers' AGENTS.md remains unavailable. Export example defects,
-teleport-wall, monster-sleep and generic camp-range wording remain unresolved as
-documented in BOT_REFERENCE.md; this experiment does not depend on those disputes.
+- Current frozen manifest b7c351acc1d721afaf0c7136930d3a8acaaa8096e5077e3bba904044f778855f.
+  Alpha 2e82fe18 uses bounded reset/direct/AoE/CC plus shields/heals and opportunistic
+  locks; alpha 6af1685b has that combat without locks. Beta 6450f600 follows basic
+  with a stationary direct spell. All retain random draft/Power stat, enemy-first
+  distractions and spawn-union farming. Starter basic-only; frozen gamma is base.
+  See recovery-audit.json for exact commits and strategy/source limits.
+  This candidate uses no copied opponent module: deliberate melee economy remains
+  distinct; clearing hostile locks avoids a failure against alpha's denial policy.
+- Latest evaluation 1f7282e64f880a00581dd984e42729b5ba268e145861600bf4a412be4c99f07d
+  evaluates source cf45a24a06fc9892ff1f777432b9dc90913169d58740bebac89385b657718f51,
+  NOT edit base or today's candidate: 4W/20L, delta 0, zero faults/missing/unknown,
+  INCONCLUSIVE/provisional-three-map-wiring. Varg-only draft did not improve wins.
+- Saved prior final exports in harvest-evidence.json: collision B loss
+  a9a93bc2feb7861abe6702c38d5eb3de9adb2a37437fefb8dfd6f7b84374d7f0:
+  814 collected / 682 tribute vs 1012, 34 deaths, round 1840, both sides zero faults.
+  Collision A loss 3ad701df605dac54c68d5b15ab3a75c526a93d444b0b91dc5624762a10096cfd:
+  286 collected / 132 tribute vs 1012, 16 deaths, round 789, both zero faults.
+  These establish economy losses, not turn-level causes or candidate performance.
+- Additional complete old-source corners A loss in corners-loss-final.json:
+  3a2714f3befc32cf60018cd36dcb15d4be608d265756cf2a4ffb8df0a5cec945,
+  opponent commit 7773859f872f54d846088226ef1cf7b855cbb0a6, round 911:
+  1066 collected / 784 tribute vs 1060, 20 deaths, both sides zero faults.
+  High collection alone did not win; this reinforces measuring tribute and wins.
+  This supplied self-play example is a loss, not a contrasting win. Individual
+  older wins were not supplied; aggregate wins do not establish their mechanism.
+- Prior isolated direct spell/Jungle/camp-goal experiments remained inconclusive;
+  integrated reset/build/route changes need measurement, not additive gain claims.
+
+## Rules/API review and checks
+
+- Changed-document review: full handbook, C++ export signatures/descriptions and
+  examples, pinned cambc.h implementation, compact reference, research, organizer
+  access ledger and verification ledger; repeated API boilerplate deduplicated
+  during review. No unrelated Python re-review. Engine/SDK 2.1.6; suite
+  historical-panels-v1; lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
+- Hashes: handbook 1c7fcf111d95b4734070f8f676cd50a48154feb0673de73a31c79845afa34732;
+  C++ export 084ef94b338bebf088864ba2d7d777714bcd66b6c0c03601e91e1e5153a41a53;
+  cambc.h 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d;
+  BOT_REFERENCE 5eb0692a69fd6440ba9ce4ede1413c4ed2a6e95720c0ef8b7b90ea4560daf7f2.
+- Objective/memory profile checked once at runtime: 1000 tribute, 2000 rounds,
+  8 live/1024 draft bytes. Gold tiebreak is lifetime earned; final full tie B wins.
+  Web C++ export has camp::is_awake/state absent from pinned header; recovered code
+  avoids those methods. Teleport/sleep/range prose disputes remain. Organizer
+  Agents page is a download hub, not certification of all event policies.
+- `python3 experiments/gamma/check_harvest.py`: PASSED, exit 0;
+  harvest-source-check.json. Draft legality, stable geometry and safety control
+  invariants only; no engine simulation or strength measurement.
+- `git diff --check`: PASSED, exit 0.
+- Intermediate recovered-source compilation/smoke PASSED, exit 0, exact source
+  197bec154516a17926028ab2fa5c9572571ffd7e2ac1f94a66aea43936ddc02f;
+  recovered-intermediate-check.json. This is not final-source validation.
+- Final `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`:
+  PASSED, exit 0, exact source
+  3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565.
+  Report .agent/check-task-74db5e961da646ab895aa56505d86528.json;
+  reference check:task-74db5e961da646ab895aa56505d86528:3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565.
+- Repaired smoke export access worked. Full paged finals and own stdout preserved
+  in smoke-evidence.json. A 4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0:
+  completed teamA win, 1006 vs 154 tribute at round 596, both sides zero faults.
+  B 437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf:
+  completed teamB win, 1084 vs 286 tribute at round 640, both sides zero faults.
+  Map and opponent revisions are not exposed by these reports: UNKNOWN.
+  Both own logs have zero bot-error/suspension/settings-mismatch markers. Logged
+  running minimum fuel is 14,291 on A and 11,783 on B before dispatcher yield;
+  this is observed smoke headroom, not a guarantee on other maps or every yield.
+  Finals report engineVersion 0.0.1 versus CLI/SDK 2.1.6; parity remains unresolved.
+  Smoke wins are validity evidence, not a controlled superiority/promotion result.
+
+## Uncertainty and next action
+
+- Melee can lose on isolated/ranged maps; greedy groups can converge bodies;
+  recall safety is conservative and can still fail. Monolith exclusion gives up
+  that objective. No measured strategic gain or production parity is claimed.
+- Supervisor evaluates the final exact checked source on frozen development
+  maps/sides/opponents and applies the full promotion gate. If unsupported,
+  inspect capture/routing and fuel logs before further threshold changes.

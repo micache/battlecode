@@ -1,0 +1,182 @@
+{
+  "task_id": "task-74db5e961da646ab895aa56505d86528",
+  "base_source_hash": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769",
+  "recovery_task": "task-9ae6a622bdd841fbb6bd9e2cf6338e03",
+  "recovered_source_hash": "197bec154516a17926028ab2fa5c9572571ffd7e2ac1f94a66aea43936ddc02f",
+  "status": "READY_FOR_EVAL; final exact-source trusted check passed",
+  "hypothesis": "Coupling melee reset/splash combat, Strength purchases and capture-aware routing increases matched mean collected and submitted gems without new bot faults.",
+  "falsifier": "Collected or submitted mean fails to rise versus the development edit base, or new bot faults appear; actual wins govern selection.",
+  "opponent_manifest": "/srv/battlecode/public/strategy/task-74db5e961da646ab895aa56505d86528/manifest.json",
+  "opponents": [
+    {
+      "commit": "2e82fe1839be5b90390f1c625c0f1f2ec8df7cb5",
+      "policy": "Alpha: bounded resets/direct/AoE/CC, heal/shield, buys and opportunistically places locks; enemy-first; random Power stat/draft and nearest spawn-union farming."
+    },
+    {
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "policy": "Alpha: bounded combat/reset chooser without altar-control module, enemy-first with retreat before recall."
+    },
+    {
+      "commit": "6450f60028bac2047cddd8cb8be0710823d583d3",
+      "policy": "Beta: basic plus stationary direct damage/CC, random Power stat and draft, nearest-group spawn union; excludes either team lock."
+    },
+    {
+      "commit": "144ab5a958a81ea546ee67d7821751a65b962906",
+      "policy": "Starter: basic-only, random draft/stat, nearest camp tiles, stationary low-health recall."
+    },
+    {
+      "commit": "e9704a214cdc159318c72bf8d0213dd082b8f702",
+      "policy": "Frozen gamma matches all six edit-base files; starter plus retreat before recall."
+    }
+  ],
+  "evidence_limit": "Frozen source proves policy only. Prior cf45a24a losses do not test this recovered candidate. No measured tournament improvement claimed.",
+  "rules_sdk_mismatch": "Web C++ export adds camp state/is_awake; installed 2.1.6 lacks these. Recovered threat test uses visible health/strength/range, not unavailable API.",
+  "final_source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+  "pending_check_requests": [],
+  "frozen_file_verification": [
+    {
+      "bot_id": "alpha",
+      "commit": "2e82fe1839be5b90390f1c625c0f1f2ec8df7cb5",
+      "source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+      "files_match_manifest": true
+    },
+    {
+      "bot_id": "beta",
+      "commit": "6450f60028bac2047cddd8cb8be0710823d583d3",
+      "source_hash": "0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1",
+      "files_match_manifest": true
+    },
+    {
+      "bot_id": "starter",
+      "commit": "144ab5a958a81ea546ee67d7821751a65b962906",
+      "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+      "files_match_manifest": true
+    },
+    {
+      "bot_id": "alpha",
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "files_match_manifest": true
+    },
+    {
+      "bot_id": "gamma",
+      "commit": "e9704a214cdc159318c72bf8d0213dd082b8f702",
+      "source_hash": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769",
+      "files_match_manifest": true
+    }
+  ],
+  "recovered_intermediate_check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792313399.008285,
+    "matches": [
+      "0599715011e451693d4533428063651ecc12cc16a90ccb44491452c962201b1e",
+      "f7174aefbf39edfdf6217b29514ab391f2f87bfe63f4d23f4f06c68d34be0f14"
+    ],
+    "report_path": ".agent/check-task-74db5e961da646ab895aa56505d86528.json",
+    "report_reference": "check:task-74db5e961da646ab895aa56505d86528:197bec154516a17926028ab2fa5c9572571ffd7e2ac1f94a66aea43936ddc02f",
+    "source_hash": "197bec154516a17926028ab2fa5c9572571ffd7e2ac1f94a66aea43936ddc02f",
+    "started": 1792313067.3879285,
+    "state": "PASSED",
+    "task_id": "task-74db5e961da646ab895aa56505d86528"
+  },
+  "final_check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792313436.8103316,
+    "matches": [
+      "4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0",
+      "437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf"
+    ],
+    "report_path": ".agent/check-task-74db5e961da646ab895aa56505d86528.json",
+    "report_reference": "check:task-74db5e961da646ab895aa56505d86528:3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+    "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+    "started": 1792313407.1369038,
+    "state": "PASSED",
+    "task_id": "task-74db5e961da646ab895aa56505d86528"
+  },
+  "smoke_summary": [
+    {
+      "side": "A",
+      "match_id": "4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0",
+      "stdout_bytes": 14949,
+      "minimum_logged_remaining_fuel": 14291,
+      "bot_error_markers": 0,
+      "suspension_markers": 0,
+      "settings_mismatch_markers": 0
+    },
+    {
+      "side": "A",
+      "match_id": "4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0",
+      "map": null,
+      "opponent_revision": null,
+      "outcome": "teamA",
+      "round": 596,
+      "botFaults": [
+        0,
+        0
+      ],
+      "teams": [
+        {
+          "draftPicks": [
+            9,
+            2,
+            6
+          ],
+          "submittedGems": 1006,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            3,
+            10,
+            5
+          ],
+          "submittedGems": 154,
+          "team": 1
+        }
+      ]
+    },
+    {
+      "side": "B",
+      "match_id": "437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf",
+      "stdout_bytes": 15098,
+      "minimum_logged_remaining_fuel": 11783,
+      "bot_error_markers": 0,
+      "suspension_markers": 0,
+      "settings_mismatch_markers": 0
+    },
+    {
+      "side": "B",
+      "match_id": "437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf",
+      "map": null,
+      "opponent_revision": null,
+      "outcome": "teamB",
+      "round": 640,
+      "botFaults": [
+        0,
+        0
+      ],
+      "teams": [
+        {
+          "draftPicks": [
+            0,
+            6,
+            5
+          ],
+          "submittedGems": 286,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            9,
+            2,
+            6
+          ],
+          "submittedGems": 1084,
+          "team": 1
+        }
+      ]
+    }
+  ]
+}
