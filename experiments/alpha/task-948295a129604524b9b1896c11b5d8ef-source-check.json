@@ -1,0 +1,26 @@
+{
+  "task_id": "task-948295a129604524b9b1896c11b5d8ef",
+  "scope": "Source isolation and safety checks only. No runtime branch coverage, fuel or strength claim.",
+  "checks": {
+    "all_other_turn_policy_matches_edit_base": true,
+    "cooldown_memory_unchanged": true,
+    "other_source_files_match_edit_base": true,
+    "occupied_visible_group_checked_before_live_state": true,
+    "only_alive_group_can_supply_movement_goals": true,
+    "member_live_reads_follow_visibility": true,
+    "free_goals_and_fresh_post_move_combat": true,
+    "no_new_persistent_or_team_state": true,
+    "bounded_work_and_action_guards": true
+  },
+  "passed": true,
+  "source_files": {
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bot.cpp": "e80611b828b6b6a375e2c44465e1a927c4cb1c3fec0bae88edba984a21312eff",
+    "bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "camp_rotation.h": "14bc8fdd7e101f831dec6eccb574d6e69be7dd1a0fc7c01e2de198f40a416d66",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  }
+}

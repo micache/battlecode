@@ -1,45 +1,10 @@
 #pragma once
 #include <cambc.h>
 #include <algorithm>
-#include <array>
 #include <cstdint>
 #include <vector>
 
 namespace camp_rotation {
-
-// One combat invocation: basic, cast, reset-follow-up basic. Spawn positions
-// are immutable metadata, so recording a target after its death is safe.
-struct clear_trace {
-    std::array<cambc::vec2, 3> targets{};
-    unsigned count = 0;
-    bool movement_blocked = false;
-
-    constexpr void note_target(cambc::vec2 spawn) {
-        if (count < targets.size()) targets[count++] = spawn;
-    }
-    constexpr void note_cast(bool exclusive_with_movement) {
-        movement_blocked |= exclusive_with_movement;
-    }
-    constexpr bool permits_followthrough(bool alive, bool can_move) const {
-        return count > 0 && !movement_blocked && alive && can_move;
-    }
-};
-
-static_assert([] {
-    clear_trace trace;
-    if (trace.permits_followthrough(true, true)) return false;
-    trace.note_target({3, 4}); // Basic-only finish can retain its melee move.
-    if (!trace.permits_followthrough(true, true)
-        || trace.permits_followthrough(false, true)
-        || trace.permits_followthrough(true, false)) return false;
-    trace.note_cast(false); // A compatible reset preserves the opportunity.
-    if (!trace.permits_followthrough(true, true)) return false;
-    trace.note_cast(true); // A ranged spell forbids walking even if can_move is set.
-    trace.note_cast(false); // Later compatible actions cannot erase that exclusion.
-    for (int i = 0; i < 8; ++i) trace.note_target({i, i});
-    return !trace.permits_followthrough(true, true) && trace.count == 3
-        && trace.targets[0].x == 3 && trace.targets[0].y == 4;
-}());
 
 // Private to one champion instance. This is an expiring observation, not shared
 // vision or a claim that a hidden group has respawned when the deadline passes.
@@ -99,31 +64,6 @@ class rotation {
     }
 
 public:
-    // Only a group touched by this turn's combat can receive a follow-through.
-    // This is not a new global reward route or a pre-combat capture priority.
-    cambc::bitboard capture_goals(const clear_trace& trace,
-                                 const cambc::bitboard& vicinity) {
-        cambc::bitboard result;
-        result.clear();
-        if (trace.movement_blocked || !trace.count
-            || cambc::fuel_remaining() < observation_fuel_reserve) return result;
-        initialise();
-        const auto visible = cambc::vision::visible_tiles();
-        for (const auto& entry : groups) {
-            if (cambc::fuel_remaining() < observation_fuel_reserve) break;
-            bool touched = false;
-            for (unsigned i = 0; i < trace.count; ++i)
-                touched |= entry.spawns.is_set(trace.targets[i]);
-            if (!touched) continue;
-            const auto candidates = entry.spawns & visible & vicinity;
-            if (candidates.is_empty()) continue;
-            // Current personal spawn vision precedes every live group query.
-            if (std::holds_alternative<cambc::map::camp_group_reward_available>(entry.group.state()))
-                result |= candidates;
-        }
-        return result;
-    }
-
     void observe() {
         if (cambc::fuel_remaining() < observation_fuel_reserve) return;
         initialise();
@@ -153,6 +93,39 @@ public:
         const auto now = cambc::round_number();
         for (const auto& entry : groups)
             if (!entry.cooldown.excludes(now)) result |= entry.spawns;
+        return result;
+    }
+
+    // Being on a spawn only means "hold for capture" after the whole group dies.
+    // Recover an otherwise idle farmer by approaching a living member of that
+    // same group. Never infer living targets from static spawns or old vision.
+    cambc::bitboard occupied_group_approaches() const {
+        cambc::bitboard result;
+        result.clear();
+        const auto& me = cambc::self();
+        if (cambc::fuel_remaining() < observation_fuel_reserve || !me.can_move()
+            || !me.can_attack()
+            || me.restrictions().contains(cambc::buff_restrictions::move)
+            || me.restrictions().contains(cambc::buff_restrictions::attack))
+            return result;
+        const auto visible = cambc::vision::visible_tiles();
+        const auto position = me.position();
+        const auto range = me.attack_range();
+        for (const auto& entry : groups) {
+            if (cambc::fuel_remaining() < observation_fuel_reserve) break;
+            if (!entry.spawns.is_set(position) || (entry.spawns & visible).is_empty())
+                continue;
+            if (!std::holds_alternative<cambc::map::camp_group_alive>(entry.group.state()))
+                return result; // Cleared groups must keep their capture occupancy.
+            unsigned examined = 0;
+            for (const auto& member : entry.group.camps()) {
+                if (++examined > observation_limit
+                    || cambc::fuel_remaining() < observation_fuel_reserve) break;
+                if (!member.is_visible() || member.health() <= 0) continue;
+                result.draw_chebyshev(member.position(), range);
+            }
+            return result; // Spawn tiles belong to exactly one physical group.
+        }
         return result;
     }
 };

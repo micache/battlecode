@@ -1,0 +1,321 @@
+{
+  "task_id": "task-948295a129604524b9b1896c11b5d8ef",
+  "bot_id": "alpha",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "input_revision": "7f6637f1ef75c76db72aa244f80342016439ae06",
+  "entry_validation": "All eight source files byte-match edit_commit; branch and HEAD match entry. Recent tasks PUBLISHED; latest candidate evaluated, not awaiting evaluation. No unfinished patch recovered.",
+  "hypothesis": "Approaching visible survivors of an occupied, still-alive camp group increases matched development win rate over the edit base; unchanged or lower win rate falsifies the prediction.",
+  "bottleneck": "The base move_towards_closest returns immediately when its union of camp spawn goals contains self. farm_camps thus cannot close distance to surviving members of that group after reaching a cleared member spawn.",
+  "evidence_limit": "Unmeasured rules/source deduction. Final scores do not establish that occupied-spawn stalls occurred in any supplied loss.",
+  "chosen_policy": "Only after ordinary camp combat does nothing and eligible goals contain self, query the occupied group under personal visibility. If still alive, build attack approaches to currently visible living members of that group, filter fresh blockers, and use existing navigation. Refresh combat targets after movement with walked=true. Otherwise preserve the hold.",
+  "expected_observable_change": "Fewer idle turns on spawn tiles of alive groups; more complete group clears and collections, higher matched wins. Trigger frequency and magnitude unknown.",
+  "risks": [
+    "Walking toward a member may expose the farmer to more damage or a contested tile.",
+    "At most sixteen static members inspected; invisible or later members are intentionally not pursued.",
+    "No measured fuel headroom or runtime branch coverage yet."
+  ],
+  "rejected_alternatives": "Prior capture follow-through regressed 2/48 matched wins. Banking priority/arrival/batching, global/local capture priority, draft/stat package, economic resupply, broad AoE, focus fire and dashes remain negative/deferred. Cost-aware global routing is broader than the concrete occupied-spawn defect and deferred.",
+  "latest_evaluation": {
+    "id": "3c97dd6a36245b5cad4b69dd706a53975e9c397ce90e090184b956d151019de5",
+    "candidate": {
+      "build_id": "582eabd75f122ac704333b680e932e1a8a9580c861315239824599307f98aef5",
+      "commit": "7f6637f1ef75c76db72aa244f80342016439ae06",
+      "revision_id": "1fcd4f77f4712bf6e40d81e60dc0faf88d3d885422583196a7caec3319b1299b",
+      "source_hash": "889cd3f658a9a3ad14a454d818654613b1056199ae6e95a71524790f9130d37a"
+    },
+    "wins": 40,
+    "losses": 8,
+    "edit_comparison": {
+      "commit_sha": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+      "common_opponent_delta": -0.041666666666666664,
+      "fault_matches": [],
+      "missing": [],
+      "paired_cases": 24,
+      "per_map": {
+        "collision": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 0.875,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 1.0,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.625,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 0.875,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 0.625,
+          "incumbent": 0.75,
+          "pairs": 4
+        }
+      },
+      "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+      "unknown_reliability": []
+    }
+  },
+  "representative_failures": [
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 22,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 3
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 3,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 624,
+            "B": 1066
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2470,
+            "B": 890
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 399
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 602,
+            "B": 1018
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 700,
+            "B": 350
+          }
+        }
+      },
+      "map": "corners",
+      "match_id": "b7a380aacb9b192cb732b58a4b4a42586c67dd9c7ebc0e270ab06437cade7038",
+      "round": 399,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 108
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 942,
+            "B": 1116
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 1650,
+            "B": 800
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 455
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 942,
+            "B": 1008
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 420,
+            "B": 350
+          }
+        }
+      },
+      "map": "expanse",
+      "match_id": "32d66986b3e015bed273a1ce61e609cba45837e8c5cdd4749533eaca2af11afe",
+      "round": 455,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1008,
+            "B": 856
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 640,
+            "B": 2320
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 493
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 1008,
+            "B": 856
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 370,
+            "B": 970
+          }
+        }
+      },
+      "map": "expanse",
+      "match_id": "e9a29bf2fbf43d3b6e1a6a8351be9c92035b5ce9043c8572a6bcc7ee13e37a9c",
+      "round": 493,
+      "side": "B",
+      "trace": null
+    }
+  ],
+  "contrasting_wins": "Latest-source collision A/B and elkring A/B each 4/4 development wins; different source from edit base, preserve its successful combat policy rather than pooling revisions.",
+  "opponent_manifest": {
+    "path": "/srv/battlecode/public/strategy/task-948295a129604524b9b1896c11b5d8ef/manifest.json",
+    "sha256": "841d3edacd8caee76f51c49fc7290092885057aa68d04421ecc08e30c01be131",
+    "all_five_source_file_sets_hash_verified": true
+  },
+  "source_observations": [
+    {
+      "bot": "beta",
+      "commit": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+      "policy": "Varg/Tavi/Ryth draft; group persistence, live camp attack approaches, farming passives, recovery/shopping and lock-aware banking. Current self-play versus this source is 2W/10L for latest candidate, not edit-base evidence."
+    },
+    {
+      "bot": "gamma",
+      "commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+      "policy": "Melee farming draft, value/cost routing, live attack approaches for alive groups versus spawn occupancy for rewards, collector deference and cooldown observations. Transfer only the alive-versus-reward approach distinction to occupied-spawn recovery."
+    }
+  ],
+  "mechanic_references": [
+    ".agent/knowledge/sources/GameRules.md:191-207",
+    ".agent/knowledge/sources/BotAPICpp.md:2415-2421",
+    "pinned cambc.h:2990-3030,4300-4374"
+  ],
+  "review": "Routine unchanged documents: skill, current instructions, compact reference, playbooks B/C/D/F and evidence ledgers consulted; SDK relevant state/visibility/geometry/navigation contracts and matching header SHA256 verified. Organizer hub is not full policy review.",
+  "check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792330113.603754,
+    "matches": [
+      "a2e015e6b5a6c562e05bd651514755ea6955499542b6752c2c1f48c0c4742d54",
+      "047963c0c13264b480b74a1694e4142b9b680afef13d10bf6c5747da07a0767b"
+    ],
+    "report_path": ".agent/check-task-948295a129604524b9b1896c11b5d8ef.json",
+    "report_reference": "check:task-948295a129604524b9b1896c11b5d8ef:397bef3cd295ec597e604a9e7e19c9a7fff08702a45c70d4b071ea303fcdc78c",
+    "source_hash": "397bef3cd295ec597e604a9e7e19c9a7fff08702a45c70d4b071ea303fcdc78c",
+    "started": 1792330081.3489609,
+    "state": "PASSED",
+    "task_id": "task-948295a129604524b9b1896c11b5d8ef"
+  },
+  "source_files_unchanged_after_check": true,
+  "checks_scope": "Trusted compile/smoke PASSED; source isolation/safety checks PASSED; no detailed runtime, fuel, full-game completion or strength evidence."
+}
