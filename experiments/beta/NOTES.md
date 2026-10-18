@@ -1,98 +1,88 @@
 # Operational summary
 
-## task-490c542467de4fe282d89f6170644b21 — bounded combat retargeting
+## task-fd18a49b25e84173bc088cee80b91936 — opportunistic altar denial
 
-Hypothesis: selecting useful damage/finishes across the current camp group or
-eligible visible threats, then refreshing targets after each basic/cast, will
-increase clearing/defensive combat efficiency, submitted gems and matched wins.
-Falsifier: matched win/throughput regression or more deaths/fuel suspension.
-Mechanism is a source/rules deduction; no per-turn trace establishes causation.
-Decision and full final-statistics artifacts: task-490c542467de4fe282d89f6170644b21/.
+Hypothesis: buying one ten-gold lock at legal shop opportunities and placing it
+on a visible empty altar along existing routes will delay opposing tribute and
+improve matched wins while preserving our own banking. Falsifier: no matched
+win gain, lower own submitted gems, or increased faults/fuel suspension versus
+d2d57274 / 7daa9117. This is an unmeasured rules/source deduction.
+Decision, evidence summary, checks and diagnostics: task-fd18a49b25e84173bc088cee80b91936/.
 
-Identity: beta, bot/beta; task as above. HEAD/input
-27dedf6219cbf10a44f92bbe76d1a328f1d8adab. Trusted edit
- d2d57274232ca7cead5bacf650d6f51fd5b3bc3d / base source
+Identity: beta / bot/beta; HEAD/input fd1a894bb861e9d8fd3d65bbe3d7df506bf05960.
+Trusted edit d2d57274232ca7cead5bacf650d6f51fd5b3bc3d; base source
 7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e.
-All six files matched edit Git blobs at entry; prepared bot.cpp/bot.h differences
-and absent HEAD farm_policy.h were intentional. No incomplete unpublished work.
-Latest candidate evaluation completed; no evaluation was awaited or started.
-Protected champion 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains in Git.
+All six source files byte-matched edit Git blobs at entry. The absent HEAD
+combat_policy.h and prepared bot.cpp differences are intentional. Prior task
+was PUBLISHED and evaluated; no unpublished candidate awaited evaluation.
+Protected accepted 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains in Git and
+the trusted accepted snapshot. No commit, push, agents or evaluation invoked.
 
-Evidence: evaluation 858f5f0f30f93eaca6b10cb4f5ca1adb64dd102b5b41a4d7a09c9e0951bc5a3a
-measured 27dedf62 / ec6ad44a, not this edit base or new candidate. Development
-35W/13L, zero faults; matched edit-base delta +0.041667 with interlock regression.
-Collision losses 19bdaff916c9c5c9d84a2a686bc0ac3e97832b8b236fb28e023b098b58944f73
-(beta A, round 627, 132 submitted/386 collected, 7 deaths) and
-774bf8fc72bf6a8aad68066c56e6abe7f07a9b01a892d24c46150c03540ca2f6
-(beta B, round 899, 788/912, 8 deaths) motivate combat/survival investigation.
-Contrasting final b6788e499d20fca9766f4075be19301f06142fa66aa53f716283d46658e9f937
-(A, round 573, 1030 submitted, zero deaths) is listed in development-selection
-evidence for that evaluation, but map and exact own source are unknown in its
-final artifact. Do not treat it as a controlled current-source win. Final files
-are hindsight, never runtime inputs. Embedded engineVersion 0.0.1 does not by
-itself certify parity with the pinned runner/SDK version 2.1.6.
+Evidence: evaluation 47ef12cb516310ac155418a45e5d9e7cd1e8a9827e78b9a09f1459195bbecb84
+measured fd1a894b / 6d52acdb, not the edit base/new source: 31W/17L, zero
+reported faults, INCONCLUSIVE; matched edit-base delta -0.041667 on 24 side pairs.
+Collision losses b7003f0d (A, round 684: 176 submitted/352 collected, 13 deaths)
+and f85ac835 (B, round 792: 608/784, 8 deaths) show objective-conversion losses,
+not a traced lock mechanism. Full IDs and summaries saved in evidence.json.
+Contrasting saved final b6788e49 (A, round 573, 1030/1052, zero deaths) has
+unknown map/exact own source in its final artifact; not a controlled current
+win. Details/limits in decision.md; finals are hindsight only.
 
-Frozen manifest 0bc95225443049e87bc4c0460a6ddb7d423dffc0f3a13d7866ee6a89ca3166e9
-inspected. Alpha 6af1685b / 87b9be45 refreshes targets after casts, compares
-capped damage/reset, uses enemy-first combat, random roster/stats and camp unions.
-Gamma 1b34f42a / 3ce565f6 focuses a target, tracks observed respawn deadlines
-and reachable value/time. Adopted alpha's compatible action-refresh idea only;
-no private worker state, opponent edits or assumptions about official opponents.
+Frozen manifest 8446678b81be646cda6e98d6e1e9fd5a97a1376110f0b84d6463da5478e3132d:
+starter 144ab5a9 / 9e804e3e and alpha 6af1685b / 87b9be45 exclude all visible
+locked altars from banking goals without clearing them. New alpha 5f73d078 /
+ba646c6e buys/places locks along routes; its safety pattern fits our farmer.
+Gamma 1b34f42a / 3ce565f6 and our edit base handle hostile locks and permit
+friendly ones. Adopted only the consumable-denial concept; opponent source is
+not evidence of official opponents or a measured exploit. No private notes read.
 
-Current strategy: Varg/Tavi/Ryth/Vendetta/Marcella farming roster; Jungle Strength,
-Monster Strength, Durability Health, then Power Strength. Explicit camp capture;
-bank each bag; complete spawn healing; no live shared memory. Routing, draft,
-shopping, shield use, banking and recovery policy remain as in edit base.
-This experiment changes only combat targeting/action sequencing:
-- Snapshot at most 16 visible live targets, checking visibility before health
-  and position. Keep snapshots within one action phase, never across turns.
-- Rank basic targets by capped damage plus 0.5 Strength for finishes; include
-  observed Varg splash. Ground AoE compares visible damage across aim points.
-- Refresh after the initial basic even if it killed the previous target. Select
-  resets only with a surviving in-range target and available attack permission.
-- After successful cast, reacquire/rank targets for a fresh basic. Check engine
-  allowances/restrictions; do not assume kills restore cast allowance.
-- At most one initial basic, one cast (including existing shield), one follow-up
-  basic. Preserve movement exclusions and do not walk after successful combat.
-- Stop optional scans below 30k fuel; retain 18k action reserve and fixed scans.
-  These are planning reserves, not measured suspension-free headroom.
-- combat_policy.h has six constexpr hit-value regressions, compiled by bot-check.
+Current strategy remains Varg/Tavi/Ryth/Vendetta/Marcella farming; Jungle
+Strength, Monster Strength, Durability Health, then Power Strength; group
+capture, bank each bag, complete spawn recovery. No live shared-memory protocol.
+This candidate adds only:
+- Buy one altar lock before shards when SDK can_buy permits, including death.
+  Tavi's field-shard exception does not authorize field consumables.
+- At turn start and after successful movement, attempt one visible empty altar
+  within two tiles. No detour, patrol or capture/channel interruption.
+- Require alive, inventory, no recall/tribute/teleport, no consumable restriction,
+  and >=30k fuel. Intersect static altars with current visibility and no locks.
+  Even a False use result ends this phase; subsequent phase refreshes observation.
+- Existing banking already permits friendly locks and legally attacks hostile
+  locks through submit_gems. Draft, combat, camp selection and recovery preserved.
 
 Engine 2.1.6; lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Documentation/SDK unchanged per trusted handoff.
-Consulted BOT_REFERENCE, RESEARCH, organizer record, Playbooks B/C/D/E/F/G and
-relevant handbook/C++ API/pinned-header combat, visibility and action contracts.
-Pinned header SHA256 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-Organizer page is a download hub; production parity/additional policies unknown.
+suite historical-panels-v1. Documentation unchanged per trusted handoff; consulted
+BOT_REFERENCE, RESEARCH, organizer record, Playbooks B/C/D/F/G and relevant
+GameRules/C++ API/installed-header consumable, shop, visibility/channel sections.
+SDK hash 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
+Organizer page is a download hub, not certification of all policies or parity.
 
-Checks on final bot source (no source changes afterward):
+Final source check (no bot-source edits afterward):
 `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
 PASSED, exit 0; source
-6d52acdbd7f1a71f6fa9ef3592dfd6ecf3a82ccbcee05d33d335460f0355bc75.
-Report .agent/check-task-490c542467de4fe282d89f6170644b21.json;
-check:task-490c542467de4fe282d89f6170644b21:6d52acdbd7f1a71f6fa9ef3592dfd6ecf3a82ccbcee05d33d335460f0355bc75.
-Exact-source check-report independently returned PASSED/0. Smoke IDs
-c0653c7bec77f1cdf2fadbb36e431f1231e8fcc18a07b30ff14e6c2de5af2e62
-and 5c84f2a787ca7235be5416050182d8cfb437c598c3a69533fa58819d58e1d67f.
-Permitted own-side stdout exports exited 0 and contain zero bytes, saved as
-smoke-a.json/smoke-b.json. They do not prove complete games or no suspensions.
-`python3 experiments/beta/task-490c542467de4fe282d89f6170644b21/check_combat_contracts.py`
-PASSED/0, report invariants.txt in that directory. Source safety contracts cover
-fresh targets, visibility, reset validity, restrictions, bounded casts/scans,
-channels, capture, recovery and free roots; eight unsafe mutations rejected.
-The first harness run raised ValueError when a mutation removed a required guard;
-the harness now treats that as rejection. No bot fault or source repair involved.
-These are source contracts, not a game simulation. `git diff --check` PASSED/0;
-report diff-check.txt in this task directory.
+b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1.
+Report .agent/check-task-fd18a49b25e84173bc088cee80b91936.json;
+check:task-fd18a49b25e84173bc088cee80b91936:b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1.
+Exact-source check-report independently returned PASSED/0, saved as
+check-report.json. Smoke IDs a06b2d35e0543b1c7e7f73e187e33e637621b87b2a38d4e10b440d09b2326750
+and ffb0829596bac15c07d892feb8e96f34956d5be121109d13ff426954a8cb8ef1.
+Own-side stdout exports exited 0, contain zero bytes, saved as smoke-a/b.json.
+These do not prove complete games, lock placement coverage or no suspensions.
+`python3 experiments/beta/task-fd18a49b25e84173bc088cee80b91936/check_lock_contracts.py`
+PASSED/0, report invariants.txt: safety contracts and ten unsafe mutations,
+plus preserved base combat/farming/recovery/draft/yield. Static checks only.
+`git diff --check` PASSED/0, report diff-check.txt.
 
-Risks: additional live queries, 16-target cap, damage estimates ignore mitigation
-and shields, finish/splash ranking may split focus, existing shield competes with
-reset. Comparative gains, fuel headroom and effect on survival remain unmeasured.
-Prior scheduling gained only +0.041667 with interlock regression and was not the
-selected edit base; harvest circuits had zero matched gain. Prior isolated draft,
-item, weak-camp and shield variants did not establish additive gains. Previous
-notes including negative findings archived in archive/through-task-c28fb5b460264834ae1f67c600db2eae.md.
+Risks: spending 10g can delay an emblem; remote routes may leave locks unused;
+clearing-capable enemies pay just three basics. Fuel reserve is a policy bound,
+not measured headroom. Neither competitive gains nor denial coverage established.
+Rejected another combat rewrite after its regression and a threat planner without
+a causal trace; no patrols or previously tested arrival-tribute change bundled.
+Prior routing +0.041667 with interlock regression, zero-gain harvest circuits,
+and isolated item/draft/shield results did not establish additive gains.
+Prior notes/negative findings archived through task-490c542467de4fe282d89f6170644b21.
 
 Next: supervisor evaluates exact checked source against d2d57274 on matched maps,
-both sides and frozen opponents. Compare wins, submitted/collected gems, deaths
-and available fuel telemetry. Keep the full accepted-champion gate mandatory.
+both sides and frozen opponents. Compare wins, both teams' submitted gems, own
+equipment progression/deaths and available fuel or lock telemetry. Accepted
+champion promotion still requires the full gate.

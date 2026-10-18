@@ -1,6 +1,5 @@
 #include <cambc.h>
 #include "bot.h"
-#include "combat_policy.h"
 #include <algorithm>
 #include <array>
 #include <limits>
@@ -18,12 +17,34 @@ constexpr unsigned retry_delay = 12;
 constexpr std::uint64_t planning_reserve = 18000;
 constexpr std::uint64_t scan_reserve = 45000;
 constexpr std::size_t max_group_checks = 12;
+constexpr std::uint64_t lock_reserve = 30000;
+constexpr int lock_placement_range = 2; // Pinned SDK consumable contract.
 int distance(vec2 a, vec2 b) { return static_cast<int>(a.chebyshev_distance(b)); }
 
 cambc::bitboard around(vec2 p, int range) {
     cambc::bitboard result;
     result.draw_chebyshev(p, range);
     return result;
+}
+
+// Spend inventory along our normal route, never detour or interrupt a channel.
+// Friendly locks permit our tribute and cost opponents three basic attacks.
+void lock_nearby_altar() {
+    auto& me = cambc::self();
+    if (cambc::fuel_remaining() < lock_reserve || !me.is_alive()
+        || me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
+        || me.restrictions().contains(cambc::buff_restrictions::consumable)) return;
+    const auto& lock = me.consumables()[cambc::consumable_type::altar_lock];
+    if (!lock.count()) return;
+    // Missing hidden locks do not establish that an altar is empty.
+    const auto candidates = around(me.position(), lock_placement_range)
+        & cambc::map::altars() & cambc::vision::visible_tiles()
+        & ~cambc::vision::altar_lock_tiles();
+    for (auto altar : candidates.positions()) {
+        // One attempt per observation phase, including a False reveal result.
+        lock.use(altar);
+        return;
+    }
 }
 
 cambc::bitboard blocked_tiles() {
@@ -50,7 +71,10 @@ bool move_to(cambc::bitboard goals) {
         for (auto tile : blocked.reachable_tiles(me.position(), me.base_stats().base_move_speed).positions())
             if (field.get(tile) < value) { best = tile; value = field.get(tile); }
         if (best == me.position()) return false;
-        if (me.move_absolute(best)) return true;
+        if (me.move_absolute(best)) {
+            lock_nearby_altar(); // Refresh visibility after walking into placement range.
+            return true;
+        }
         if (cambc::fuel_remaining() < planning_reserve) return false;
     }
     return false;
@@ -77,107 +101,29 @@ void shield_if_exposed() {
         }
 }
 
-// Snapshot only within one action phase. Read fresh handles after each action.
-constexpr std::size_t combat_target_limit = 16;
-constexpr std::uint64_t combat_scan_reserve = 30000;
-template<class Target> struct ObservedTarget {
-    Target target;
-    vec2 position;
-    float health;
-    bool eligible;
-};
-
-template<class Target, class ReadTargets, class Eligible>
-auto observe_targets(ReadTargets read_targets, Eligible eligible) {
-    std::vector<ObservedTarget<Target>> result;
-    std::size_t examined = 0;
-    for (const auto& target : read_targets()) {
-        if (++examined > combat_target_limit
-            || cambc::fuel_remaining() < combat_scan_reserve) break;
-        if (!target.is_visible()) continue;
-        const auto health = target.health();
-        if (health <= 0) continue;
-        result.push_back({target, target.position(), health, eligible(target)});
-    }
-    return result;
-}
-
+// One basic attack and at most one successful cast, with a refreshed reset attack.
+// Ground AoE uses the observed target tile; unit spells require their own mask.
 template<class Target>
-std::optional<ObservedTarget<Target>> basic_target(const std::vector<ObservedTarget<Target>>& targets) {
+bool fight(const Target& target, bool walked = false) {
     auto& me = cambc::self();
-    const auto position = me.position();
-    const auto range = me.attack_range();
-    const auto strength = me.strength();
-    const bool splash = me.champion_name() == cambc::champion_type::varg;
-    float best_value = 0;
-    std::optional<ObservedTarget<Target>> best;
-    for (const auto& t : targets) {
-        if (!t.eligible || distance(position, t.position) > range) continue;
-        float value = combat_policy::hit_value(t.health, strength, strength);
-        if (splash)
-            for (const auto& other : targets)
-                if (other.position != t.position && distance(other.position, t.position) <= 1)
-                    value += combat_policy::hit_value(other.health, strength, strength);
-        if (value > best_value) { best = t; best_value = value; }
-    }
-    return best;
-}
-
-// One initial basic, one cast, and a refreshed follow-up basic. Engine allowances
-// remain authoritative: a cooldown reset is not assumed to grant another cast.
-template<class Target, class ReadTargets, class Eligible>
-bool fight(ReadTargets read_targets, Eligible eligible, bool walked = false) {
-    auto& me = cambc::self();
+    if (!target.is_visible() || target.health() <= 0) return false;
     bool acted = false;
-    auto can_attack = [&] {
-        return me.is_alive() && me.can_attack()
-            && !me.restrictions().contains(cambc::buff_restrictions::attack);
-    };
-    auto attack_fresh = [&] {
-        if (!can_attack()) return false;
-        const auto targets = observe_targets<Target>(read_targets, eligible);
-        const auto target = basic_target(targets);
-        if (!target || !target->target.is_visible() || target->target.health() <= 0) return false;
-        me.attack(target->target);
-        return true;
-    };
-    if (can_attack()) {
-        const auto targets = observe_targets<Target>(read_targets, eligible);
-        if (const auto target = basic_target(targets)) {
-            shield_if_exposed();
-            if (can_attack() && target->target.is_visible() && target->target.health() > 0) {
-                me.attack(target->target);
-                acted = true;
-            }
-        }
+    if (me.can_attack() && distance(me.position(), target.position()) <= me.attack_range()) {
+        shield_if_exposed();
+        if (me.can_attack()) { me.attack(target); acted = true; }
     }
-    if (!me.is_alive() || !me.can_cast()
-        || me.restrictions().contains(cambc::buff_restrictions::cast)
-        || cambc::fuel_remaining() < combat_scan_reserve) return acted;
+    if (!me.is_alive() || !target.is_visible() || target.health() <= 0 || !me.can_cast()) return acted;
 
-    // The previous basic/splash may have killed the primary or its neighbors.
-    const auto targets = observe_targets<Target>(read_targets, eligible);
-    const auto reset_target = basic_target(targets);
     std::optional<cambc::ability> best;
-    std::optional<ObservedTarget<Target>> aim;
     float best_value = 0;
-    const auto strength = me.strength();
     for (const auto& ability : me.abilities()) {
-        if (cambc::fuel_remaining() < combat_scan_reserve
-            || !ability.info() || !ability.is_ready()) continue;
+        if (!ability.is_ready()) continue;
         const bool excludes_walk = std::visit([](const auto& info) { return info.exclusive_with_movement; }, ability.info().value());
         if (walked && excludes_walk) continue;
         if (ability.is_attack_reset()) {
-            if (!me.can_attack() && reset_target && ability.can_target_self()
-                && !me.restrictions().contains(cambc::buff_restrictions::attack)) {
-                float value = combat_policy::hit_value(reset_target->health, strength, strength);
-                if (me.champion_name() == cambc::champion_type::varg)
-                    for (const auto& other : targets)
-                        if (other.position != reset_target->position
-                            && distance(other.position, reset_target->position) <= 1)
-                            value += combat_policy::hit_value(other.health, strength, strength);
-                if (value > best_value) { best = ability; aim = reset_target; best_value = value; }
-            }
+            if (acted && !me.can_attack() && ability.can_target_self()
+                && distance(me.position(), target.position()) <= me.attack_range()
+                && me.strength() > best_value) { best = ability; best_value = me.strength(); }
             continue;
         }
         if (!(ability.is_damage() || ability.is_cc() || ability.is_aoe_damage())) continue;
@@ -188,32 +134,24 @@ bool fight(ReadTargets read_targets, Eligible eligible, bool walked = false) {
         } else {
             if (!ability.can_target_enemies()) continue;
         }
-        const auto range = ability.valid_tiles();
-        const auto damage = ability.damage_amount();
-        for (const auto& target : targets) {
-            if (!target.eligible || !range.is_set(target.position)) continue;
-            float value = combat_policy::hit_value(target.health, damage, strength);
-            if (ability.is_cc()) value += strength;
-            if (ability.is_aoe_damage()) {
-                const auto radius = ability.get<cambc::ability_aoe_damage>().radius;
-                for (const auto& other : targets)
-                    if (other.position != target.position && distance(other.position, target.position) <= radius)
-                        value += combat_policy::hit_value(other.health, damage, strength);
-            }
-            if (value > best_value) { best = ability; aim = target; best_value = value; }
+        if (!ability.valid_tiles().is_set(target.position())) continue;
+        float value = ability.damage_amount();
+        if (ability.is_cc()) value += me.strength();
+        if (ability.is_aoe_damage()) {
+            const auto radius = ability.get<cambc::ability_aoe_damage>().radius;
+            for (const auto& camp : cambc::vision::camps())
+                if (camp.is_visible() && camp.health() > 0 && camp.position() != target.position()
+                    && distance(camp.position(), target.position()) <= radius) value += ability.damage_amount();
         }
+        if (value > best_value) { best = ability; best_value = value; }
     }
-    if (!best || !aim || !me.is_alive() || !me.can_cast()
-        || !aim->target.is_visible() || aim->target.health() <= 0
-        || cambc::fuel_remaining() < planning_reserve) return acted;
+    if (!best) return acted;
     const bool cast = best->is_attack_reset() ? best->use()
-        : best->is_aoe_damage() ? best->use(aim->position) : best->use(aim->target);
-    if (cast) {
-        acted = true;
-        // Never attack the stale pre-cast target. Retaliation and splash can kill.
-        if (me.is_alive()) attack_fresh();
-    }
-    return acted;
+        : best->is_aoe_damage() ? best->use(target.position()) : best->use(target);
+    if (cast && best->is_attack_reset() && me.is_alive() && target.is_visible()
+        && target.health() > 0 && me.can_attack()
+        && distance(me.position(), target.position()) <= me.attack_range()) me.attack(target);
+    return acted || cast;
 }
 
 bool bank() {
@@ -240,6 +178,10 @@ bool bank() {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
+    // Reserve ten gold before equipment spending, at spawn or while dead.
+    // can_buy enforces stock, location and Tavi's consumable shop restrictions.
+    const auto lock = cambc::consumable_type::altar_lock;
+    if (me.can_buy(lock)) me.buy(lock);
     using I = cambc::item_type;
     auto counts = me.item_count();
     // Finish each unique farming passive once, then stack useful stats.
@@ -319,8 +261,8 @@ void Bot::farm_camps() {
     auto& g = groups[chosen];
     if (!reward) {
         // Stay focused on one physical group; Varg splash and Ryth AoE clear it together.
-        if (fight<cambc::camp>([&] { return g.group.camps(); },
-            [](const auto&) { return true; })) return;
+        for (const auto& camp : camps)
+            if (g.spawns.is_set(camp.spawn_position()) && fight(camp)) return;
     }
     auto goals = g.spawns;
     if (!reward) {
@@ -333,8 +275,8 @@ void Bot::farm_camps() {
     if (cambc::fuel_remaining() < planning_reserve) return;
     if (move_to(goals)) {
         // Movement changes visibility. Rebuild handles and prohibit exclusive spells.
-        if (fight<cambc::camp>([&] { return g.group.camps(); },
-            [](const auto&) { return true; }, true)) return;
+        for (const auto& camp : cambc::vision::camps())
+            if (g.spawns.is_set(camp.spawn_position()) && fight(camp, true)) return;
     } else if (!goals.is_set(me.position())) {
         g.retry_round = round + retry_delay;
         target_group = -1;
@@ -347,6 +289,7 @@ void Bot::play_turn() {
     buy_items();
     if (!me.is_alive()) { recovering = false; target_group = -1; return; }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
+    lock_nearby_altar();
     if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
 
     const auto& spawn = cambc::map::spawn_region(team::ally);
@@ -365,12 +308,12 @@ void Bot::play_turn() {
     }
     // Secure bags before accepting unrelated fights.
     if (bank()) return;
-    if (fight<cambc::champion>([] { return cambc::vision::champions(team::enemy); },
-        [&](const auto& enemy) {
-            return distance(me.position(), enemy.position()) <= me.attack_range()
-                && (enemy.health() <= me.strength() * 2
-                    || distance(me.position(), enemy.position()) <= enemy.attack_range());
-        })) return;
+    for (const auto& enemy : cambc::vision::champions(team::enemy))
+        if (enemy.is_visible() && enemy.health() > 0
+            && distance(me.position(), enemy.position()) <= me.attack_range()
+            && (enemy.health() <= me.strength() * 2
+                || distance(me.position(), enemy.position()) <= enemy.attack_range()))
+            if (fight(enemy)) return;
 
     if (!initialized) {
         for (auto group : cambc::map::camp_groups()) {

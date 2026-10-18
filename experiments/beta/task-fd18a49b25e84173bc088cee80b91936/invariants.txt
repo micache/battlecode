@@ -1,0 +1,4 @@
+PASS: placement visibility, range, occupancy, inventory, channel, restriction, fuel and bounded-attempt contracts.
+PASS: guarded consumable purchase and fresh post-movement placement; friendly/hostile bank semantics preserved.
+PASS: 10 unsafe mutations rejected; farming/combat/recovery, draft and official yield remain at edit base.
+Static contracts only; fuel headroom, match completion and competitive gains are not established.
