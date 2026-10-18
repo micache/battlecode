@@ -1186,6 +1186,8 @@ Get the remaining owner turn-end ticks; zero means ready.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate an ability before choosing a spell.
 
 ```cpp
@@ -1203,6 +1205,8 @@ Query damage before absorption/health limits; includes caster items and passives
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate an ability before choosing a spell.
 
 ```cpp
@@ -1219,6 +1223,8 @@ float damage_amount(const champion& target) const
 Predict health lost after mitigation and shields, capped at current health. Target must be visible. @param target Visible champion that would be hit.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate an ability before choosing a spell.
 
@@ -1258,6 +1264,8 @@ Query heal before absorption/health limits; includes caster items and passives.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate an ability before choosing a spell.
 
 ```cpp
@@ -1274,6 +1282,8 @@ float heal_amount(const champion& target) const
 Cap healing at the visible target's missing health. Does not cast or consume resources. @param target Visible champion that would be healed.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate an ability before choosing a spell.
 
@@ -1455,6 +1465,8 @@ Query whether the live ability has a positive remaining cooldown.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate an ability before choosing a spell.
 
 ```cpp
@@ -1471,6 +1483,8 @@ bool is_ready() const
 Check whether this ability is ready to cast.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate an ability before choosing a spell.
 
@@ -1504,6 +1518,8 @@ Like `valid_tiles`, but writes into `out` instead of returning a new board. @par
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate an ability before choosing a spell.
 
 Inputs:
@@ -1524,6 +1540,8 @@ Query shield before absorption/health limits; includes caster items and passives
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate an ability before choosing a spell.
 
 ```cpp
@@ -1540,6 +1558,8 @@ float shield_amount(const champion& target) const
 Query full shield strength for a visible target. Does not cast or consume resources. @param target Visible champion that would be shielded.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate an ability before choosing a spell.
 
@@ -1593,6 +1613,8 @@ Cast on a camp; the cast lands on the target's tile. Returns false for a newly r
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate an ability before choosing a spell.
 
 Inputs:
@@ -1612,6 +1634,8 @@ bool use(const champion& target) const
 Cast on a champion; unit casts land on the target's tile. Returns false for a newly revealed hidden obstruction; known invalid destinations throw. @param target Champion to cast on.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate an ability before choosing a spell.
 
@@ -1667,6 +1691,8 @@ bitboard valid_tiles() const
 Casting range only; does not filter visibility, occupancy or target categories. Throws for range-less or unused slots, hidden owners, and design-only abilities.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate an ability before choosing a spell.
 
@@ -4218,6 +4244,8 @@ Query current focus for this visible unit.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate a visible camp before choosing where to farm.
 
 Inputs:
@@ -4236,6 +4264,8 @@ float health() const override
 Query current health; live state requires a visible runtime identity.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate a visible camp before choosing where to farm.
 
@@ -4256,6 +4286,8 @@ Query whether this camp is living (awake or asleep); uses the same visibility ch
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate a visible camp before choosing where to farm.
 
 Inputs:
@@ -4274,6 +4306,8 @@ bool is_asleep() const
 Query whether this camp is living but dormant; uses the same visibility checks as state().
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate a visible camp before choosing where to farm.
 
@@ -4294,6 +4328,8 @@ Query whether this camp is awake; uses the same visibility checks as state().
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate a visible camp before choosing where to farm.
 
 Inputs:
@@ -4312,6 +4348,8 @@ bool is_dead() const
 Query whether this camp is dead; uses the same visibility checks as state().
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate a visible camp before choosing where to farm.
 
@@ -4453,6 +4491,8 @@ Query current maximum health; live state requires a visible runtime identity.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate a visible camp before choosing where to farm.
 
 Inputs:
@@ -4487,6 +4527,8 @@ vec2 position() const override
 Get the tile position; live entity views query current engine state.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate a visible camp before choosing where to farm.
 
@@ -4524,6 +4566,8 @@ Query dead, alive (awake), or asleep. The current tile, or last occupied tile wh
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate a visible camp before choosing where to farm.
 
 Inputs:
@@ -4542,6 +4586,8 @@ float strength() const override
 Query current strength for this visible unit.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate a visible camp before choosing where to farm.
 
@@ -4710,6 +4756,8 @@ Attack an altar lock; requires the authenticated self and host-validated action 
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 Inputs:
@@ -4730,6 +4778,8 @@ Attack a champion or camp view; requires the authenticated self and host-validat
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 Inputs:
@@ -4749,6 +4799,8 @@ std::int32_t attack_range() const override
 Get the unit's attack range in tiles; champion state is queried live.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -4823,6 +4875,8 @@ Check whether this champion can attack.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Check the action allowance before spending fuel to choose an attack target.
 
 ```cpp
@@ -4839,6 +4893,8 @@ bool can_buy(consumable_type consumable) const
 Check whether a consumable can be bought in the current state. @param consumable Consumable to buy.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -4859,6 +4915,8 @@ bool can_buy(item_type item, std::uint32_t count = 1) const
 Check whether an item can be bought in the current state. @param item Item to buy. @param count Number of copies to buy.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -4881,6 +4939,8 @@ Check whether this champion can cast.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Check the action allowance before spending fuel to evaluate ready abilities.
 
 ```cpp
@@ -4898,6 +4958,8 @@ Check whether this champion can move.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Check the action allowance before spending fuel to plan a path.
 
 ```cpp
@@ -4914,6 +4976,8 @@ bool can_sell() const
 Check whether the authenticated self currently has permission to sell.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -5030,6 +5094,8 @@ Query current focus for this visible unit.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5046,6 +5112,8 @@ std::uint32_t gem_count() const
 Get carried gems.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -5081,6 +5149,8 @@ Check whether this champion has completed its turn.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5097,6 +5167,8 @@ float health() const override
 Get current and maximum health.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Recall when badly injured and safe from interruption.
 
@@ -5171,6 +5243,8 @@ Check whether this champion is recalling.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5188,6 +5262,8 @@ Check whether this champion is submitting gems.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5204,6 +5280,8 @@ bool is_teleporting() const
 Check whether this champion is teleporting.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -5237,6 +5315,8 @@ Get item counts indexed by item type.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5253,6 +5333,8 @@ float max_health() const override
 Query current maximum health; live state requires a visible runtime identity.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Recall when badly injured and safe from interruption.
 
@@ -5393,6 +5475,8 @@ Get the tile position; live entity views query current engine state.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5410,6 +5494,8 @@ Get the scheduling priority used for the current round.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5426,6 +5512,8 @@ std::int32_t priority() const
 Get the scheduling priority for the next round.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -5466,6 +5554,8 @@ Query the visible champion's remaining channel rounds; no active channel throws.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5482,6 +5572,8 @@ buff_restrictions restrictions() const
 Union of active buff restrictions; requires visibility.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -5541,6 +5633,8 @@ Get current state and action availability.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -5557,6 +5651,8 @@ float strength() const override
 Query current strength for this visible unit.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -5611,6 +5707,8 @@ bitboard visible_tiles() const
 Get tiles visible to this champion.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -5669,6 +5767,8 @@ void visible_tiles_into(bitboard& out) const
 Like `visible_tiles`, but writes into `out` instead of returning a new board. @param out Destination; its previous contents are overwritten.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -6239,6 +6339,8 @@ std::uint32_t count() const
 Get the number currently owned.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Plan a purchase or use an owned consumable.
 
@@ -8500,6 +8602,8 @@ virtual std::int32_t attack_range() const = 0
 
 Attack range in Chebyshev tiles; melee units have range 1.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -8517,6 +8621,8 @@ Build the live unit's Chebyshev attack-range mask; does not filter targets or at
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -8533,6 +8639,8 @@ void attack_tiles_into(bitboard& out) const
 Like `attack_tiles`, but writes into `out` instead of returning a new board. @param out Destination; its previous contents are overwritten.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -8554,6 +8662,8 @@ Construct a fresh owning buff collection; previous collections retain their capt
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -8571,6 +8681,8 @@ Query current focus for this visible unit.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -8587,6 +8699,8 @@ virtual float health() const = 0
 Query current health; live state requires a visible runtime identity.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -8620,6 +8734,8 @@ Query current maximum health; live state requires a visible runtime identity.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -8637,6 +8753,8 @@ Get the tile position; live entity views query current engine state.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Evaluate your champion's options during its turn.
 
 ```cpp
@@ -8653,6 +8771,8 @@ virtual float strength() const = 0
 Query current strength for this visible unit.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Evaluate your champion's options during its turn.
 
@@ -8947,6 +9067,8 @@ Prefer the allied lock if both teams have a lock on this altar. @param position 
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Check visible objects before choosing a destination.
 
 Inputs:
@@ -9075,6 +9197,8 @@ Find a currently visible camp. @param position Current tile of the camp.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Check visible objects before choosing a destination.
 
 Inputs:
@@ -9160,6 +9284,8 @@ cambc::champion champion_at(vec2 position)
 Create a fresh view of the currently visible champion at a position. @param position Tile to query.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Check visible objects before choosing a destination.
 
@@ -9404,6 +9530,8 @@ Get the visible teleport reservation on a tile. @param position Tile to query.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Check visible objects before choosing a destination.
 
 Inputs:
@@ -9509,6 +9637,8 @@ Get the ordinary ward at a tile for one team. @param position Tile to query. @pa
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
+**vision**: This function requires you to have the subject in vision.
+
 Check visible objects before choosing a destination.
 
 Inputs:
@@ -9528,6 +9658,8 @@ cambc::ward ward_at(vec2 position)
 Get the ordinary ward at a tile. @param position Tile to query.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+**vision**: This function requires you to have the subject in vision.
 
 Check visible objects before choosing a destination.
 
@@ -9690,6 +9822,25 @@ friend bool operator==(const ward&, const ward&) = default
 ```
 
 Compare every captured field.
+
+### owner
+
+```cpp
+cambc::champion owner() const
+```
+
+Return the owning champion captured when this ward was visible, even if the owner is hidden. Live champion state still requires the champion to be in vision.
+
+**gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+Check visible objects before choosing a destination.
+
+Inputs:
+- subject: bc::ward (a valid instance)
+
+```cpp
+auto result = subject.owner();
+```
 
 ### position
 

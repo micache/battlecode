@@ -53,6 +53,8 @@ def main():
             output.mkdir()
             command = ['run', 'side-a', 'side-b', '--map', '/work/frozen.map26a', '--out-dir', '/output',
                        '--statistics', '/output/final.json']
+            if engine.lock['version'] == '2.2.5':
+                command += ['--release', '--json']
             if args.name == 'truncated':
                 command += ['--rounds', '1']
             engine.execute(project, output, command, 0.05 if args.name == 'timeout' else 300,

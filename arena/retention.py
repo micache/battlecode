@@ -97,7 +97,7 @@ def protected_jobs(arena):
                       'ORDER BY created DESC', (bot,))
         if rows:
             evaluations.add(rows[0]['id'])
-        full = next((r for r in rows if json.loads(r['suite'])['coverage']=='full-nine-map'), None)
+        full = next((r for r in rows if json.loads(r['suite'])['coverage'] in ('full-nine-map','full-map-pool')), None)
         if full:
             evaluations.add(full['id'])
         for row in rows[:8]:

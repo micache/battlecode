@@ -8,7 +8,7 @@ from .common import atomic_bytes, atomic_json, file_hash, read_json, require, tr
 SKILL = 'skills/battlecode-strategy/SKILL.md'
 DOCUMENTS = ('AGENTS.md', 'BOT_REFERENCE.md', 'PLAYBOOKS.md', 'RESEARCH.md',
              'sources/GameRules.md', 'sources/BotAPIPython.md', 'sources/BotAPICpp.md',
-             'sources/BotAPIPython.live-20261017.md', 'docs/rules/verified.md',
+             'sources/BotAPIPython.live-20261017.md', 'sources/EngineErrors.md', 'docs/rules/verified.md',
              'docs/rules/organizer-agents.md', SKILL)
 
 

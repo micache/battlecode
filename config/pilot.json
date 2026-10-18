@@ -5,13 +5,13 @@
   "infrastructure": "/opt/battlecode",
   "root": "/srv/battlecode",
   "mirror": "/srv/battlecode/repos/source.git",
-  "maps": "/srv/battlecode/maps/pool-2026a-216",
-  "map_manifest": "/opt/battlecode/evidence/map-pool.json",
+  "maps": "/srv/battlecode/toolchains/cambc-225/template/maps",
+  "map_manifest": "/opt/battlecode/evidence/map-pool-225.json",
   "engine_lock": "/srv/battlecode/locks/engine.json",
   "parser_contract": "/etc/battlecode/parser.json",
   "engine": {
-    "version": "2.1.6",
-    "binary_sha256": "e2a641bab3c9ec3b80d595c2956e6dbb115959b039617efb14e554617bf0d08c"
+    "version": "2.2.5",
+    "binary_sha256": "47c4d2d78ba29e7ef8c4633845f26659ece968c9424409a300a9ea4b89e7eaa2"
   },
   "limits": {
     "matches": 1,
@@ -40,7 +40,8 @@
       "elkring",
       "expanse",
       "interlock",
-      "lanes"
+      "lanes",
+      "ambush", "contest", "eight", "fragment", "pilgrimage", "rushbait-v2", "stampede", "swirl"
     ],
     "holdout_maps": [
       "monolith",
@@ -50,7 +51,7 @@
     "opponent_revision_ids": [],
     "minimum_gain": 0.05,
     "maximum_map_drop": 0.25,
-    "max_promotion_checks_per_day": 2
+    "full_evaluation": true
   },
   "workers": {
     "alpha": {

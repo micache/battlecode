@@ -100,7 +100,7 @@ class DevelopmentTests(Harness):
         self.assertEqual({r[0] for r in own}, set(self.config['evaluation']['development_maps']))
         suite = json.loads(self.arena.db.one('SELECT suite FROM evaluations WHERE id=?', (eid,))['suite'])
         self.assertEqual(suite['development_incumbent_id'], base['id'])
-        self.assertEqual(suite['coverage'], 'development-six-map')
+        self.assertEqual(suite['coverage'], 'development-map-pool')
         summary = read_json(self.root / 'feedback/alpha/latest.json')['summary']
         validate_schema(summary, read_json(PROJECT / 'schemas/feedback.schema.json'))
         self.assertEqual(summary['metrics']['development_comparison']['source_hash'], base['source_hash'])

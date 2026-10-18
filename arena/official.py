@@ -52,9 +52,10 @@ def selection_status(arena, now=None):
             continue
         suite, metrics = json.loads(row['suite']), json.loads(row['metrics'])
         opponents = suite.get('opponents', {})
-        if (suite.get('coverage') != 'full-nine-map' or len(suite.get('maps', {})) != 9 or
+        if (suite.get('coverage') not in ('full-nine-map', 'full-map-pool') or
+                suite.get('maps') != arena.freeze_maps() or
                 len({o['source_hash'] for o in opponents.values()}) < 3 or
-                metrics.get('paired_cases') != 9 * len(opponents) or
+                metrics.get('paired_cases') != len(suite['maps']) * len(opponents) or
                 metrics.get('missing') or metrics.get('fault_matches') or metrics.get('unknown_reliability') or
                 metrics.get('decision') != 'ACCEPTED' or
                 suite.get('infrastructure_commit') != arena.config['infrastructure_commit'] or

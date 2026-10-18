@@ -1,5 +1,15 @@
 # Organizer Agents.md page — access record
 
+18 October update: the owner supplied fresh root-directory exports. GameRules.md
+still hashes to `1c7fcf111d95b4734070f8f676cd50a48154feb0673de73a31c79845afa34732`.
+The current `sources/BotAPICpp.md` is an unchanged copy of the new supplied
+export, SHA256 `b3f00c5caf707b284910a74083d3ecc519431216fd31409be876dc0e3a769213`;
+the previous bytes remain in Git. The table below records the earlier retrieval,
+not the new file's hash. Visibility annotations and ward::owner were added.
+CLI 2.2.5's installed header lacks ward::owner; BOT_REFERENCE.md records this
+upstream documentation/SDK gap explicitly. Do not patch an unofficial SDK to
+pretend they are identical. The error enum matches all 134 supplied entries.
+
 Retrieved 17 October 2026 through the owner's approved normal browser at
 https://2026a.battlecode.co.uk/game/docs/agents. The page is a Markdown-download
 hub, not a separately downloadable agent-instruction file. Its article contains

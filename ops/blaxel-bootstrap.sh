@@ -23,7 +23,7 @@ if test ! -e /usr/local/bin/codex; then
 fi
 python3 /opt/battlecode/ops/prepare-owners.py
 if test ! -f /srv/battlecode/locks/engine.json; then
-  python3 /opt/battlecode/ops/as-arena.py bash /opt/battlecode/ops/prepare-engine.sh
+  python3 /opt/battlecode/ops/as-arena.py bash /opt/battlecode/ops/prepare-engine.sh --register
 fi
 python3 /opt/battlecode/ops/as-arena.py arena init
 echo 'Installation ready, paused. Complete owner logins and review real starter games before starting workers.'

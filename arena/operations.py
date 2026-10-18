@@ -20,7 +20,7 @@ def register_toolchain(config, image_id, template, compiler_record, profile_reco
     require('sha256:' + inspected.removeprefix('sha256:') == image_id,
             "image must already be installed at immutable ID")
     version = run(["podman", "run", "--rm", "--pull=never", "--network=none", image_id, "cambc", "--version"])
-    require(version == "cambc 2.1.6", "engine version mismatch")
+    require(version == "cambc " + config['engine']['version'], "engine version mismatch")
     binary_hash = run(["podman", "run", "--rm", "--pull=never", "--network=none", image_id,
                        "python3", "/opt/engine-evidence.py", "binary-hash"])
     require(binary_hash == config["engine"]["binary_sha256"], "distributed engine hash mismatch")
@@ -28,14 +28,18 @@ def register_toolchain(config, image_id, template, compiler_record, profile_reco
     # The template comes from a trusted image; it includes the official build recipes, never a bot branch's scripts.
     manifest = tree_manifest(template)
     require("sdk/cpp/cambc.h" in manifest, "matching installed C++ SDK missing")
-    lock = {"protocol_version": 1, "version": "2.1.6", "engine_sha256": binary_hash,
+    lock = {"protocol_version": 1, "version": config['engine']['version'], "engine_sha256": binary_hash,
             "image_id": image_id, "project_template": str(Path(template).resolve()),
             "template_sha256": tree_hash(template), "sdk_cpp_sha256": file_hash(Path(template) / "sdk/cpp/cambc.h"),
             "compiler_versions": compiler_record, "language": "cpp", "effective_profile": None,
             "recipe_sha256": file_hash(Path(config["infrastructure"]) / "ops/Containerfile"),
             "created": time.time()}
+    if config['engine']['version'] == '2.2.5':
+        lock['build_mode'] = 'release'
     if profile_record:
-        require(profile_record["effective_profile"] == PROFILE, "runtime profile differs; review rules update")
+        profile = profile_record['effective_profile']
+        expected = dict(PROFILE, fuel_multipliers={'cpp': 1})
+        require(profile in (PROFILE, expected), "runtime profile differs; review rules update")
         evidence = profile_record["evidence"]
         require(file_hash(evidence["path"]) == evidence["sha256"], "runtime profile evidence missing/changed")
         lock["effective_profile"] = profile_record["effective_profile"]
@@ -44,16 +48,27 @@ def register_toolchain(config, image_id, template, compiler_record, profile_reco
     return lock
 
 
+def starter_snapshot(arena):
+    # An upgrade must not silently reuse a prior CLI's starter implementation.
+    if arena.adapter().lock.get('version') == '2.2.5':
+        return arena.root / 'starters' / arena.adapter().lock_hash
+    return arena.root / 'starter'
+
+
 def starter_check(arena, normalize_only=False):
     from .engine import seal_artifacts
     root, db = arena.root, arena.db
     engine = arena.adapter()
-    snapshot = root / "starter"
+    snapshot = starter_snapshot(arena)
     if not snapshot.exists():
         shutil.copytree(Path(engine.lock["project_template"]) / "bots/side-a/src", snapshot / "src")
     build = engine.prepare_bot(snapshot, "official-starter")
     map_info = arena.freeze_maps()[arena.config["evaluation"]["screen_maps"][0]]
-    jobs = [arena.queue_match(build, build, map_info, repetition=f"starter-side-{side}") for side in ("A", "B")]
+    require(not normalize_only or engine.lock.get('version') != '2.2.5',
+            'run fresh reviewed starter games; do not relabel initial unreviewed attempts')
+    parser_revision = ':' + identity(engine.contract) if engine.lock.get('version') == '2.2.5' else ''
+    jobs = [arena.queue_match(build, build, map_info, repetition=f"starter-side-{side}{parser_revision}")
+            for side in ("A", "B")]
     # Two acceptance runs are explicitly recorded as deterministic repetitions, not independent samples.
     if normalize_only:
         for job_id in jobs:
@@ -77,9 +92,11 @@ def starter_check(arena, normalize_only=False):
     verified = all(row["result"] and json.loads(row["result"])["state"] == "COMPLETED" and
                    json.loads(row["result"]).get("bot_faults") == 0 for row in results)
     db.put("starter_verified", verified)
+    db.put('starter_engine_lock_hash', engine.lock_hash if verified else None)
     if verified:
         db.put("adapter_paused", False)
-    report = {"verified": verified, "matches": [{"match_id": row["id"], "artifact": row["artifact"],
+    report = {"verified": verified, 'engine_lock_hash': engine.lock_hash,
+              'starter_snapshot': str(snapshot), "matches": [{"match_id": row["id"], "artifact": row["artifact"],
                "state": row["state"]} for row in results], "independent_samples": False,
               "parser_review_required": not bool(engine.contract)}
     atomic_json(root / "acceptance/starter-check.json", report)
@@ -90,7 +107,7 @@ def register_starter(arena, revision_id):
     require(arena.db.get("starter_verified", False), "complete starter games must be verified first")
     row = arena.db.one("SELECT * FROM revisions WHERE id=?", (revision_id,))
     require(row, "starter revision must be a real ingested commit")
-    expected = tree_hash(arena.root / "starter/src")
+    expected = tree_hash(starter_snapshot(arena) / 'src')
     require(row["source_hash"] == expected, "baseline differs from pinned official starter")
     arena.db.put("starter_revision", revision_id)
     return row
@@ -99,26 +116,31 @@ def register_starter(arena, revision_id):
 def ensure_starter_reference(arena):
     """Preserve starter independently of both lanes, including when existing bots are supplied."""
     require(arena.db.get("starter_verified", False), "starter games must be verified first")
-    if arena.db.get("starter_revision"):
-        return arena.db.get("starter_revision")
+    snapshot = starter_snapshot(arena)
+    previous = arena.db.get('starter_revision')
+    if previous:
+        row = arena.db.one('SELECT source_hash FROM revisions WHERE id=?', (previous,))
+        if row['source_hash'] == tree_hash(snapshot / 'src'):
+            return previous
     from .gitstore import git
-    directory = arena.root / "repos" / "official-starter-reference"
+    directory = arena.root / 'repos' / ('official-starter-reference-' + tree_hash(snapshot / 'src')[:16])
     require(not directory.exists(), "interrupted starter reference exists; preserve/reconcile before retry")
     directory.mkdir(parents=True)
     git(directory, "init", "-b", "reference/official-starter")
-    shutil.copytree(arena.root / "starter/src", directory / "bots/starter/src")
+    shutil.copytree(snapshot / 'src', directory / "bots/starter/src")
     git(directory, "add", "--", "bots/starter/src")
     git(directory, "-c", "user.name=Battlecode starter reference", "-c", "user.email=arena@localhost",
         "commit", "-m", "Pinned official C++ starter reference")
     commit = git(directory, "rev-parse", "HEAD")
-    source_hash = tree_hash(arena.root / "starter/src")
-    for path in [arena.root / "starter/src", *(arena.root / "starter/src").rglob("*")]:
+    source_hash = tree_hash(snapshot / 'src')
+    for path in [snapshot / 'src', *(snapshot / 'src').rglob('*')]:
         path.chmod(0o550 if path.is_dir() else 0o440)
     revision_id = identity({"repository": str(directory), "commit": commit, "source_hash": source_hash})
     with arena.db.transaction():
-        arena.db.execute("INSERT INTO bots(id,branch,latest_tip) VALUES('starter','reference/official-starter',?)", (commit,))
+        arena.db.execute("INSERT INTO bots(id,branch,latest_tip) VALUES('starter','reference/official-starter',?) "
+                         "ON CONFLICT(id) DO UPDATE SET latest_tip=excluded.latest_tip", (commit,))
         arena.db.execute("INSERT INTO revisions VALUES(?,'starter',?,?,NULL,'official-starter',?,?,'ACCEPTED',?)",
-                         (revision_id, commit, source_hash, str(arena.root / "starter"),
+                         (revision_id, commit, source_hash, str(snapshot),
                           arena.config["infrastructure_commit"], time.time()))
         arena.db.put("starter_revision", revision_id)
     return revision_id

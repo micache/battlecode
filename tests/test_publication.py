@@ -298,7 +298,7 @@ class PublicationTests(Harness):
         self.assertEqual(revision['base_source_hash'], task['base_source_hash'])
         self.arena.start_evaluation(revision['id'])
         evaluation = self.arena.db.one('SELECT suite FROM evaluations WHERE revision_id=?', (revision['id'],))
-        self.assertEqual(json.loads(evaluation['suite'])['coverage'], 'development-six-map')
+        self.assertEqual(json.loads(evaluation['suite'])['coverage'], 'development-map-pool')
         self.request(config, 'worker-finished', publication)
         self.assertEqual(self.arena.db.one('SELECT state FROM tasks WHERE id=?', (task['task_id'],))['state'], 'PUBLISHED')
 

@@ -85,7 +85,8 @@ def replenish(arena):
 def status(arena):
     active = arena.db.one("SELECT * FROM training_rounds ORDER BY created DESC LIMIT 1")
     result = {'enabled':arena.config['limits'].get('continuous_matches',False),
-              'priority':'below evaluations and smoke checks','maps':'six development maps; both sides',
+              'priority':'below evaluations and smoke checks',
+              'maps':f"{len(arena.config['evaluation']['development_maps'])} development maps; both sides",
               'coding_interval_seconds':arena.config['limits'].get('improvement_interval_seconds',3600),
               'model_pauses_do_not_stop_games':True,'independent_reruns':False}
     result['rounds'] = arena.db.all('SELECT state,count(*) AS count FROM training_rounds GROUP BY state')

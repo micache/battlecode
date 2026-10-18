@@ -80,6 +80,10 @@ def normalize_result(artifacts, contract, engine_hash):
             return dict(result, state="BOT_FAULT" if faults else "TRUNCATED" if truncated else "INFRA_ERROR", bot_faults=faults,
                         detail="missing authoritative final statistics")
         stats = read_json(stats_path)
+        current_metrics, current_suspensions = {}, None
+        if contract.get('statistics_schema') == 'cambc-225-json-v1':
+            from .statistics import read_current
+            faults, current_metrics, current_suspensions = read_current(stats)
         if contract.get("statistics_schema") == "cambc-216-v2":
             require(stats["schemaVersion"] == 2 and stats["engineVersion"] == "0.0.1" and
                     stats["engineVersionPacked"] == 65536, "unreviewed statistics/embedded-engine version")
@@ -99,7 +103,7 @@ def normalize_result(artifacts, contract, engine_hash):
         require(winner in ("A", "B"), "unknown outcome/draw: rules discrepancy")
         replays = list(output.rglob("*.repl26a"))
         require(replays and all(p.stat().st_size > 0 for p in replays), "completed game missing replay")
-        metrics = {}
+        metrics = dict(current_metrics)
         for name, path in contract.get("metric_pointers", {}).items():
             try:
                 metrics[name] = {"available": True, "value": pointer(stats, path)}
@@ -117,7 +121,7 @@ def normalize_result(artifacts, contract, engine_hash):
                 require(all(isinstance(v, (float, int)) and v >= 0 for v in totals.values()), "invalid official metric")
                 metrics[name] = {"available": True, "value": totals}
         reason = pointer(stats, contract["reason_pointer"]) if contract.get("reason_pointer") else None
-        suspensions = None
+        suspensions = current_suspensions
         if contract.get("fuel_suspension_patterns"):
             suspensions = sum(len(re.findall(p, logs)) for p in contract["fuel_suspension_patterns"])
         return dict(result, state="COMPLETED", completed=True, winner=winner, terminal_reason=reason,
@@ -162,6 +166,8 @@ class OfficialEngine:
         else:
             require(re.fullmatch(r"sha256:[a-f0-9]{64}", self.lock["image_id"]), "immutable local OCI image required")
         require(self.lock.get("compiler_versions") and self.lock.get("recipe_sha256"), "incomplete toolchain lock")
+        if self.lock['version'] == '2.2.5':
+            require(self.lock.get('build_mode') == 'release', 'platform-equivalent release build required')
         require(tree_hash(self.lock["project_template"]) == self.lock["template_sha256"], "SDK/template changed")
         self.contract = read_json(config["parser_contract"]) if Path(config["parser_contract"]).exists() else None
         if self.contract:
@@ -209,7 +215,7 @@ class OfficialEngine:
         source_hash = tree_hash(Path(snapshot) / "src")
         build_id = identity({"source": source_hash, "language": "cpp", "engine_lock": self.lock_hash,
                              "infrastructure_commit": self.config["infrastructure_commit"],
-                             "recipe": "official-source-cache-v2"})
+                             "recipe": "official-release-source-cache-v3"})
         directory = Path(self.config["root"]) / "builds" / build_id
         if (directory / "build.json").exists():
             saved = read_json(directory / "build.json")
@@ -221,13 +227,14 @@ class OfficialEngine:
         self.prepare_project(work, {side: Path(snapshot) / "src" for side in ("side-a", "side-b")})
         output = directory / "output"
         output.mkdir(exist_ok=True)
-        process = self.execute(work, output, ["build", "side-a", "--output", "/output/bot.wasm"],
+        release = ['--release'] if self.lock['version'] == '2.2.5' else []
+        process = self.execute(work, output, ["build", "side-a", *release, "--output", "/output/bot.wasm"],
                                self.config["limits"]["build_timeout_seconds"], f"bc-build-{build_id[:24]}")
         if process['timeout'] or process['returncode'] != 0 or not (output / 'bot.wasm').exists():
             raise BuildError(output, process, 'side-a')
         other = directory / "output-b"
         other.mkdir(exist_ok=True)
-        process_b = self.execute(work, other, ["build", "side-b", "--output", "/output/bot.wasm"],
+        process_b = self.execute(work, other, ["build", "side-b", *release, "--output", "/output/bot.wasm"],
                                  self.config["limits"]["build_timeout_seconds"], f"bc-build-{build_id[:24]}")
         if process_b['timeout'] or process_b['returncode'] != 0 or not (other / 'bot.wasm').exists():
             raise BuildError(other, process_b, 'side-b')
@@ -237,6 +244,7 @@ class OfficialEngine:
                  "cache_project": str(work),
                  "cache_hashes": {side: tree_hash(work / "bots" / side / ".cambc") for side in ("side-a", "side-b")},
                  "side_b_wasm_sha256": file_hash(other / "bot.wasm"),
+                 "build_mode": self.lock.get('build_mode', 'legacy-default'),
                  "mode": "official-source-project with verified per-slot CLI build cache; no compiled-input interface"}
         atomic_json(directory / "build.json", saved)
         return saved
@@ -269,7 +277,8 @@ class OfficialEngine:
         shutil.copyfile(spec["map_path"], project / "frozen.map26a")
         artifacts = output / "artifacts"
         artifacts.mkdir()
-        self.execute(project, artifacts, ["run", "side-a", "side-b", "--map", "/work/frozen.map26a",
+        release = ['--release', '--json'] if self.lock['version'] == '2.2.5' else []
+        self.execute(project, artifacts, ["run", "side-a", "side-b", *release, "--map", "/work/frozen.map26a",
                                          "--out-dir", "/output", "--statistics", "/output/final.json"],
                      self.config["limits"]["match_timeout_seconds"], f"bc-match-{spec['job_id'][:24]}")
         # These documented-by-observation bundle entries are diagnostics, never outcome authority.
@@ -285,7 +294,17 @@ class OfficialEngine:
                             (artifacts / f'bot-{side}.stdout.log').write_text(data.decode(errors='replace').replace('\x00', '\\0'))
             except (zipfile.BadZipFile, OSError):
                 pass  # Normalization still decides from the strict authoritative contract.
-        return normalize_result(artifacts, self.contract, self.lock["engine_sha256"])
+        result = normalize_result(artifacts, self.contract, self.lock["engine_sha256"])
+        if result['completed'] and self.lock['version'] == '2.2.5':
+            stats = read_json(artifacts / 'final.json')
+            require(stats['match']['mapHash'] == spec['map_hash'], 'statistics map differs from frozen input')
+            # Readable handoff avoids paging through hundreds of KiB of timelines.
+            atomic_json(artifacts / 'summary.json', {
+                'source_file': 'final.json', 'source_sha256': file_hash(artifacts / 'final.json'),
+                'match': stats['match'], 'teams': stats['teams'], 'champions': stats['champions'],
+                'diagnostics': stats['diagnostics'], 'normalized': result,
+                'omitted': 'Full timelines/events/heatmaps remain in unchanged final.json.'})
+        return result
 
     def recover_containers(self):
         if self.colab:

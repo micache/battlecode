@@ -34,11 +34,13 @@ def load(path):
             "official mutations disabled for this pilot")
     require(config["billing"] == {"subscription_only": True, "api_fallback": False,
                                   "cross_account_failover": False}, "subscription isolation required")
-    require(config["engine"]["version"] == "2.1.6", "review engine update before use")
+    require(config["engine"]["version"] in ("2.1.6", "2.2.5"), "review engine update before use")
     require(config["evaluation"]["minimum_gain"] >= 0.05 and
             config["evaluation"]["maximum_map_drop"] <= 0.25, "weakened promotion gate")
-    require(len(config["evaluation"]["development_maps"]) == 6 and
-            len(config["evaluation"]["holdout_maps"]) == 3, "full nine-map gate required")
+    development, holdouts = (config['evaluation'][k] for k in ('development_maps', 'holdout_maps'))
+    require(len(development) >= 6 and len(holdouts) >= 3 and
+            len(development + holdouts) == len(set(development + holdouts)),
+            "complete published map pool and at least three reserved holdouts required")
     require(set(config["evaluation"]["screen_maps"]) <= set(config["evaluation"]["development_maps"]),
             "screen maps must be development maps")
     require(len(config["evaluation"]["screen_maps"]) == 3 and

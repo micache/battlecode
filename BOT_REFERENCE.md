@@ -1,5 +1,24 @@
 # Bot reference grounded in the supplied handbook
 
+Current runtime update, 18 October 2026: CLI 2.2.5, official engine 0.0.3
+build `d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5`,
+release builds and the complete 17-map published pool. The new user-supplied
+GameRules.md is unchanged; the refreshed C++ export adds visibility annotations
+and `ward::owner()`. IMPORTANT: that last method is not present in CLI 2.2.5's
+installed header (SHA256 `ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264`).
+Do not call it or invent an ABI workaround. The installed matching SDK is the
+compilation contract; the download hub can document a newer API before release.
+All 134 documented error names/numbers match the installed error enum. See
+`sources/EngineErrors.md` for handling. Use `error.code()`, `error.message()` and
+`to_string(code)`; always reach a legal turn yield after bounded recovery.
+
+`cambc build --release` and `cambc run --release` match platform mode.
+`debug_block` bodies do not execute there: never place strategy, state changes
+or necessary turn yielding only inside one. No custom fuel or round override
+is used for scoring. CLI 2.2.5 statistics require `--json` for readable output.
+Use the compact `summary.json` evidence slice before large raw timelines;
+the original `final.json`, replay and observed engine seed are retained.
+
 Current access addendum, 17 October 2026: the organizer's LLM-download page is now
 accessible and its GameRules.md is byte-identical to the reviewed supplied file.
 The current C++ API export is `sources/BotAPICpp.md`; use it with the pinned

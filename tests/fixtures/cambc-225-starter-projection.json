@@ -1,0 +1,1540 @@
+{
+  "_fixture_provenance": {
+    "cli": "2.2.5",
+    "command": "cambc run starter-cpp starter-cpp --release --json --map maps/collision.map26a --out-dir /work/parity-run --statistics /work/parity-run/final.json",
+    "network": "none",
+    "observed": "2026-10-18",
+    "projection": "Timelines, heatmaps and unrelated events omitted; retained fields unchanged.",
+    "source_sha256": "c461869fe0e4d1812139f6ad91dc79c0c0a8f6b63a6e4cee6182778fbb0d5604"
+  },
+  "champions": [
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 0,
+      "items": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "3"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "16"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "83"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "16"
+        }
+      ],
+      "metrics": {
+        "assists": "0",
+        "championDamageDone": 3790.0,
+        "championDamageTaken": 5518.0,
+        "collectedGems": "638",
+        "deaths": "8",
+        "earnedGold": "2940",
+        "gems": "0",
+        "gold": "450",
+        "healingDone": 0.0,
+        "healingReceived": 0.0,
+        "kills": "10",
+        "monsterDamageDone": 28463.0,
+        "monsterDamageTaken": 4082.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "2490",
+        "submittedGems": "638"
+      },
+      "name": "Ryth",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 1,
+      "items": [
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "7"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Health",
+          "quantity": "35"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "7"
+        }
+      ],
+      "metrics": {
+        "assists": "1",
+        "championDamageDone": 1860.0,
+        "championDamageTaken": 10017.0,
+        "collectedGems": "264",
+        "deaths": "4",
+        "earnedGold": "1190",
+        "gems": "0",
+        "gold": "140",
+        "healingDone": 0.0,
+        "healingReceived": 7080.0,
+        "kills": "3",
+        "monsterDamageDone": 13080.0,
+        "monsterDamageTaken": 6013.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "1050",
+        "submittedGems": "242"
+      },
+      "name": "Marcella",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 2,
+      "items": [
+        {
+          "item": "Power Shard of Health",
+          "quantity": "2"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "5"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Health",
+          "quantity": "27"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "5"
+        }
+      ],
+      "metrics": {
+        "assists": "0",
+        "championDamageDone": 670.0,
+        "championDamageTaken": 1945.0,
+        "collectedGems": "154",
+        "deaths": "6",
+        "earnedGold": "820",
+        "gems": "0",
+        "gold": "10",
+        "healingDone": 0.0,
+        "healingReceived": 2400.0,
+        "kills": "1",
+        "monsterDamageDone": 17694.0,
+        "monsterDamageTaken": 7066.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "810",
+        "submittedGems": "132"
+      },
+      "name": "Prism",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 3,
+      "items": [
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "3"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Health",
+          "quantity": "15"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "3"
+        }
+      ],
+      "metrics": {
+        "assists": "1",
+        "championDamageDone": 420.0,
+        "championDamageTaken": 0.0,
+        "collectedGems": "44",
+        "deaths": "10",
+        "earnedGold": "460",
+        "gems": "0",
+        "gold": "10",
+        "healingDone": 0.0,
+        "healingReceived": 1282.5,
+        "kills": "0",
+        "monsterDamageDone": 14571.0,
+        "monsterDamageTaken": 3420.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "450",
+        "submittedGems": "22"
+      },
+      "name": "Cassi",
+      "team": "teamB"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 4,
+      "items": [
+        {
+          "item": "Power Shard of Focus",
+          "quantity": "4"
+        },
+        {
+          "item": "Power Emblem of Focus",
+          "quantity": "8"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Focus",
+          "quantity": "44"
+        },
+        {
+          "item": "Power Emblem of Focus",
+          "quantity": "8"
+        }
+      ],
+      "metrics": {
+        "assists": "4",
+        "championDamageDone": 1215.0,
+        "championDamageTaken": 3755.0,
+        "collectedGems": "330",
+        "deaths": "10",
+        "earnedGold": "1435",
+        "gems": "0",
+        "gold": "115",
+        "healingDone": 0.0,
+        "healingReceived": 0.0,
+        "kills": "1",
+        "monsterDamageDone": 8249.0,
+        "monsterDamageTaken": 5245.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "1320",
+        "submittedGems": "286"
+      },
+      "name": "Issac",
+      "team": "teamB"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 5,
+      "items": [
+        {
+          "item": "Power Emblem of Focus",
+          "quantity": "4"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Focus",
+          "quantity": "20"
+        },
+        {
+          "item": "Power Emblem of Focus",
+          "quantity": "4"
+        }
+      ],
+      "metrics": {
+        "assists": "5",
+        "championDamageDone": 3380.0,
+        "championDamageTaken": 365.0,
+        "collectedGems": "132",
+        "deaths": "8",
+        "earnedGold": "730",
+        "gems": "0",
+        "gold": "130",
+        "healingDone": 0.0,
+        "healingReceived": 0.0,
+        "kills": "1",
+        "monsterDamageDone": 11541.0,
+        "monsterDamageTaken": 5815.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "600",
+        "submittedGems": "88"
+      },
+      "name": "Tavi",
+      "team": "teamB"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 6,
+      "items": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "4"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "8"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "44"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "8"
+        }
+      ],
+      "metrics": {
+        "assists": "2",
+        "championDamageDone": 12465.0,
+        "championDamageTaken": 2200.0,
+        "collectedGems": "264",
+        "deaths": "8",
+        "earnedGold": "1515",
+        "gems": "22",
+        "gold": "195",
+        "healingDone": 0.0,
+        "healingReceived": 540.0,
+        "kills": "7",
+        "monsterDamageDone": 26877.0,
+        "monsterDamageTaken": 4020.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "1320",
+        "submittedGems": "154"
+      },
+      "name": "Prism",
+      "team": "teamB"
+    }
+  ],
+  "diagnostics": {
+    "botFaults": {
+      "teamA": 0,
+      "teamB": 0
+    },
+    "codes": [],
+    "detailedCaptureComplete": true
+  },
+  "events": [
+    {
+      "entries": [
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 5,
+            "kind": "champion",
+            "name": "Tavi",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 1754,
+            "ordinal": 12864,
+            "phase": "champions",
+            "round": 106,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 24,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 6,
+            "kind": "champion",
+            "name": "Prism",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 3506,
+            "ordinal": 28156,
+            "phase": "champions",
+            "round": 232,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 26,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 6,
+            "kind": "champion",
+            "name": "Prism",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 4875,
+            "ordinal": 41391,
+            "phase": "champions",
+            "round": 341,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 25,
+          "y": 18
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 7498,
+            "ordinal": 64221,
+            "phase": "camps",
+            "round": 529,
+            "substep": 23
+          },
+          "value": "0",
+          "x": 24,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 4,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 10563,
+            "ordinal": 92873,
+            "phase": "camps",
+            "round": 765,
+            "substep": 21
+          },
+          "value": "0",
+          "x": 20,
+          "y": 14
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 12162,
+            "ordinal": 106228,
+            "phase": "camps",
+            "round": 875,
+            "substep": 24
+          },
+          "value": "0",
+          "x": 26,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 4,
+            "kind": "champion",
+            "name": "Issac",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 14718,
+            "ordinal": 129552,
+            "phase": "champions",
+            "round": 1067,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 24,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 6,
+            "kind": "champion",
+            "name": "Prism",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 16885,
+            "ordinal": 148878,
+            "phase": "champions",
+            "round": 1226,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 22,
+          "y": 24
+        }
+      ],
+      "kind": "gemLoss",
+      "owner": {
+        "id": 0,
+        "kind": "champion",
+        "name": "Ryth",
+        "team": "teamA"
+      }
+    },
+    {
+      "entries": [],
+      "kind": "fuelExhausted",
+      "owner": {
+        "id": 0,
+        "kind": "champion",
+        "name": "Ryth",
+        "team": "teamA"
+      }
+    },
+    {
+      "entries": [
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 6,
+            "kind": "champion",
+            "name": "Prism",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 1604,
+            "ordinal": 11163,
+            "phase": "champions",
+            "round": 92,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 23,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 6,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 4076,
+            "ordinal": 34229,
+            "phase": "camps",
+            "round": 282,
+            "substep": 20
+          },
+          "value": "0",
+          "x": 25,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 6,
+            "kind": "champion",
+            "name": "Prism",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 13489,
+            "ordinal": 117765,
+            "phase": "champions",
+            "round": 970,
+            "substep": 0
+          },
+          "value": "22",
+          "x": 25,
+          "y": 20
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 6,
+            "kind": "champion",
+            "name": "Prism",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 15122,
+            "ordinal": 133079,
+            "phase": "champions",
+            "round": 1096,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 25,
+          "y": 20
+        }
+      ],
+      "kind": "gemLoss",
+      "owner": {
+        "id": 1,
+        "kind": "champion",
+        "name": "Marcella",
+        "team": "teamA"
+      }
+    },
+    {
+      "entries": [],
+      "kind": "fuelExhausted",
+      "owner": {
+        "id": 1,
+        "kind": "champion",
+        "name": "Marcella",
+        "team": "teamA"
+      }
+    },
+    {
+      "entries": [
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 4,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 1682,
+            "ordinal": 12015,
+            "phase": "camps",
+            "round": 99,
+            "substep": 18
+          },
+          "value": "0",
+          "x": 16,
+          "y": 10
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 6,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 4065,
+            "ordinal": 34106,
+            "phase": "camps",
+            "round": 281,
+            "substep": 20
+          },
+          "value": "0",
+          "x": 26,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 0,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 6594,
+            "ordinal": 56209,
+            "phase": "camps",
+            "round": 463,
+            "substep": 20
+          },
+          "value": "0",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 6,
+            "kind": "champion",
+            "name": "Prism",
+            "team": "teamB"
+          },
+          "timestamp": {
+            "input": 8535,
+            "ordinal": 73810,
+            "phase": "champions",
+            "round": 608,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 26,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 6,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 10369,
+            "ordinal": 91417,
+            "phase": "camps",
+            "round": 753,
+            "substep": 23
+          },
+          "value": "22",
+          "x": 25,
+          "y": 18
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 2,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 13429,
+            "ordinal": 117157,
+            "phase": "camps",
+            "round": 965,
+            "substep": 20
+          },
+          "value": "0",
+          "x": 17,
+          "y": 11
+        }
+      ],
+      "kind": "gemLoss",
+      "owner": {
+        "id": 2,
+        "kind": "champion",
+        "name": "Prism",
+        "team": "teamA"
+      }
+    },
+    {
+      "entries": [],
+      "kind": "fuelExhausted",
+      "owner": {
+        "id": 2,
+        "kind": "champion",
+        "name": "Prism",
+        "team": "teamA"
+      }
+    },
+    {
+      "entries": [
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 984,
+            "ordinal": 6185,
+            "phase": "champions",
+            "round": 51,
+            "substep": 0
+          },
+          "value": "22",
+          "x": 15,
+          "y": 31
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 2968,
+            "ordinal": 23663,
+            "phase": "champions",
+            "round": 195,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 12,
+          "y": 33
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 4753,
+            "ordinal": 40052,
+            "phase": "champions",
+            "round": 330,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 12,
+          "y": 33
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 6369,
+            "ordinal": 54139,
+            "phase": "champions",
+            "round": 446,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 16,
+          "y": 29
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 6,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 8273,
+            "ordinal": 71137,
+            "phase": "camps",
+            "round": 586,
+            "substep": 22
+          },
+          "value": "0",
+          "x": 12,
+          "y": 33
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 9552,
+            "ordinal": 83764,
+            "phase": "champions",
+            "round": 690,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 12,
+          "y": 33
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 12052,
+            "ordinal": 105013,
+            "phase": "camps",
+            "round": 865,
+            "substep": 24
+          },
+          "value": "0",
+          "x": 26,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 1,
+            "kind": "champion",
+            "name": "Marcella",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 13402,
+            "ordinal": 116788,
+            "phase": "champions",
+            "round": 962,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 21,
+          "y": 24
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 1,
+            "kind": "champion",
+            "name": "Marcella",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 15020,
+            "ordinal": 132105,
+            "phase": "champions",
+            "round": 1088,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 21,
+          "y": 25
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 16599,
+            "ordinal": 146320,
+            "phase": "champions",
+            "round": 1205,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 15,
+          "y": 31
+        }
+      ],
+      "kind": "gemLoss",
+      "owner": {
+        "id": 3,
+        "kind": "champion",
+        "name": "Cassi",
+        "team": "teamB"
+      }
+    },
+    {
+      "entries": [],
+      "kind": "fuelExhausted",
+      "owner": {
+        "id": 3,
+        "kind": "champion",
+        "name": "Cassi",
+        "team": "teamB"
+      }
+    },
+    {
+      "entries": [
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 984,
+            "ordinal": 6187,
+            "phase": "champions",
+            "round": 51,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 26,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 2968,
+            "ordinal": 23665,
+            "phase": "champions",
+            "round": 195,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 25,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 4753,
+            "ordinal": 40054,
+            "phase": "champions",
+            "round": 330,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 25,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 6369,
+            "ordinal": 54141,
+            "phase": "champions",
+            "round": 446,
+            "substep": 0
+          },
+          "value": "22",
+          "x": 26,
+          "y": 20
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 6,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 8273,
+            "ordinal": 71139,
+            "phase": "camps",
+            "round": 586,
+            "substep": 22
+          },
+          "value": "0",
+          "x": 25,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 9552,
+            "ordinal": 83766,
+            "phase": "champions",
+            "round": 690,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 24,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 12052,
+            "ordinal": 105015,
+            "phase": "camps",
+            "round": 865,
+            "substep": 24
+          },
+          "value": "0",
+          "x": 25,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 1,
+            "kind": "champion",
+            "name": "Marcella",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 13402,
+            "ordinal": 116790,
+            "phase": "champions",
+            "round": 962,
+            "substep": 0
+          },
+          "value": "22",
+          "x": 23,
+          "y": 22
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 1,
+            "kind": "champion",
+            "name": "Marcella",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 15020,
+            "ordinal": 132107,
+            "phase": "champions",
+            "round": 1088,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 25,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 16599,
+            "ordinal": 146322,
+            "phase": "champions",
+            "round": 1205,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 25,
+          "y": 21
+        }
+      ],
+      "kind": "gemLoss",
+      "owner": {
+        "id": 4,
+        "kind": "champion",
+        "name": "Issac",
+        "team": "teamB"
+      }
+    },
+    {
+      "entries": [],
+      "kind": "fuelExhausted",
+      "owner": {
+        "id": 4,
+        "kind": "champion",
+        "name": "Issac",
+        "team": "teamB"
+      }
+    },
+    {
+      "entries": [
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 2017,
+            "ordinal": 15657,
+            "phase": "camps",
+            "round": 129,
+            "substep": 19
+          },
+          "value": "0",
+          "x": 21,
+          "y": 24
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 1,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 3507,
+            "ordinal": 28281,
+            "phase": "camps",
+            "round": 233,
+            "substep": 17
+          },
+          "value": "0",
+          "x": 7,
+          "y": 35
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 5,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 5033,
+            "ordinal": 42851,
+            "phase": "camps",
+            "round": 353,
+            "substep": 18
+          },
+          "value": "0",
+          "x": 16,
+          "y": 28
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 7713,
+            "ordinal": 66040,
+            "phase": "camps",
+            "round": 544,
+            "substep": 21
+          },
+          "value": "0",
+          "x": 21,
+          "y": 20
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 1,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 8962,
+            "ordinal": 78421,
+            "phase": "camps",
+            "round": 646,
+            "substep": 15
+          },
+          "value": "0",
+          "x": 7,
+          "y": 35
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 6,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 11610,
+            "ordinal": 101490,
+            "phase": "camps",
+            "round": 836,
+            "substep": 22
+          },
+          "value": "0",
+          "x": 25,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 13540,
+            "ordinal": 118382,
+            "phase": "champions",
+            "round": 975,
+            "substep": 0
+          },
+          "value": "22",
+          "x": 24,
+          "y": 23
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 15200,
+            "ordinal": 134054,
+            "phase": "camps",
+            "round": 1104,
+            "substep": 22
+          },
+          "value": "22",
+          "x": 25,
+          "y": 22
+        }
+      ],
+      "kind": "gemLoss",
+      "owner": {
+        "id": 5,
+        "kind": "champion",
+        "name": "Tavi",
+        "team": "teamB"
+      }
+    },
+    {
+      "entries": [],
+      "kind": "fuelExhausted",
+      "owner": {
+        "id": 5,
+        "kind": "champion",
+        "name": "Tavi",
+        "team": "teamB"
+      }
+    },
+    {
+      "entries": [
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 1757,
+            "ordinal": 12991,
+            "phase": "camps",
+            "round": 107,
+            "substep": 21
+          },
+          "value": "22",
+          "x": 24,
+          "y": 23
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 1,
+            "kind": "champion",
+            "name": "Marcella",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 3584,
+            "ordinal": 29131,
+            "phase": "champions",
+            "round": 240,
+            "substep": 0
+          },
+          "value": "22",
+          "x": 26,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 5255,
+            "ordinal": 45032,
+            "phase": "camps",
+            "round": 371,
+            "substep": 18
+          },
+          "value": "0",
+          "x": 26,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 7094,
+            "ordinal": 60942,
+            "phase": "champions",
+            "round": 502,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 24,
+          "y": 20
+        },
+        {
+          "amount": 0.0,
+          "context": "camp",
+          "target": {
+            "id": 7,
+            "kind": "camp"
+          },
+          "timestamp": {
+            "input": 8864,
+            "ordinal": 77207,
+            "phase": "camps",
+            "round": 636,
+            "substep": 22
+          },
+          "value": "0",
+          "x": 26,
+          "y": 21
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 11927,
+            "ordinal": 103797,
+            "phase": "champions",
+            "round": 855,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 26,
+          "y": 19
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 0,
+            "kind": "champion",
+            "name": "Ryth",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 13532,
+            "ordinal": 118257,
+            "phase": "champions",
+            "round": 974,
+            "substep": 0
+          },
+          "value": "44",
+          "x": 23,
+          "y": 23
+        },
+        {
+          "amount": 0.0,
+          "context": "champion",
+          "target": {
+            "id": 2,
+            "kind": "champion",
+            "name": "Prism",
+            "team": "teamA"
+          },
+          "timestamp": {
+            "input": 15414,
+            "ordinal": 136722,
+            "phase": "champions",
+            "round": 1126,
+            "substep": 0
+          },
+          "value": "0",
+          "x": 25,
+          "y": 18
+        }
+      ],
+      "kind": "gemLoss",
+      "owner": {
+        "id": 6,
+        "kind": "champion",
+        "name": "Prism",
+        "team": "teamB"
+      }
+    },
+    {
+      "entries": [],
+      "kind": "fuelExhausted",
+      "owner": {
+        "id": 6,
+        "kind": "champion",
+        "name": "Prism",
+        "team": "teamB"
+      }
+    }
+  ],
+  "formatVersion": "1.0",
+  "jsonFormatVersion": "1.0",
+  "match": {
+    "engineBuildHash": "d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5",
+    "engineVersion": "0.0.3",
+    "finalInput": 17015,
+    "finalRoundPartial": true,
+    "finalSubstep": 7,
+    "height": 41,
+    "mapHash": "ebfcace19ebb3bca84d63856c5cb56285042057d751ff41dc011d8a2c8c085dc",
+    "metricSemanticsVersion": 1,
+    "outcome": "teamA",
+    "roundsCompleted": 1236,
+    "roundsStarted": 1237,
+    "seed": "14621398811092091047",
+    "width": 41
+  },
+  "teams": [
+    {
+      "submittedGems": "1012",
+      "team": "teamA"
+    },
+    {
+      "submittedGems": "550",
+      "team": "teamB"
+    }
+  ]
+}

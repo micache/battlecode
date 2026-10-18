@@ -38,6 +38,14 @@ def main():
         source = Path(revision['snapshot']) / 'src'
         require(tree_hash(source) == revision['source_hash'], 'immutable source changed')
         engine = OfficialEngine(config)
+        require(suite.get('engine_lock_hash') == engine.lock_hash, 'evaluation uses an obsolete engine')
+        from arena.common import read_json
+        current_maps = {m['name']: m['sha256'] for m in read_json(config['map_manifest'])['maps']}
+        require(suite.get('coverage') == 'full-map-pool' and
+                {name: info['hash'] for name, info in suite.get('maps', {}).items()} == current_maps,
+                'all current published maps must be evaluated before export')
+        require(metrics['paired_cases'] == len(current_maps) * len(suite['opponents']),
+                'complete both-side common-opponent comparisons required')
         label = args.bot + '-' + args.commit
         work = root / 'export-work' / label
         output = root / 'public/exports' / label
@@ -57,7 +65,8 @@ def main():
                     'coverage':suite['coverage'], 'wins':metrics['wins'], 'losses':metrics['losses'],
                     'common_opponent_delta':metrics['common_opponent_delta'], 'created':time.time(),
                     'official_upload_performed':False, 'contest_compliance_certified':False,
-                    'note':'Source ZIP for owner review/manual upload. Provisional local results are not a full promotion gate.'}
+                    'map_count':len(current_maps), 'build_mode':engine.lock.get('build_mode'),
+                    'note':'Full-current-pool source ZIP for manual upload. Automatic champion promotion and official uploads remain disabled.'}
         atomic_json(output / 'manifest.json', manifest, 0o644)
         print(json.dumps(manifest, indent=2))
 

@@ -62,6 +62,7 @@ def new_task(arena, bot, owner="server"):
                     f"arena-client --config /etc/battlecode/{bot}.json history --task-id TASK_ID",
                     f"arena-client --config /etc/battlecode/{bot}.json check-report --task-id TASK_ID --source-hash HASH",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file final.json",
+                    f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file summary.json",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file bot-a.stdout.log",
                     f"arena-client --config /etc/battlecode/{bot}.json slice --match-id MATCH_ID --file bot-b.stdout.log",
                     f"arena-client --config /etc/battlecode/{bot}.json external-slice --match-id OFFICIAL_MATCH_ID --file observations.json"],
@@ -72,7 +73,8 @@ def new_task(arena, bot, owner="server"):
                                 "Preserve interrupted work. No agents, daemon, publication or official actions. "
                                 "Raw matches/, evaluations/, checks/ and state/ are arena-private: do not open or list them. "
                                 "Use the supplied arena-client commands for this lane's development evidence; "
-                                "final.json contains complete final statistics, bot-a.stdout.log and bot-b.stdout.log contain bounded bot logs. "
+                                "Read summary.json first for compact per-champion final statistics; final.json also includes large timelines. "
+                                "bot-a.stdout.log and bot-b.stdout.log contain bounded bot logs. "
                                 "A missing optional diagnostic is unknown, not a reason to invent evidence. "
                                 "The host intentionally has no bot compiler: compilers live only in the trusted container. "
                                 "Use bot-check for compilation/smoke, never search host /opt or other owners' homes for toolchains. "
@@ -263,7 +265,7 @@ def handle_request(arena, bot, request):
                 "only this lane's development evidence may be exported")
         require(job and job["artifact"], "raw match history was retired or is unavailable; compact results remain in feedback")
         filename = payload.get("file", "stderr.log")
-        require(filename in ("stdout.log", "stderr.log", "final.json", "bot-a.stdout.log", "bot-b.stdout.log"), "unsupported slice file")
+        require(filename in ("stdout.log", "stderr.log", "final.json", "summary.json", "bot-a.stdout.log", "bot-b.stdout.log"), "unsupported slice file")
         limit = min(int(payload.get("limit", 8192)), 32768)
         offset = max(0, int(payload.get("offset", 0)))
         require(limit > 0, "invalid slice length")

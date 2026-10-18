@@ -71,11 +71,14 @@ class StrategyTests(Harness):
         self.assertTrue(all(item['outcome']=='B' and item['available_diagnostics']==['observations.json'] for item in result))
         self.assertTrue(all(item['official_patch']=='other-patch' and 'annotation' not in item for item in result))
 
-    def test_full_evaluation_budget_falls_back_to_screen_without_stalling(self):
+    def test_full_evaluation_never_silently_downgrades_at_daily_budget(self):
         self.establish()
         self.config['evaluation']['full_evaluation'] = True
         self.config['evaluation']['max_promotion_checks_per_day'] = 0
         row = self.commit('alpha', 'budget limited')
         evaluation = self.arena.start_evaluation(row['id'])
         suite = json.loads(self.arena.db.one('SELECT suite FROM evaluations WHERE id=?', (evaluation,))['suite'])
-        self.assertEqual(suite['coverage'], 'provisional-three-map-wiring')
+        self.assertEqual(suite['coverage'], 'full-map-pool')
+        self.finish_all()
+        cases = self.arena.evaluation_cases(evaluation)
+        self.assertEqual({case['map_name'] for case in cases}, set(self.arena.freeze_maps()))

@@ -3,10 +3,10 @@
   "python": "3.11+",
   "python_dependencies": [],
   "cambc": {
-    "version": "2.1.6",
-    "wheel": "cambc-2.1.6-py3-none-manylinux_2_28_x86_64.whl",
-    "wheel_sha256": "209370d22858e1404ee4c03b64d1b23abf3fc86f4efe78145fc1642b8bc451e0",
-    "binary_sha256": "e2a641bab3c9ec3b80d595c2956e6dbb115959b039617efb14e554617bf0d08c"
+    "version": "2.2.5",
+    "wheel": "cambc-2.2.5-py3-none-manylinux_2_28_x86_64.whl",
+    "wheel_sha256": "f371eeef014163f1493e585b7f7f581c64662f7996bf7e6fed8a518daf303942",
+    "binary_sha256": "47c4d2d78ba29e7ef8c4633845f26659ece968c9424409a300a9ea4b89e7eaa2"
   },
   "codex": {
     "observed_local_version": "0.163.0",

@@ -178,16 +178,16 @@ class Arena:
         maps = self.freeze_maps()
         full = self.config['evaluation'].get('full_evaluation', False) or self.config['evaluation']['automatic_promotion']
         full = bool(full and incumbent)  # New-lane validity baseline: three maps against the fixed starter.
-        if full:
-            count = self.db.one("SELECT count(*) AS n FROM evaluations WHERE bot_id=? AND stage='promotion' AND created>?",
-                                (bot["id"], time.time() - 86400))["n"]
-            full = count < min(2, self.config['evaluation'].get('max_promotion_checks_per_day', 2))
+        # Coverage is not a daily promotion budget. Every requested full
+        # evaluation covers the complete frozen pool; automatic promotion is
+        # separately guarded below. Never silently downgrade it to a screen.
         suite = {"protocol_version": 1, "version": self.config["evaluation"]["suite_version"],
                  "engine_lock_hash": self.adapter().lock_hash, "maps": maps,
                  "opponents": {rid: {"build_id": build["build_id"], "source_hash": build["source_hash"],
                                       "commit": self.db.one("SELECT commit_sha FROM revisions WHERE id=?", (rid,))["commit_sha"]}
                                for rid, build in opponents.items()},
-                 "coverage": "full-nine-map" if full else ("development-six-map" if cumulative else "provisional-three-map-wiring"),
+                 "coverage": "full-map-pool" if full else (
+                     "development-map-pool" if cumulative else "provisional-three-map-wiring"),
                  "development_incumbent_id": development_id,
                  "candidate_build": candidate["build_id"], "incumbent_build": incumbent["build_id"] if incumbent else None,
                  "gate": self.config["evaluation"], "config_hash": self.config["config_hash"]}
@@ -242,7 +242,7 @@ class Arena:
                 self.finish_evaluation(evaluation, metrics, "REJECTED" if metrics["fault_matches"] else "INCONCLUSIVE")
                 continue
             stage = evaluation["stage"]
-            full = suite["coverage"] == "full-nine-map"
+            full = suite["coverage"] in ("full-nine-map", "full-map-pool")
             if stage == "smoke" or (stage == "screen" and full):
                 next_stage = "screen" if stage == "smoke" else "promotion"
                 names = self.config["evaluation"]["screen_maps"] if next_stage == "screen" else list(suite["maps"])
@@ -297,13 +297,14 @@ class Arena:
                 ('common_opponent_delta', 'paired_cases', 'per_map', 'missing', 'fault_matches', 'unknown_reliability')})
         if state == "ACCEPTED" and evaluation["incumbent_id"]:
             readiness = self.db.get("readiness", {})
-            expected_case_count = 9 * 2 * len(suite["opponents"])
+            expected_case_count = len(suite['maps']) * 2 * len(suite["opponents"])
             if not (self.config['evaluation']['automatic_promotion']
                     and readiness.get("private_arena_ready") and readiness.get("competition_parity_verified")
                     and readiness.get("engine_lock_hash") == suite["engine_lock_hash"]
                     and suite["engine_lock_hash"] == self.adapter().lock_hash
                     and suite.get("infrastructure_commit") == self.config["infrastructure_commit"]
-                    and suite["coverage"] == "full-nine-map" and len(suite["opponents"]) >= 3
+                    and suite["coverage"] in ("full-nine-map", "full-map-pool") and len(suite["opponents"]) >= 3
+                    and suite['maps'] == self.freeze_maps()
                     and metrics["paired_cases"] == expected_case_count // 2
                     and len({o["source_hash"] for o in suite["opponents"].values()}) >= 3):
                 state = "INCONCLUSIVE"
