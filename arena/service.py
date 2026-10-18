@@ -352,8 +352,10 @@ class Arena:
         from .training import status as training_status
         status['continuous_training'] = training_status(self)
         status['local_offload'] = {'last_completed':self.db.get('offload_last_completed'),
+                                  'enabled':not self.config['limits'].get('rolling_history', False),
                                   'pending_batch':(self.db.get('offload_pending') or {}).get('batch_id'),
                                   'retained_online':'replays/statistics/logs; only redundant project.zip worktrees move offline'}
+        status['rolling_history'] = self.db.get('rolling_history', {'enabled':False})
         atomic_json(self.root / "public/status.json", status, 0o644)
         from .operations import acceptance_report
         acceptance_report(self)
@@ -364,7 +366,10 @@ class Arena:
         self.consume_control()
         consume_messages(self)
         self.db.put("heartbeat", time.time())
-        if self.config['limits'].get('archive_completed_projects', False):
+        if self.config['limits'].get('rolling_history', False):
+            from .retention import maintain
+            maintain(self)
+        elif self.config['limits'].get('archive_completed_projects', False):
             from .storage import archive_projects
             self.db.put('project_archive_maintenance', archive_projects(self))
         status = self.export_status()
@@ -409,6 +414,8 @@ class Arena:
                 import re
                 require(isinstance(response_id, str) and re.fullmatch('[a-f0-9]{32}', response_id), 'invalid operator response ID')
                 try:
+                    require(not self.config['limits'].get('rolling_history', False),
+                            'offloading disabled: server uses rolling local history')
                     from .offload import prepare, acknowledge
                     result = prepare(self) if operation == 'offload-plan' else acknowledge(self, message['payload'])
                     response = {'ok':True, 'result':result}

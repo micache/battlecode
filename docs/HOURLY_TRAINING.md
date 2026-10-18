@@ -1,5 +1,10 @@
 # Active training: alpha, beta and gamma
 
+18 October storage policy: [rolling local history](ROLLING_HISTORY.md) replaces
+the laptop offloader. Old routine raw history expires automatically while source,
+compact results and important evaluation evidence remain. The offload sections
+below describe the earlier configuration, not the current dependency.
+
 17 October strategy update: all lanes now use the same competitive strategy
 skill, current readable rule/API packet and frozen arena opponent sources.
 Training edits continue from a measured development base, separately from the

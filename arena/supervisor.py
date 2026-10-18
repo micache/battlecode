@@ -236,7 +236,7 @@ def handle_request(arena, bot, request):
         require(allowed and not any(row["map_name"] in arena.config["evaluation"]["holdout_maps"] for row in allowed),
                 "only this lane's development evidence may be exported")
         job = db.one("SELECT * FROM match_jobs WHERE id=?", (job_id,))
-        require(job and job["artifact"], "match artifact unavailable")
+        require(job and job["artifact"], "raw match history was retired or is unavailable; compact results remain in feedback")
         filename = payload.get("file", "stderr.log")
         require(filename in ("stdout.log", "stderr.log", "final.json", "bot-a.stdout.log", "bot-b.stdout.log"), "unsupported slice file")
         limit = min(int(payload.get("limit", 8192)), 32768)

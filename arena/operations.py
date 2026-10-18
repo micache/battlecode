@@ -293,6 +293,15 @@ def backup(arena):
                 "config_hash": arena.config["config_hash"], "engine_lock": read_json(arena.config["engine_lock"]),
                 "artifact_manifests": {str(p.relative_to(arena.root)): file_hash(p)
                                        for p in (arena.root / "matches").rglob("completion.json")}})
+    if arena.config['limits'].get('rolling_history',False):
+        # Retain three successful local DB backups; source and live state are
+        # outside these exact numeric backup directories.
+        backups = sorted((p for p in (arena.root/'backups').iterdir()
+                          if p.is_dir() and not p.is_symlink() and p.name.isdigit()
+                          and (p/'arena.sqlite').is_file() and (p/'manifest.json').is_file()), key=lambda p:p.name)
+        from .storage import remove_redundant
+        for previous in backups[:-3]:
+            remove_redundant(previous)
     return {"backup": str(directory), "separate_volume_copy": "operator must copy database, manifest and referenced artifact trees"}
 
 

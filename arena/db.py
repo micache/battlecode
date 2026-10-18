@@ -57,6 +57,8 @@ CREATE TABLE IF NOT EXISTS training_cases(
 CREATE INDEX IF NOT EXISTS training_round_cases ON training_cases(round_id);
 CREATE INDEX IF NOT EXISTS job_queue ON match_jobs(state,created);
 CREATE INDEX IF NOT EXISTS revision_queue ON revisions(bot_id,state,created);
+CREATE TABLE IF NOT EXISTS artifact_retirements(
+ job_id TEXT PRIMARY KEY REFERENCES match_jobs(id), record TEXT NOT NULL, state TEXT NOT NULL);
 """
 
 
