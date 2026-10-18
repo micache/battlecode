@@ -1,0 +1,26 @@
+{
+  "task_id": "task-cf106a770c3345388063fa3eee68243f",
+  "scope": "Source invariants; C++ temporal static_assert requires bot-check. No game-strength or fuel claim.",
+  "checks": {
+    "other_policy_matches_edit_base": true,
+    "other_source_files_match_edit_base": true,
+    "current_visibility_precedes_live_state": true,
+    "channels_preserved_before_new_bank_observation": true,
+    "fresh_nonrespawn_observation_invalidates_old_cooldown": true,
+    "bounded_observation_work": true,
+    "no_new_live_team_memory": true,
+    "temporal_contracts_in_trusted_build": true,
+    "official_yield_preserved": true
+  },
+  "passed": true,
+  "source_files": {
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bot.cpp": "639c77d8b3038c6210bd373cb2092b2e62d18db79b383a6ac39b420ca8a1143b",
+    "bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  }
+}
