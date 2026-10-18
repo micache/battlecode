@@ -1,0 +1,192 @@
+{
+  "task_id": "task-67604621e969459896026d5855132cae",
+  "bot_id": "alpha",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "input_revision": "a5b2b63f1c4f59820a1c0b2e03e7ba4b8dc5052a",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "hypothesis": "Ranking camp routes by reachable travel plus estimated clearing/capture/tribute time per gem-equivalent reward increases matched development win rate over the edit base; unchanged or lower win rate falsifies this prediction.",
+  "basis": "Unmeasured rules/source deduction. Final statistics support an objective-throughput deficit, but no supplied action trace establishes route choice as its cause.",
+  "evaluated_source": {
+    "build_id": "46e2d97a0e3e6efc575ff2a36a43106cc92d27c371ffa0dde24c898091d714d0",
+    "commit": "a5b2b63f1c4f59820a1c0b2e03e7ba4b8dc5052a",
+    "revision_id": "ddf6ec4dc5c67ad239e552c3c16882c17f5f04661442f3eadd82fc9ac2e73ad5",
+    "source_hash": "397bef3cd295ec597e604a9e7e19c9a7fff08702a45c70d4b071ea303fcdc78c"
+  },
+  "evaluation_id": "beb181cb416aef4b92ecd0a51c58777cc2131c83c56f34966febf44fe08e5c1d",
+  "development_summary": {
+    "wins": 42,
+    "losses": 6,
+    "fault_matches": 0,
+    "matched_edit_base_delta": 0.0,
+    "side_paired_cases": 24,
+    "contrasting_map_wins": "corners, elkring, interlock: 8/8 each on this evaluated source"
+  },
+  "matches": [
+    {
+      "match_id": "f72189d59b66c8d08978276c877d1778063bbf8e529a7281a0c8e83f51e6a344",
+      "candidate_side": "A",
+      "map": "expanse",
+      "candidate_source_hash": "397bef3cd295ec597e604a9e7e19c9a7fff08702a45c70d4b071ea303fcdc78c",
+      "round": 455,
+      "outcome": "teamB",
+      "botFaults": [
+        0,
+        0
+      ],
+      "opponent_version": "unknown at this match level; evaluation opponent set retained in task envelope",
+      "final_path": "experiments/alpha/task-67604621e969459896026d5855132cae-expanse-A-loss-final.json",
+      "teams": [
+        {
+          "team": 0,
+          "collectedGems": 998,
+          "submittedGems": 998,
+          "gems": 0,
+          "earnedGold": 1670,
+          "deaths": 0,
+          "kills": 0,
+          "championDamageDone": 0.0,
+          "monsterDamageDone": 40750.0
+        },
+        {
+          "team": 1,
+          "collectedGems": 1116,
+          "submittedGems": 1008,
+          "gems": 108,
+          "earnedGold": 800,
+          "deaths": 0,
+          "kills": 0,
+          "championDamageDone": 0.0,
+          "monsterDamageDone": 31500.0
+        }
+      ]
+    },
+    {
+      "match_id": "efdac449fc9d374ba4870d454fa8d3fade1005d0e1c9e7544549706cb00dd72e",
+      "candidate_side": "A",
+      "map": "collision",
+      "candidate_source_hash": "397bef3cd295ec597e604a9e7e19c9a7fff08702a45c70d4b071ea303fcdc78c",
+      "round": 933,
+      "outcome": "teamB",
+      "botFaults": [
+        0,
+        0
+      ],
+      "opponent_version": "unknown at this match level; evaluation opponent set retained in task envelope",
+      "final_path": "experiments/alpha/task-67604621e969459896026d5855132cae-collision-A-loss-final.json",
+      "teams": [
+        {
+          "team": 0,
+          "collectedGems": 858,
+          "submittedGems": 726,
+          "gems": 0,
+          "earnedGold": 4095,
+          "deaths": 8,
+          "kills": 6,
+          "championDamageDone": 28930.300483703613,
+          "monsterDamageDone": 59557.40000915527
+        },
+        {
+          "team": 1,
+          "collectedGems": 1136,
+          "submittedGems": 1004,
+          "gems": 22,
+          "earnedGold": 5365,
+          "deaths": 6,
+          "kills": 7,
+          "championDamageDone": 27676.0,
+          "monsterDamageDone": 75215.60008239746
+        }
+      ]
+    },
+    {
+      "match_id": "31c1ee5ac36a9bb2a11120c63616b3da2e2e7a46d0776032c24ed5b2048c35ee",
+      "candidate_side": "B",
+      "map": "lanes",
+      "candidate_source_hash": "397bef3cd295ec597e604a9e7e19c9a7fff08702a45c70d4b071ea303fcdc78c",
+      "round": 427,
+      "outcome": "teamA",
+      "botFaults": [
+        0,
+        0
+      ],
+      "opponent_version": "unknown at this match level; evaluation opponent set retained in task envelope",
+      "final_path": "experiments/alpha/task-67604621e969459896026d5855132cae-lanes-B-loss-final.json",
+      "teams": [
+        {
+          "team": 0,
+          "collectedGems": 1042,
+          "submittedGems": 1020,
+          "gems": 22,
+          "earnedGold": 890,
+          "deaths": 0,
+          "kills": 0,
+          "championDamageDone": 0.0,
+          "monsterDamageDone": 29720.0
+        },
+        {
+          "team": 1,
+          "collectedGems": 992,
+          "submittedGems": 992,
+          "gems": 0,
+          "earnedGold": 1300,
+          "deaths": 0,
+          "kills": 0,
+          "championDamageDone": 0.0,
+          "monsterDamageDone": 37915.0
+        }
+      ]
+    }
+  ],
+  "policy": "After unchanged camp combat does nothing, shortlist at most eight eligible groups by static reward/work/travel estimate. Rank free live attack approaches or cleared capture spawns using one forward distance field and fresh visible health, full design-health estimates for unknown members, fixed capture and tribute overhead, and 10% commitment discount. Keep current cleared occupancy. Preserve cooldown expiry and all draft/combat/banking/shop policies. Fuel fallback retains old nearest-spawn routing.",
+  "parameters": {
+    "gold_weight": 0.12,
+    "commitment_discount": 0.9,
+    "candidate_limit": 8,
+    "member_limit": 16,
+    "start_fuel_reserve": 65000,
+    "scan_fuel_reserve": 45000,
+    "combat_fuel_reserve": 18000
+  },
+  "frozen_manifest": "/srv/battlecode/public/strategy/task-67604621e969459896026d5855132cae/manifest.json",
+  "frozen_manifest_sha256": "464851d78998889b15dd0b12b833e422ff00fd4e1def7afa28ed7ee0594d03bb",
+  "opponent_source_findings": [
+    {
+      "bot": "gamma",
+      "commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "finding": "Cost/value routing, visible HP versus uncertain design estimates, persistent group choice and free live attack approaches; also collector deference, melee draft and farming passives, which are not transferred."
+    },
+    {
+      "bot": "beta",
+      "commit": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+      "source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+      "finding": "Varg/Tavi/Ryth melee-first draft; bounded ranked groups, work estimates, group focus, field/death shopping, recovery/banking and collector deference. Transfer route work estimate only."
+    }
+  ],
+  "negative_findings": "Prior occupied-group approach candidate had zero matched gain versus edit base. Arrival-aware expiry and capture follow-through did not select a new base. Do not repeat earlier banking-priority/batching, draft/stat, economic-resupply, broad-AoE, focus-fire or dash packages. Global cost/value routing was previously deferred rather than evaluated.",
+  "risks": [
+    "Static hidden-health and basic-only DPS are estimates; spells, regeneration and allies change actual work.",
+    "Eight-group shortlist can miss a partially cleared or obstructed better group.",
+    "No collector deference is added; farmers can converge and divide rewards.",
+    "Bank travel and hostile locks are not priced in route scores.",
+    "Extra native field and per-goal distance queries add fuel cost; guards are planning reserves, not measured headroom."
+  ],
+  "checked_source_hash": "9df96ffb3b9509b40f5a93ae59c9b7cbd1b48dde6e8f8580a1f3f29b0c021dd9",
+  "check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792333624.5312002,
+    "matches": [
+      "526cf82b525a251528c7d9e78789228f13d23b84d7e175e7dc58d1b45501b9ad",
+      "0d193ca3a8d6a3c32be3c0f9412ab22f8a840d36a0d133ed928dba8231990966"
+    ],
+    "report_path": ".agent/check-task-67604621e969459896026d5855132cae.json",
+    "report_reference": "check:task-67604621e969459896026d5855132cae:9df96ffb3b9509b40f5a93ae59c9b7cbd1b48dde6e8f8580a1f3f29b0c021dd9",
+    "source_hash": "9df96ffb3b9509b40f5a93ae59c9b7cbd1b48dde6e8f8580a1f3f29b0c021dd9",
+    "started": 1792333588.9080396,
+    "state": "PASSED",
+    "task_id": "task-67604621e969459896026d5855132cae"
+  },
+  "next_action": "Supervisor evaluates exact checked source against the edit base and protected champion across maps and both sides. Compare wins first, then collection/tribute, camp damage per collected gem and paired-win rounds; inspect route/fuel telemetry before further routing changes."
+}

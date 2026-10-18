@@ -1,0 +1,25 @@
+{
+  "task_id": "task-67604621e969459896026d5855132cae",
+  "scope": "Byte comparison of unaffected policies against trusted edit commit; not engine branch or strength coverage. Route scoring static_assert contracts compile in bot-check.",
+  "checks": {
+    "random.h_unchanged": true,
+    "bot.h_unchanged": true,
+    "main.cpp_unchanged": true,
+    "draft.h_unchanged": true,
+    "altar_control.h_unchanged": true,
+    "draft.cpp_unchanged": true,
+    "outside_route_call_unchanged": true
+  },
+  "passed": true,
+  "source_file_sha256": {
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bot.cpp": "5ac2f85ecafb970e303e3938ae126ee7a3d653c4193d676e485797f66d0a5f5e",
+    "bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "camp_rotation.h": "ae3a6fe006ab8ec813d093aa8bb3e3f5145d75ca0eff48e341e979fa97526057",
+    "camp_route_policy.h": "f190ba3c30a33b4fd1f0e0bd5ab17302fd450f2512406631e88d48fe39600412",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  }
+}

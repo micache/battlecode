@@ -239,20 +239,7 @@ void farm_camps() {
 
     // Include unknown/expired groups, but do not revisit a personally observed
     // cooldown early merely because its spawn tiles have left our vision.
-    auto goals = camp_rotation::memory().goals();
-
-    if (goals.is_set(cambc::self().position())) {
-        // The ordinary router holds on any spawn. If the group is still alive,
-        // approach a visible survivor instead of waiting for an impossible capture.
-        auto approaches = camp_rotation::memory().occupied_group_approaches();
-        if (!approaches.is_empty()
-            && cambc::fuel_remaining() >= camp_rotation::observation_fuel_reserve) {
-            approaches &= ~blocked_tiles(); // Only free attack approaches seed this route.
-            if (move_towards_closest(approaches))
-                fight<cambc::camp>(true); // Rebuild target observations after walking.
-        }
-        return;
-    }
+    auto goals = camp_rotation::memory().route_goals(blocked_tiles());
 
     // Fresh vision after movement may reveal a camp already in range.
     if (move_towards_closest(goals))
