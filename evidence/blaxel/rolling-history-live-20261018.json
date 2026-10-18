@@ -1,0 +1,144 @@
+{
+  "runtime_commit": "7c2e76d6e80b4353efd906c6047f80ec4e91606e",
+  "owner_direction": "Replace offloading with oldest-first rolling local history",
+  "local_offload_timer": "disabled and no longer installed as an enabled timer",
+  "local_offload_service": "inactive",
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -q",
+    "passed": 106,
+    "exit_code": 0
+  },
+  "before": {
+    "completed_games": 2551,
+    "free_bytes": 1072037888,
+    "disk_pressure": true
+  },
+  "live_probe": {
+    "process": "arena-rolling-history-live-check-20261018",
+    "status": "completed",
+    "exit_code": 0,
+    "stderr": "",
+    "result": {
+      "at": 1792292711.2308524,
+      "runtime": "7c2e76d6e80b4353efd906c6047f80ec4e91606e",
+      "parser_fixture_preserved": true,
+      "sampled_retained_matches": [
+        {
+          "id": "da4d4d6f83f68e1621168f2f3a0ba1952337e0dd9930229c798311b87eb097ff",
+          "artifact": "/srv/battlecode/matches/da4d4d6f83f68e1621168f2f3a0ba1952337e0dd9930229c798311b87eb097ff/1",
+          "attempt_count": 1,
+          "seal_verified": true
+        },
+        {
+          "id": "3781d0e67431109a6a8834831d31f89ec08cdaf1ba1f223368c173cea5784be6",
+          "artifact": "/srv/battlecode/matches/3781d0e67431109a6a8834831d31f89ec08cdaf1ba1f223368c173cea5784be6/1-retained",
+          "attempt_count": 1,
+          "seal_verified": true
+        }
+      ],
+      "sample_retirement_kept_result_and_removed_raw": true,
+      "retired_matches": 768,
+      "active_match_ids": [],
+      "workers": [
+        {
+          "id": "alpha",
+          "state": "WAITING_EVALUATION",
+          "detail": null,
+          "task_id": "task-4133354c587642a699e191721aab2290"
+        },
+        {
+          "id": "beta",
+          "state": "RUNNING",
+          "detail": null,
+          "task_id": "task-8fbe93005e2745df8b10d8b9da49fea8"
+        },
+        {
+          "id": "gamma",
+          "state": "IDLE",
+          "detail": null,
+          "task_id": "task-a1a0fd0bf4a7437389ce07280d8aceee"
+        }
+      ]
+    }
+  },
+  "after": {
+    "timestamp": 1792292649.3120973,
+    "paused": false,
+    "adapter_paused": false,
+    "disk_pressure": false,
+    "service_error": null,
+    "disk": {
+      "artifact_bytes": 511563181,
+      "free": 3869863936
+    },
+    "workers": [
+      {
+        "detail": null,
+        "heartbeat": 1792255852.6797416,
+        "id": "alpha",
+        "last_feedback": "bcbcd9f7f6a58d66e6c96708d4ebb36c332c3120d6742a4d1eec181ddbf0bde6",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "WAITING_EVALUATION",
+        "task_id": "task-4133354c587642a699e191721aab2290"
+      },
+      {
+        "detail": null,
+        "heartbeat": 1792292612.1906123,
+        "id": "beta",
+        "last_feedback": "d6686af762b5f8ede88c9dd08958fccfd7234697887ca3a65564acc2819f5d65",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "RUNNING",
+        "task_id": "task-8fbe93005e2745df8b10d8b9da49fea8"
+      },
+      {
+        "detail": null,
+        "heartbeat": 1792254012.884869,
+        "id": "gamma",
+        "last_feedback": "322271ef54566a308ed0a314061debfb504f4872b7353c8394aaf57e78cdc1ee",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "IDLE",
+        "task_id": "task-a1a0fd0bf4a7437389ce07280d8aceee"
+      }
+    ],
+    "matches": [
+      {
+        "count": 60,
+        "state": "CANCELLED"
+      },
+      {
+        "count": 2558,
+        "state": "COMPLETED"
+      },
+      {
+        "count": 1,
+        "state": "QUEUED"
+      }
+    ],
+    "rolling_history": {
+      "artifact_bytes": 511563181,
+      "at": 1792292649.30773,
+      "compacted_projects": [
+        "3781d0e67431109a6a8834831d31f89ec08cdaf1ba1f223368c173cea5784be6"
+      ],
+      "enabled": true,
+      "free_bytes": 3869863936,
+      "policy": "oldest routine raw matches first; newest 120, active/accepted/latest evaluations, bounded failures and parser/bootstrap evidence protected; no offloading",
+      "raw_retirement_is_permanent": true,
+      "reclaimed_bytes": 15129090,
+      "retired_build_caches": [],
+      "retired_matches": [],
+      "total_reclaimed_bytes": 2753084413,
+      "total_retired_matches": 768
+    }
+  },
+  "limits": "Old routine raw files are permanently removed. Normalized results, source commits, notes, compact feedback and pinned/recent evidence retained. Actual host reboot still unverified."
+}

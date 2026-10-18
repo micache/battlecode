@@ -62,3 +62,11 @@ offload requests are rejected while rolling history is enabled.
 `arena status` exposes `rolling_history`: current free space, raw bytes, reclaimed
 bytes, retired raw-game count and the last batch of discarded compiler caches.
 The evidence/retirement ledger remains in SQLite; it is not another service.
+
+Live deployment: runtime `7c2e76d6e80b4353efd906c6047f80ec4e91606e`.
+[Saved evidence](../evidence/blaxel/rolling-history-live-20261018.json) records
+the disk guard clearing, free space rising from about 1.0 GB to 3.9 GB, seven
+new completed games, and beta's next native improvement job running. It verifies
+retained artifact seals and parser-fixture bytes, and confirms that a retired
+raw match still has its normalized result. At that snapshot 768 oldest routine
+raw match directories had been permanently removed. 106 local tests passed.
