@@ -1,0 +1,373 @@
+{
+  "task_id": "task-ccebe4f09a07468fb85c1ff4ff3feb92",
+  "edit_commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+  "edit_source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+  "latest_evaluation": {
+    "evaluation_id": "3d64e64e7554fd39566226269de41f297d4cbc4ece281f716afa3252f2a56a82",
+    "candidate": {
+      "build_id": "a4208eeee341a3ad0c94de98dcfe1bf75a057c22dd0560f9e954d7b770464239",
+      "commit": "db8b69148809f2d7872142d5e5bdffdf071f7c32",
+      "revision_id": "898a0aedadd5a9ff150296b6600333def519a9e75795aede48e07d2c574e056a",
+      "source_hash": "490fd85093ab5ce3b22a9f6f86fadffe719d2b03e9d37ea4062b0f28d0654e73"
+    },
+    "coverage": "development-six-map"
+  },
+  "latest_development_comparison": {
+    "commit_sha": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+    "common_opponent_delta": -0.14583333333333334,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 24,
+    "per_map": {
+      "collision": {
+        "candidate": 0.5,
+        "incumbent": 0.375,
+        "pairs": 4
+      },
+      "corners": {
+        "candidate": 0.625,
+        "incumbent": 0.75,
+        "pairs": 4
+      },
+      "elkring": {
+        "candidate": 0.25,
+        "incumbent": 0.5,
+        "pairs": 4
+      },
+      "expanse": {
+        "candidate": 0.5,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "interlock": {
+        "candidate": 0.25,
+        "incumbent": 0.375,
+        "pairs": 4
+      },
+      "lanes": {
+        "candidate": 0.375,
+        "incumbent": 0.5,
+        "pairs": 4
+      }
+    },
+    "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+    "unknown_reliability": []
+  },
+  "latest_representative_failures": [
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 22
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 12,
+            "B": 0
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 12
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 420,
+            "B": 1024
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 1180,
+            "B": 4610
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 543
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 188,
+            "B": 1002
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 40,
+            "B": 1130
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "ec73ece3885f2c648cddb220e63a06a8bb50fed24d64a4457e588fe94f2761d4",
+      "round": 543,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 108
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 1,
+            "B": 10
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 10,
+            "B": 1
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1028,
+            "B": 854
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 3990,
+            "B": 2160
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 667
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 1028,
+            "B": 400
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 960,
+            "B": 210
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "967695d195aa8e4b3e17549bcf5c53934104d303d22d9754bd8eb2882faa99ec",
+      "round": 667,
+      "side": "B",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 7,
+            "B": 2
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 2,
+            "B": 7
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 796,
+            "B": 1144
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2030,
+            "B": 4125
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 582
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 378,
+            "B": 1014
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 50,
+            "B": 855
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "6524091bfa2e1a322bdc277f9d4d5097b1ec1ff9237632ae62be39f0dc72c749",
+      "round": 582,
+      "side": "A",
+      "trace": null
+    }
+  ],
+  "attribution": "Latest failures evaluate source 490fd850..., not the restored edit base or this candidate. No per-turn combat cause is established.",
+  "exact_base_contrasts": [
+    {
+      "match_id": "3e3cd7fe03e8848a724c5cb3a7478d676e4d7e0a4fb32e38f8a863014e807f3e",
+      "side": "A",
+      "map": "interlock",
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "opponent_commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "outcome": "teamB",
+      "round": 609,
+      "own_tribute": 968,
+      "opponent_tribute": 1010,
+      "own_collected": 968,
+      "own_deaths": 5,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/camp-claims-evidence.json"
+    },
+    {
+      "match_id": "d36694ea34fad7710a893a7970a447abf89640d425d1b6f833b0628bb4422aaa",
+      "side": "A",
+      "map": "lanes",
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "opponent_commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "outcome": "teamB",
+      "round": 432,
+      "own_tribute": 786,
+      "opponent_tribute": 1010,
+      "own_collected": 786,
+      "own_deaths": 1,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/camp-claims-evidence.json"
+    },
+    {
+      "match_id": "759094967480eed1b72e4d10f0b0d23d2f333c77948c3bd195f5e0652b106962",
+      "side": "B",
+      "map": "lanes",
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "opponent_commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "outcome": "teamA",
+      "round": 447,
+      "own_tribute": 912,
+      "opponent_tribute": 1008,
+      "own_collected": 948,
+      "own_deaths": 2,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/camp-claims-evidence.json"
+    },
+    {
+      "match_id": "4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0",
+      "side": "A",
+      "map": null,
+      "opponent_commit": null,
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "round": 596,
+      "outcome": "teamA",
+      "own_tribute": 1006,
+      "opponent_tribute": 154,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/smoke-evidence.json",
+      "limit": "Smoke wins, maps/opponent revisions unknown; not controlled comparisons or turn-level cause evidence."
+    },
+    {
+      "match_id": "437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf",
+      "side": "B",
+      "map": null,
+      "opponent_commit": null,
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "round": 640,
+      "outcome": "teamB",
+      "own_tribute": 1084,
+      "opponent_tribute": 286,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/smoke-evidence.json",
+      "limit": "Smoke wins, maps/opponent revisions unknown; not controlled comparisons or turn-level cause evidence."
+    }
+  ],
+  "source_deduction": "Base fight returns when the original target dies after a basic and chooses a reset before comparing damage/area spells. Group clearing therefore has an unmeasured opportunity to spend separate allowances and choose useful area damage.",
+  "frozen_opponent_audit": [
+    {
+      "bot": "alpha",
+      "commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+      "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+      "policy": "Ranks capped direct damage vs resets with 16-target/18k-fuel bounds and refreshes a basic target after casts; random Power stat/draft, enemy-first combat, spawn-union farming, locks and private respawn observations."
+    },
+    {
+      "bot": "beta",
+      "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e",
+      "policy": "Varg/Tavi/Ryth opening, Strength farming plus durability Health, reset/damage/AoE value comparison, local group reservations and recovery latch. Its fight still retains one target through the basic."
+    }
+  ],
+  "transfer": "Use bounded spell-value comparison in gamma while retaining its objective-first macro policy; add group-scoped target refresh and Varg splash aim scoring rather than importing generic enemy-first combat.",
+  "manifest_sha256": "d6be412acd64b3a56d605621ef0d3cea3aa0bb693087c1b59cb6574b85e508bd"
+}

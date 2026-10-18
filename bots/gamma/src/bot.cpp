@@ -1,5 +1,8 @@
 #include <cambc.h>
 #include "bot.h"
+#include "combat_value.h"
+#include <array>
+#include <span>
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -60,52 +63,121 @@ template<class Target>
 bool live(const Target& t) {
     return cambc::self().is_alive() && t.is_visible() && t.health() > 0;
 }
+// Only the supplied camp group or defensive shortlist may be attacked. No chase.
+// Snapshot live observations again after EVERY action; handles are identities only.
+constexpr std::uint64_t COMBAT_FUEL = 18000;
+constexpr unsigned COMBAT_STEPS = 4;
+constexpr unsigned COMBAT_TARGETS = 12;
 template<class Target>
-bool fight(const Target& target, bool walked, bool dangerous) {
+bool fight(std::span<const Target> candidates, bool walked) {
     auto& me = cambc::self();
-    if (!live(target)) return false;
     bool acted = false;
-    if (me.can_attack() && !me.restrictions().contains(cambc::buff_restrictions::attack)
-        && distance(me.position(), target.position()) <= me.attack_range()) {
-        me.attack(target);
-        acted = true;
+    const bool splash = me.passive() == cambc::passive_type::splash_attack;
+    const float strength = me.strength();
+    float basic_damage = strength;
+    if constexpr (std::is_same_v<Target, cambc::camp>) {
+        const auto items = me.item_count();
+        if (items[cambc::item_type::monster_emblem_of_strength]
+            || items[cambc::item_type::monster_emblem_of_health]
+            || items[cambc::item_type::monster_emblem_of_focus]) basic_damage *= 1.1f;
     }
-    if (!live(target) || !me.can_cast()
-        || me.restrictions().contains(cambc::buff_restrictions::cast)
-        || cambc::fuel_remaining() < ACTION_FUEL) return acted;
-    const auto abilities = me.abilities();
-    // Varg's shield preserves farming health; do not overwrite an active shield.
-    if (dangerous && distance(me.position(), target.position()) <= 3
-        && me.health() < me.max_health() * 0.75f && !me.buffs().has_shield()) {
-        for (const auto& a : abilities)
-            if (a.is_shield() && a.can_target_self() && a.is_ready() && a.use()) return true;
-    }
-    for (const auto& a : abilities) {
-        if (!a.is_attack_reset() || !a.can_target_self() || !a.is_ready()
-            || me.can_attack() || me.restrictions().contains(cambc::buff_restrictions::attack)
-            || distance(me.position(), target.position()) > me.attack_range()) continue;
-        if (a.use()) {
-            if (live(target) && me.can_attack()
+    // A small finishing preference rewards removed threats, not just raw damage.
+    const float kill_bonus = strength * 0.25f;
+    for (unsigned step = 0; step < COMBAT_STEPS; ++step) {
+        if (!me.is_alive() || cambc::fuel_remaining() < COMBAT_FUEL) break;
+        const auto restrictions = me.restrictions();
+        const bool attack_allowed = !restrictions.contains(cambc::buff_restrictions::attack);
+        const auto position = me.position();
+        const auto range = me.attack_range();
+        std::vector<Target> targets;
+        std::array<combat_value::target, COMBAT_TARGETS> observations{};
+        unsigned examined = 0;
+        for (const auto& t : candidates) {
+            if (++examined > COMBAT_TARGETS || cambc::fuel_remaining() < COMBAT_FUEL) break;
+            if (!t.is_visible()) continue;
+            const float hp = t.health();
+            if (hp <= 0) continue;
+            const auto p = t.position();
+            const auto d = distance(position, p);
+            if constexpr (std::is_same_v<Target, cambc::champion>) {
+                if (d > range || (d > 1 && hp > 2 * strength)) continue;
+            }
+            observations[targets.size()] = {p.x, p.y, hp, d <= range};
+            targets.push_back(t);
+        }
+        if (targets.empty()) break;
+        const auto view = std::span<const combat_value::target>(observations.data(), targets.size());
+        int basic = -1;
+        float basic_score = 0;
+        for (std::size_t i = 0; i < targets.size(); ++i) {
+            if (!view[i].in_range || !attack_allowed) continue;
+            const float score = combat_value::basic(view, i, splash, basic_damage, kill_bonus);
+            if (score > basic_score) { basic = static_cast<int>(i); basic_score = score; }
+        }
+        if (basic >= 0 && me.can_attack()) {
+            me.attack(targets[basic]);
+            acted = true;
+            continue; // A kill must not strand the separate cast allowance.
+        }
+        if (!me.can_cast() || restrictions.contains(cambc::buff_restrictions::cast)) break;
+        const auto abilities = me.abilities();
+        // Preserve the base's health protection; never replace an active shield.
+        if (me.health() < me.max_health() * 0.75f && !me.buffs().has_shield()) {
+            bool dangerous = false;
+            for (const auto& t : targets)
+                if (distance(position, t.position()) <= 3 && t.strength() > 0) { dangerous = true; break; }
+            if (dangerous) {
+                for (const auto& a : abilities)
+                    if (a.is_shield() && a.can_target_self() && a.is_ready() && a.use()) return true;
+            }
+        }
+        std::optional<cambc::ability> selected;
+        int aim = -1;
+        float best = 0;
+        for (const auto& a : abilities) {
+            if (cambc::fuel_remaining() < COMBAT_FUEL || !a.info() || !a.is_ready()) continue;
+            const bool exclusive = std::visit([](const auto& info) { return info.exclusive_with_movement; }, *a.info());
+            if (walked && exclusive) continue;
+            if (a.is_attack_reset()) {
+                // No range query for a rangeless reset; only buy a useful new hit.
+                if (basic >= 0 && !me.can_attack() && a.can_target_self() && basic_score > best) {
+                    best = basic_score; selected = a; aim = basic;
+                }
+                continue;
+            }
+            if (!(a.is_damage() || a.is_aoe_damage() || a.is_cc())) continue;
+            const bool ground = a.is_aoe_damage() && a.can_target_ground();
+            const bool unit = std::is_same_v<Target, cambc::camp> ? a.can_target_camps() : a.can_target_enemies();
+            if (!ground && !unit) continue;
+            const auto valid = a.valid_tiles();
+            const float damage = a.damage_amount();
+            const int radius = ground ? static_cast<int>(a.get<cambc::ability_aoe_damage>().radius) : 0;
+            for (std::size_t i = 0; i < targets.size(); ++i) {
+                if (!valid.is_set(targets[i].position())) continue;
+                float score = ground ? combat_value::area(view, i, radius, damage, kill_bonus)
+                    : combat_value::hit(damage, view[i].health, kill_bonus);
+                if constexpr (std::is_same_v<Target, cambc::champion>) {
+                    if (a.is_cc() || (ground && a.get<cambc::ability_aoe_damage>().duration > 0))
+                        score += strength * 0.25f;
+                }
+                if (score > best) { best = score; selected = a; aim = static_cast<int>(i); }
+            }
+        }
+        if (!selected || aim < 0 || cambc::fuel_remaining() < ACTION_FUEL) break;
+        const auto& target = targets[aim];
+        if (!live(target)) break;
+        bool cast = false;
+        if (selected->is_attack_reset()) {
+            cast = selected->use();
+            // Complete reset + basic together, including at the loop/fuel boundary.
+            if (cast && live(target) && me.can_attack()
                 && !me.restrictions().contains(cambc::buff_restrictions::attack)
                 && distance(me.position(), target.position()) <= me.attack_range()) me.attack(target);
-            return true;
-        }
-    }
-    for (const auto& a : abilities) {
-        if (!(a.is_damage() || a.is_aoe_damage() || a.is_cc()) || !a.is_ready()) continue;
-        const bool exclusive = std::visit([](const auto& info) { return info.exclusive_with_movement; }, *a.info());
-        if (walked && exclusive) continue;
-        if (!live(target) || !a.valid_tiles().is_set(target.position())) continue;
-        if (a.can_target_ground()) {
-            if (a.use(target.position())) return true;
-        } else {
-            if constexpr (std::is_same_v<Target, cambc::camp>) {
-                if (!a.can_target_camps()) continue;
-            } else {
-                if (!a.can_target_enemies()) continue;
-            }
-            if (a.use(target)) return true;
-        }
+        } else if (selected->is_aoe_damage() && selected->can_target_ground())
+            cast = selected->use(target.position());
+        else cast = selected->use(target);
+        if (!cast) break; // Bounded fallback after a newly invalid action.
+        acted = true; // Rebuild observations; do not assume a killed target survived.
     }
     return acted;
 }
@@ -123,16 +195,8 @@ bool threatened() {
 
 // Score first, fight only adjacent threats/cheap finishes; never chase enemies.
 bool defend(bool walked) {
-    auto& me = cambc::self();
-    std::optional<cambc::champion> target;
-    float best = std::numeric_limits<float>::max();
-    for (const auto& e : cambc::vision::champions(team::enemy)) {
-        if (!e.is_visible() || e.health() <= 0) continue;
-        const int d = distance(me.position(), e.position());
-        if (d > me.attack_range() || (d > 1 && e.health() > 2 * me.strength())) continue;
-        if (e.health() < best) { best = e.health(); target = e; }
-    }
-    return target && fight(*target, walked, true);
+    const auto enemies = cambc::vision::champions(team::enemy);
+    return fight<cambc::champion>(enemies, walked);
 }
 
 bool bank(bool allow_move) {
@@ -184,11 +248,6 @@ void Bot::farm_camps() {
     if (farms.empty()) {
         for (const auto& group : cambc::map::camp_groups())
             farms.push_back({group, group.spawn_tiles(), 0});
-        // Canonical static identities, not an assumption about enumeration order.
-        std::sort(farms.begin(), farms.end(), [](const Farm& a, const Farm& b) {
-            return static_cast<cambc::handle_camp_group_t>(a.group)
-                < static_cast<cambc::handle_camp_group_t>(b.group);
-        });
     }
     const unsigned now = cambc::round_number();
     const auto visible = cambc::vision::visible_tiles();
@@ -200,7 +259,6 @@ void Bot::farm_camps() {
         if (f.spawns.is_set(me.position())
             && std::holds_alternative<cambc::map::camp_group_reward_available>(f.group.state())) {
             target_group = static_cast<int>(i);
-            claims.publish(i, farms.size());
             defend(false);
             return;
         }
@@ -212,7 +270,7 @@ void Bot::farm_camps() {
             if (++inspected > 8 || cambc::fuel_remaining() < ACTION_FUEL) break;
             if (!c.is_monolith() && c.is_visible() && c.health() > 0
                 && distance(me.position(), c.position()) <= me.attack_range()
-                && fight(c, false, c.strength() > 0)) return;
+                && fight<cambc::camp>(std::span<const cambc::camp>(&c, 1), false)) return;
         }
         return;
     }
@@ -263,9 +321,6 @@ void Bot::farm_camps() {
         // Reward / (travel + clearing + capture). Resets improve clear estimates.
         const float cost = dist + hp / std::max(1.0f, me.strength() * 1.12f) + cambc::constants::capture_time + 1;
         float score = cost / std::max(1.0f, value);
-        // Soft reservation: spread out, but help if alternatives cost much more.
-        // The sender promises only its intention; all live queries stay local.
-        score *= 1.0f + camp_claims::duplicate_penalty * claims.others(i, farms.size());
         if (static_cast<int>(i) == target_group) score *= 0.85f; // Avoid target thrashing.
         if (score < best_score) { best_score = score; selected = static_cast<int>(i); }
     }
@@ -279,18 +334,8 @@ void Bot::farm_camps() {
         return;
     }
     auto& f = farms[selected];
-    claims.publish(selected, farms.size());
     auto act_on_group = [&](bool walked) {
-        std::optional<cambc::camp> target;
-        float best = std::numeric_limits<float>::max();
-        for (const auto& c : f.group.camps()) {
-            if (!c.is_visible() || c.health() <= 0) continue;
-            const auto d = distance(me.position(), c.position());
-            // Prefer a target we can actually attack/cast on this turn.
-            const float score = (d > me.attack_range() ? 100000.0f : 0.0f) + c.health();
-            if (score < best) { best = score; target = c; }
-        }
-        return target && fight(*target, walked, target->strength() > 0);
+        return fight<cambc::camp>(f.group.camps(), walked);
     };
     const bool acted = act_on_group(false);
     // can_move() alone need not encode a just-cast spell's walk exclusion.
@@ -316,7 +361,6 @@ void Bot::farm_camps() {
 
 void Bot::play_turn() {
     auto& me = cambc::self();
-    claims.begin_turn();
     // Dead units can shop, but cannot inspect position or perform live actions.
     if (!me.is_alive()) { buy_items(); target_group = -1; return; }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;

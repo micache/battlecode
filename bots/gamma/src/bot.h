@@ -1,9 +1,8 @@
 #pragma once
 #include <cambc.h>
 #include <vector>
-#include "camp_claims.h"
 
-// Private camp observations; shared bytes carry only expiring target intents.
+// Private per-body state. No live shared-memory protocol or allied hidden vision.
 class Bot {
     struct Farm {
         cambc::map::camp_group group;
@@ -11,7 +10,6 @@ class Bot {
         unsigned respawn_observed_until = 0;
     };
     std::vector<Farm> farms;
-    camp_claims::board claims;
     int target_group = -1;
     void buy_items();
     void farm_camps();
