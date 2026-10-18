@@ -1,0 +1,396 @@
+{
+  "task_id": "task-0648f2bdbcf046cfb9be1812a8247adb",
+  "bot_id": "alpha",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "input_revision": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "source_files_match_edit_commit_on_entry": true,
+  "initial_git_status": "clean",
+  "incomplete_work": "None; latest evaluated candidate equals edit base. Pending self-play is separate.",
+  "evaluation_id": "20a057f89ee416439f7dd9ee3785bcb7cb8201fe7a2a6304f0e6447988135050",
+  "evaluated_source": {
+    "build_id": "6341cbe8ce815a0eed1d9a48b5b38b37292922290f4bf6afbd1848e6586b15d8",
+    "commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+    "revision_id": "2bd9aa09821265ac4c2da4507ba6581fce4fff3cea5e7dda550b94ffc30af31c",
+    "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f"
+  },
+  "development": {
+    "metrics": {
+      "wins": 42,
+      "losses": 6,
+      "per_map": {
+        "collision": {
+          "candidate": 0.875,
+          "incumbent": 0.125,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 1.0,
+          "incumbent": 0.125,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 1.0,
+          "incumbent": 0.125,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.625,
+          "incumbent": 0.125,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 1.0,
+          "incumbent": 0.125,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 0.75,
+          "incumbent": 0.125,
+          "pairs": 4
+        }
+      },
+      "per_opponent": {
+        "30a901fb37260fb2b6ce5f932060e0c80822c4f49b11d3120654b0f8f070aaa1": {
+          "candidate": 1.0,
+          "incumbent": 0.5,
+          "pairs": 6
+        },
+        "54338dc8eaa7f1cf288206540974dcf92a0ea5f6d99c3677dc15a612793547f0": {
+          "candidate": 0.8333333333333334,
+          "incumbent": 0.0,
+          "pairs": 6
+        },
+        "650eb88bce04b8d8ffdcf70e9c819cdcb3ef0e4e12986aa01cc5e172996e6b0b": {
+          "candidate": 1.0,
+          "incumbent": 0.0,
+          "pairs": 6
+        },
+        "e8aa98b8dcd0ec7757c49ad613e8dc8647518c5e17bffb27be8342e81258c0a0": {
+          "candidate": 0.6666666666666666,
+          "incumbent": 0.0,
+          "pairs": 6
+        }
+      },
+      "development_comparison": {
+        "commit_sha": "2e82fe1839be5b90390f1c625c0f1f2ec8df7cb5",
+        "common_opponent_delta": 0.08333333333333333,
+        "fault_matches": [],
+        "missing": [],
+        "paired_cases": 24,
+        "per_map": {
+          "collision": {
+            "candidate": 0.875,
+            "incumbent": 1.0,
+            "pairs": 4
+          },
+          "corners": {
+            "candidate": 1.0,
+            "incumbent": 0.875,
+            "pairs": 4
+          },
+          "elkring": {
+            "candidate": 1.0,
+            "incumbent": 1.0,
+            "pairs": 4
+          },
+          "expanse": {
+            "candidate": 0.625,
+            "incumbent": 0.375,
+            "pairs": 4
+          },
+          "interlock": {
+            "candidate": 1.0,
+            "incumbent": 0.875,
+            "pairs": 4
+          },
+          "lanes": {
+            "candidate": 0.75,
+            "incumbent": 0.625,
+            "pairs": 4
+          }
+        },
+        "source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+        "unknown_reliability": []
+      }
+    },
+    "representative_failures": [
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 22
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 8,
+              "B": 6
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 6,
+              "B": 7
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 858,
+              "B": 1136
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 4095,
+              "B": 5365
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 933
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 726,
+              "B": 1004
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 65,
+              "B": 385
+            }
+          }
+        },
+        "map": "collision",
+        "match_id": "34af65daf805731f34cb049ed09102ca4a2f2e131ce8e0227f6dc2d8dc2a732a",
+        "round": 933,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 108
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 998,
+              "B": 1116
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 1670,
+              "B": 800
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 455
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 998,
+              "B": 1008
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 510,
+              "B": 350
+            }
+          }
+        },
+        "map": "expanse",
+        "match_id": "7cf8782a52a3d2793758c0d9f8f04589e372a85314adf75093ceb66e33eaefb0",
+        "round": 455,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1008,
+              "B": 890
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 640,
+              "B": 2040
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 493
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1008,
+              "B": 890
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 370,
+              "B": 660
+            }
+          }
+        },
+        "map": "expanse",
+        "match_id": "c2a0e91d58af355f33322f052f7bc099bca15d27c9cfbdfcb2f6aa91614f98b2",
+        "round": 493,
+        "side": "B",
+        "trace": null
+      }
+    ]
+  },
+  "hypothesis": "Arrival-aware cooldown eligibility increases matched development win rate over the edit base. Unchanged or lower win rate falsifies the prediction.",
+  "bottleneck": "Expanse objective throughput; exclusion of cooling groups until expiry can add avoidable return travel. The causal link is unmeasured.",
+  "policy": "For positive remembered cooldowns, include a group when now + max(0, ceil(rectangle-distance / walking-speed) - 1) >= remembered deadline. Retain zero-timer exclusion and fresh observations. Existing pathfinder chooses among eligible goals.",
+  "mechanism_diagnostics": [
+    "time from cooldown expiry to first return/attack",
+    "collection and tribute",
+    "paired-win finish rounds",
+    "early spawn occupancy"
+  ],
+  "risk": "More return trips may reduce exploration or crowd allies. Rectangle distance ignores walls and gaps conservatively; occupants can delay respawn beyond expiry. Fuel overhead unmeasured.",
+  "opponent_manifest": {
+    "count": 4,
+    "manifest": "/srv/battlecode/public/strategy/task-0648f2bdbcf046cfb9be1812a8247adb/manifest.json",
+    "sha256": "77dc7e180cfb28e14f94896bc4a9016e9f788de6f624e675d61973d05b08747c"
+  },
+  "opponent_sources_verified": true,
+  "opponent_observations": [
+    {
+      "bot": "beta",
+      "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "policy": "Varg/Tavi/Ryth farming draft, group target persistence, reward/HP/distance scoring, unique farming passives and safe recovery; bank() returns after movement without starting tribute."
+    },
+    {
+      "bot": "gamma",
+      "commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+      "policy": "Melee draft, throughput routing, collector deference, timestamped observed respawn deadlines; skips positive cooldowns regardless of distance, banks after moving."
+    },
+    {
+      "bot": "historical alpha",
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "policy": "Nearest-group routing and first visible basic target; base precursor without altar denial or respawn memory."
+    },
+    {
+      "bot": "starter",
+      "commit": "144ab5a958a81ea546ee67d7821751a65b962906",
+      "policy": "Random unrepeated draft and stat, nearest-group farming; source compared with historical alpha below."
+    }
+  ],
+  "documentation": {
+    "routine_iteration": true,
+    "gameplay_review_required": false,
+    "sdk_sha256": "90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d",
+    "consulted": [
+      "BOT_REFERENCE.md",
+      "PLAYBOOKS.md B/C/F",
+      "RESEARCH.md",
+      "docs/rules/organizer-agents.md",
+      "GameRules.md camp phases/capture/respawn",
+      "BotAPICpp.md camp group states",
+      "installed cambc.h static group/member metadata and movement"
+    ]
+  },
+  "trusted_check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792322778.8065708,
+    "matches": [
+      "f3da9e07a23bd2822b35465aac73076e5587bdcf5f0ab59c7ee75934ef65c302",
+      "4c628d417b3456531f269f59bd5258a5bec07355798eed6f2ec156fd0e1e1cce"
+    ],
+    "report_path": ".agent/check-task-0648f2bdbcf046cfb9be1812a8247adb.json",
+    "report_reference": "check:task-0648f2bdbcf046cfb9be1812a8247adb:6e362fd7cce836975fa615bc8b936109235fd320def63703761366586efabc25",
+    "source_hash": "6e362fd7cce836975fa615bc8b936109235fd320def63703761366586efabc25",
+    "started": 1792322743.9994547,
+    "state": "PASSED",
+    "task_id": "task-0648f2bdbcf046cfb9be1812a8247adb"
+  },
+  "source_files_unchanged_after_check": true
+}

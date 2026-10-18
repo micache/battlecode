@@ -237,8 +237,8 @@ void farm_camps() {
     if (fight<cambc::camp>() || cambc::fuel_remaining() < combat_fuel_reserve)
         return;
 
-    // Include unknown/expired groups, but do not revisit a personally observed
-    // cooldown early merely because its spawn tiles have left our vision.
+    // Include unknown/expired groups and cooldowns that cannot be reached before
+    // their observed deadline. Recheck personal vision on every farming turn.
     auto goals = camp_rotation::memory().goals();
 
     // Fresh vision after movement may reveal a camp already in range.
