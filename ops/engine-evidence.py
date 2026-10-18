@@ -5,12 +5,14 @@ from pathlib import Path
 import sys
 
 
-EXPECTED = "e2a641bab3c9ec3b80d595c2956e6dbb115959b039617efb14e554617bf0d08c"
+EXPECTED = "47c4d2d78ba29e7ef8c4633845f26659ece968c9424409a300a9ea4b89e7eaa2"
 distribution = importlib.metadata.distribution("cambc")
+if distribution.version != '2.2.5':
+    raise SystemExit('unreviewed cambc distribution')
 matches = []
 for item in distribution.files:
     path = Path(distribution.locate_file(item))
-    if path.is_file() and path.stat().st_size == 95129344:
+    if path.is_file() and path.stat().st_size == 95698040:
         if hashlib.sha256(path.read_bytes()).hexdigest() == EXPECTED:
             matches.append(path)
 if len(matches) != 1:

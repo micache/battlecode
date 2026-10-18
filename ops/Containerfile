@@ -8,5 +8,5 @@ COPY engine-evidence.py /opt/engine-evidence.py
 RUN python3 /opt/engine-evidence.py verify
 RUN cambc init --yes /opt/project
 WORKDIR /opt/project
-RUN cambc new side-a --lang cpp && cambc new side-b --lang cpp && cambc build side-a --output /opt/starter.wasm
+RUN cambc new side-a --lang cpp && cambc new side-b --lang cpp && cambc build side-a --release --output /opt/starter.wasm
 RUN dpkg-query -W > /opt/compiler-packages.txt
