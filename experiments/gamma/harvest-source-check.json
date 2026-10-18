@@ -29,7 +29,7 @@
   },
   "passed": true,
   "source_file_sha256": {
-    "bot.cpp": "8a95842787904a5305dad11800a9b03f55eef3164f5e248a367e55035262eaf5",
+    "bot.cpp": "84e471222f5ce3d9092d79ccd86ff0f645d6ffc8d8ed6b9c2851d1ed6d177b76",
     "bot.h": "bf6ed7d94c1c4454e5f44e7703ba3767e05e0dfa5ca16c2d50ce0347c911a310",
     "draft.cpp": "bfac1b1879665b73b2bcb33ff3567641d73e40afd760d08d0498f53ddfa375b3",
     "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",

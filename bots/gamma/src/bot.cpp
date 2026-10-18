@@ -1,6 +1,7 @@
 #include <cambc.h>
 #include "bot.h"
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <limits>
 #include <optional>
@@ -15,6 +16,10 @@ constexpr float HEALED_HEALTH = 0.98f;
 constexpr unsigned SHOP_RECALL_GOLD = 300;
 constexpr std::uint64_t PLAN_FUEL = 30000;
 constexpr std::uint64_t ACTION_FUEL = 10000;
+constexpr float BANK_RISK_COST = 12.0f; // Travel rounds per projected health-bar lost.
+constexpr float BANK_FATAL_FRACTION = 0.70f;
+constexpr float BANK_FATAL_COST = 25.0f;
+constexpr unsigned BANK_GOAL_LIMIT = 128;
 
 int distance(vec2 a, vec2 b) { return static_cast<int>(a.chebyshev_distance(b)); }
 cambc::bitboard around(vec2 p, int r) {
@@ -32,7 +37,7 @@ cambc::bitboard blocked_tiles() {
 
 // Goals are FREE approach/capture tiles, never occupied camps or an altar.
 // A failed hidden-obstruction step permits one refreshed alternative.
-bool move_to(cambc::bitboard goals) {
+bool move_to(cambc::bitboard goals, cambc::bitboard avoid = {}) {
     auto& me = cambc::self();
     if (!me.can_move() || me.restrictions().contains(cambc::buff_restrictions::move)
         || cambc::fuel_remaining() < ACTION_FUEL) return false;
@@ -40,6 +45,11 @@ bool move_to(cambc::bitboard goals) {
         auto blocked = blocked_tiles();
         goals &= ~blocked;
         if (goals.is_empty() || goals.is_set(me.position())) return false;
+        // Banking first tries a route outside observed threat ranges. If that
+        // disconnects us (including starting inside a threat), use normal terrain
+        // on the second attempt rather than freeze a carrier indefinitely.
+        if (retry == 0) blocked |= avoid & ~goals;
+        blocked.set(me.position(), false);
         cambc::distance_field field;
         cambc::bitboard visited;
         field.compute_to(blocked, goals, around(me.position(), 0), visited);
@@ -48,7 +58,10 @@ bool move_to(cambc::bitboard goals) {
         for (auto p : blocked.reachable_tiles(me.position(), me.base_stats().base_move_speed).positions()) {
             if (field.get(p) < best) { step = p; best = field.get(p); }
         }
-        if (step == me.position()) return false;
+        if (step == me.position()) {
+            if (retry == 0 && !avoid.is_empty()) continue;
+            return false;
+        }
         if (me.move_absolute(step)) return true;
         if (!me.can_move() || cambc::fuel_remaining() < ACTION_FUEL) return false;
     }
@@ -135,28 +148,108 @@ bool defend(bool walked) {
     return target && fight(*target, walked, true);
 }
 
+struct BankThreats {
+    struct Threat { vec2 position; int range; float pressure; };
+    std::array<Threat, 32> units{};
+    unsigned count = 0;
+    cambc::bitboard danger;
+    float pressure_at(vec2 p) const {
+        float result = 0;
+        for (unsigned i = 0; i < count; ++i)
+            if (distance(p, units[i].position) <= units[i].range) result += units[i].pressure;
+        return result;
+    }
+};
+
+BankThreats bank_threats() {
+    BankThreats result;
+    const auto add = [&](vec2 p, int range, float pressure) {
+        result.danger |= around(p, range);
+        if (result.count < result.units.size()) result.units[result.count++] = {p, range, pressure};
+    };
+    // Observed basic threat plus one enemy step. Focus is a conservative spell
+    // pressure allowance, not a claim about a hidden cooldown or exact damage.
+    for (const auto& e : cambc::vision::champions(team::enemy))
+        if (e.is_visible() && e.health() > 0)
+            add(e.position(), e.attack_range() + 1, e.strength() + 0.25f * e.focus());
+    // Wake state is unavailable in the pinned SDK; visible damaging camps are
+    // conservatively treated as active. Resource clusters contribute no danger.
+    for (const auto& c : cambc::vision::camps()) {
+        if (cambc::fuel_remaining() < PLAN_FUEL) break;
+        if (c.is_visible() && c.health() > 0 && c.strength() > 0)
+            add(c.position(), c.attack_range(), c.strength());
+    }
+    return result;
+}
+
 bool bank(bool allow_move) {
     auto& me = cambc::self();
     if (!me.gem_count()) return false;
-    auto try_submit = [&]() {
+    const auto altars = cambc::map::altars();
+    // Avoid a threat scan in the early-priority check when no altar is adjacent.
+    if (!allow_move && (altars & around(me.position(), cambc::constants::submit_gems_range)).is_empty())
+        return false;
+    const auto threats = bank_threats();
+    const auto try_submit = [&](bool walked) {
         // Enemy locks, rather than friendly locks, are the obstruction.
         const auto hostile = cambc::vision::altar_lock_tiles(team::enemy);
-        for (auto altar : cambc::map::altars().positions()) {
+        // Prefer an unlocked adjacent altar before spending attacks on a lock.
+        for (bool locked : {false, true}) for (auto altar : altars.positions()) {
             if (distance(me.position(), altar) > cambc::constants::submit_gems_range) continue;
-            if (hostile.is_set(altar) && (!me.can_attack()
+            if (hostile.is_set(altar) != locked) continue;
+            if (locked && (!me.can_attack()
                 || me.restrictions().contains(cambc::buff_restrictions::attack))) continue;
+            // Shield before committing to an exposed channel, when another
+            // allowance remains to start it. Never overwrite a useful shield.
+            if (!locked && me.can_cast() && (me.can_move() || me.can_attack())
+                && !me.restrictions().contains(cambc::buff_restrictions::cast)
+                && !me.buffs().has_shield() && bank_threats().pressure_at(me.position()) > 0) {
+                for (const auto& a : me.abilities()) {
+                    if (!a.is_shield() || !a.can_target_self() || !a.is_ready()) continue;
+                    if (walked && std::visit([](const auto& info) { return info.exclusive_with_movement; }, *a.info())) continue;
+                    if (a.use()) break;
+                }
+            }
             me.submit_gems(altar); // May hit a hostile lock; never a boolean.
             return true;
         }
         return false;
     };
-    if (try_submit()) return true;
-    if (!allow_move) return false;
+    // Safe adjacent tribute keeps its priority over recovery and combat. An
+    // exposed carrier instead gets the normal recovery check, then a bank plan.
+    if (!allow_move) return threats.pressure_at(me.position()) == 0 && try_submit(false);
+    if (cambc::fuel_remaining() < PLAN_FUEL) { try_submit(false); return true; }
+    const auto blocked = blocked_tiles();
+    cambc::distance_field travel;
+    cambc::bitboard visited;
+    travel.compute(blocked, around(me.position(), 0), visited);
+    const auto hostile = cambc::vision::altar_lock_tiles(team::enemy);
+    const float ticks = std::max(float(cambc::constants::submit_gem_minimum_duration),
+        float(std::ceil(me.gem_count() * cambc::constants::submit_gem_duration_multiplier)
+              + cambc::constants::submit_gem_base_duration));
+    const float health = std::max(1.0f, me.health());
     cambc::bitboard goals;
-    // A locked altar remains reachable: three attacks can clear it.
-    for (auto altar : cambc::map::altars().positions())
-        goals |= around(altar, cambc::constants::submit_gems_range);
-    if (move_to(goals)) try_submit(); // Refresh vision and position after walking.
+    float best = std::numeric_limits<float>::max();
+    unsigned inspected = 0;
+    for (auto altar : altars.positions()) {
+        const float lock_turns = hostile.is_set(altar) ? 3.0f : 0.0f;
+        for (auto p : (around(altar, cambc::constants::submit_gems_range) & ~blocked).positions()) {
+            if (++inspected > BANK_GOAL_LIMIT || cambc::fuel_remaining() < PLAN_FUEL) break;
+            const auto d = travel.get(p);
+            if (d == cambc::distance_field::unreachable) continue;
+            const float loss = threats.pressure_at(p) * (ticks + lock_turns + 1) / health;
+            const float score = d + lock_turns + BANK_RISK_COST * loss
+                + (loss >= BANK_FATAL_FRACTION ? BANK_FATAL_COST : 0.0f);
+            if (score < best) { best = score; goals = around(p, 0); }
+        }
+        if (inspected > BANK_GOAL_LIMIT || cambc::fuel_remaining() < PLAN_FUEL) break;
+    }
+    if (goals.is_empty() || goals.is_set(me.position())) { try_submit(false); return true; }
+    const auto before = me.position();
+    move_to(goals, threats.danger);
+    // Fresh lock, visibility and position queries after even a failed hidden bump.
+    // Submit on arrival at our chosen approach, not while passing a riskier altar.
+    if (goals.is_set(me.position())) try_submit(me.position() != before);
     return true;
 }
 } // namespace
