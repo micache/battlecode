@@ -1,0 +1,340 @@
+{
+  "task_id": "task-b61dfbca8f5349ac832abc6a600f85ab",
+  "bot_id": "alpha",
+  "edit_commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+  "base_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+  "input_revision": "b05df0c086ce758e54c5b153509355f4864f7783",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "entry_audit": "All six source files matched trusted edit commit; initial HEAD diff/deletion is preparation, not unfinished work.",
+  "latest_task_state": "PUBLISHED",
+  "latest_evaluation": "086044d9b74acef4f173cfbd02aac8733cc1774a39533598b3f52fade9308124",
+  "latest_evaluated_source": "b87639faa949861e2afb04cf863943dae3ea1ad95c3b58999fe1bd456c31e4fd",
+  "latest_candidate_not_edit_base": true,
+  "documentation_hash_matches": {
+    "AGENTS.md": true,
+    "BOT_REFERENCE.md": true,
+    "PLAYBOOKS.md": true,
+    "RESEARCH.md": true,
+    "docs/rules/organizer-agents.md": true,
+    "docs/rules/verified.md": true,
+    "skills/battlecode-strategy/SKILL.md": true,
+    "sources/BotAPICpp.md": true,
+    "sources/BotAPIPython.live-20261017.md": true,
+    "sources/BotAPIPython.md": true,
+    "sources/GameRules.md": true
+  },
+  "matching_sdk_hash": "90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d",
+  "frozen_manifest_hash": "433d8f5d4fff6ecbc8d9c61b10b876cc2357f96a69679fbfec3509c6ffe811e7",
+  "frozen_source_audit": "All four source sets hash-verified. Read beta bot/draft; starter/gamma differ only in retreat; frozen alpha equals edit source. All leave dash unused; basic/spell/retreat policies differ.",
+  "hypothesis": "Using ready, walk-compatible dashes to cut at least two steps from existing objective routes will reduce paired-win completion rounds without reducing matched win rate versus the edit base; unchanged/increased rounds or a win-rate regression falsifies this hypothesis.",
+  "basis": "Unmeasured rules/source deduction: walking moves one tile; dash adds two, is walking-compatible, and currently unused. No trace proves travel caused a supplied loss.",
+  "feedback_summary": {
+    "candidate_wins": 40,
+    "candidate_losses": 8,
+    "development_base_delta": -0.041666666666666664,
+    "development_comparison": {
+      "commit_sha": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "common_opponent_delta": -0.041666666666666664,
+      "fault_matches": [],
+      "missing": [],
+      "paired_cases": 24,
+      "per_map": {
+        "collision": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 0.75,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 0.75,
+          "incumbent": 0.875,
+          "pairs": 4
+        }
+      },
+      "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "unknown_reliability": []
+    },
+    "representative_failures": [
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 12,
+              "B": 2
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 1,
+              "B": 10
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 330,
+              "B": 1026
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 1750,
+              "B": 5135
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 657
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 198,
+              "B": 1004
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 10,
+              "B": 515
+            }
+          }
+        },
+        "map": "collision",
+        "match_id": "c83f8af10aeca117908d230411b826453ebf0bc807354f469031e6b48b84fd2e",
+        "round": 657,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 22,
+              "B": 22
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 5,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 5
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 288,
+              "B": 1026
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 1020,
+              "B": 1270
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 380
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 200,
+              "B": 1004
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 120,
+              "B": 610
+            }
+          }
+        },
+        "map": "corners",
+        "match_id": "752aae9fac7a4d3dc660f68a5605f9df64b4d6fc25d45c9bb871421d27c28f11",
+        "round": 380,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 36,
+              "B": 22
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 5
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 5,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1066,
+              "B": 766
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 1680,
+              "B": 1430
+            }
+          },
+          "round": {
+            "available": true,
+            "value": 470
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1030,
+              "B": 636
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 360,
+              "B": 290
+            }
+          }
+        },
+        "map": "corners",
+        "match_id": "d2956049baffab92de6d64fa79ff2d62374f68bff41653a1835a074ca45c50ed",
+        "round": 470,
+        "side": "B",
+        "trace": null
+      }
+    ],
+    "base_selfplay_unique_inputs": 24,
+    "base_selfplay_wins": 24,
+    "base_selfplay_mean_round": 538.0833333333334
+  },
+  "policy": "Normal walk first, then refresh observed blockers; eight straight two-step rays; require both path tiles free/in-range and field decrease >=2; one dash attempt. Respect cast restrictions/cooldown/movement compatibility and 30000-fuel guard; do not alter combat scoring, draft/build, capture or banking priorities.",
+  "risk": "Dash competes with same-turn reset and can approach threats sooner; distance field predates walking and is only a route hint. Conservative paths omit hole/bent-path shortcuts. Geometry assertions do not validate engine cast branch coverage or measured fuel.",
+  "alternatives_rejected": [
+    "Repeat AoE/finish scoring: measured regression versus edit base",
+    "Global capture priority, fixed draft/stat package and banking batching have prior negative evidence",
+    "Spawn-heal-only policy repeatedly tried; choose unused mobility instead"
+  ],
+  "host_regression_attempt": {
+    "command": "c++ -std=c++20 -O2 -Wall -Wextra -Werror -I bots/alpha/src experiments/alpha/check_travel_dash.cpp -o /tmp/alpha-b61dfbca-travel-check && /tmp/alpha-b61dfbca-travel-check > experiments/alpha/task-b61dfbca8f5349ac832abc6a600f85ab-regression.txt",
+    "exit_code": 127,
+    "result": "Host compiler unavailable; exhaustive fixture did not run. Eight focused compile-time assertions added to trusted bot build instead."
+  },
+  "trusted_check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792301171.9101222,
+    "matches": [
+      "ab9d3e31392b097fcfc88ac670d6af40ec3cdfb6535ed7c1a70d277ed714be89",
+      "b70a3bc67736ba9460869c03885b5608b172518be04b3d1e8c05a8443b879e09"
+    ],
+    "report_path": ".agent/check-task-b61dfbca8f5349ac832abc6a600f85ab.json",
+    "report_reference": "check:task-b61dfbca8f5349ac832abc6a600f85ab:8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e",
+    "source_hash": "8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e",
+    "started": 1792301139.588803,
+    "state": "PASSED",
+    "task_id": "task-b61dfbca8f5349ac832abc6a600f85ab"
+  },
+  "compile_time_regressions": "Eight static assertions in travel_dash_checks.h, compiled by the trusted check; no runtime cost.",
+  "final_audit": {
+    "unchanged_files": [
+      "bot.h",
+      "main.cpp",
+      "draft.cpp",
+      "draft.h",
+      "random.h"
+    ],
+    "non_navigation_policy": "byte-identical except relocating combat constants",
+    "diff_check_exit_code": 0,
+    "bot_source_file_sha256": {
+      "bots/alpha/src/bot.cpp": "74f889765168c5401e5f806b45f0d85fcf0b7aa0bf3635c7d66c054e9fcfa0b2",
+      "bots/alpha/src/bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+      "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+      "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+      "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+      "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+      "bots/alpha/src/travel_dash.h": "25b7d521456e110553e927f5fe7b0ecfd6c641ae0063a63d74b1477c0d8f82c1",
+      "bots/alpha/src/travel_dash_checks.h": "9824d1259e84afd6026ab2e53a764883d2dcd72ad002847aeb2942d12494422b"
+    },
+    "check_report_command": "arena-client --config /var/lib/battlecode-volume/config/alpha.json check-report --task-id task-b61dfbca8f5349ac832abc6a600f85ab --source-hash 8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e",
+    "check_report_exit_code": 0
+  }
+}

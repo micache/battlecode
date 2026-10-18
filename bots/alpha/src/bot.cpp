@@ -1,7 +1,8 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
-#include "combat_scoring.h"
+#include "travel_dash.h"
+#include "travel_dash_checks.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -11,10 +12,28 @@
 #include <optional>
 #include <type_traits>
 #include <variant>
-#include <vector>
 
 using cambc::vec2;
 using cambc::team;
+
+// Bound extra combat work; this is a planning reserve, not measured fuel headroom.
+constexpr std::uint64_t combat_fuel_reserve = 18000;
+constexpr unsigned combat_target_limit = 16;
+constexpr std::uint64_t travel_dash_fuel_reserve = 30000;
+
+std::optional<cambc::ability> ready_travel_dash() {
+    auto& me = cambc::self();
+    if (cambc::fuel_remaining() < travel_dash_fuel_reserve || !me.can_cast()
+        || me.restrictions().contains(cambc::buff_restrictions::cast))
+        return std::nullopt;
+    for (const auto& ability : me.abilities()) {
+        if (!ability.is_dash() || !ability.is_ready()) continue;
+        const auto& info = ability.get<cambc::ability_dash>();
+        if (!info.exclusive_with_movement && info.range >= travel::dash_steps)
+            return ability;
+    }
+    return std::nullopt;
+}
 
 int distance(vec2 a, vec2 b) {
     return static_cast<int>(a.chebyshev_distance(b));
@@ -46,7 +65,8 @@ bool move_towards_closest(cambc::bitboard goals) {
     goals &= ~blocked | cambc::vision::camp_tiles();
     if (goals.is_empty())
         return false;
-    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0]))
+    const auto dash = ready_travel_dash();
+    if (!dash && goals.count() == 1 && !blocked.is_set(goals.positions()[0]))
         return me.move_towards(goals.positions()[0]);
 
     // Expand from the goals until our current tile is reached.
@@ -60,7 +80,27 @@ bool move_towards_closest(cambc::bitboard goals) {
     for (auto tile : blocked.reachable_tiles(step, me.base_stats().base_move_speed).positions())
         if (field.get(tile) < field.get(step)) step = tile;
 
-    return step != me.position() && me.move_absolute(step);
+    const bool moved = step != me.position() && me.move_absolute(step);
+    if (!dash || cambc::fuel_remaining() < travel_dash_fuel_reserve)
+        return moved;
+
+    // Walking can expose blockers. Rebuild occupancy before choosing a dash;
+    // old field distances are route hints, never proof that a landing is legal.
+    if (!me.is_alive() || !me.can_cast() || !dash->is_ready()
+        || me.restrictions().contains(cambc::buff_restrictions::cast))
+        return moved;
+    const auto fresh_blocked = blocked_tiles();
+    const auto range = dash->valid_tiles();
+    const auto destination = travel::dash_destination(me.position(), field.width(), field.height(),
+        [&](vec2 tile) { return range.is_set(tile) && !fresh_blocked.is_set(tile); },
+        [&](vec2 tile) { return field.get(tile); });
+    if (destination) {
+        // One attempt only. A newly revealed hidden obstruction preserves the
+        // cast; return to the caller, which refreshes vision before combat.
+        const bool dashed = dash->use(*destination);
+        return dashed || moved;
+    }
+    return moved;
 }
 
 void Bot::buy_items() {
@@ -71,13 +111,6 @@ void Bot::buy_items() {
     const unsigned count = me.gold_count() / item.cost();
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
-
-// Bound extra combat work; this is a planning reserve, not measured fuel headroom.
-constexpr std::uint64_t combat_fuel_reserve = 18000;
-constexpr unsigned combat_target_limit = 16;
-constexpr float camp_finish_bonus = 20;
-constexpr float champion_finish_bonus = 100;
-constexpr float champion_control_bonus = 20;
 
 // Handles are refreshed through vision on every action, never cached across turns.
 template<class Target>
@@ -129,24 +162,8 @@ bool fight(bool walked = false) {
         || cambc::fuel_remaining() < combat_fuel_reserve)
         return acted;
 
-    // Snapshot only current visible live targets, after the ordinary basic.
-    // No actions happen while scoring; refresh again before committing the cast.
-    struct observation { Target handle; vec2 position; float health; };
-    std::vector<observation> targets;
-    targets.reserve(combat_target_limit);
-    unsigned examined = 0;
-    for (const auto& target : combat_targets<Target>()) {
-        if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
-            break;
-        if (!target.is_visible()) continue;
-        const float health = target.health();
-        if (health > 0) targets.push_back({target, target.position(), health});
-    }
-    constexpr float finish_bonus = std::is_same_v<Target, cambc::camp>
-        ? camp_finish_bonus : champion_finish_bonus;
-
-    // At most two slots, sixteen visible aim points, and 16x16 cheap distance
-    // comparisons per slot. Count all observed splash victims, without tile search.
+    // At most two slots and sixteen visible aim points per slot; no tile search.
+    // Compare useful direct damage against the additional basic from a reset.
     std::optional<cambc::ability> selected;
     std::optional<Target> selected_target;
     float best_score = 0;
@@ -159,20 +176,17 @@ bool fight(bool walked = false) {
             if (me.can_attack() || me.restrictions().contains(cambc::buff_restrictions::attack))
                 continue;
             const auto range = me.attack_tiles();
-            const float strength = me.strength();
-            for (const auto& target : targets) {
-                if (cambc::fuel_remaining() < combat_fuel_reserve)
+            unsigned examined = 0;
+            for (const auto& target : combat_targets<Target>()) {
+                if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                     break;
-                if (!range.is_set(target.position))
+                if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
                     continue;
-                // Basic damage remains an estimate: no target-specific basic
-                // predictor is exposed. The cast's follow-up uses fresh vision.
-                const float score = combat_scoring::hit(
-                    {target.position.x, target.position.y, target.health, strength}, finish_bonus);
+                const float score = std::min(me.strength(), target.health());
                 if (score > best_score) {
                     best_score = score;
                     selected = ability;
-                    selected_target = target.handle;
+                    selected_target = target;
                 }
                 break; // Match the first-target basic policy used after the reset.
             }
@@ -185,37 +199,24 @@ bool fight(bool walked = false) {
             continue;
         const auto range = ability.valid_tiles();
         const float damage = ability.damage_amount();
-        std::array<combat_scoring::target, combat_target_limit> predicted{};
-        unsigned count = 0;
-        for (const auto& target : targets) {
-            if (cambc::fuel_remaining() < combat_fuel_reserve)
+        unsigned examined = 0;
+        for (const auto& target : combat_targets<Target>()) {
+            if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                 break;
-            float loss = damage;
-            if constexpr (!std::is_same_v<Target, cambc::camp>) {
-                if (damage > 0) loss = ability.damage_amount(target.handle);
-            }
-            predicted[count++] = {target.position.x, target.position.y, target.health, loss};
-        }
-        const auto victims = std::span<const combat_scoring::target>{predicted.data(), count};
-        float control_bonus = 0;
-        if constexpr (!std::is_same_v<Target, cambc::camp>) {
-            if (ability.is_cc() || (ground && ability.get<cambc::ability_aoe_damage>().duration > 0))
-                control_bonus = champion_control_bonus;
-        }
-        for (unsigned i = 0; i < count; ++i) {
-            if (cambc::fuel_remaining() < combat_fuel_reserve) break;
-            const auto& target = targets[i];
-            if (!range.is_set(target.position))
+            if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
                 continue;
-            // Victims need not themselves be in cast range, only in the blast.
-            const float score = ground
-                ? combat_scoring::area(victims, target.position.x, target.position.y,
-                    ability.get<cambc::ability_aoe_damage>().radius, finish_bonus, control_bonus)
-                : combat_scoring::hit(predicted[i], finish_bonus, control_bonus);
+            // Ground spells aim at a visible enemy/camp, not unexplored terrain.
+            // Only the primary damage is scored: splash is a conservative bonus.
+            float score = std::min(damage, target.health());
+            if constexpr (!std::is_same_v<Target, cambc::camp>) {
+                const bool control = ability.is_cc() ||
+                    (ground && ability.get<cambc::ability_aoe_damage>().duration > 0);
+                if (control) score += 20; // prefer actual crowd control in PvP
+            }
             if (score > best_score) {
                 best_score = score;
                 selected = ability;
-                selected_target = target.handle;
+                selected_target = target;
             }
         }
     }

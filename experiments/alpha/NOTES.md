@@ -1,87 +1,95 @@
-# Current experiment: task-d71c11f9549c4960bf74ec303723f6a8
+# Current experiment: task-b61dfbca8f5349ac832abc6a600f85ab
 
 ## Identity and status
-- Bot alpha, branch bot/alpha; clean entry and edit commit/input
-  6af1685b849ad23ee9eaadb1a8de18742318d87b; base source
+- Bot alpha, branch bot/alpha; input b05df0c086ce758e54c5b153509355f4864f7783.
+- Edit commit 6af1685b849ad23ee9eaadb1a8de18742318d87b; base source
   87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01.
+  All six entry files matched that commit. Initial HEAD diff/deleted scoring
+  header was trusted preparation. No unfinished patch; latest task PUBLISHED
+  with completed INCONCLUSIVE evaluation. Pending self-play is separate.
 - Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e remains in Git.
-  No unfinished patch at entry. Latest candidate evaluated INCONCLUSIVE, not pending;
-  pending continuous self-play is separate. No agents, commits or publication.
+  No agents, commits, publication, submission or tournament evaluation here.
 - Engine/SDK 2.1.6, historical-panels-v1; lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-- Unchanged documentation hashes verified; full-review basis task-4a36c64286504efea17aa49a4a94b17f.
-  Read compact reference, research/organizer limits, relevant economy/combat/
-  execution playbooks, handbook AoE/capture/kit sections, ability API and installed
-  C++ declarations. Installed header hash matches brief. Organizer page is a
-  download hub; event-policy/production-parity limits remain explicit.
-- Previous operational notes archived as task-4a36c64286504efea17aa49a4a94b17f.md.
+- Unchanged documentation hashes verified; review basis task-d71c11f9549c4960bf74ec303723f6a8.
+  Read compact reference, research/organizer limits, relevant C/D/F playbooks,
+  handbook movement/dash kits/capture/recovery, API and installed SDK contracts.
+  Header hash matches brief. Organizer page is a download hub; event-policy and
+  production-parity limits remain. Previous notes archived by task ID.
 
 ## One hypothesis
-Area- and finish-aware ability scoring will reduce mean completion round on matched development cases won by both versions without lowering matched win rate; unchanged/increased rounds or a win-rate regression falsifies the hypothesis.
-This is an unmeasured rules/source deduction. Win rate remains the safety gate;
-rounds are a throughput diagnostic in the currently saturated development panel.
+Using ready, walk-compatible dashes to cut at least two steps from existing
+objective routes will reduce paired-win completion rounds without reducing
+matched win rate versus the edit base. Unchanged/increased rounds or a win-rate
+regression falsifies the hypothesis. This is an unmeasured rules/source deduction;
+travel costs and dash branch coverage are not available from supplied aggregates.
 
-## Evidence and choice
-- Evaluation 3886f315a6fa4f70cd6f34957d02d043f053cdc101399dad9c36674b6e892f84
-  measures this exact edit source. Supplied development summary: 48W/0L, zero
-  faults/missing/unknown; mean round 557.229, submitted 1012.792, deaths 1.125.
-  Distinct continuous self-play inputs: 24W/0L, mean round 538.083. Repeated games
-  are not independent. No current-source loss example or turn trace is supplied;
-  no causal claim about particular wasted casts or holdout details.
-- Frozen manifest d6cf7c9195fdb55a481b00dc2c1220066fc4127f81ab0368a94a3b5dafaa1f89
-  and all four source sets verified. Beta 6450f600 uses basic plus one unit spell;
-  gamma e9704a21 and starter 144ab5a9 use basics only; frozen alpha 6af1685b is
-  the edit source. All retain positional random draft/stats, nearest-camp farming
-  and immediate banking. They are arena source observations, not runtime traces.
-- Incumbent scores only primary AoE damage, ignoring additional visible victims;
-  generic raw spell damage also ignores champion shields/mitigation. Its max-useful-
-  damage score can prefer a nonlethal hit over a valuable finishing cast.
-- Prior global capture priority has negative evidence (task-fc527... / evaluation
-  59f8b837...); fixed draft/Strength and 40-gem batching also remain rejected.
-  Vendetta's kill passive refreshes cooldowns, not the one-cast allowance; no
-  unsupported same-turn cast chain added. Repeated spawn-heal-only ideas deferred.
+## Evidence and decision
+- Evaluation 086044d9b74acef4f173cfbd02aac8733cc1774a39533598b3f52fade9308124
+  measures b05df0c / b87639faa949861e2afb04cf863943dae3ea1ad95c3b58999fe1bd456c31e4fd,
+  not the edit source: 40W/8L, no faults/missing/unknown. Matched development-base
+  delta -0.041667 across 24 side-paired cells; corners/lanes regressed. Do not
+  repeat its area/finish scoring. Supplied base self-play is 24 unique wins,
+  mean round 538.083; deterministic repeats are not independent samples.
+- Latest-source collision A loss c83f8af10aeca117908d230411b826453ebf0bc807354f469031e6b48b84fd2e:
+  round 657, submitted 198 vs 1004, deaths 12 vs 2. Corners A loss
+  752aae9fac7a4d3dc660f68a5605f9df64b4d6fc25d45c9bb871421d27c28f11:
+  round 380, submitted 200 vs 1004, deaths 5 vs 0. Opponent is frozen alpha
+  6af1685b / 87b9be45. No trace supports attributing these losses to travel.
+  Contrasting supplied aggregate: collision B 4W/0L for that latest source.
+- Frozen manifest 433d8f5d4fff6ecbc8d9c61b10b876cc2357f96a69679fbfec3509c6ffe811e7:
+  all four source sets hash-verified. Beta 6450f600 basic+unit spell; gamma
+  e9704a21 and starter 144ab5a9 basics; alpha 6af1685b equals edit source.
+  Random draft/build, nearest-camp routes and immediate banking are shared.
+  None uses dash. These source observations do not establish runtime events.
+- Handbook: walk one tile, dash two with compatible walking and eight-turn-end
+  cooldown. Four draft possibilities have dashes, but base never casts them.
+  Travel is repeated for farming, banking and retreat, making unused mobility
+  a distinct throughput opportunity without replacing the strong combat policy.
+- Prior global capture priority, fixed composition/Strength package, 40-gem
+  batching and repeated spawn-heal-only experiments remain negative/deferred.
 
 ## Candidate policy
-- Changed only combat ability scoring in bot.cpp; added combat_scoring.h.
-  Basic target ordering, draft, item choices, capture/travel, banking/retreat,
-  channels, defensive fallback, shared memory and official yield remain unchanged.
-- Snapshot at most 16 visible living same-category targets AFTER the first basic.
-  Score direct and AoE damage capped at current health. For champions use the
-  SDK's target-specific predicted health loss; for camps use raw damage capped
-  at health. No hidden live reads or persistent target observations.
-- AoE aims only at those visible unit positions, counts victims within the kit's
-  Chebyshev radius including victims outside cast range, and counts primary once.
-  Score all candidates from a frozen observation set; no actions during scoring.
-- Deterministic finish bonus: camp 20, champion 100 damage-score units. PvP control
-  remains worth 20 per affected target. Reset comparison uses the same finish
-  bonus on its estimated extra basic; actual follow-up retains first-target policy.
-- At most two slots, 16 targets and 16x16 pure distance comparisons per slot;
-  preserve 18,000-fuel reserve and requery target/readiness before action.
-  No fuel override. Eight compile-time scoring regressions are included in the
-  actual bot translation unit (central/edge/isolated splash, overkill, finish,
-  shielded zero damage, control-only value and dead-target exclusion).
+- Added travel_dash.h selector and compile-time geometry checks; changed only
+  navigation in bot.cpp relative to edit source. Draft/build, independent combat
+  allowances/scoring, capture/banking priorities, memory and yield remain intact.
+- Normal walking first. If a dash was ready and walk-compatible, recheck cast
+  availability/restrictions/cooldown and rebuild observed blockers after movement.
+  Only use existing dashes with SDK range >=2; no hard-coded champion identity.
+- Reuse the route distance field as a hint; search eight straight two-step rays.
+  Both intermediate/landing tiles must be in range and free of known walls,
+  holes, altars, enemy spawn, units and teleport reservations. Require >=2 field
+  distance improvement; never leave an already-reached route goal to dash.
+- One cast attempt. A hidden obstruction returning false gets no blind retry;
+  caller refreshes vision before any post-movement camp combat. No cached enemy
+  state or new shared memory. No hole crossings or bent dash paths in this test.
+- 30,000-fuel guard before dash planning/attempt; original 18,000 combat guard
+  retained. At most eight endpoint evaluations, no additional route-field solve
+  except replacing the singleton shortcut when a usable dash exists. Guards are
+  policy reserves, not measured headroom. No fuel setting changes.
 
-## Validation and remaining uncertainty
-- Entry/documentation/SDK/opponent hashes and five unchanged source files verified;
-  decision and evidence limits saved in this task's -decision.json.
-- git diff --check PASSED, exit 0 (before trusted check).
+## Validation and uncertainty
+- git diff --check PASSED, exit 0.
+- Host exhaustive geometry fixture compile attempt FAILED, exit 127: no c++
+  compiler (clang++/g++/clang/gcc also unavailable). Fixture did not execute.
+  See decision JSON for exact attempted command. Do not claim exhaustive coverage.
+- Eight focused geometry assertions are compiled into the trusted bot build:
+  open two-step travel, fresh midpoint/landing blockers, boundary/goal occupancy,
+  one-step remainder, insufficient gain, unreachable origin and reverse travel.
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json PASSED,
-  exit 0. Exact checked source:
-  b87639faa949861e2afb04cf863943dae3ea1ad95c3b58999fe1bd456c31e4fd.
-  Report .agent/check-task-d71c11f9549c4960bf74ec303723f6a8.json;
-  reference check:task-d71c11f9549c4960bf74ec303723f6a8:b87639faa949861e2afb04cf863943dae3ea1ad95c3b58999fe1bd456c31e4fd.
-  Approved check-report agrees. Reports expose summary only, no detailed compiler/
-  runtime diagnostics. Eight included compile-time assertions passed in this build.
-  Smoke IDs bdd2187b40888491e9653c9985212ba99cef37f4bcf1e331d0aab9cd9dc73a27
-  and 8ca40a0d2f73e1f9c89ff778a4ec84cc6b0f9e46d70e73becd469c566f9f7b6a.
-  IDs/exit alone are not a full-game completion or improvement claim.
-- Final git diff --check PASSED, exit 0; no bot-source changes after trusted check.
-- No tournament evaluation run here. Improvement, ability branch coverage and fuel
-  headroom are unknown. The reserve is a guard, not measured headroom.
-- Risks: scoring cost may defer casts; extra AoE can awaken other camp groups;
-  raw camp/basic damage ignores mitigation/item-specific effects, and reset
-  prediction remains approximate. AoE scores only the current combat category,
-  not allies or other categories; off-unit optimal centers are not searched.
-- Next: supervisor compares exact checked candidate with edit base and protected
-  champion across maps and both sides. Reject lower win rate; inspect paired win
-  completion rounds and objective throughput before accepting a speed claim.
+  exit 0, source 8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e.
+  Report .agent/check-task-b61dfbca8f5349ac832abc6a600f85ab.json;
+  check:task-b61dfbca8f5349ac832abc6a600f85ab:8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e.
+  Approved check-report agrees; summary exposes no detailed runtime diagnostics.
+  Smoke IDs ab9d3e31392b097fcfc88ac670d6af40ec3cdfb6535ed7c1a70d277ed714be89
+  and b70a3bc67736ba9460869c03885b5608b172518be04b3d1e8c05a8443b879e09.
+  IDs alone do not establish full-game completion, dash coverage or improvement.
+- Source audit/decision/evidence: this task's -decision.json. No bot-source edits
+  after trusted check. Eight static assertions passed, exhaustive fixture unrun.
+- Risks: a travel dash consumes the reset allowance's competing cast, can approach
+  threats faster, and follows a field from before newly exposed blockers. Fresh
+  local geometry enforces legality but not globally optimal or safe routing.
+- Next: supervisor evaluates exact checked source against edit base and protected
+  champion across maps/both sides. Reject win-rate regression; compare paired-win
+  rounds, deaths and submitted gems. If mobility regresses, inspect dash destinations
+  and reset opportunity cost before adding hole jumps or combat chase behavior.
