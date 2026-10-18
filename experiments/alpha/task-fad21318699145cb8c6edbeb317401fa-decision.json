@@ -1,0 +1,64 @@
+{
+  "task_id": "task-fad21318699145cb8c6edbeb317401fa",
+  "bot_id": "alpha",
+  "edit_commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+  "base_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+  "identity": "All six source files verified byte-identical to edit commit; prepared HEAD differences are intentional. Latest candidate has completed INCONCLUSIVE evaluation; pending self-play is separate.",
+  "hypothesis": "Focusing champion basic attacks and reset follow-ups on the lowest-health legal visible enemy, breaking equal-health ties by carried gems, will increase matched development win rate over the edit base. Unchanged or lower win rate falsifies the hypothesis.",
+  "basis": "Unmeasured source/rules deduction: base and frozen opponents choose the first in-range basic target. Damaging a wounded target can remove an opposing body sooner and independently observing allies can converge without shared memory. Final scores do not demonstrate this caused a loss.",
+  "policy": "Change only champion basic target ranking and align reset target prediction with the same fresh selector. Preserve camp first-target behavior and all ability scoring, draft, purchases, channels, navigation, retreat and banking.",
+  "expected_observable": "Higher side-paired win rate; kills, deaths and submitted gems diagnose whether concentrated basics improve the objective race.",
+  "risk": "Raw health is not shield/mitigation-aware; a wounded shielded target can be a poor choice. Extra scans cost fuel. Allies have different visibility; no coordinated targeting guarantee.",
+  "alternatives": "Do not repeat rejected camp/area/finish spell scoring or travel dashes (latest delta zero). Tavi remote shopping is a separate untested economy opportunity; no coupled purchase changes here.",
+  "frozen_manifest": "/srv/battlecode/public/strategy/task-fad21318699145cb8c6edbeb317401fa/manifest.json",
+  "frozen_audit": "All four source sets hash-verified. Alpha equals edit base; beta basic plus unit spell; gamma/starter basics only. Random draft/build, nearest camps and immediate banking are shared.",
+  "documentation": "Routine unchanged-doc iteration; compact reference, research and organizer limits, combat/economy playbooks and relevant handbook/API/SDK contracts consulted. SDK SHA256 matches brief; download hub does not certify all event policy or production parity.",
+  "regression_audit": {
+    "bots/alpha/src/bot.h": true,
+    "bots/alpha/src/draft.cpp": true,
+    "bots/alpha/src/draft.h": true,
+    "bots/alpha/src/main.cpp": true,
+    "bots/alpha/src/random.h": true
+  },
+  "source_edit_sha256": "3eb49256162ac5b3643707ea5047a2e4563ecd2c14fb56c77bde2ce16b5e97d3",
+  "negative_findings": "Prior spell area/finish scoring had development-base delta -0.041667 and changed camp splash selection; this candidate preserves spell/camp policy and changes only champion basics. Latest dash experiment delta 0.0; not reintroduced.",
+  "evaluation_basis": {
+    "id": "b4c8b53911a3b94679ff7e1a1ff36e0fcf03e541da6d790ef8439b2b1ceeb9f2",
+    "commit": "8a8819e101d7d70ff99cf010662456b4184e846c",
+    "source_hash": "8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e",
+    "development_wins": 42,
+    "development_losses": 6,
+    "development_base_delta": 0.0,
+    "mechanism_attribution": "unknown; final aggregates are not a target-selection trace"
+  },
+  "trusted_check": {
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792304693.614834,
+    "matches": [
+      "85a92fa459a40301b1fc2d53270c0888a02e3241741bae798607d03068c0e798",
+      "ef5bfcbc95392f19890151a922f9bdfc25a342b707c13c5273741dc3fef23b41"
+    ],
+    "report_path": ".agent/check-task-fad21318699145cb8c6edbeb317401fa.json",
+    "report_reference": "check:task-fad21318699145cb8c6edbeb317401fa:e028774f1102eeffb4372ca9eee3f54044819b2f48718548dfac7ea262840347",
+    "source_hash": "e028774f1102eeffb4372ca9eee3f54044819b2f48718548dfac7ea262840347",
+    "started": 1792304662.2465696,
+    "state": "PASSED",
+    "task_id": "task-fad21318699145cb8c6edbeb317401fa",
+    "limits": "Summary report exposes no detailed runtime diagnostics, tactical coverage, fuel headroom or comparative strength. Smoke IDs alone do not establish completed full games."
+  },
+  "tests": [
+    {
+      "command": "git diff --check",
+      "status": "PASSED",
+      "exit_code": 0
+    },
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": ".agent/check-task-fad21318699145cb8c6edbeb317401fa.json"
+    }
+  ]
+}

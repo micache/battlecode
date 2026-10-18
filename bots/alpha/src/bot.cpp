@@ -1,8 +1,6 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
-#include "travel_dash.h"
-#include "travel_dash_checks.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -15,25 +13,6 @@
 
 using cambc::vec2;
 using cambc::team;
-
-// Bound extra combat work; this is a planning reserve, not measured fuel headroom.
-constexpr std::uint64_t combat_fuel_reserve = 18000;
-constexpr unsigned combat_target_limit = 16;
-constexpr std::uint64_t travel_dash_fuel_reserve = 30000;
-
-std::optional<cambc::ability> ready_travel_dash() {
-    auto& me = cambc::self();
-    if (cambc::fuel_remaining() < travel_dash_fuel_reserve || !me.can_cast()
-        || me.restrictions().contains(cambc::buff_restrictions::cast))
-        return std::nullopt;
-    for (const auto& ability : me.abilities()) {
-        if (!ability.is_dash() || !ability.is_ready()) continue;
-        const auto& info = ability.get<cambc::ability_dash>();
-        if (!info.exclusive_with_movement && info.range >= travel::dash_steps)
-            return ability;
-    }
-    return std::nullopt;
-}
 
 int distance(vec2 a, vec2 b) {
     return static_cast<int>(a.chebyshev_distance(b));
@@ -65,8 +44,7 @@ bool move_towards_closest(cambc::bitboard goals) {
     goals &= ~blocked | cambc::vision::camp_tiles();
     if (goals.is_empty())
         return false;
-    const auto dash = ready_travel_dash();
-    if (!dash && goals.count() == 1 && !blocked.is_set(goals.positions()[0]))
+    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0]))
         return me.move_towards(goals.positions()[0]);
 
     // Expand from the goals until our current tile is reached.
@@ -80,27 +58,7 @@ bool move_towards_closest(cambc::bitboard goals) {
     for (auto tile : blocked.reachable_tiles(step, me.base_stats().base_move_speed).positions())
         if (field.get(tile) < field.get(step)) step = tile;
 
-    const bool moved = step != me.position() && me.move_absolute(step);
-    if (!dash || cambc::fuel_remaining() < travel_dash_fuel_reserve)
-        return moved;
-
-    // Walking can expose blockers. Rebuild occupancy before choosing a dash;
-    // old field distances are route hints, never proof that a landing is legal.
-    if (!me.is_alive() || !me.can_cast() || !dash->is_ready()
-        || me.restrictions().contains(cambc::buff_restrictions::cast))
-        return moved;
-    const auto fresh_blocked = blocked_tiles();
-    const auto range = dash->valid_tiles();
-    const auto destination = travel::dash_destination(me.position(), field.width(), field.height(),
-        [&](vec2 tile) { return range.is_set(tile) && !fresh_blocked.is_set(tile); },
-        [&](vec2 tile) { return field.get(tile); });
-    if (destination) {
-        // One attempt only. A newly revealed hidden obstruction preserves the
-        // cast; return to the caller, which refreshes vision before combat.
-        const bool dashed = dash->use(*destination);
-        return dashed || moved;
-    }
-    return moved;
+    return step != me.position() && me.move_absolute(step);
 }
 
 void Bot::buy_items() {
@@ -112,6 +70,10 @@ void Bot::buy_items() {
     if (count && me.can_buy(item, count)) me.buy(item, count);
 }
 
+// Bound extra combat work; this is a planning reserve, not measured fuel headroom.
+constexpr std::uint64_t combat_fuel_reserve = 18000;
+constexpr unsigned combat_target_limit = 16;
+
 // Handles are refreshed through vision on every action, never cached across turns.
 template<class Target>
 auto combat_targets() {
@@ -122,20 +84,38 @@ auto combat_targets() {
 }
 
 template<class Target>
-std::optional<Target> basic_target() {
+std::optional<Target> basic_target(bool require_attack_allowance = true) {
     auto& me = cambc::self();
-    if (!me.is_alive() || !me.can_attack()
+    if (!me.is_alive() || (require_attack_allowance && !me.can_attack())
         || me.restrictions().contains(cambc::buff_restrictions::attack))
         return std::nullopt;
     const auto range = me.attack_tiles();
+    std::optional<Target> best;
+    float lowest_health = 0;
+    std::uint32_t largest_bag = 0;
     unsigned examined = 0;
     for (const auto& target : combat_targets<Target>()) {
         if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
             break;
-        if (target.is_visible() && target.health() > 0 && range.is_set(target.position()))
+        if (!target.is_visible()) continue;
+        const float health = target.health();
+        if (health <= 0 || !range.is_set(target.position())) continue;
+        if constexpr (std::is_same_v<Target, cambc::camp>) {
+            // Keep camp ordering: do not awaken different groups for this policy.
             return target;
+        } else {
+            // Focus wounded enemies rather than engine enumeration order. Equal
+            // health favors a valuable carrier; exact ties keep stable order.
+            if (best && health > lowest_health) continue;
+            const auto bag = target.gem_count();
+            if (!best || health < lowest_health || bag > largest_bag) {
+                best = target;
+                lowest_health = health;
+                largest_bag = bag;
+            }
+        }
     }
-    return std::nullopt;
+    return best;
 }
 
 bool cast_ready(const cambc::ability& ability, bool walked) {
@@ -175,20 +155,15 @@ bool fight(bool walked = false) {
             // Resets have no range; only spend one when a new basic is possible.
             if (me.can_attack() || me.restrictions().contains(cambc::buff_restrictions::attack))
                 continue;
-            const auto range = me.attack_tiles();
-            unsigned examined = 0;
-            for (const auto& target : combat_targets<Target>()) {
-                if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
-                    break;
-                if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
-                    continue;
-                const float score = std::min(me.strength(), target.health());
+            // Predict the same target policy that the fresh post-reset basic
+            // will use; only the spent allowance is ignored during planning.
+            if (const auto target = basic_target<Target>(false)) {
+                const float score = std::min(me.strength(), target->health());
                 if (score > best_score) {
                     best_score = score;
                     selected = ability;
                     selected_target = target;
                 }
-                break; // Match the first-target basic policy used after the reset.
             }
             continue;
         }

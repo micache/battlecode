@@ -1,0 +1,128 @@
+[
+  {
+    "match_id": "57599b1c1943087d7580b16a1693de18401161734d03839db10e214f030b2010",
+    "map": "corners",
+    "candidate_side": "A",
+    "candidate_commit": "8a8819e101d7d70ff99cf010662456b4184e846c",
+    "candidate_source_hash": "8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e",
+    "opponent": "unknown in final artifact",
+    "final": {
+      "botFaults": [
+        0,
+        0
+      ],
+      "engineVersion": "0.0.1",
+      "engineVersionPacked": 65536,
+      "outcome": "teamB",
+      "round": 415,
+      "schemaVersion": 2,
+      "teams": [
+        {
+          "draftPicks": [
+            7,
+            5,
+            0,
+            6,
+            9
+          ],
+          "submittedGems": 292,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            0,
+            10,
+            5,
+            6,
+            4
+          ],
+          "submittedGems": 1004,
+          "team": 1
+        }
+      ]
+    },
+    "evaluation_id": "b4c8b53911a3b94679ff7e1a1ff36e0fcf03e541da6d790ef8439b2b1ceeb9f2",
+    "limits": "Historical dash source, not current edit base or candidate. Final totals cannot establish target choices or cause. Artifact engineVersion 0.0.1 is not envelope CLI/SDK 2.1.6.",
+    "side_totals": {
+      "A": {
+        "deaths": 5,
+        "kills": 0,
+        "collectedGems": 420,
+        "submittedGems": 292,
+        "gems": 0,
+        "earnedGold": 1180
+      },
+      "B": {
+        "deaths": 0,
+        "kills": 5,
+        "collectedGems": 1076,
+        "submittedGems": 1004,
+        "gems": 72,
+        "earnedGold": 1430
+      }
+    }
+  },
+  {
+    "match_id": "7821425f5bb7c52d1b313cd8c80db1e939f6cf7c2d1d47056ceac18f7eef135c",
+    "map": "elkring",
+    "candidate_side": "A",
+    "candidate_commit": "8a8819e101d7d70ff99cf010662456b4184e846c",
+    "candidate_source_hash": "8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e",
+    "opponent": "unknown in final artifact",
+    "final": {
+      "botFaults": [
+        0,
+        0
+      ],
+      "engineVersion": "0.0.1",
+      "engineVersionPacked": 65536,
+      "outcome": "teamB",
+      "round": 593,
+      "schemaVersion": 2,
+      "teams": [
+        {
+          "draftPicks": [
+            5,
+            0,
+            4,
+            6,
+            7
+          ],
+          "submittedGems": 612,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            6,
+            9,
+            8,
+            3,
+            0
+          ],
+          "submittedGems": 1008,
+          "team": 1
+        }
+      ]
+    },
+    "evaluation_id": "b4c8b53911a3b94679ff7e1a1ff36e0fcf03e541da6d790ef8439b2b1ceeb9f2",
+    "limits": "Historical dash source, not current edit base or candidate. Final totals cannot establish target choices or cause. Artifact engineVersion 0.0.1 is not envelope CLI/SDK 2.1.6.",
+    "side_totals": {
+      "A": {
+        "deaths": 8,
+        "kills": 6,
+        "collectedGems": 756,
+        "submittedGems": 612,
+        "gems": 72,
+        "earnedGold": 4200
+      },
+      "B": {
+        "deaths": 7,
+        "kills": 5,
+        "collectedGems": 1080,
+        "submittedGems": 1008,
+        "gems": 36,
+        "earnedGold": 5710
+      }
+    }
+  }
+]
