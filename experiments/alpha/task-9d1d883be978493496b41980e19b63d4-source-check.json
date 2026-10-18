@@ -1,0 +1,31 @@
+{
+  "task_id": "task-9d1d883be978493496b41980e19b63d4",
+  "scope": "Source integration invariants. Pure C++ trace scenarios require bot-check; no engine coverage/fuel/strength claim.",
+  "checks": {
+    "combat_actions_scoring_and_order_unchanged_except_trace": true,
+    "navigation_shopping_and_readiness_unchanged": true,
+    "whole_turn_policy_unchanged": true,
+    "ordinary_route_and_postwalk_combat_unchanged": true,
+    "cooldown_observer_and_eligibility_unchanged": true,
+    "other_executable_files_match_edit_base": true,
+    "successful_spell_trace_includes_damage_and_defensive_paths": true,
+    "alive_move_and_spell_exclusion_guard": true,
+    "only_touched_visible_local_reward_groups": true,
+    "postcombat_fresh_blockers_and_single_legal_move": true,
+    "already_on_capture_region_does_not_move": true,
+    "extra_work_and_action_have_fuel_guards": true,
+    "bounded_trace_and_no_new_shared_protocol": true,
+    "official_yield_survives_exceptions": true
+  },
+  "passed": true,
+  "source_files": {
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bot.cpp": "952584aee03c3bcdbb66eebff7dc0cb4c44304d02bf3788c2a5ae21f044d78ff",
+    "bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "camp_rotation.h": "73e2776d8b2a1f273d28587dc11dd68a91b4dae2da2d8be2741e0562eb347eb6",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  }
+}

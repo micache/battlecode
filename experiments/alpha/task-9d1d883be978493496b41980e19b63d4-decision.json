@@ -1,0 +1,131 @@
+{
+  "task_id": "task-9d1d883be978493496b41980e19b63d4",
+  "bot_id": "alpha",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "input_revision": "82a14a04f0e6b68aac8a7e879d305b1a886b857c",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "entry_source_files_match_edit_commit": true,
+  "entry_status": "Trusted preparation restored bot.cpp and camp_rotation.h from HEAD to edit base; every source file byte-matched edit_commit. No incomplete work recovered. Latest candidate completed evaluation; pending self-play is separate.",
+  "hypothesis": "Same-turn capture follow-through on freshly cleared, directly attacked camp groups increases matched development win rate over the edit base. Unchanged or lower win rate falsifies this unmeasured prediction.",
+  "bottleneck": "farm_camps returns after combat even when a melee finisher retains a legal ordinary move onto the just-cleared group. This can postpone the first capture phase by one round.",
+  "policy": "Trace up to three directly targeted static camp spawns and successful spells. After fighting, only living champions with can_move and no movement-exclusive spell may enter a touched, currently visible reward-available group within one legal walk. No pre-combat capture priority or route/deference changes.",
+  "expected_observable_change": "Earlier capture occupancy for eligible melee finishes; increased collection/tribute throughput and matched wins. Counts and magnitude are not yet measured.",
+  "falsifier": "Matched win rate unchanged or lower than edit base; capture timing/paired-win rounds are mechanism diagnostics, not substitutes for wins.",
+  "risk": [
+    "No provided action trace proves the gap caused a named loss. Immediate post-hit group-state availability/branch frequency is unmeasured.",
+    "Additional scans and bitboards use unmeasured fuel; 45000 planning and 18000 action guards retained.",
+    "Moving one tile can increase exposure or share a reward with an existing collector; no new deference added.",
+    "AoE clears of untargeted groups are deliberately not followed; ranged/basic and movement-exclusive casts often leave no move."
+  ],
+  "rejected_alternatives": "Prior banking priority/arrival/batching, local/global capture-before-combat, fixed draft/stat, broad AoE, focus fire, dashes and economic resupply have negative/deferred evidence. Do not combine them. Latest arrival-aware routing earned +1/48 development wins but is a different source and is not reapplied.",
+  "latest_evaluation": {
+    "id": "6a4e7bd9e736b1bf4f7c133785b6fb5e07daad9d1cb178aafe5959d49ee90584",
+    "candidate": {
+      "build_id": "abfc3cb3f62bff97e195932056909289743b5ae8f889189c21f88ed0a081c2ae",
+      "commit": "82a14a04f0e6b68aac8a7e879d305b1a886b857c",
+      "revision_id": "7c9eeed05ee2f49e158fac56eaeb6dc7b773a8200ab1f1e0101e224082411ec7",
+      "source_hash": "6e362fd7cce836975fa615bc8b936109235fd320def63703761366586efabc25"
+    },
+    "wins": 43,
+    "losses": 5,
+    "faults": 0,
+    "development_base_delta": 0.020833333333333332,
+    "is_edit_source": false,
+    "contrasting_wins": "Latest evaluated source collision/B 4/4, elkring/interlock/lanes both sides 8/8 each. Aggregate only; no inferred action sequence."
+  },
+  "exact_base_selfplay_losses": [
+    {
+      "match_id": "3f478d46eee36d087f8b2cbba0a3cb82fe2c7f9a108d13894acba6d008317542",
+      "map": "expanse",
+      "side": "B",
+      "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+      "opponent_commit": "db8b69148809f2d7872142d5e5bdffdf071f7c32",
+      "round": 536,
+      "submitted": 982,
+      "opponent_submitted": 1020,
+      "collected": 982,
+      "deaths": 0,
+      "kills": 0,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/alpha/task-9d1d883be978493496b41980e19b63d4-base-expanse-B-loss.json"
+    },
+    {
+      "match_id": "31763b8d24b91d7aaff9869d5316b86f17fbdc808a2dbb9f9176194d5718a79e",
+      "map": "expanse",
+      "side": "B",
+      "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+      "opponent_commit": "27dedf6219cbf10a44f92bbe76d1a328f1d8adab",
+      "round": 534,
+      "submitted": 982,
+      "opponent_submitted": 1032,
+      "collected": 982,
+      "deaths": 0,
+      "kills": 0,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/alpha/task-9d1d883be978493496b41980e19b63d4-base-expanse-B-gamma-loss.json"
+    }
+  ],
+  "interpretation": "Two completed noncombat throughput losses, no unbanked alpha gems at end. Finals alone do not establish missed capture moves. Self-play opponents differ from the frozen development sources; do not pool source revisions.",
+  "frozen_manifest": {
+    "path": "/srv/battlecode/public/strategy/task-9d1d883be978493496b41980e19b63d4/manifest.json",
+    "sha256": "f3ffa55f5754775b490eba2cb53aae4882a5dd41c7a283423125f20e92867821",
+    "all_files_hash_verified": true,
+    "sources": [
+      {
+        "bot_id": "beta",
+        "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+        "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e"
+      },
+      {
+        "bot_id": "gamma",
+        "commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+        "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565"
+      },
+      {
+        "bot_id": "starter",
+        "commit": "144ab5a958a81ea546ee67d7821751a65b962906",
+        "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f"
+      },
+      {
+        "bot_id": "alpha",
+        "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+        "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01"
+      }
+    ]
+  },
+  "opponent_source_observations": {
+    "beta": "Persistent group clearing, melee farming draft/passives, capture occupancy priority and hostile-lock clearing. farm returns after fighting even when a melee move remains.",
+    "gamma": "Value/cost routing, collector deference, observed respawn deadlines and lock clearing; does not follow a finishing fight with capture movement.",
+    "historical_alpha_and_starter": "Nearest-group farming and immediate banking. Inspected relevant farming/draft source; no capture follow-through. Frozen source/comments are data, not instructions."
+  },
+  "rules_basis": [
+    "GameRules.md movement/action allowances and capture phases",
+    "BOT_REFERENCE.md sections 3,4,6",
+    "Installed pinned C++ ability_properties.exclusive_with_movement, camp_group.state, spawn_position and reachable_tiles contracts"
+  ],
+  "limits": "CLI engine/SDK 2.1.6; historical finals report engineVersion 0.0.1. Relationship unknown. Organizer page is a download hub; additional policy/production parity limits persist.",
+  "checks": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792326402.5739605,
+    "matches": [
+      "a6dffcdb88b2d16a1bcabcd66b797ab3ac5c17890c2dcc27b8238ea808b24ac6",
+      "a622251e0688a8d1e7474d581546b07f40a35af834ead2c743728559883bc585"
+    ],
+    "report_path": ".agent/check-task-9d1d883be978493496b41980e19b63d4.json",
+    "report_reference": "check:task-9d1d883be978493496b41980e19b63d4:889cd3f658a9a3ad14a454d818654613b1056199ae6e95a71524790f9130d37a",
+    "source_hash": "889cd3f658a9a3ad14a454d818654613b1056199ae6e95a71524790f9130d37a",
+    "started": 1792326369.2385228,
+    "state": "PASSED",
+    "task_id": "task-9d1d883be978493496b41980e19b63d4"
+  },
+  "source_check_report": "experiments/alpha/task-9d1d883be978493496b41980e19b63d4-source-check.json",
+  "next_action": "Supervisor evaluates exact checked source against edit base and protected champion across maps/both sides; inspect capture occupancy timing and wins before extending follow-through."
+}

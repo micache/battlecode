@@ -117,14 +117,23 @@ bool cast_ready(const cambc::ability& ability, bool walked) {
     }, *ability.info());
 }
 
+void trace_cast(camp_rotation::clear_trace* trace, const cambc::ability& ability) {
+    if (trace)
+        trace->note_cast(std::visit([](const auto& info) {
+            return info.exclusive_with_movement;
+        }, *ability.info()));
+}
+
 // Spend the separate basic and cast allowances. Never walk after this routine
-// acts: a spell may exclude movement even when can_move() still reports true.
+// acts without checking its trace: can_move() need not encode spell exclusions.
 template<class Target>
-bool fight(bool walked = false) {
+bool fight(bool walked = false, camp_rotation::clear_trace* trace = nullptr) {
     auto& me = cambc::self();
     bool acted = false;
     if (const auto target = basic_target<Target>()) {
         me.attack(*target);
+        if constexpr (std::is_same_v<Target, cambc::camp>)
+            if (trace) trace->note_target(target->spawn_position());
         acted = true;
     }
     if (!me.is_alive() || !me.can_cast()
@@ -199,9 +208,16 @@ bool fight(bool walked = false) {
         else
             cast = selected->use(*selected_target);
         if (cast) {
+            trace_cast(trace, *selected);
+            if constexpr (std::is_same_v<Target, cambc::camp>)
+                if (trace) trace->note_target(selected_target->spawn_position());
             acted = true;
             // Refresh after the cast: a kill, splash or retaliation changes targets.
-            if (const auto next = basic_target<Target>()) me.attack(*next);
+            if (const auto next = basic_target<Target>()) {
+                me.attack(*next);
+                if constexpr (std::is_same_v<Target, cambc::camp>)
+                    if (trace) trace->note_target(next->spawn_position());
+            }
         }
     }
 
@@ -212,7 +228,7 @@ bool fight(bool walked = false) {
                 continue;
             if (ability.is_shield() && ability.can_target_self()
                 && me.health() < me.max_health() * 0.75f) {
-                if (ability.use()) break;
+                if (ability.use()) { trace_cast(trace, ability); break; }
             }
             if (ability.is_heal() && ability.can_target_allies()) {
                 const auto range = ability.valid_tiles();
@@ -224,7 +240,7 @@ bool fight(bool walked = false) {
                         || !range.is_set(ally.position())) continue;
                     if (ally.max_health() - ally.health() < ability.heal_amount() * 0.5f)
                         continue;
-                    if (ability.use(ally)) break;
+                    if (ability.use(ally)) { trace_cast(trace, ability); break; }
                 }
             }
         }
@@ -234,11 +250,34 @@ bool fight(bool walked = false) {
 
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
-    if (fight<cambc::camp>() || cambc::fuel_remaining() < combat_fuel_reserve)
+    camp_rotation::clear_trace trace;
+    const bool fought = fight<cambc::camp>(false, &trace);
+    if (cambc::fuel_remaining() < combat_fuel_reserve)
         return;
+    if (fought) {
+        auto& me = cambc::self();
+        if (trace.permits_followthrough(me.is_alive(), me.can_move())
+            && cambc::fuel_remaining() >= camp_rotation::observation_fuel_reserve) {
+            auto goals = camp_rotation::memory().capture_goals(trace,
+                tiles_around(me.position(), me.base_stats().base_move_speed));
+            // Already occupying the cleared group needs no move. Do not compute
+            // blockers/reachability on ordinary, unfinished fighting turns.
+            if (!goals.is_empty() && !goals.is_set(me.position())
+                && cambc::fuel_remaining() >= camp_rotation::observation_fuel_reserve) {
+                // Fresh occupants after combat; no path search or second action.
+                const auto blocked = blocked_tiles();
+                goals &= blocked.reachable_tiles(me.position(),
+                    me.base_stats().base_move_speed) & ~blocked;
+                if (!goals.is_empty() && cambc::fuel_remaining() >= combat_fuel_reserve
+                    && me.move_absolute(goals.positions()[0]))
+                    altar_control::place_lock();
+            }
+        }
+        return;
+    }
 
-    // Include unknown/expired groups and cooldowns that cannot be reached before
-    // their observed deadline. Recheck personal vision on every farming turn.
+    // Include unknown/expired groups, but do not revisit a personally observed
+    // cooldown early merely because its spawn tiles have left our vision.
     auto goals = camp_rotation::memory().goals();
 
     // Fresh vision after movement may reveal a camp already in range.
