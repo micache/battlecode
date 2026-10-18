@@ -10,15 +10,16 @@ class Bot {
         cambc::vec2 center;
         float initial_health;
         unsigned retry_round = 0;
+        // Lower-bound deadline from a visible respawn observation. At expiry,
+        // hidden state is unknown again; occupied spawns can delay respawning.
+        unsigned respawn_observed_until = 0;
     };
     std::vector<Group> groups;
     int target_group = -1;
     bool initialized = false;
     bool recovering = false;
-    unsigned bag_started_round = 0;
-    bool bank_committed = false;
     void buy_items();
-    bool farm_camps(bool carrying = false);
+    void farm_camps();
 public:
     void play_turn();
 };
