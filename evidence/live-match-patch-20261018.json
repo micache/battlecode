@@ -1,0 +1,16 @@
+{
+  "observed_at": 1792340283.3637362,
+  "source": "https://2026a.battlecode.co.uk/game/match-groups/13f3c4d1-dae1-418b-9dfc-0bca49568eec",
+  "access": "Owner-approved normal browser session; read-only current-team history and one observed group metadata GET. No token extraction, upload or challenge.",
+  "http_status": 200,
+  "group_created_at": "2026-10-18T16:10:06.870Z",
+  "group_finished_at": "2026-10-18T16:12:33.947Z",
+  "completed_games": 5,
+  "patch_id_each_game": "0.0.3:d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5:1",
+  "local_cli": "2.2.5",
+  "local_release_statistics_engine_version": "0.0.3",
+  "local_release_statistics_engine_build_hash": "d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5",
+  "engine_build_and_metric_semantics_match": true,
+  "production_settings_dump_obtained": false,
+  "interpretation": "Exact engine build and metric-semantics match to games finished minutes before this read. Not a claim of identical opponents, rating, pairing or an inspected production settings override."
+}

@@ -1,5 +1,11 @@
 # Arena implementation assignment
 
+Current owner override (18 October 2026): use pinned official CLI 2.2.5 and
+release mode, with all 17 currently published maps. The earlier nine-map counts
+below are historical. Full evaluation is never downgraded by a daily promotion
+counter; automatic champion promotion remains a separate disabled gate.
+See docs/TOOLCHAIN_225.md for migration, evidence and the ward::owner SDK gap.
+
 Implement the design in README.md as a small, recoverable service. Use Python, SQLite, ordinary files, Git, systemd, and the official cambc CLI. Do not build a web dashboard, distributed broker, Kubernetes stack, vector database, custom game simulator, or LLM routing service for version one.
 
 This document is a specification. `arena`, `arena-client`, and `bot-check` below are project commands you must implement. They are not commands supplied by cambc. Existing official CLI syntax is recorded in evidence/cli-help.txt.
@@ -125,13 +131,13 @@ Starting policy, to tune after measuring costs:
 | Promotion | All frozen maps × two sides × the same opponents, plus incumbent head-to-head | Accept only under the configured reliability and score gate |
 | External check | Selected accepted bot versus strong official opponents | Investigate generalization; keep this evidence separate |
 
-The currently observed pool has nine maps. With three opponents, a complete common-opponent suite is 54 candidate games, plus up to 54 reusable incumbent games; nine-map head-to-head adds 18 games. Screening cases already present in the final suite should be reused. With fewer opponents, label results provisional and report the actual coverage.
+The currently published pool has 17 maps. With three opponents, a complete common-opponent suite is 102 candidate games, plus up to 102 reusable incumbent games; full-pool head-to-head adds 34 games. Screening cases already present in the final suite should be reused. With fewer opponents, label results provisional and report the actual coverage. Never export an old-engine or partial-map candidate as current submission-ready.
 
 Use result score 1 for a win and 0 for a loss. Under the supplied rules there is no completed-game draw: at the round limit compare submitted gems, lifetime gold earned, champion kills, then Team B. The final fallback refers to absolute side assignment, not a relative SDK Team.ENEMY value. Trust a verified engine outcome, retain the reason where available, and test complete-tie attribution explicitly. An unexpected draw is a schema/rules discrepancy to investigate, not automatically a half point. Average sides within each map/opponent case, then apply fixed declared weights. Compare candidate and incumbent on these matched cases. Report raw counts, per-map and per-opponent results, bot faults, missing cases, and the score difference. Never let an opponent pool's changing composition masquerade as an improvement.
 
 Initial operational promotion gate: no reproducible candidate reliability fault; at least +5 percentage points in common-opponent mean score; no decline greater than 25 percentage points on any adequately covered map; no aggregate decline on the reserved holdout maps. These are engineering thresholds, not proof of statistical significance. If evidence is mixed or incomplete, keep the incumbent and mark INCONCLUSIVE. The evaluator owns thresholds; a bot cannot edit them.
 
-Reserve about one-third of maps for promotion checks and expose only aggregate holdout results to the coding worker. These are public maps: holdout means reserved evaluation feedback, not secret or previously unseen terrain. Even repeated pass/fail feedback can overfit that holdout; cap promotion checks, rotate or replenish it when new legal maps arrive, and use external play as an additional check. For statistical uncertainty, resample at the map/case level rather than pretending identical reruns or side pairs are independent. Do not promise a significant gain from a tiny suite.
+Keep the three existing reserved maps for promotion checks and expose only aggregate holdout results to the coding worker. These are public maps: holdout means reserved evaluation feedback, not secret or previously unseen terrain. Even repeated pass/fail feedback can overfit that holdout; retain that caveat and use external play as an additional check. A full evaluation must still cover every published map, with no daily counter silently reducing coverage. For statistical uncertainty, resample at the map/case level rather than pretending identical reruns or side pairs are independent. Do not promise a significant gain from a tiny suite.
 
 Keep separate pointers for each lane champion and the team's selected official submission. Promotions are atomic compare-and-swap updates against the incumbent and suite version used by the evaluation. Do not advance an official submission automatically as a side effect of local promotion.
 

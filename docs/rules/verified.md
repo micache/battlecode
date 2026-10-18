@@ -1,3 +1,19 @@
+18 October current-game update: the official CLI is now hash-pinned to 2.2.5,
+with release-mode build/run commands and fresh 17-map pool hashes in
+`evidence/map-pool-225.json`. Its statistics identify engine 0.0.3 build
+`d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5`,
+metric semantics 1. A fresh authorized read of an own-team five-game series
+finished at 2026-10-18 16:12 UTC reports that exact patch for every game; see
+`evidence/live-match-patch-20261018.json`. The C++ runtime observer measured the
+published round/gem/memory defaults and first/subsequent draft/play budgets.
+Other languages are unmeasured and unused. A production settings dump has not
+been obtained; no undisclosed override or official win-rate parity is asserted.
+The new user-supplied rules bytes are unchanged; the C++ export is retained at
+its new hash and all 134 error codes match the installed SDK. ward::owner is
+an explicit upstream documentation-ahead-of-release gap, not an available call.
+The historical table below is not current runtime status. See
+`docs/TOOLCHAIN_225.md` for the stopped migration and qualification procedure.
+
 Current addendum, 17 October 2026: the official Agents.md page is accessible and
 is a download hub. Live GameRules.md matches the supplied reviewed bytes exactly.
 Current C++ and newer Python API exports are retained with provenance in

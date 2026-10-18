@@ -32,7 +32,10 @@ Reused match artifacts are evidence, not new independent samples. No holdouts.
             continue
         seen.add(key)
         result = json.loads(row['result']) if row['result'] else {}
-        group = groups.setdefault(row['source_hash'], {'source_hash':row['source_hash'], 'commit':row['commit_sha'],
+        spec = json.loads(row['spec'])
+        group_key = (row['source_hash'], spec['engine_lock_hash'], spec['settings_hash'])
+        group = groups.setdefault(group_key, {'source_hash':row['source_hash'], 'commit':row['commit_sha'],
+            'engine_lock_hash':spec['engine_lock_hash'], 'settings_hash':spec['settings_hash'],
             'evaluation_id':row['evaluation_id'], 'completed':0, 'wins':0, 'losses':0,
             'noncompleted':0, 'fault_matches':0, 'unknown_reliability':0, 'by_map_side':{}, 'examples':[]})
         if not result.get('completed') or row['state'] != 'COMPLETED':

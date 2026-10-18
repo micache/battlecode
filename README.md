@@ -1,5 +1,12 @@
 # Battlecode arena: selected design
 
+18 October runtime update: three Codex lanes (alpha, beta, gamma), one concurrent
+match/build/model job, hourly coding tasks and continuous non-model self-play.
+The current toolchain is official CLI 2.2.5 / engine 0.0.3 in release mode;
+evaluation covers all 17 published maps without a daily coverage downgrade.
+See [current-game migration](docs/TOOLCHAIN_225.md) for exact commands, upstream
+documentation gaps and evidence. Older design observations below are historical.
+
 The two-owner implementation is deployed on Blaxel. Both owner accounts are authenticated, starter games and three-map baselines are complete, and live improvement jobs have started; final acceptance is still pending. See [Blaxel commands](ops/BLAXEL.md), [current acceptance status](docs/IMPLEMENTATION_STATUS.md), and [standard VM operations](ops/OPERATIONS.md). The pilot overrides the historical four-lane design below: alpha/beta only, one match/build/Codex job, and official automation disabled. Real and synthetic evidence are labeled separately.
 
 Revised 16 October 2026, Asia/Saigon. The remaining sections preserve the original design and prompt pack; the live pilot status and deployment-specific commands linked above take precedence.

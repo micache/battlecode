@@ -8,6 +8,8 @@ from arena.common import ArenaError, atomic_json, read_json
 from arena.engine import normalize_result
 from arena.statistics import read_current
 from test_arena import Harness, ENGINE_HASH, synthetic_contract
+from arena.memory import training_window
+from arena.training import roster
 
 
 FIXTURE = Path(__file__).parent / 'fixtures/cambc-225-starter-projection.json'
@@ -70,3 +72,25 @@ class CurrentToolchainTests(Harness):
         self.assertEqual({(c['map_name'],c['candidate_side']) for c in cases},
                          {(m['name'],side) for m in manifest['maps'] for side in ('A','B')})
         self.assertFalse(self.config['evaluation']['automatic_promotion'])
+
+    def test_feedback_windows_separate_the_same_source_on_different_engines(self):
+        self.establish()
+        old = training_window(self.arena, 'alpha')['source_groups']
+        self.assertEqual(len(old), 1)
+        old_hash = self.engine.lock_hash
+        self.engine.lock_hash = 'a' * 64
+        candidate = self.arena.db.one("SELECT accepted_revision FROM bots WHERE id='alpha'")['accepted_revision']
+        self.arena.db.execute("UPDATE revisions SET state='PENDING' WHERE id=?", (candidate,))
+        self.arena.start_evaluation(candidate)
+        self.finish_all()
+        groups = training_window(self.arena, 'alpha')['source_groups']
+        self.assertEqual({g['engine_lock_hash'] for g in groups}, {old_hash, 'a'*64})
+        self.assertEqual(len({g['source_hash'] for g in groups}), 1)
+
+    def test_old_engine_results_cannot_select_a_current_training_roster(self):
+        self.establish()
+        for worker in self.config['workers'].values():
+            worker.update(enabled=True, owner_confirmed=True)
+        self.assertEqual(set(roster(self.arena)), {'alpha','beta'})
+        self.engine.lock_hash = 'a' * 64
+        self.assertEqual(roster(self.arena), {})

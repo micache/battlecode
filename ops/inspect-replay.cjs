@@ -5,6 +5,8 @@ const fs = require('node:fs');
 (async () => {
   const output = process.argv[2];
   const expectedRound = Number(process.argv[3]);
+  const port = Number(process.argv[4] || 7026);
+  if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('invalid local review port');
   if (!Number.isInteger(expectedRound) || expectedRound < 1) throw new Error('expected final statistics round required');
   const browser = await chromium.launch({headless: true,
     executablePath: fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined,
@@ -24,7 +26,17 @@ const fs = require('node:fs');
   });
   const errors = [];
   page.on('pageerror', error => errors.push(String(error)));
-  await page.goto('http://127.0.0.1:7026/?replay=replay.zip&cambc-cli=1');
+  const origin = `http://127.0.0.1:${port}`;
+  let replayHash;
+  if (process.argv[5]) {
+    const response = await context.request.get(origin + '/replay.zip');
+    if (!response.ok()) throw new Error('served replay unavailable');
+    const bytes = await response.body();
+    if (bytes.length > 64 * 1024 * 1024) throw new Error('served replay exceeds bound');
+    replayHash = require('node:crypto').createHash('sha256').update(bytes).digest('hex');
+    if (replayHash !== process.argv[5]) throw new Error('visualizer is serving a different replay');
+  }
+  await page.goto(origin + '/?replay=replay.zip&cambc-cli=1');
   try { await page.waitForFunction(round => {
     const range = document.querySelector('input[aria-label^="Seek timeline"]');
     return range && Number(range.max) >= round && !document.body.innerText.includes('Loading timeline...');
@@ -38,7 +50,7 @@ const fs = require('node:fs');
   await seek.focus();
   await page.keyboard.press('End');
   await page.waitForTimeout(2000);
-  const report = {url: page.url(), body: await page.locator('body').innerText(),
+  const report = {url: page.url(), served_replay_sha256: replayHash, body: await page.locator('body').innerText(),
                   buttons: await page.getByRole('button').evaluateAll(elements => elements.map(e => ({text:e.textContent, title:e.title, aria:e.getAttribute('aria-label')}))),
                   inputs: await page.locator('input').evaluateAll(elements => elements.map(e => ({type:e.type,min:e.min,max:e.max,value:e.value,aria:e.getAttribute('aria-label')}))), errors};
   fs.writeFileSync(output + '.json', JSON.stringify(report, null, 2));

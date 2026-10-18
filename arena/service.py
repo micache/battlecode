@@ -139,7 +139,8 @@ class Arena:
             temp.rename(final)
             self.finish_match(job["id"], number, final)
         # Re-export idempotently if a crash separated commit from feedback publication.
-        for evaluation in self.db.all("SELECT * FROM evaluations WHERE finished IS NOT NULL AND metrics IS NOT NULL"):
+        for evaluation in self.db.all("SELECT * FROM evaluations WHERE finished IS NOT NULL AND metrics IS NOT NULL "
+                                      "ORDER BY created,id"):
             export_feedback(self.db, self.config, evaluation)
         self.db.put("recovered_at", time.time())
 

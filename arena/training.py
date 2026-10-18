@@ -16,11 +16,12 @@ def roster(arena):
     for bot, worker in sorted(arena.config['workers'].items()):
         if not worker['enabled'] or not worker['owner_confirmed']:
             continue
-        for row in arena.db.all('SELECT r.id,r.commit_sha,r.source_hash,e.metrics FROM evaluations e '
+        for row in arena.db.all('SELECT r.id,r.commit_sha,r.source_hash,e.metrics,e.suite FROM evaluations e '
                                 'JOIN revisions r ON r.id=e.revision_id WHERE e.bot_id=? '
                                 'AND e.finished IS NOT NULL AND e.metrics IS NOT NULL ORDER BY e.created DESC', (bot,)):
-            metrics = json.loads(row.pop('metrics'))
-            if (metrics.get('missing') or metrics.get('fault_matches') or metrics.get('unknown_reliability') or
+            metrics, suite = json.loads(row.pop('metrics')), json.loads(row.pop('suite'))
+            if (suite['engine_lock_hash'] != arena.adapter().lock_hash or
+                    metrics.get('missing') or metrics.get('fault_matches') or metrics.get('unknown_reliability') or
                     not metrics.get('wins', 0) + metrics.get('losses', 0)):
                 continue
             chosen[bot] = dict(row, build=arena.build(row['id']))
