@@ -1,0 +1,97 @@
+{
+  "task_id": "task-d71c11f9549c4960bf74ec303723f6a8",
+  "bot_id": "alpha",
+  "base_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+  "edit_commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+  "input_revision": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "entry_clean": true,
+  "latest_evaluation": "3886f315a6fa4f70cd6f34957d02d043f053cdc101399dad9c36674b6e892f84",
+  "latest_evaluation_state": "INCONCLUSIVE",
+  "awaiting_evaluation": false,
+  "hypothesis": "Area- and finish-aware ability scoring will reduce mean completion round on matched development cases won by both versions without lowering matched win rate; unchanged/increased rounds or a win-rate regression falsifies the hypothesis.",
+  "mechanism": "Score visible same-category area victims rather than only the aim target; cap overkill, reward finishes, use target-specific champion health-loss predictions. Compare resets against the same finish-value scale.",
+  "evidence_limit": "No turn trace establishes wasted casts. Current edit base has 48/48 development wins; faster objective throughput is a rules/source deduction. Frozen opponent sources need not be versions in continuous self-play.",
+  "risk": "Higher bounded scoring cost; splash wakes groups; altered casts may affect routing and kills. Basic/reset damage against champions is estimated, unlike spell prediction.",
+  "rejected_alternatives": [
+    "Global capture-first routing has prior negative evidence; do not repeat without traces.",
+    "Fixed draft/Strength and 40-gem batching have negative evidence; retain incumbent.",
+    "Vendetta resets cooldowns, not the one-cast allowance; do not assume repeated same-turn casts.",
+    "Spawn-heal fixes were already tried separately; no new recovery evidence justifies repeating."
+  ],
+  "opponent_manifest_sha256": "d6cf7c9195fdb55a481b00dc2c1220066fc4127f81ab0368a94a3b5dafaa1f89",
+  "frozen_opponents": [
+    {
+      "bot_id": "beta",
+      "commit": "6450f60028bac2047cddd8cb8be0710823d583d3",
+      "source_hash": "0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1",
+      "revision_id": "8e99bfc5e9b45ed491550aa05ec38e0d344c7ab252398a6cb9971fa9cfecd549",
+      "files_verified": true
+    },
+    {
+      "bot_id": "gamma",
+      "commit": "e9704a214cdc159318c72bf8d0213dd082b8f702",
+      "source_hash": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769",
+      "revision_id": "b3e1029a3513d0d61227bba5921f65f42295b665334f428c8061c31047bf4a42",
+      "files_verified": true
+    },
+    {
+      "bot_id": "starter",
+      "commit": "144ab5a958a81ea546ee67d7821751a65b962906",
+      "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+      "revision_id": "30a901fb37260fb2b6ce5f932060e0c80822c4f49b11d3120654b0f8f070aaa1",
+      "files_verified": true
+    },
+    {
+      "bot_id": "alpha",
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "revision_id": "650eb88bce04b8d8ffdcf70e9c819cdcb3ef0e4e12986aa01cc5e172996e6b0b",
+      "files_verified": true
+    }
+  ],
+  "unchanged_existing_source_files": {
+    "bot.h": true,
+    "draft.cpp": true,
+    "draft.h": true,
+    "main.cpp": true,
+    "random.h": true
+  },
+  "no_policy_change": [
+    "draft",
+    "items",
+    "navigation",
+    "capture",
+    "banking",
+    "retreat",
+    "shared memory",
+    "turn yield",
+    "basic target ordering",
+    "defensive cast fallback"
+  ],
+  "regressions": "Eight compile-time scenario assertions in combat_scoring.h are included in the actual bot translation unit.",
+  "validation": {
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+    "exit_code": 0,
+    "state": "PASSED",
+    "source_hash": "b87639faa949861e2afb04cf863943dae3ea1ad95c3b58999fe1bd456c31e4fd",
+    "report_path": ".agent/check-task-d71c11f9549c4960bf74ec303723f6a8.json",
+    "report_reference": "check:task-d71c11f9549c4960bf74ec303723f6a8:b87639faa949861e2afb04cf863943dae3ea1ad95c3b58999fe1bd456c31e4fd",
+    "smoke_matches": [
+      "bdd2187b40888491e9653c9985212ba99cef37f4bcf1e331d0aab9cd9dc73a27",
+      "8ca40a0d2f73e1f9c89ff778a4ec84cc6b0f9e46d70e73becd469c566f9f7b6a"
+    ],
+    "report_inspection": "Local report and approved check-report agree. Only summary diagnostics exposed; full-game completion, ability branch coverage and fuel headroom not established.",
+    "diff_check_exit_code": 0,
+    "compile_time_scoring_assertions": 8
+  },
+  "candidate_file_sha256": {
+    "bot.cpp": "3ebf57e146654532a82bc3dd5ad732e0f957a80cad13367539946ab34d6de9aa",
+    "bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "combat_scoring.h": "115339e19b770ca5de27caef67a88f56c133cb3de57c989150b3013ea30cf7b3",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  }
+}

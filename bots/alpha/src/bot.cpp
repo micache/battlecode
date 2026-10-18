@@ -1,6 +1,7 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
+#include "combat_scoring.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -10,6 +11,7 @@
 #include <optional>
 #include <type_traits>
 #include <variant>
+#include <vector>
 
 using cambc::vec2;
 using cambc::team;
@@ -73,6 +75,9 @@ void Bot::buy_items() {
 // Bound extra combat work; this is a planning reserve, not measured fuel headroom.
 constexpr std::uint64_t combat_fuel_reserve = 18000;
 constexpr unsigned combat_target_limit = 16;
+constexpr float camp_finish_bonus = 20;
+constexpr float champion_finish_bonus = 100;
+constexpr float champion_control_bonus = 20;
 
 // Handles are refreshed through vision on every action, never cached across turns.
 template<class Target>
@@ -124,8 +129,24 @@ bool fight(bool walked = false) {
         || cambc::fuel_remaining() < combat_fuel_reserve)
         return acted;
 
-    // At most two slots and sixteen visible aim points per slot; no tile search.
-    // Compare useful direct damage against the additional basic from a reset.
+    // Snapshot only current visible live targets, after the ordinary basic.
+    // No actions happen while scoring; refresh again before committing the cast.
+    struct observation { Target handle; vec2 position; float health; };
+    std::vector<observation> targets;
+    targets.reserve(combat_target_limit);
+    unsigned examined = 0;
+    for (const auto& target : combat_targets<Target>()) {
+        if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
+            break;
+        if (!target.is_visible()) continue;
+        const float health = target.health();
+        if (health > 0) targets.push_back({target, target.position(), health});
+    }
+    constexpr float finish_bonus = std::is_same_v<Target, cambc::camp>
+        ? camp_finish_bonus : champion_finish_bonus;
+
+    // At most two slots, sixteen visible aim points, and 16x16 cheap distance
+    // comparisons per slot. Count all observed splash victims, without tile search.
     std::optional<cambc::ability> selected;
     std::optional<Target> selected_target;
     float best_score = 0;
@@ -138,17 +159,20 @@ bool fight(bool walked = false) {
             if (me.can_attack() || me.restrictions().contains(cambc::buff_restrictions::attack))
                 continue;
             const auto range = me.attack_tiles();
-            unsigned examined = 0;
-            for (const auto& target : combat_targets<Target>()) {
-                if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
+            const float strength = me.strength();
+            for (const auto& target : targets) {
+                if (cambc::fuel_remaining() < combat_fuel_reserve)
                     break;
-                if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
+                if (!range.is_set(target.position))
                     continue;
-                const float score = std::min(me.strength(), target.health());
+                // Basic damage remains an estimate: no target-specific basic
+                // predictor is exposed. The cast's follow-up uses fresh vision.
+                const float score = combat_scoring::hit(
+                    {target.position.x, target.position.y, target.health, strength}, finish_bonus);
                 if (score > best_score) {
                     best_score = score;
                     selected = ability;
-                    selected_target = target;
+                    selected_target = target.handle;
                 }
                 break; // Match the first-target basic policy used after the reset.
             }
@@ -161,24 +185,37 @@ bool fight(bool walked = false) {
             continue;
         const auto range = ability.valid_tiles();
         const float damage = ability.damage_amount();
-        unsigned examined = 0;
-        for (const auto& target : combat_targets<Target>()) {
-            if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
+        std::array<combat_scoring::target, combat_target_limit> predicted{};
+        unsigned count = 0;
+        for (const auto& target : targets) {
+            if (cambc::fuel_remaining() < combat_fuel_reserve)
                 break;
-            if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
-                continue;
-            // Ground spells aim at a visible enemy/camp, not unexplored terrain.
-            // Only the primary damage is scored: splash is a conservative bonus.
-            float score = std::min(damage, target.health());
+            float loss = damage;
             if constexpr (!std::is_same_v<Target, cambc::camp>) {
-                const bool control = ability.is_cc() ||
-                    (ground && ability.get<cambc::ability_aoe_damage>().duration > 0);
-                if (control) score += 20; // prefer actual crowd control in PvP
+                if (damage > 0) loss = ability.damage_amount(target.handle);
             }
+            predicted[count++] = {target.position.x, target.position.y, target.health, loss};
+        }
+        const auto victims = std::span<const combat_scoring::target>{predicted.data(), count};
+        float control_bonus = 0;
+        if constexpr (!std::is_same_v<Target, cambc::camp>) {
+            if (ability.is_cc() || (ground && ability.get<cambc::ability_aoe_damage>().duration > 0))
+                control_bonus = champion_control_bonus;
+        }
+        for (unsigned i = 0; i < count; ++i) {
+            if (cambc::fuel_remaining() < combat_fuel_reserve) break;
+            const auto& target = targets[i];
+            if (!range.is_set(target.position))
+                continue;
+            // Victims need not themselves be in cast range, only in the blast.
+            const float score = ground
+                ? combat_scoring::area(victims, target.position.x, target.position.y,
+                    ability.get<cambc::ability_aoe_damage>().radius, finish_bonus, control_bonus)
+                : combat_scoring::hit(predicted[i], finish_bonus, control_bonus);
             if (score > best_score) {
                 best_score = score;
                 selected = ability;
-                selected_target = target;
+                selected_target = target.handle;
             }
         }
     }
