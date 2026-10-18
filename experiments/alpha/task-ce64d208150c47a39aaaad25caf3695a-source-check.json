@@ -1,0 +1,17 @@
+{
+  "task_id": "task-ce64d208150c47a39aaaad25caf3695a",
+  "scope": "source contracts, not engine fixtures or fuel measurements",
+  "checks": {
+    "channel_guard_before_live_shopping": true,
+    "resupply_after_retreat_combat_and_banking_before_farming": true,
+    "empty_bag_spawn_action_and_fuel_guards": true,
+    "visible_camp_before_live_health_and_range": true,
+    "capture_state_only_after_occupancy_guard": true,
+    "retry_deadline_committed_before_recall": true,
+    "purchase_count_and_legality_unchanged": true,
+    "combat_and_farming_unchanged": true,
+    "other_executable_sources_unchanged": true,
+    "yield_retained": true
+  },
+  "passed": true
+}

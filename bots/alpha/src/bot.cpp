@@ -80,6 +80,46 @@ void Bot::buy_items() {
 constexpr std::uint64_t combat_fuel_reserve = 18000;
 constexpr unsigned combat_target_limit = 16;
 
+// Two emblems justify a quiet resupply trip; smaller balances keep farming.
+constexpr unsigned resupply_gold = 300;
+constexpr unsigned resupply_retry_rounds = 40;
+
+bool economic_recall(unsigned& next_attempt) {
+    auto& me = cambc::self();
+    if (cambc::round_number() < next_attempt
+        || me.gold_count() < resupply_gold || me.gem_count() || !me.can_move()
+        || cambc::map::spawn_region(team::ally).is_set(me.position())
+        || cambc::fuel_remaining() < combat_fuel_reserve)
+        return false;
+
+    // No claim that unseen enemies are absent. Abort this optional trip whenever
+    // a current enemy is visible or a damaging camp could interrupt the channel.
+    if (!cambc::vision::champions(team::enemy).empty()) return false;
+    unsigned examined = 0;
+    for (const auto& camp : cambc::vision::camps()) {
+        if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
+            return false;
+        if (camp.is_visible() && camp.health() > 0 && camp.strength() > 0
+            && camp.attack_tiles().is_set(me.position()))
+            return false;
+    }
+
+    // Do not abandon our existing capture for shopping. Only inspect live state
+    // for a group whose spawn we occupy, which is necessarily in our vision.
+    for (const auto& group : cambc::map::camp_groups()) {
+        if (cambc::fuel_remaining() < combat_fuel_reserve) return false;
+        if (group.spawn_tiles().is_set(me.position())
+            && std::holds_alternative<cambc::map::camp_group_reward_available>(group.state()))
+            return false;
+    }
+
+    // A hidden attacker may interrupt us. Let ordinary play resume rather than
+    // restarting an optional recall every turn. Emergency retreat is separate.
+    next_attempt = cambc::round_number() + resupply_retry_rounds;
+    me.recall();
+    return true;
+}
+
 // Handles are refreshed through vision on every action, never cached across turns.
 template<class Target>
 auto combat_targets() {
@@ -271,6 +311,7 @@ void Bot::play_turn() {
     // Refill control tools while dead so the next sortie can deny an altar.
     if (!me.is_alive()) {
         altar_control::buy_lock();
+        buy_items();
         return;
     }
 
@@ -279,13 +320,14 @@ void Bot::play_turn() {
         || (!me.can_move() && !me.can_attack() && !me.can_cast()))
         return;
 
-    // Shop before leaving spawn.
+    // The same build shops wherever legal: spawn, death, or Tavi's field shop.
+    // Consumables still use their separate spawn/death permission.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
     if (at_spawn) {
         // Ten gold buys persistent denial; remaining gold follows the base build.
         altar_control::buy_lock();
-        buy_items();
     }
+    buy_items(); // can_buy rejects ordinary champions away from spawn.
 
     altar_control::place_lock();
 
@@ -323,6 +365,10 @@ void Bot::play_turn() {
         move_towards_closest(goals);
         return;
     }
+
+    // Bags are already banked and combat/retreat retain priority. Tavi has spent
+    // affordable field gold above, so needs no special-case resupply exemption.
+    if (economic_recall(next_resupply_round)) return;
 
     farm_camps();
 

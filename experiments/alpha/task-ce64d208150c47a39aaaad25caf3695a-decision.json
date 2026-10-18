@@ -1,0 +1,249 @@
+{
+  "task_id": "task-ce64d208150c47a39aaaad25caf3695a",
+  "edit_commit": "2e82fe1839be5b90390f1c625c0f1f2ec8df7cb5",
+  "base_source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+  "evaluation_id": "089fa436cc9f5a5b0108459554430b05581849083c8235228c59e16c52b7b587",
+  "development_metrics": {
+    "wins": 45,
+    "losses": 3,
+    "fault_matches": [],
+    "development_comparison": {
+      "commit_sha": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "common_opponent_delta": 0.0625,
+      "fault_matches": [],
+      "missing": [],
+      "paired_cases": 24,
+      "per_map": {
+        "collision": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        }
+      },
+      "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "unknown_reliability": []
+    }
+  },
+  "opponent_source_inspection": [
+    {
+      "bot_id": "beta",
+      "commit": "6450f60028bac2047cddd8cb8be0710823d583d3",
+      "source_hash": "0c8c6de101ec85fcad250ef308157891de39e173751780d4e7b117285a73e5a1",
+      "path": "/srv/battlecode/public/strategy/task-ce64d208150c47a39aaaad25caf3695a/8e99bfc5e9b45ed491550aa05ec38e0d344c7ab252398a6cb9971fa9cfecd549/src",
+      "buy_items_spawn_only": true,
+      "has_economic_recall": false,
+      "uses_can_buy": true
+    },
+    {
+      "bot_id": "gamma",
+      "commit": "e9704a214cdc159318c72bf8d0213dd082b8f702",
+      "source_hash": "3ddcabd550a7198b7553379a78a11ce62ece141f30dbbb772b36ef8257d2f769",
+      "path": "/srv/battlecode/public/strategy/task-ce64d208150c47a39aaaad25caf3695a/b3e1029a3513d0d61227bba5921f65f42295b665334f428c8061c31047bf4a42/src",
+      "buy_items_spawn_only": true,
+      "has_economic_recall": false,
+      "uses_can_buy": true
+    },
+    {
+      "bot_id": "starter",
+      "commit": "144ab5a958a81ea546ee67d7821751a65b962906",
+      "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+      "path": "/srv/battlecode/public/strategy/task-ce64d208150c47a39aaaad25caf3695a/30a901fb37260fb2b6ce5f932060e0c80822c4f49b11d3120654b0f8f070aaa1/src",
+      "buy_items_spawn_only": true,
+      "has_economic_recall": false,
+      "uses_can_buy": true
+    },
+    {
+      "bot_id": "alpha",
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "path": "/srv/battlecode/public/strategy/task-ce64d208150c47a39aaaad25caf3695a/650eb88bce04b8d8ffdcf70e9c819cdcb3ef0e4e12986aa01cc5e172996e6b0b/src",
+      "buy_items_spawn_only": true,
+      "has_economic_recall": false,
+      "uses_can_buy": true
+    }
+  ],
+  "deduction": "Current and frozen alpha buy shards only at spawn. No quiet gold-based recall exists. Gold accumulation is measured, but lost turns caused by it are not. Field-shop permissions and empty-bag quiet resupply are an unmeasured strategy experiment.",
+  "hypothesis": "Legal field/death shopping and quiet empty-bag resupply at 300 gold reduce completion rounds on paired development wins without lowering matched win rate. Unchanged/increased paired-win rounds or lower win rate falsifies this hypothesis.",
+  "risk": "Five-tick recall plus travel may exceed the benefit of two emblems; stat purchases can alter fights/routes; visible-only safety cannot exclude hidden attackers.",
+  "rejected": "No repeat of fixed draft/stat builds, global capture priority or fixed bag batching. Gold recall is independent of prior health-threshold/spawn-heal tests. The interlock type 8 record is Willow, not Tavi; it supplies no Tavi-specific measurement.",
+  "current_source_self_play": {
+    "source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+    "commit": "2e82fe1839be5b90390f1c625c0f1f2ec8df7cb5",
+    "unique_input_cells": 24,
+    "repeat_matches": 225,
+    "wins": 24,
+    "losses": 0,
+    "unspent_gold": {
+      "mean": 909.0833333333334,
+      "observations": 24
+    }
+  },
+  "parameters": {
+    "resupply_gold": 300,
+    "retry_rounds": 40,
+    "fuel_reserve": 18000,
+    "camp_threat_limit": 16
+  },
+  "match_summaries": [
+    {
+      "file": "task-ce64d208150c47a39aaaad25caf3695a-d31442e3-final.json",
+      "candidate_side": "A",
+      "map": "expanse",
+      "candidate_source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+      "opponent_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "round": 762,
+      "outcome": "teamB",
+      "botFaults": [
+        0,
+        0
+      ],
+      "teams": [
+        {
+          "draftPicks": [
+            3,
+            0,
+            9
+          ],
+          "submittedGems": 920,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            7,
+            3,
+            8
+          ],
+          "submittedGems": 1042,
+          "team": 1
+        }
+      ],
+      "candidate_deaths": 0,
+      "candidate_unspent_gold": 220
+    },
+    {
+      "file": "task-ce64d208150c47a39aaaad25caf3695a-e13df8ea-final.json",
+      "candidate_side": "B",
+      "map": "interlock",
+      "candidate_source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+      "opponent_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "round": 541,
+      "outcome": "teamA",
+      "botFaults": [
+        0,
+        0
+      ],
+      "teams": [
+        {
+          "draftPicks": [
+            5,
+            0,
+            4,
+            6
+          ],
+          "submittedGems": 1020,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            2,
+            5,
+            6,
+            7
+          ],
+          "submittedGems": 590,
+          "team": 1
+        }
+      ],
+      "candidate_deaths": 8,
+      "candidate_unspent_gold": 310
+    },
+    {
+      "file": "task-ce64d208150c47a39aaaad25caf3695a-f853ed6f-final.json",
+      "candidate_side": "B",
+      "map": "lanes",
+      "candidate_source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+      "opponent_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "round": 464,
+      "outcome": "teamA",
+      "botFaults": [
+        0,
+        0
+      ],
+      "teams": [
+        {
+          "draftPicks": [
+            2,
+            4,
+            10,
+            9,
+            1
+          ],
+          "submittedGems": 1008,
+          "team": 0
+        },
+        {
+          "draftPicks": [
+            7,
+            8,
+            6,
+            0,
+            5
+          ],
+          "submittedGems": 836,
+          "team": 1
+        }
+      ],
+      "candidate_deaths": 1,
+      "candidate_unspent_gold": 170
+    }
+  ],
+  "final_check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792311996.5634832,
+    "matches": [
+      "7ade61f48674664036cc461628a9d3dba34e6896ea72911b2f27e0884bd0d66f",
+      "332a3dcd077dcd9d53ad7445dbe184ca4d49aa75416612a4ce0a4061178a1309"
+    ],
+    "report_path": ".agent/check-task-ce64d208150c47a39aaaad25caf3695a.json",
+    "report_reference": "check:task-ce64d208150c47a39aaaad25caf3695a:7a14708a701b4c911b6ec7d9b06a9f379f7bb70018cfc2090cdf906fb45e9ae1",
+    "source_hash": "7a14708a701b4c911b6ec7d9b06a9f379f7bb70018cfc2090cdf906fb45e9ae1",
+    "started": 1792311966.1481574,
+    "state": "PASSED",
+    "task_id": "task-ce64d208150c47a39aaaad25caf3695a"
+  },
+  "final_source_file_sha256": {
+    "bot.cpp": "f220ffdd14a55e71dd2f90046f7801f0e49e7e99d497c68d50bc0248a0ec89d4",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bot.h": "07b6e16da4de3f04a83bb373f78afee7d3e12c199db71ff8f51b66c2e3320b76",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0"
+  }
+}
