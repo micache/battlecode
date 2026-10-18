@@ -20,7 +20,7 @@ checks = {
     'channels_preserved': 'if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;' in s,
     'spawn_healing_before_departure': 'if (at_spawn && me.health() < me.max_health() * HEALED_HEALTH) return;' in s,
     'capture_and_vacate_states_separate': 'goals = f.spawns;' in s and 'move_to(around(me.position(), 1) & ~f.spawns);' in s,
-    'no_live_shared_memory_writes': 'shared_memory.write' not in s,
+    'shared_writes_confined_to_claim_protocol': 'shared_memory' not in s and 'camp_claims::board claims;' in (ROOT / 'bots/gamma/src/bot.h').read_text(),
     'normal_fuel_and_yield': 'PLAN_FUEL = 30000' in s and 'retry < 2' in s and 'cambc::end_turn();' in m,
     'sdk_profile_validation': 'constants::winning_gems != 1000' in m and 'constants::max_rounds != 2000' in m,
     'combat_never_walks_after_exclusive_kill': s.index('if (!me.is_alive() || acted) return;') < s.index('const auto fresh_visible'),

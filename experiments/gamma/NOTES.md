@@ -1,104 +1,123 @@
 # Gamma operational notes
 
-## task-f10f6850851a4b819ef515def204aab6 — threat-aware banking
+## task-ce3692cbfe1f45ffab7f246b29e02f3b — distributed camp intents
 
-- Refinement; branch bot/gamma; HEAD/input/edit commit
-  1b34f42a5266051ee50bae4cf74197b99b1115cb; verified edit source
+- Exploration, one candidate. Branch bot/gamma; HEAD/input
+  81434048685e159a41d861303ace6e27f99c4e71; actual edit commit
+  1b34f42a5266051ee50bae4cf74197b99b1115cb, verified source
   3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565.
-  Protected champion 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d stays in Git.
-  Clean initial worktree; prior task PUBLISHED and evaluated, no candidate awaiting
-  evaluation. Seven pending continuous self-play matches are not a pending candidate.
-- Hypothesis: choosing banking approaches and routes using observed threats,
-  reachable distance and bag-dependent channel exposure will increase matched
-  mean submitted gems and reduce Collision deaths versus the edit base, without
-  new faults. Falsified if either predicted metric fails to improve or faults
-  appear. Wins and the full promotion gate remain decisive; no gain yet measured.
-- Bottleneck evidence: current-source development losses show major gem-conversion
-  failure despite collection and no faults. This suggests carrier survival as a
-  useful target; final statistics do NOT establish where/when bags were lost.
-- Chosen policy: rank free reachable altar approach tiles by distance, three turns
-  for a hostile lock, plus projected health loss during tribute/lock clearing.
-  Risk cost 12 travel rounds per health bar; add 25 rounds above 70% projected loss.
-  Use SDK channel settings; starting bag sets duration, not a hardcoded threshold.
-  Enemy radius = observed attack range + one step; pressure = Strength + .25 Focus
-  (heuristic, not exact spell damage/cooldown). Visible damaging camps use current
-  range/Strength, conservatively active because pinned header lacks wake state.
-- First try a path outside observed danger; if disconnected, retry ordinary legal
-  terrain. Two attempts maximum, normal fuel guards, 128 approach candidates and
-  32 pressure records. No persistent enemy cache or shared-memory protocol.
-  Unlocked adjacent altars precede hostile locks. Safe adjacent tribute retains
-  priority; exposed carriers pass through the existing low-health recovery check.
-  Shield an exposed channel when legal without replacing an active shield.
-  Refresh locks/position/visibility after movement; start tribute at the selected
-  approach. Preserve useful channels and a cheap adjacent submission fallback.
-- Preserve melee farmer draft Varg/Vendetta/Marcella/Ryth/Tavi, Jungle+Monster
-  Strength then Power Strength, capture occupancy, respawn vacating, 35% recovery,
-  98% spawn healing, and 300-gold empty-bag shopping recall.
+  Initial source files matched frozen gamma hashes exactly; initial bot.cpp diff
+  from HEAD is trusted preparation, not incomplete worker work. Protected champion
+  1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d remains in Git. Latest experiment is
+  evaluated, not pending; continuous self-play pending matches are separate.
+- Hypothesis: expiring team target intents will reduce duplicate camp trips and
+  increase matched mean collected AND submitted gems versus the edit base without
+  new bot faults. Falsifier: either mean does not improve or faults appear. Wins
+  and the unchanged promotion gate govern selection. Duplication is a SOURCE-
+  GROUNDED, UNMEASURED mechanism; finals do not establish wasted travel/capture.
+- Bottleneck: farmers use the same independent reward/time score; only a visible
+  ally already occupying a CLEARED group reserves it. No coordination of distant
+  targets or ongoing clears. Extra allies do not accelerate capture; each also
+  needs a banking trip. A soft target penalty lets farmers spread work without
+  forbidding cooperative clearing when alternatives cost substantially more.
 
-## Matched evidence and opponents
+## Candidate policy and memory contract
 
-- Evaluation 3318aa749628b04a8e7d6b09d2c6a4ffbd2d8242b093832aaf420ae31c618d89
-  applies to edit source above: overall 60W/12L, INCONCLUSIVE; development 39W/9L
-  on 48 distinct cells, faults 0. Self-play separately 9W/15L on 24 distinct cells;
-  repeated executions not independent. No holdout traces used.
-- bank-route-evidence.json contains complete paged finals for supplied development
-  examples, same own source and alpha 6af1685b849ad23ee9eaadb1a8de18742318d87b:
-  Collision A 5fc18347ab2888b5ef80a2d503d531268fc701493973ea48b7b93e59b272826d:
-  round 491 loss, 614 collected / 44 submitted vs 1012, 8 own deaths, faults 0/0.
-  Collision B bcb9257d90cc7c5da9827de8231b6309f527f467408c7ae7e7bd2a4cf706a7a7:
-  round 639 loss, 606 collected / 318 submitted vs 1028, 8 own deaths, faults 0/0.
-  Corners A 39c976f384350091e548b0173d473c80340bafe4c9d007a8b307c718ff3045c3:
-  round 459 loss, 624 collected / 528 submitted vs 1018, 10 own deaths, faults 0/0.
-  Elkring B 316d4ad70f40c542f79b7baa8a275708ce76cd1e86e336fa6d75fe30df1ea78b:
-  round 542 loss, 792 collected / 612 submitted vs 1008, 14 own deaths, faults 0/0.
-- Contrasting prior exact-base smoke wins are in smoke-evidence.json and archived
-  prior notes: A 4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0,
-  B 437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf.
-  Both completed, 0/0 faults; maps/opponent revisions unknown. Not controlled
-  development contrasts; no individual current development win ID was supplied.
-- Frozen manifest e290bdbd287c9cc6b0e328e297d0a9b42b360b43f374fcb9cc4a458be6071104.
-  Inspected alpha 6af1685b source: random draft/stat, enemy-first combat with
-  reset/direct/AoE/CC and shields/heals, nearest unlocked altar union, camp union.
-  It can attack carriers while ours previously ignored fights whenever banking.
-  Inspected beta d2d57274232ca7cead5bacf650d6f51fd5b3bc3d: deliberate Varg/Tavi/Ryth
-  draft, Strength+durability build, 45% recovery, shield-if-exposed, unlocked-first
-  banking, group capture/reservation and bounded geometry-ranked routing.
-  Adaptation is risk-aware carrier routing, not copied opponent code or draft.
-- Rejected for this candidate: broader draft/build rewrite (working integrated
-  base already improved development); blanket combat-before-banking (would lose
-  useful score windows); permanent danger exclusion (can deadlock carriers).
-  Prior isolated Varg-only and other economy trials remain inconclusive; details
-  preserved in archive/task-74db5e961da646ab895aa56505d86528.md and earlier archives.
+- Keep draft Varg/Vendetta/Marcella/Ryth/Tavi, Strength build, combat/reset/shield,
+  capture occupancy, farming scores, all-bag banking, recall and healing from base.
+- New camp_claims.h protocol v1: byte 0 = 0xD1; bytes 1..6 = one intent per actual
+  BODY, ranked by immutable ally handle; byte 7 unused. No hidden ally state read.
+  Both Cassi and Issac would get distinct slots. Unsupported >6 bodies or >63
+  groups use independent farming; no truncated IDs or buffer overflow.
+- Each owner exclusively writes its slot. One byte publishes complete group+clock:
+  low six bits = canonical sorted group index+1, zero releases; top two = round
+  modulo four. Header initialization is idempotent; unknown versions untouched.
+  No rich unit state, observations, positions or draft messages are serialized.
+- Every owner turn releases the old intent BEFORE dead/channel/stun/healing/
+  banking/retreat branches. Only selected farming/capture republishes. Claims are
+  hints, never treated as proof of an ally position or hidden camp state.
+- Freshness requires modulo age <=1 AND private time since token change <=1.
+  Unchanged abandoned tokens never revive on clock wrap. First observation of an
+  old byte can look fresh for at most two observations; skipping a full heartbeat
+  cycle may conservatively discard an active claim. Renewed changed tokens revive.
+  Writes are single-byte host calls, with no multi-byte torn record to interpret.
+- Camp score multiplier = 1 + 1.5 * fresh other claims, then existing 0.85 target
+  hysteresis. Reservations are SOFT: help a claimed group when alternatives are
+  much worse. Existing visible uncontested capture reservation and occupancy
+  preservation take precedence. Static group handles are sorted for common IDs.
+- Six observations and one six-byte read starting at offset 1
+  per body turn, plus own release/publish. No searches added, normal fuel retained.
+  Exact temporal/boundary assertions in the header compile with the real policy.
 
-## Checks, uncertainty and continuation
+## Evidence and rejected alternatives
 
-- Rules/SDK unchanged per trusted handoff; consulted BOT_REFERENCE, playbooks B/C/F,
-  research and organizer ledger, relevant tribute/lock rules and pinned header
-  channel/visibility/ability contracts. Engine/SDK 2.1.6; lock
+- Latest evaluated source f7d71d2cebfdbfc7b1214a888c1514ae33657003c43d52c3e5e7a17894ff6ac6
+  is NOT today's edit base. Evaluation
+  870d0ce3e3dee3d0dd40628e35d859427d6d046acaa6b129dfa44e1d881fb1ce:
+  overall 45W/27L, INCONCLUSIVE; development 26W/22L, faults zero.
+  Matched development delta vs actual edit base -0.0208333 on 24 side-paired cases.
+  Previous threat-routing idea did not beat this base; retained in
+  archive/task-f10f6850851a4b819ef515def204aab6.md, not reapplied.
+- camp-claims-evidence.json saves supplied exact-base self-play finals, all vs
+  beta d2d57274232ca7cead5bacf650d6f51fd5b3bc3d, zero faults on both sides:
+  Interlock A 3e3cd7fe03e8848a724c5cb3a7478d676e4d7e0a4fb32e38f8a863014e807f3e:
+  round 609 loss, 968 collected AND submitted vs 1010, five own deaths.
+  Lanes A d36694ea34fad7710a893a7970a447abf89640d425d1b6f833b0628bb4422aaa:
+  round 432 loss, 786 collected AND submitted vs 1010, one own death.
+  Lanes B 759094967480eed1b72e4d10f0b0d23d2f333c77948c3bd195f5e0652b106962:
+  round 447 loss, 948 collected / 912 submitted vs 1008, two own deaths.
+  These motivate throughput exploration but do not prove duplicate targeting.
+- Contrasting exact-base smoke wins already saved in smoke-evidence.json:
+  A 4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0,
+  1006 tribute at round 596; B
+  437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf,
+  1084 at round 640; both zero faults. Maps/opponent revisions UNKNOWN, so these
+  are not controlled development contrasts. Supplied individual development
+  examples are losses; aggregate wins are not evidence of their mechanisms.
+- Frozen manifest 9d8e11bbbc803745d63e3fd2a46d7301afb4c7f23bdbc57bbd8958386f844aba.
+  Alpha 5f73d078 (source ba646c6e...) adds opportunistic 10-gold altar locks and
+  privately observed respawn rotation to enemy-first combat and spawn-union farming;
+  it has no target intent protocol. Beta d2d57274 (source 7daa9117...) deliberately
+  drafts melee farmers, uses Strength+durability, local ally proximity penalty and
+  visible collector reservations, but cannot coordinate out-of-vision targets.
+  The protocol addresses a shared source limitation without copying their policy.
+- Rejected this task: another banking-risk tuning (latest measured regression),
+  hard map sectors (could strand farmers behind terrain/cooldowns), hard exclusive
+  claims (would prevent useful help), draft overhaul (isolated Varg change was
+  inconclusive). Base accepted/rejected history stays in earlier archives.
+- Unchanged docs/SDK per trusted handoff; consulted reference, playbooks C/E/F,
+  research/organizer limits, shared-memory rules/API and pinned header contracts.
+  Engine/SDK 2.1.6; lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-  Organizer download hub does not establish every event policy or production parity.
-- Existing harvest source/geometry regression: PASSED, exit 0;
-  harvest-source-check.json. Source invariants only, not runtime simulation.
+  No claim of production parity or complete event-policy review.
+
+## Checks and next action
+
+- `python3 experiments/gamma/check_harvest.py`: PASSED, exit 0;
+  harvest-source-check.json. Existing visibility/action/capture/draft/geometry
+  invariants retained; previous no-memory assertion replaced with confinement to
+  the new protocol. Header temporal/boundary static_asserts compiled successfully.
 - `bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json`:
-  PASSED, exit 0; exact candidate source
-  f7d71d2cebfdbfc7b1214a888c1514ae33657003c43d52c3e5e7a17894ff6ac6.
-  Report .agent/check-task-f10f6850851a4b819ef515def204aab6.json;
-  check:task-f10f6850851a4b819ef515def204aab6:f7d71d2cebfdbfc7b1214a888c1514ae33657003c43d52c3e5e7a17894ff6ac6.
-  Exact-source check-report agrees. Complete smoke finals and own paged logs saved
-  in bank-route-smoke.json. A 564439933d2c1c8ecc407eab3a5efa6a72e0bde69456b05150bb62d368e7d9b4:
-  completed teamA win, 1046 vs 396 tribute at round 967, both sides zero faults.
-  B 6ef0c1ddd390b20bf2d3cfa4df15688cdc7ffb03dcc8bf3d8b2e37249509c168:
-  completed teamB win, 1004 vs 374 tribute at round 612, both sides zero faults.
-  Maps/opponent revisions unknown in these exports; not controlled gain evidence.
-  Both logs have zero bot-error, suspension and settings-mismatch markers.
-  Logged running minimum fuel: A 11497, B 13330 before dispatcher yield, not a
-  guarantee for every turn/map. Finals still report engineVersion 0.0.1 versus
-  CLI/SDK 2.1.6; production parity unresolved as in prior notes.
+  PASSED, exit 0, final source
+  490fd85093ab5ce3b22a9f6f86fadffe719d2b03e9d37ea4062b0f28d0654e73.
+  Report .agent/check-task-ce3692cbfe1f45ffab7f246b29e02f3b.json;
+  check:task-ce3692cbfe1f45ffab7f246b29e02f3b:490fd85093ab5ce3b22a9f6f86fadffe719d2b03e9d37ea4062b0f28d0654e73.
+  Exact-source check-report agrees. No source edits after trusted validation.
+- camp-claims-smoke.json retains complete paged finals and own stdout:
+  A a4d394a3eb2b2dc13cdbc79ec5961ee9ffcf4042fa2e6a85a284a3ed11153fca:
+  completed teamA win, 1104 vs 430 tribute, round 718, both sides zero faults.
+  B 1cd294c232fa621f34d58f15db2cf3838afde1a5da8b6ed96497862d49d10f76:
+  completed teamB win, 1030 vs 176 tribute, round 554, both sides zero faults.
+  Both own logs: zero bot-error, suspension and settings-mismatch markers.
+  Lowest logged running fuel minima: A 9363, B 11928 before dispatcher yield.
+  This is sampled smoke headroom, not a guarantee for every turn/map. Maps and
+  opponent revisions UNKNOWN in exports; smoke wins do not measure superiority.
+  Finals still report engineVersion 0.0.1; production parity remains unresolved.
 - `git diff --check`: PASSED, exit 0.
-- Main regression risks: conservative camp ranges and enemy-step estimates can
-  lengthen trips; distant safe altars may become unsafe out of vision; local
-  pressure is not a full combat forecast. Fallback can still cross danger. No
-  turn-level evidence proves the selected mechanism explains all supplied losses.
-- Next: supervisor evaluates final checked source against edit base on matched
-  development maps/sides/opponents, inspects Collision conversion/deaths and broad
-  wins, then applies the unchanged champion promotion gate.
+- Risk: separated farmers lose cooperative clear speed or combat protection;
+  stale hints can briefly penalize good camps; low-fuel scanning remains bounded
+  but may still bias selection. No comparative gain measured in this invocation.
+- Next: supervisor evaluates exact checked candidate vs edit base on matched
+  maps/sides/opponents, inspects collected/submitted gems and wins, and applies
+  the unchanged champion promotion gate. If unsupported, inspect bounded target
+  traces before further coordination or penalty tuning.
