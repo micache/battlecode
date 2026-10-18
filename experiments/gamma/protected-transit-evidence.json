@@ -1,0 +1,443 @@
+{
+  "task_id": "task-bf57edace9e2432697d916c1e30b5c6c",
+  "base_commit": "63d05e37a937fa2bfebf3de613af2ee3113b21a8",
+  "base_source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+  "bottleneck": "Carrier conversion and transit exposure; current banking/recovery paths never use shields or dash.",
+  "hypothesis": "Walking-compatible shields and progress-only dashes on banking/recovery routes will increase matched mean submitted gems and reduce Collision champion deaths versus the edit base without new bot faults.",
+  "falsifier": "Reject the mechanism if matched mean tribute does not increase, Collision deaths do not decrease, or a new bot fault appears. Win results and unchanged gates determine selection.",
+  "measurement_limit": "Unmeasured source/rules deduction. Final statistics show losses and conversion gaps, not where deaths occurred or whether the new actions would prevent them.",
+  "evaluation": {
+    "id": "4c4120d3beed5bee0d15ccebe1c94f04fba58e7c1daa29028921e8cc3d11c95e",
+    "wins": 31,
+    "losses": 17,
+    "metrics": {
+      "bot_faults_by_side": {
+        "available": true,
+        "mean": 0.0,
+        "observations": 48
+      },
+      "carried_gems": {
+        "available": true,
+        "mean": 17.041666666666668,
+        "observations": 48
+      },
+      "champion_deaths": {
+        "available": true,
+        "mean": 3.7291666666666665,
+        "observations": 48
+      },
+      "champion_kills": {
+        "available": true,
+        "mean": 2.7708333333333335,
+        "observations": 48
+      },
+      "collected_gems": {
+        "available": true,
+        "mean": 951.5416666666666,
+        "observations": 48
+      },
+      "lifetime_earned_gold": {
+        "available": true,
+        "mean": 2129.1666666666665,
+        "observations": 48
+      },
+      "round": {
+        "available": true,
+        "mean": 513.5208333333334,
+        "observations": 48
+      },
+      "submitted_gems": {
+        "available": true,
+        "mean": 893.0,
+        "observations": 48
+      },
+      "unspent_gold": {
+        "available": true,
+        "mean": 337.9166666666667,
+        "observations": 48
+      }
+    },
+    "development_comparison": {
+      "commit_sha": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+      "common_opponent_delta": 0.08333333333333333,
+      "fault_matches": [],
+      "missing": [],
+      "paired_cases": 24,
+      "per_map": {
+        "collision": {
+          "candidate": 0.375,
+          "incumbent": 0.375,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 0.75,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 0.875,
+          "incumbent": 0.5,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 0.5,
+          "incumbent": 0.375,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 0.5,
+          "incumbent": 0.5,
+          "pairs": 4
+        }
+      },
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "unknown_reliability": []
+    }
+  },
+  "representative_failures": [
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 36,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 2,
+            "B": 2
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 2,
+            "B": 2
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 922,
+            "B": 1032
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2270,
+            "B": 2720
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 798
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 886,
+            "B": 1032
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 350,
+            "B": 20
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "5b443161c09ff220d43551bc44b0fcc2b637731e1db0299d8b4cc8f9dbb7cdef",
+      "round": 798,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 8,
+            "B": 0
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 8
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 520,
+            "B": 1006
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 1320,
+            "B": 3710
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 505
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 152,
+            "B": 1006
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 30,
+            "B": 620
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "d3e47f475514c3d33d65b8354010a50c6b949315e488caccf8170869d5b3c2ed",
+      "round": 505,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 8
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 8,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1008,
+            "B": 542
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 4340,
+            "B": 1445
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 670
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 1008,
+            "B": 340
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 980,
+            "B": 35
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "bbd750afa99f30e5aaf95c507db7cf00f20c771189c42a250f1e5d3f5b35bfc9",
+      "round": 670,
+      "side": "B",
+      "trace": null
+    }
+  ],
+  "contrast": {
+    "match_id": "1a34ac22cfc0efa7805b0eacf5cf2218a68ad3e56485c06c3cbe71da15d01e25",
+    "candidate_side": "A",
+    "map": "corners",
+    "opponent_revision": "54338dc8eaa7f1cf288206540974dcf92a0ea5f6d99c3677dc15a612793547f0",
+    "result": "loss; 624 collected / 576 tribute vs 1008; eight deaths. Final supports throughput concern but cannot identify a transit death."
+  },
+  "opponent_audit": [
+    {
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "policy": "Random draft/Power-stat selection, enemy-first bounded combat, spawn-union farming. Capable of ranged pressure. No assumption of official-opponent identity."
+    },
+    {
+      "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e",
+      "policy": "Varg/Tavi/Ryth opening, one farming/durability core, group routing, shield-before-exposed-combat and latched recovery. Shield protection motivates extending gamma protection to carriers, not importing its macro."
+    },
+    {
+      "commit": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+      "source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+      "policy": "Same beta macro plus opportunistic locks, as confirmed by frozen-source diff; gamma retains hostile-lock attacks."
+    }
+  ],
+  "verified": {
+    "entry_identity": true,
+    "clean_initial_worktree": true,
+    "edit_base_file_hashes": true,
+    "all_frozen_opponent_file_hashes": true,
+    "manifest_sha256": "5e259511f78250eadfed0c7c3664be8623bd6eb07b19aafba60c1dc2a299b0ac",
+    "sdk_sha256": "90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d"
+  },
+  "policy": {
+    "scope": "banking/recovery only; farming/draft/item order unchanged",
+    "dash_range_cap": 2,
+    "minimum_dash_route_progress": 2,
+    "dash_plan_fuel": 30000,
+    "action_fuel": 10000,
+    "movement_attempt_bound": 2,
+    "event_log_limit_per_body_per_kind": 3,
+    "dash_legality": "SDK walk-reachable subset intersected with cast range and fresh free occupancy; no hole jumps. Refresh after dash or hidden-blocker reveal before ordinary walk. No new distance field.",
+    "shield_legality": "Ready/self-target/walking-compatible, no existing shield, visible threat, no active channel. Refresh threats after movement."
+  },
+  "risks": [
+    "Dash spends a cast that could later reset combat.",
+    "Conservative dash path excludes hole shortcuts.",
+    "A spare shield may be spent on a threat that never attacks.",
+    "Hidden opponents and bank route choices are unchanged; this cannot solve all carrier deaths."
+  ],
+  "rejected_alternatives": [
+    "Threat-aware bank routes and team claims already regressed; no changed rationale to repeat them.",
+    "Broad combat rewrite already regressed.",
+    "More survival items could further slow low-contact farming; retain measured item order."
+  ],
+  "source_isolation_audit": {
+    "passed": true,
+    "method": "Compared unchanged function bodies and five other source files against edit commit using git show; no strategic inference.",
+    "unchanged": [
+      "live/fight",
+      "threatened",
+      "defend",
+      "buy_items",
+      "farm_camps",
+      "bot.h",
+      "draft.cpp",
+      "draft.h",
+      "main.cpp",
+      "random.h"
+    ]
+  },
+  "rules_references": [
+    ".agent/knowledge/BOT_REFERENCE.md sections 3,5,6,7",
+    ".agent/knowledge/sources/GameRules.md movement and Vendetta/Varg kits",
+    ".agent/knowledge/sources/BotAPICpp.md ability_dash/ability_shield/valid_tiles/reachable_tiles",
+    "Pinned cambc.h lines 2569-2591, 3177-3190, 3275-3335"
+  ],
+  "candidate_file_sha256": {
+    "bot.cpp": "21de12836711ee5e1eb89663962100bcb20dd6e2017c04c26c8f122240af5b6c",
+    "bot.h": "bf6ed7d94c1c4454e5f44e7703ba3767e05e0dfa5ca16c2d50ce0347c911a310",
+    "draft.cpp": "bfac1b1879665b73b2bcb33ff3567641d73e40afd760d08d0498f53ddfa375b3",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "786c1365f90c1eb409b163f584c97a4f596191c946d4bd2b2eb4d0682c9f751c",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0
+  },
+  "trusted_check": {
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json",
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792338598.0621092,
+    "matches": [
+      "62ed7201f9cb0267c8593e17095daec672d08f6f4e960e52d25df68d7e652349",
+      "7aea8bbb2c3439ae907bc36ce4eea5933a1733a6aa8f2033795159f1209c36d6"
+    ],
+    "report_path": ".agent/check-task-bf57edace9e2432697d916c1e30b5c6c.json",
+    "report_reference": "check:task-bf57edace9e2432697d916c1e30b5c6c:85c39989f37666a2b352a143f278998a98770cc7a97b057dbd9daf5f1e4fc42a",
+    "source_hash": "85c39989f37666a2b352a143f278998a98770cc7a97b057dbd9daf5f1e4fc42a",
+    "started": 1792338413.4901307,
+    "state": "PASSED",
+    "task_id": "task-bf57edace9e2432697d916c1e30b5c6c",
+    "exact_source_check_report_agrees": true
+  },
+  "smoke_summary": [
+    {
+      "match_id": "62ed7201f9cb0267c8593e17095daec672d08f6f4e960e52d25df68d7e652349",
+      "file": "bot-a.stdout.log",
+      "markers": {
+        "errors": 0,
+        "suspensions": 0,
+        "settings_mismatches": 0,
+        "dash_events": 3,
+        "shield_events": 3
+      },
+      "sampled_minimum_fuel": 14263
+    },
+    {
+      "match_id": "7aea8bbb2c3439ae907bc36ce4eea5933a1733a6aa8f2033795159f1209c36d6",
+      "file": "bot-b.stdout.log",
+      "markers": {
+        "errors": 0,
+        "suspensions": 0,
+        "settings_mismatches": 0,
+        "dash_events": 3,
+        "shield_events": 3
+      },
+      "sampled_minimum_fuel": 12865
+    }
+  ],
+  "smoke_limit": "Two complete validity games; maps/opponent revisions unknown. No matched strength inference. Sampled fuel minima do not prove all-map headroom."
+}

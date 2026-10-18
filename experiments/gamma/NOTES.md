@@ -1,109 +1,104 @@
 # Gamma operational notes
 
-## task-ffac8b92c85645ca803df9d1120ffd48 — bounded survival investment
+## task-bf57edace9e2432697d916c1e30b5c6c — protected objective travel
 
-- One refinement candidate. Branch bot/gamma; HEAD/input eef19f04b32f7a09a3730ecf8464d0bf63a14e0a.
-  Actual edit commit 1b34f42a5266051ee50bae4cf74197b99b1115cb, source
-  3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565.
-  All six initial files matched frozen gamma SHA256s. Prepared bot.cpp change
-  and combat_value.h deletion restore this base, not incomplete worker edits.
-  Protected champion 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d remains in Git.
-  Latest published candidate has completed evaluation; no pending candidate
-  evaluation blocks this task. Pending self-play games are separate.
-- Hypothesis: one Durability Health emblem after the farming core will reduce
-  matched mean champion deaths AND increase matched mean submitted gems versus
-  this edit base without new bot faults. Either failed directional metric or a
-  new fault rejects the mechanism. Wins and unchanged gates decide selection.
-  This is an UNMEASURED source/rules deduction, not an inferred replay event.
-- Change: Jungle Strength, Monster Strength, exactly one Durability Health,
-  then unlimited Power Strength. Stage budgets use current cost/combine_count;
-  partial purchases and can_buy retained. Actual completion is refreshed after
-  purchase. No other executable change relative to the edit base.
-- The new stage spends at most 150 gold at default costs. Varg gains 500 HP and
-  10% incoming mitigation instead of six Power Strength growths. Ryth also gains
-  5 Strength from bonus Health. Spawn Health purchases heal the gained HP;
-  Tavi field purchases do not. Duplicate family passives are not purchased.
-
-## Existing strategy and bounds
-
-- Draft Varg/Vendetta/Marcella/Ryth/Tavi with legal complete fallback roster.
-  Melee reset/splash combat, low-health Varg shield preference, objective-first
-  banking, hostile lock attacks, channels, recall and spawn-healing preserved.
-- Reachable camp value/time scoring, 0.85 target hysteresis, capture occupancy,
-  private respawn observations, ally collector avoidance, vacate after rewards.
-  No living monolith farming. Free approach tiles, two movement attempts maximum.
-- Retreat below 35% HP, wait on spawn until 98%; safe empty-bag shop recall at
-  300 gold. Defend only adjacent threats or cheap finishes; no champion chasing.
-- Visibility before live reads; refreshed observations after actions. No shared
-  memory writes or allied hidden vision. No fuel overrides or extra searches.
-  Optional planning stops below 30k fuel; action reserve 10k; fallback eight camps.
-  No post-combat walking; dispatcher catches invalid actions and always yields.
-
-## Evidence and retained negative findings
-
-- durability-build-evidence.json saves feedback, exact-base contrasts, source
-  identities, audited opponent policies and the decision/falsifier.
-- Latest evaluation 804ae9d1b55c15c904978519941ac03229d6781dfc224b27ba9fff79067c037d
-  evaluates f857236953b7f785b46f7f465b429635fbf07f961a43e1012b280aede2f970d7
-  at eef19f04, NOT today's edit base or candidate: 25W/23L, zero faults;
-  matched development delta vs edit base -0.0416667 over 24 side-paired cases.
-  Target-aware combat did not improve this base. Earlier camp claims and
-  threat-aware banking also regressed. Prior notes preserved in
-  archive/task-ccebe4f09a07468fb85c1ff4ff3feb92.md.
-- That later source lost Collision A
-  8de1fe376614bd1e234627c66ca8ff2101cbaf19e1a5b427ea0e9aefa79fde8f:
-  900 collected / 720 tribute vs 1010, six deaths, round 761; Collision B
-  80b937e62772954c0abb021bfc5acc390edcbc1424af2526c38f6a8c2528dd13:
-  576 collected / 504 tribute vs 1024, eight deaths, round 835. Both zero faults.
-  Finals establish strategic losses, not per-turn causes or candidate behavior.
-- Exact-base loss vs beta d2d57274232ca7cead5bacf650d6f51fd5b3bc3d:
-  Interlock A 3e3cd7fe03e8848a724c5cb3a7478d676e4d7e0a4fb32e38f8a863014e807f3e,
-  968 vs 1010 tribute, five deaths, round 609. Lanes A
-  d36694ea34fad7710a893a7970a447abf89640d425d1b6f833b0628bb4422aaa,
-  786 vs 1010 tribute, one death, round 432: low death count can still lose races.
-- Exact-base smoke wins: A 4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0,
-  1006 tribute round 596; B 437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf,
-  1084 round 640. Map/opponent revisions UNKNOWN; validity contrasts only.
-- Frozen manifest SHA256 a57dcb89eb62db715074041b7dbff23ee624d33001a3211e55d5a75f701d655f.
-  Beta d2d57274 uses this survival item stage, Varg/Tavi/Ryth opening, group
-  routes, recovery latch and AoE/reset combat. Transfer the bounded item idea
-  into gamma's established macro without assuming other beta systems add gains.
-  Alpha 5f73d078 uses random Power stat/draft, enemy-first bounded combat,
-  opportunistic locks and spawn-union farming. All current alpha/beta source
-  file hashes verified. Arena policies do not predict official opponents.
-- Unchanged docs per trusted handoff. Consulted compact reference, playbooks C/G,
-  relevant item/champion rules, C++ shop API and matching installed SDK, research
-  and organizer evidence ledger. Engine/SDK 2.1.6; lock
-  00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-  Production parity and unrelated organizer policy remain unresolved.
-
-## Validation, risks and next action
-
-- python3 experiments/gamma/check_durability_build.py: PASSED, exit 0;
-  durability-build-source-check.json. Checks stage order, one emblem, budget,
-  permission, actual completion, Strength scaling and unchanged other policy.
-  These are source invariants, not engine simulation or measured item purchases.
-- bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json:
-  PASSED, exit 0, exact source
+- One refinement candidate. Branch bot/gamma; clean initial worktree; HEAD/input
+  and edit commit 63d05e37a937fa2bfebf3de613af2ee3113b21a8, source
   a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec.
-  Report .agent/check-task-ffac8b92c85645ca803df9d1120ffd48.json;
-  check:task-ffac8b92c85645ca803df9d1120ffd48:a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec.
-  Exact-source check-report agrees. No bot source edits after validation.
-- durability-build-smoke.json saves complete paged finals and own bounded logs.
-  A 289095505f992a52ae7be0d50d5abeade2d1873cb061474878fca4b7743bb816:
-  completed teamA win, 1006 vs 198 tribute, round 608. B
-  3fc501dfc08f3d73459ced366db89ea85f676dda6bee2016f7739a1737d770f3:
-  completed teamB win, 1010 vs 330 tribute, round 628. Both sides zero faults
-  in both games; own logs zero error/suspension/settings-mismatch markers.
-  Logged running fuel minima A 14291 / B 11783 before dispatcher yield; sampled
-  headroom, not an all-map guarantee. Maps/opponent revisions UNKNOWN. Smoke
-  validity only; no comparative improvement claim. Finals report engineVersion
-  0.0.1 despite pinned CLI/SDK 2.1.6, so production parity remains unresolved.
-- git diff --check: PASSED, exit 0 after final metadata edits.
-- Risks: slower clears may outweigh survival on low-contact maps; Tavi field
-  Health increases max HP without healing and may trigger earlier retreat.
-  Death reductions alone cannot establish a win gain.
-- Next: supervisor compares exact checked candidate against edit base across
-  matched maps/sides/opponents: deaths, tribute/collection, faults and wins.
-  Apply unchanged promotion gate. If unsupported, inspect recovery/capture
-  traces before changing item order or increasing the survival investment.
+  Entry and edit-base file hashes verified. Protected accepted champion remains
+  1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d. Prior candidate evaluation is complete;
+  pending continuous self-play is separate. Prior notes archived under
+  archive/task-ffac8b92c85645ca803df9d1120ffd48.md.
+- Hypothesis: walking-compatible shields and progress-only dashes on banking/
+  recovery routes will increase matched mean submitted gems and reduce Collision
+  champion deaths versus this edit base without new bot faults. Either failed
+  directional metric or a new fault falsifies the mechanism. Wins and unchanged
+  promotion gates determine selection. This is an UNMEASURED source/rules
+  deduction; finals do not identify when/where deaths occurred.
+- Source bottleneck: bank() never cast protection or mobility; low-health
+  recovery also skipped abilities. This leaves Varg exposed before tribute and
+  wastes Vendetta's dash while carrying. Both normally skip farming combat.
+
+## Candidate strategy and bounds
+
+- Preserve Varg/Vendetta/Marcella/Ryth/Tavi draft, Jungle Strength, Monster
+  Strength, one Durability Health, then Power Strength. Existing combat,
+  camp selection/capture/respawn, retreat threshold 35%, spawn healing 98%,
+  empty-bag shop recall 300 gold and hostile-lock attacks are unchanged.
+- Bank/recovery movement alone opts into dash. Ready, ground-targeted,
+  walking-compatible dash must advance >=2 route steps; range capped at 2.
+  Candidates intersect SDK walk-reachable tiles, cast range and free occupancy.
+  This intentionally excludes hole shortcuts. Reuse the existing route field;
+  no additional global search or different bank destination.
+- After dash success OR a hidden-blocker reveal, refresh occupancy before the
+  ordinary walk. Preserve success if dash arrived but no walk is needed/possible.
+  Re-read movement allowance/restrictions and retain two movement attempts max.
+  Ability inspection is two slots; candidate mask at most 25 tiles per slot.
+- Shield only when ready, self-targeted, walking-compatible, exposed to a visible
+  enemy/camp, and no active shield. Protect before bank travel/tribute and before/
+  after recovery travel; refresh threats after travel. Never cancel a channel.
+- Planning reserve 30k, action reserve 10k; ordinary walk remains the cheap
+  fallback. New action logs capped at three dash and three shield events per
+  body per game. No live shared memory, hidden-state reads or fuel overrides.
+
+## Evidence and alternatives
+
+- Evaluation 4c4120d3beed5bee0d15ccebe1c94f04fba58e7c1daa29028921e8cc3d11c95e
+  evaluates the exact edit base: 31W/17L, zero faults, 48 completed games.
+  Collision 3W/5L; development-base matched delta +0.0833333 across 24 paired
+  cases. Protected-champion comparison is separate; result INCONCLUSIVE.
+- Collision A loss 5b443161c09ff220d43551bc44b0fcc2b637731e1db0299d8b4cc8f9dbb7cdef:
+  922 collected / 886 tribute vs 1032, two deaths, round 798. Varg 400 collected /
+  364 submitted; Vendetta 144/144. This close race also needs useful throughput.
+- Collision A loss d3e47f475514c3d33d65b8354010a50c6b949315e488caccf8170869d5b3c2ed:
+  520 collected / 152 tribute vs 1006, eight deaths, round 505. Varg 224/22 and
+  four deaths; Vendetta 144/0 and two deaths. Opponent revision UNKNOWN in the
+  final slice; do not infer a per-turn cause or an exact opponent from its draft.
+- Contrasting Corners A loss 1a34ac22cfc0efa7805b0eacf5cf2218a68ad3e56485c06c3cbe71da15d01e25
+  vs frozen gamma 1b34f42a: 624 collected / 576 tribute vs 1008, eight deaths,
+  round 480. Conversion alone is not the whole macro problem.
+- Complete paged finals saved in protected-transit-finals.json. Exact-source
+  previous smoke wins in durability-build-smoke.json: A 289095505f992a52ae7be0d50d5abeade2d1873cb061474878fca4b7743bb816
+  1006 tribute round 608; B 3fc501dfc08f3d73459ced366db89ea85f676dda6bee2016f7739a1737d770f3
+  1010 round 628; both zero faults. Maps/opponents UNKNOWN; validity contrasts.
+- Frozen manifest 5e259511f78250eadfed0c7c3664be8623bd6eb07b19aafba60c1dc2a299b0ac;
+  all file hashes verified. Alpha 6af1685b uses random Power stat/draft,
+  enemy-first bounded combat and spawn-union farming. Beta d2d57274 uses
+  Varg/Tavi/Ryth, group routing, shield-first exposed combat and recovery latch.
+  Beta 9f7ae1c8 adds opportunistic locks to that macro (verified source diff).
+  Adapt the protection idea to gamma's carrier path, not beta's whole strategy.
+- Prior target-aware combat, camp claims and threat-aware bank routes regressed;
+  do not repeat without changed evidence. Keep the measured survival item stage.
+- protected-transit-evidence.json records hypothesis, falsifier, frozen-source
+  identities, metric summary, risks and rejected alternatives.
+
+## Validation, limits and next action
+
+- Docs unchanged per trusted handoff; consulted compact reference, playbooks
+  B/C/D/F/G, research/evidence ledger, movement/dash/shield rules, matching C++
+  API sections and installed SDK. SDK hash verified; engine 2.1.6, lock
+  00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
+- Manual source-isolation audit passed: combat/threat model/defend/shop/farming
+  and all five other source files match edit base. git diff --check passed.
+- bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json:
+  PASSED, exit 0; exact source
+  85c39989f37666a2b352a143f278998a98770cc7a97b057dbd9daf5f1e4fc42a.
+  Report .agent/check-task-bf57edace9e2432697d916c1e30b5c6c.json;
+  exact-source check-report agrees. No bot source edits after validation.
+- protected-transit-smoke.json saves complete finals and own logs with zero
+  padding removed after inspecting all pages. A
+  62ed7201f9cb0267c8593e17095daec672d08f6f4e960e52d25df68d7e652349:
+  teamA win, 1034 vs 264 tribute, round 675. B
+  7aea8bbb2c3439ae907bc36ce4eea5933a1733a6aa8f2033795159f1209c36d6:
+  teamB win, 1026 vs 394, round 629. Both games zero faults on both sides.
+  Own logs each show three dash and three shield events, zero error/suspension/
+  settings-mismatch markers. Sampled running fuel minima A 14263 / B 12865;
+  not an all-map guarantee. Map/opponent revisions UNKNOWN; validity only.
+- Risks: dash consumes a cast that could later reset combat; shield can be spent
+  on a threat that never attacks; conservative paths forgo hole shortcuts.
+  Hidden threats and route choices remain uncertain. Finals cannot establish
+  transit deaths, improved safety or competitive strength. Production parity
+  remains unresolved (saved finals report engineVersion 0.0.1).
+- Next: supervisor evaluates exact checked source against this edit base across
+  matched maps/sides/opponents; inspect Collision deaths, tribute and wins,
+  plus faults and broad regressions. Apply unchanged promotion gates.
