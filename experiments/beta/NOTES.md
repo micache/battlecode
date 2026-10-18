@@ -1,88 +1,106 @@
 # Operational summary
 
-## task-fd18a49b25e84173bc088cee80b91936 — opportunistic altar denial
+## task-1d43321af474473ebc71622f4c168925 — bounded banking detours
 
-Hypothesis: buying one ten-gold lock at legal shop opportunities and placing it
-on a visible empty altar along existing routes will delay opposing tribute and
-improve matched wins while preserving our own banking. Falsifier: no matched
-win gain, lower own submitted gems, or increased faults/fuel suspension versus
-d2d57274 / 7daa9117. This is an unmeasured rules/source deduction.
-Decision, evidence summary, checks and diagnostics: task-fd18a49b25e84173bc088cee80b91936/.
+Hypothesis: avoiding currently visible enemy attack regions on banking routes,
+when a reachable detour costs at most six extra walking steps, will reduce
+carrier deaths and improve bag conversion and matched wins versus 9f7ae1c8 /
+b4e969c7. Falsifier: no matched win gain, worse submitted/collected conversion,
+or increased deaths/fuel suspension. This is an unmeasured source/rules
+hypothesis; final statistics do not establish a banking-route cause of death.
 
-Identity: beta / bot/beta; HEAD/input fd1a894bb861e9d8fd3d65bbe3d7df506bf05960.
-Trusted edit d2d57274232ca7cead5bacf650d6f51fd5b3bc3d; base source
-7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e.
-All six source files byte-matched edit Git blobs at entry. The absent HEAD
-combat_policy.h and prepared bot.cpp differences are intentional. Prior task
-was PUBLISHED and evaluated; no unpublished candidate awaited evaluation.
-Protected accepted 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains in Git and
-the trusted accepted snapshot. No commit, push, agents or evaluation invoked.
+Identity: beta / bot/beta; task ID above; HEAD/input/edit commit
+9f7ae1c88a1bd0d5d62ed7713956efd40c95be33; base source
+b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1.
+All six source file SHA256 values matched trusted edit_start before editing;
+initial working tree clean. Prior task PUBLISHED and evaluated, not awaiting
+evaluation. Existing interrupted recovery artifacts retained. Protected accepted
+0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains in Git/trusted snapshot.
+No agents, commits, publication, official actions or tournament runs invoked.
 
-Evidence: evaluation 47ef12cb516310ac155418a45e5d9e7cd1e8a9827e78b9a09f1459195bbecb84
-measured fd1a894b / 6d52acdb, not the edit base/new source: 31W/17L, zero
-reported faults, INCONCLUSIVE; matched edit-base delta -0.041667 on 24 side pairs.
-Collision losses b7003f0d (A, round 684: 176 submitted/352 collected, 13 deaths)
-and f85ac835 (B, round 792: 608/784, 8 deaths) show objective-conversion losses,
-not a traced lock mechanism. Full IDs and summaries saved in evidence.json.
-Contrasting saved final b6788e49 (A, round 573, 1030/1052, zero deaths) has
-unknown map/exact own source in its final artifact; not a controlled current
-win. Details/limits in decision.md; finals are hindsight only.
+Evidence: evaluation a5df175f4daa1cec79538b74e4767f065bc6246390fb6f304c3654bbea485dea
+measured this edit base: 42W/6L, zero faults/missing/unknown reliability,
+INCONCLUSIVE/development-six-map; matched development-base delta +0.1875 on
+24 side pairs. This is separate from protected champion delta +0.75.
+- Collision loss 580f9745 (A, round 797): 682 submitted / 872 collected,
+  58 carried, nine deaths; opposing old beta had three deaths, 1012 submitted.
+- Corners loss 81041817 (A, round 409): 658/766, one death; opposing 1032.
+  Uses trusted feedback summary; no full final exported for this case.
+- Expanse loss 39a7bc8f (B, round 493) versus gamma: 858/928, zero deaths
+  and zero champion damage taken on either team. Banking safety is unlikely
+  to address this distinct farming-speed loss; expect unchanged routing when
+  enemy threat masks do not intersect routes, apart from added query costs.
+- Historical contrasting win b6788e49 (A, round 573): 1030/1052, zero deaths.
+  Map and exact own revision unknown; not controlled evidence for today's edit.
+Full IDs, source/opponent identities and computed final totals: this task's
+evidence.json and two complete final.json exports. No omniscient state feeds
+runtime policy. Final embedded engineVersion 0.0.1 is preserved as supplied;
+trusted runner distribution identity is 2.1.6. No engine-failure cause inferred.
 
-Frozen manifest 8446678b81be646cda6e98d6e1e9fd5a97a1376110f0b84d6463da5478e3132d:
-starter 144ab5a9 / 9e804e3e and alpha 6af1685b / 87b9be45 exclude all visible
-locked altars from banking goals without clearing them. New alpha 5f73d078 /
-ba646c6e buys/places locks along routes; its safety pattern fits our farmer.
-Gamma 1b34f42a / 3ce565f6 and our edit base handle hostile locks and permit
-friendly ones. Adopted only the consumable-denial concept; opponent source is
-not evidence of official opponents or a measured exploit. No private notes read.
+Frozen manifest b3e9b121b51589eb0f0522871455ef62e9e68b4a6db30ac56c3df39316e3ec8c:
+gamma 1b34f42a / 3ce565f6 drafts Varg/Vendetta/Marcella first, with
+melee walk-plus-attack/reset farming, cost/reward rotation, bank-before-fights,
+legal lock clearing and no threat-aware banking path. Old beta d2d57274 / 7daa9117 matches our edit except lock additions;
+it shares shortest-route banking and the current farm/recovery design.
+Alpha 5f73d078 / ba646c6e places locks and explicitly clears hostile ones.
+Inspected shared source, not private worker state or official-opponent code.
+Lock-aware travel-cost selection was considered but not bundled: the measured
+collision opponent buys no locks, so it does not explain that loss.
 
-Current strategy remains Varg/Tavi/Ryth/Vendetta/Marcella farming; Jungle
-Strength, Monster Strength, Durability Health, then Power Strength; group
-capture, bank each bag, complete spawn recovery. No live shared-memory protocol.
-This candidate adds only:
-- Buy one altar lock before shards when SDK can_buy permits, including death.
-  Tavi's field-shard exception does not authorize field consumables.
-- At turn start and after successful movement, attempt one visible empty altar
-  within two tiles. No detour, patrol or capture/channel interruption.
-- Require alive, inventory, no recall/tribute/teleport, no consumable restriction,
-  and >=30k fuel. Intersect static altars with current visibility and no locks.
-  Even a False use result ends this phase; subsequent phase refreshes observation.
-- Existing banking already permits friendly locks and legally attacks hostile
-  locks through submit_gems. Draft, combat, camp selection and recovery preserved.
+Current strategy: Varg/Tavi/Ryth/Vendetta/Marcella; Jungle Strength,
+Monster Strength, Durability Health, then Power Strength; group capture,
+bank each bag, complete spawn healing, opportunistic altar locks. No live
+shared-memory protocol. This candidate modifies only movement policy for bank:
+- Ordinary free-approach shortest path remains the fallback.
+- With >=45k fuel after computing it, observe visible living enemies and mask
+  Chebyshev attack_range + 1 (one next ordinary step). Clear our current tile
+  from danger so a legal exit can be considered. No hidden health/position read.
+- With >=30k fuel and nonempty safe goals, compute one additional reverse
+  distance field. Use it only when reachable and <= direct distance + 6.
+  Movement's reachable mask uses the SAME blocked board as the selected field.
+- No route/no cheap detour/low fuel retains ordinary movement. One refreshed
+  hidden-obstruction retry stays bounded as before. Channels and spawn recovery
+  still return before banking; adjacent tribute and hostile-lock fallback stay
+  unchanged. Nonbank callers retain their default movement policy.
+
+Decision/risk: focus on carrier protection, not a general retreat planner.
+Short detours bound the throughput cost and isolate the hypothesis from camp,
+combat and draft changes. Enemy spell range, dashes, hidden opponents and future
+movement remain uncertain. Camp damage is not masked. A moving enemy can cause
+route oscillation; a six-step per-decision bound is not a bound on cumulative
+travel. Excluding every approach falls back to risk rather than stalling.
+Extra distance-field queries/copying add fuel cost; reserves are policy gates,
+not measured suspension-free headroom. Existing wins may regress from delay.
 
 Engine 2.1.6; lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1. Documentation unchanged per trusted handoff; consulted
-BOT_REFERENCE, RESEARCH, organizer record, Playbooks B/C/D/F/G and relevant
-GameRules/C++ API/installed-header consumable, shop, visibility/channel sections.
-SDK hash 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-Organizer page is a download hub, not certification of all policies or parity.
+suite historical-panels-v1; installed C++ SDK SHA256
+90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
+Documentation unchanged per handoff. Consulted compact BOT_REFERENCE, RESEARCH,
+organizer access record, Playbooks B/C/D/F/G and movement/visibility/banking/
+distance-field sections in rules, C++ export and installed header. Organizer
+page is a download hub, not certification of all policies or production parity.
 
-Final source check (no bot-source edits afterward):
+Final-source check (no bot-source edits afterward):
 `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED, exit 0; source
-b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1.
-Report .agent/check-task-fd18a49b25e84173bc088cee80b91936.json;
-check:task-fd18a49b25e84173bc088cee80b91936:b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1.
-Exact-source check-report independently returned PASSED/0, saved as
-check-report.json. Smoke IDs a06b2d35e0543b1c7e7f73e187e33e637621b87b2a38d4e10b440d09b2326750
-and ffb0829596bac15c07d892feb8e96f34956d5be121109d13ff426954a8cb8ef1.
-Own-side stdout exports exited 0, contain zero bytes, saved as smoke-a/b.json.
-These do not prove complete games, lock placement coverage or no suspensions.
-`python3 experiments/beta/task-fd18a49b25e84173bc088cee80b91936/check_lock_contracts.py`
-PASSED/0, report invariants.txt: safety contracts and ten unsafe mutations,
-plus preserved base combat/farming/recovery/draft/yield. Static checks only.
-`git diff --check` PASSED/0, report diff-check.txt.
+PASSED/0; source f3a34040840ca797a84b12e2ae9a0ed6992ce47fbaf58fe37bb568bb2e0df897.
+Report: .agent/check-task-1d43321af474473ebc71622f4c168925.json.
+Reference: check:task-1d43321af474473ebc71622f4c168925:f3a34040840ca797a84b12e2ae9a0ed6992ce47fbaf58fe37bb568bb2e0df897.
+Smoke IDs 3c56d0a7e365d3757ae726ba03fde498c77a30e91257ea278c7296d318f78bb8,
+736340f9ffdad930685cb9ea973fa67f0217acd39bbc3ba48230cdf6b1030fca.
+`git diff --check` PASSED/0; this task's diff-check.txt.
+Exact-source check-report independently returned PASSED/0. Both own-side smoke
+stdout exports exited 0 and contain zero bytes; saved alongside evidence.
+Compilation/smoke success is not a completed competitive win, banking-detour
+coverage, or measured fuel headroom. Comparative strength remains unmeasured.
 
-Risks: spending 10g can delay an emblem; remote routes may leave locks unused;
-clearing-capable enemies pay just three basics. Fuel reserve is a policy bound,
-not measured headroom. Neither competitive gains nor denial coverage established.
-Rejected another combat rewrite after its regression and a threat planner without
-a causal trace; no patrols or previously tested arrival-tribute change bundled.
-Prior routing +0.041667 with interlock regression, zero-gain harvest circuits,
-and isolated item/draft/shield results did not establish additive gains.
-Prior notes/negative findings archived through task-490c542467de4fe282d89f6170644b21.
+Negative findings retained in archive/through-task-fd18a49b25e84173bc088cee80b91936.md:
+combat retargeting regressed -0.041667 against its edit base; camp scheduler
++0.041667 had interlock regression; harvest circuits had no established gain.
+Earlier isolated arrival-tribute, draft/items/shield changes did not establish
+additive gains. No previously rejected system is silently restored here.
 
-Next: supervisor evaluates exact checked source against d2d57274 on matched maps,
-both sides and frozen opponents. Compare wins, both teams' submitted gems, own
-equipment progression/deaths and available fuel or lock telemetry. Accepted
-champion promotion still requires the full gate.
+Next: supervisor evaluates exact checked source against 9f7ae1c8 on matched
+maps, sides and frozen opponents. Compare wins, carrier deaths, submitted and
+collected gems and available fuel/route telemetry; separate collision combat
+losses from expanse's combat-free speed loss. A later farming-speed experiment
+needs its own measured candidate. Full promotion gate remains required.

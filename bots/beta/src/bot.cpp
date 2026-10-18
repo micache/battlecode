@@ -19,6 +19,8 @@ constexpr std::uint64_t scan_reserve = 45000;
 constexpr std::size_t max_group_checks = 12;
 constexpr std::uint64_t lock_reserve = 30000;
 constexpr int lock_placement_range = 2; // Pinned SDK consumable contract.
+constexpr unsigned max_bank_detour = 6;
+constexpr int bank_enemy_margin = 1; // Allow for an enemy's next ordinary step.
 int distance(vec2 a, vec2 b) { return static_cast<int>(a.chebyshev_distance(b)); }
 
 cambc::bitboard around(vec2 p, int range) {
@@ -56,7 +58,7 @@ cambc::bitboard blocked_tiles() {
 }
 
 // Every root is a free approach tile. Retry once after a hidden obstruction.
-bool move_to(cambc::bitboard goals) {
+bool move_to(cambc::bitboard goals, bool protect_bag = false) {
     auto& me = cambc::self();
     if (!me.can_move()) return false;
     for (int attempt = 0; attempt < 2; ++attempt) {
@@ -66,9 +68,37 @@ bool move_to(cambc::bitboard goals) {
         cambc::distance_field field;
         cambc::bitboard visited;
         field.compute_to(blocked, goals, around(me.position(), 0), visited);
+        auto step_blocked = blocked;
+        // Only banking uses this optional detour. These are current observations,
+        // not shared vision or remembered enemy positions, and not a safety proof.
+        if (protect_bag && cambc::fuel_remaining() >= scan_reserve) {
+            cambc::bitboard danger;
+            for (const auto& enemy : cambc::vision::champions(team::enemy))
+                if (enemy.is_visible() && enemy.health() > 0)
+                    danger |= around(enemy.position(), enemy.attack_range() + bank_enemy_margin);
+            danger.set(me.position(), false); // Permit a step out of danger.
+            if (!danger.is_empty() && cambc::fuel_remaining() >= lock_reserve) {
+                auto cautious_blocked = blocked | danger;
+                const auto cautious_goals = goals & ~cautious_blocked;
+                if (!cautious_goals.is_empty()) {
+                    cambc::distance_field cautious;
+                    cautious.compute_to(cautious_blocked, cautious_goals,
+                        around(me.position(), 0), visited);
+                    const auto safer_distance = cautious.get(me.position());
+                    const auto direct_distance = field.get(me.position());
+                    // Never stall for an unreachable safe route or make an
+                    // unbounded diversion. Otherwise retain the original field.
+                    if (safer_distance != cambc::distance_field::unreachable
+                        && safer_distance <= unsigned(direct_distance) + max_bank_detour) {
+                        field = std::move(cautious);
+                        step_blocked = std::move(cautious_blocked);
+                    }
+                }
+            }
+        }
         auto best = me.position();
         auto value = field.get(best);
-        for (auto tile : blocked.reachable_tiles(me.position(), me.base_stats().base_move_speed).positions())
+        for (auto tile : step_blocked.reachable_tiles(me.position(), me.base_stats().base_move_speed).positions())
             if (field.get(tile) < value) { best = tile; value = field.get(tile); }
         if (best == me.position()) return false;
         if (me.move_absolute(best)) {
@@ -170,8 +200,8 @@ bool bank() {
         if (enemy_locks.is_set(altar)) locked |= around(altar, cambc::constants::submit_gems_range);
         else unlocked |= around(altar, cambc::constants::submit_gems_range);
     }
-    if (!unlocked.is_empty() && move_to(unlocked)) return true;
-    if (!locked.is_empty()) move_to(locked);
+    if (!unlocked.is_empty() && move_to(unlocked, true)) return true;
+    if (!locked.is_empty()) move_to(locked, true);
     return true;
 }
 } // namespace
