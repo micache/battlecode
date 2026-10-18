@@ -29,6 +29,8 @@ def main():
     current = config['engine']['version'] == '2.2.5'
     if current:
         read_current(stats)
+        require(inspected.get('served_replay_sha256') == file_hash(replay),
+                'visualizer review must verify the exact saved replay bytes')
         match = stats['match']
         round_number = match['roundsStarted']
         outcome = match['outcome']
