@@ -1,0 +1,204 @@
+{
+  "runtime": "3b6ac1b7771c02ba4d80d7735212b0a24d0ebf35",
+  "recorded_at": 1792336627.0442739,
+  "status": {
+    "timestamp": 1792336619.2872891,
+    "paused": false,
+    "adapter_paused": false,
+    "disk_pressure": false,
+    "service_error": null,
+    "disk": {
+      "artifact_bytes": 767625374,
+      "free": 2919469056
+    },
+    "workers": [
+      {
+        "detail": null,
+        "heartbeat": 1792336227.60172,
+        "id": "alpha",
+        "last_feedback": "beb181cb416aef4b92ecd0a51c58777cc2131c83c56f34966febf44fe08e5c1d",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "WAITING_EVALUATION",
+        "task_id": "task-67604621e969459896026d5855132cae"
+      },
+      {
+        "detail": null,
+        "heartbeat": 1792334414.2935278,
+        "id": "beta",
+        "last_feedback": "d5095f01216c16c9cb6fc6ca50e20c80e2c23d2472027f6e02c1eb53079b109a",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "IDLE",
+        "task_id": "task-9485272c218a4db2a10b11a83cae45f1"
+      },
+      {
+        "detail": null,
+        "heartbeat": 1792336314.8573244,
+        "id": "gamma",
+        "last_feedback": "804ae9d1b55c15c904978519941ac03229d6781dfc224b27ba9fff79067c037d",
+        "lease_owner": "server",
+        "next_run": 0,
+        "paused": 0,
+        "quota_count": 0,
+        "state": "WAITING_EVALUATION",
+        "task_id": "task-ffac8b92c85645ca803df9d1120ffd48"
+      }
+    ],
+    "matches": [
+      {
+        "count": 96,
+        "state": "CANCELLED"
+      },
+      {
+        "count": 8536,
+        "state": "COMPLETED"
+      },
+      {
+        "count": 9,
+        "state": "QUEUED"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "bot": "alpha",
+      "task_id": "task-67604621e969459896026d5855132cae",
+      "state": "PUBLISHED",
+      "commit": "cf1c7574dc04a9bb94004b1424ce470f8e243eae",
+      "source_hash": "9df96ffb3b9509b40f5a93ae59c9b7cbd1b48dde6e8f8580a1f3f29b0c021dd9",
+      "recovery": {
+        "at": 1792336153.2167096,
+        "old_state": "PAUSED",
+        "source_hash": "9df96ffb3b9509b40f5a93ae59c9b7cbd1b48dde6e8f8580a1f3f29b0c021dd9",
+        "infrastructure_commit": "3b6ac1b7771c02ba4d80d7735212b0a24d0ebf35",
+        "model_invocations": 0,
+        "original_detail": "oversized experiment history",
+        "reason": "recover exact checked native candidate after bounded note-publication repair"
+      },
+      "fresh_check": {
+        "state": "PASSED",
+        "started": 1792336153.2445643,
+        "finished": 1792336224.3952494,
+        "matches": [
+          {
+            "match_id": "a264967e8f22edee41f7e87fb48cc7b1fc4c68df1f47a98d1b2cba2a3d3cce00",
+            "state": "COMPLETED",
+            "completed": true,
+            "bot_faults": 0
+          },
+          {
+            "match_id": "3b4e1fa18c49f79917a4ea0258190ada6208b06d12122aa8df192f026d001142",
+            "state": "COMPLETED",
+            "completed": true,
+            "bot_faults": 0
+          }
+        ]
+      },
+      "evaluation": {
+        "id": "85a3d036a4d7c0de454b6974fcf8a653fa76bff1da8f109d332619a086fe9d20",
+        "state": "EVALUATING",
+        "coverage": "development-six-map",
+        "opponent_sources": 4,
+        "development_base": "2bd9aa09821265ac4c2da4507ba6581fce4fff3cea5e7dda550b94ffc30af31c"
+      }
+    },
+    {
+      "bot": "gamma",
+      "task_id": "task-ffac8b92c85645ca803df9d1120ffd48",
+      "state": "PUBLISHED",
+      "commit": "63d05e37a937fa2bfebf3de613af2ee3113b21a8",
+      "source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+      "recovery": {
+        "at": 1792336271.1179342,
+        "old_state": "PAUSED",
+        "source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+        "infrastructure_commit": "3b6ac1b7771c02ba4d80d7735212b0a24d0ebf35",
+        "model_invocations": 0,
+        "original_detail": "oversized notes",
+        "reason": "recover exact checked native candidate after bounded note-publication repair"
+      },
+      "fresh_check": {
+        "state": "PASSED",
+        "started": 1792336271.158182,
+        "finished": 1792336311.838403,
+        "matches": [
+          {
+            "match_id": "bbd96cd7ae993623592adc39c3f4804094d7e89bb1841672784e986ce167484b",
+            "state": "COMPLETED",
+            "completed": true,
+            "bot_faults": 0
+          },
+          {
+            "match_id": "7d8fbf0292408862debe9a41cb02a573a02299eed97d0e1c6c3b64d15929032e",
+            "state": "COMPLETED",
+            "completed": true,
+            "bot_faults": 0
+          }
+        ]
+      },
+      "evaluation": {
+        "id": "4c4120d3beed5bee0d15ccebe1c94f04fba58e7c1daa29028921e8cc3d11c95e",
+        "state": "EVALUATING",
+        "coverage": "development-six-map",
+        "opponent_sources": 4,
+        "development_base": "54338dc8eaa7f1cf288206540974dcf92a0ea5f6d99c3677dc15a612793547f0"
+      }
+    }
+  ],
+  "sqlite_quick_check": "ok",
+  "foreign_key_violations": 0,
+  "supervisor_running": true,
+  "unit_restarts": {
+    "arena": 0,
+    "alpha": 0,
+    "beta": 0,
+    "gamma": 0
+  },
+  "automatic_promotion": false,
+  "improvement_interval_seconds": 3600,
+  "cause": "The old publisher bounded the entire cumulative note snapshot, rather than the current experiment's edits.",
+  "before": {
+    "alpha": {
+      "history_files": 133,
+      "history_bytes": 756700,
+      "changed_note_files": 6,
+      "changed_note_bytes": 55013,
+      "error": "oversized experiment history"
+    },
+    "gamma": {
+      "history_files": 71,
+      "history_bytes": 1099790,
+      "changed_note_files": 6,
+      "changed_note_bytes": 216215,
+      "error": "oversized notes"
+    }
+  },
+  "verification": {
+    "test_command": "python3 -m unittest discover -s tests",
+    "tests_passed": 122,
+    "test_failures": 0,
+    "source_and_all_note_files_compared_against_preserved_owner_attempts": true,
+    "original_native_results_unchanged": true,
+    "owner_checkpoints_unchanged": true,
+    "no_additional_model_invocations_for_recovery": true,
+    "services_stopped_before_runtime_install": true,
+    "previous_managed_supervisor_exited": 0,
+    "managed_supervisor": "arena-note-delta-supervisor-20261018",
+    "backup": "/srv/battlecode/backups/1792336127092791709",
+    "completed_games_before_restart": 8526,
+    "completed_games_at_snapshot": 8536,
+    "official_mutations_performed": false,
+    "model_and_authentication_settings_changed": false
+  },
+  "limits": [
+    "This is a verified controlled service restart, not a physical provider reboot test.",
+    "Candidate evaluations were still running; no strength or promotion claim.",
+    "No claim of indefinite fault-free operation; quota/auth waits and genuine unsafe edits remain guarded.",
+    "Genuinely oversized current edit transactions remain bounded; accumulated unchanged history no longer consumes that budget."
+  ]
+}

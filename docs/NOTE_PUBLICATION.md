@@ -57,3 +57,30 @@ Regression checks include inherited history beyond both former limits, exact
 preservation of unchanged bytes, note additions/deletions/moves, scope and symlink
 denial, mailbox overflow rejection before writing, and recovery of both known
 failure classes with zero additional model invocations.
+
+## Live deployment and verification
+
+Runtime `3b6ac1b7771c02ba4d80d7735212b0a24d0ebf35` is installed. All 122
+automated checks passed, including two successive publications after inherited
+history exceeds the former aggregate limits. A consistent pre-recovery database
+backup was saved at `/srv/battlecode/backups/1792336127092791709`.
+
+The normal publisher recovered alpha as `cf1c7574dc04a9bb94004b1424ce470f8e243eae`
+and gamma as `63d05e37a937fa2bfebf3de613af2ee3113b21a8`. Both passed fresh
+both-side full-game smoke checks, with zero observed bot faults, and needed no
+additional model invocation. Published source and every note file were compared
+against each preserved owner attempt: all 133 alpha files (756,700 bytes) and
+71 gamma files (1,099,790 bytes) matched exactly. Native results and private
+checkpoints were not rewritten.
+
+After the supervised restart, completed games increased from 8,526 to 8,536.
+Both recovered candidates were in six-map frozen-opponent evaluation, beta was
+IDLE between scheduled jobs, no lane was paused, and all four units had zero
+unexpected restarts. SQLite quick_check returned `ok` and foreign_key_check
+found no violations. About 2.92 GB remained free, with rolling retention active
+and no reported disk pressure, adapter pause or service error.
+
+The [live record](../evidence/blaxel/note-delta-recovery-20261018.json) preserves
+the actual task, commit, source, smoke match and evaluation IDs. Neither the
+pending evaluations nor controlled restart certify champion strength, official
+contest parity, physical reboot persistence or indefinite uptime.
