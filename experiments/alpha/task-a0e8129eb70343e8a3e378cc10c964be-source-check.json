@@ -1,0 +1,28 @@
+{
+  "task_id": "task-a0e8129eb70343e8a3e378cc10c964be",
+  "scope": "Source invariants only; no runtime, fuel or strength claim",
+  "checks": {
+    "only_local_farming_policy_changed": true,
+    "other_executable_files_match_edit_base": true,
+    "live_group_queries_require_current_local_vision": true,
+    "only_cleared_groups_collect": true,
+    "ongoing_capture_precedes_other_camp_attacks": true,
+    "walk_distance_and_free_goals_checked": true,
+    "existing_collector_precedes_election": true,
+    "delegated_tiles_not_navigation_goals": true,
+    "ally_live_state_requires_visibility": true,
+    "deterministic_tie_and_no_new_shared_state": true,
+    "bounded_scan_and_fallback": true,
+    "yield_survives_exceptions": true
+  },
+  "passed": true,
+  "source_files": {
+    "bot.cpp": "82f489485022f42a908a82cd86e73d1ca5e62ea5203d8dd6618a8820ddfea799",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0"
+  }
+}

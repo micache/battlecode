@@ -3,8 +3,6 @@
 // Per-champion state survives between turns. Pick one stat and keep buying it.
 class Bot {
     int chosen_stat = -1;
-    // Private to this champion; optional shop recall never blocks emergency recall.
-    unsigned next_resupply_round = 0;
 
     // Spend only on power shards of the randomly chosen stat.
     void buy_items();

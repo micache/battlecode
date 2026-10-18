@@ -80,46 +80,6 @@ void Bot::buy_items() {
 constexpr std::uint64_t combat_fuel_reserve = 18000;
 constexpr unsigned combat_target_limit = 16;
 
-// Two emblems justify a quiet resupply trip; smaller balances keep farming.
-constexpr unsigned resupply_gold = 300;
-constexpr unsigned resupply_retry_rounds = 40;
-
-bool economic_recall(unsigned& next_attempt) {
-    auto& me = cambc::self();
-    if (cambc::round_number() < next_attempt
-        || me.gold_count() < resupply_gold || me.gem_count() || !me.can_move()
-        || cambc::map::spawn_region(team::ally).is_set(me.position())
-        || cambc::fuel_remaining() < combat_fuel_reserve)
-        return false;
-
-    // No claim that unseen enemies are absent. Abort this optional trip whenever
-    // a current enemy is visible or a damaging camp could interrupt the channel.
-    if (!cambc::vision::champions(team::enemy).empty()) return false;
-    unsigned examined = 0;
-    for (const auto& camp : cambc::vision::camps()) {
-        if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
-            return false;
-        if (camp.is_visible() && camp.health() > 0 && camp.strength() > 0
-            && camp.attack_tiles().is_set(me.position()))
-            return false;
-    }
-
-    // Do not abandon our existing capture for shopping. Only inspect live state
-    // for a group whose spawn we occupy, which is necessarily in our vision.
-    for (const auto& group : cambc::map::camp_groups()) {
-        if (cambc::fuel_remaining() < combat_fuel_reserve) return false;
-        if (group.spawn_tiles().is_set(me.position())
-            && std::holds_alternative<cambc::map::camp_group_reward_available>(group.state()))
-            return false;
-    }
-
-    // A hidden attacker may interrupt us. Let ordinary play resume rather than
-    // restarting an optional recall every turn. Emergency retreat is separate.
-    next_attempt = cambc::round_number() + resupply_retry_rounds;
-    me.recall();
-    return true;
-}
-
 // Handles are refreshed through vision on every action, never cached across turns.
 template<class Target>
 auto combat_targets() {
@@ -271,8 +231,86 @@ bool fight(bool walked = false) {
     return acted;
 }
 
+// Local collection is deliberately different from global reward chasing: finish
+// a nearby clear, but leave collection to an existing or better-placed ally.
+constexpr int local_capture_steps = 3;
+constexpr unsigned local_capture_group_limit = 16;
+constexpr std::uint64_t capture_scan_reserve = 45000;
+
+std::uint32_t champion_id(const cambc::champion& champion) {
+    return static_cast<std::uint32_t>(static_cast<cambc::handle_champion_t>(champion));
+}
+
+bool collect_local_reward(cambc::bitboard& delegated) {
+    auto& me = cambc::self();
+    if (cambc::fuel_remaining() < capture_scan_reserve) return false;
+    const auto position = me.position();
+    const auto visible = cambc::vision::visible_tiles();
+    const auto vicinity = tiles_around(position, local_capture_steps);
+    const auto allies = cambc::vision::champions(team::ally);
+    auto allied_tiles = cambc::vision::champion_tiles(team::ally);
+    allied_tiles.set(position, false);
+    cambc::bitboard rewards;
+    rewards.clear();
+    std::optional<cambc::bitboard> free_reachable;
+    unsigned examined = 0;
+    for (const auto& group : cambc::map::camp_groups()) {
+        if (cambc::fuel_remaining() < capture_scan_reserve) break;
+        const auto spawns = group.spawn_tiles();
+        // Static geometry first; never ask for hidden lifecycle state.
+        if ((spawns & vicinity & visible).is_empty()) continue;
+        if (++examined > local_capture_group_limit) break;
+        if (!std::holds_alternative<cambc::map::camp_group_reward_available>(group.state()))
+            continue;
+        // Never abandon an ongoing capture for another camp's attack opportunity.
+        if (spawns.is_set(position)) return true;
+        if (!(spawns & allied_tiles).is_empty()) {
+            delegated |= spawns;
+            continue;
+        }
+        // A three-step geometric radius is not proof of a three-step route.
+        if (!free_reachable) {
+            const auto blocked = blocked_tiles();
+            free_reachable = blocked.reachable_tiles(position, local_capture_steps) & ~blocked;
+        }
+        const auto local_goals = spawns & *free_reachable;
+        if (local_goals.is_empty()) continue;
+        int our_distance = 0;
+        while (our_distance < local_capture_steps
+            && (spawns & tiles_around(position, our_distance)).is_empty()) ++our_distance;
+        bool assigned_elsewhere = false;
+        unsigned allies_examined = 0;
+        for (const auto& ally : allies) {
+            if (++allies_examined > 6 || cambc::fuel_remaining() < capture_scan_reserve)
+                break;
+            if (ally == me || !ally.is_visible() || !ally.is_alive()) continue;
+            // Only ordinary empty-bag farmers are prospective collectors. These
+            // are current local observations, not shared vision or cached intent.
+            if (ally.gem_count() || ally.is_recalling() || ally.is_submitting_gems()
+                || ally.is_teleporting() || ally.health() < ally.max_health() * 0.35f)
+                continue;
+            const auto ally_position = ally.position();
+            const bool closer = our_distance > 0
+                && !(spawns & tiles_around(ally_position, our_distance - 1)).is_empty();
+            const bool tied = !(spawns & tiles_around(ally_position, our_distance)).is_empty();
+            if (closer || (tied && champion_id(ally) < champion_id(me))) {
+                assigned_elsewhere = true;
+                break;
+            }
+        }
+        if (assigned_elsewhere) delegated |= spawns;
+        else rewards |= local_goals;
+    }
+    // If extra scanning spent the planning reserve, retain ordinary legal farming.
+    if (rewards.is_empty() || cambc::fuel_remaining() < combat_fuel_reserve) return false;
+    return move_towards_closest(rewards);
+}
+
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
+    cambc::bitboard delegated;
+    delegated.clear();
+    if (collect_local_reward(delegated)) return;
     if (fight<cambc::camp>() || cambc::fuel_remaining() < combat_fuel_reserve)
         return;
 
@@ -284,7 +322,7 @@ void farm_camps() {
         const bool group_visible = !(group.spawn_tiles() & visible).is_empty();
         if (group_visible && std::holds_alternative<cambc::map::camp_group_respawning>(group.state()))
             continue;
-        goals |= group.spawn_tiles();
+        goals |= group.spawn_tiles() & ~delegated;
     }
 
     // Fresh vision after movement may reveal a camp already in range.
@@ -311,7 +349,6 @@ void Bot::play_turn() {
     // Refill control tools while dead so the next sortie can deny an altar.
     if (!me.is_alive()) {
         altar_control::buy_lock();
-        buy_items();
         return;
     }
 
@@ -320,14 +357,13 @@ void Bot::play_turn() {
         || (!me.can_move() && !me.can_attack() && !me.can_cast()))
         return;
 
-    // The same build shops wherever legal: spawn, death, or Tavi's field shop.
-    // Consumables still use their separate spawn/death permission.
+    // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
     if (at_spawn) {
         // Ten gold buys persistent denial; remaining gold follows the base build.
         altar_control::buy_lock();
+        buy_items();
     }
-    buy_items(); // can_buy rejects ordinary champions away from spawn.
 
     altar_control::place_lock();
 
@@ -365,10 +401,6 @@ void Bot::play_turn() {
         move_towards_closest(goals);
         return;
     }
-
-    // Bags are already banked and combat/retreat retain priority. Tavi has spent
-    // affordable field gold above, so needs no special-case resupply exemption.
-    if (economic_recall(next_resupply_round)) return;
 
     farm_camps();
 
