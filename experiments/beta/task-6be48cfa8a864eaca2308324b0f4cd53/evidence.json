@@ -1,0 +1,330 @@
+{
+  "task_id": "task-6be48cfa8a864eaca2308324b0f4cd53",
+  "edit_commit": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+  "base_source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+  "latest_evaluated_candidate": {
+    "build_id": "d22f4444fb8f1ce3bde8ec8d6179bbfcd623f21acdb8db822b33df1c14c043fa",
+    "commit": "672874bb459ad66bfc3e03b3ff7f96a9160fbf56",
+    "revision_id": "1d0e541d62be9b7f8bc3e6ca6ad0243702c9387e7ead4494d1aaa87a10b588ad",
+    "source_hash": "1afc298354488d093706f3c0e637a29ae133ce3484c378daf555a477d9d2a1d6"
+  },
+  "evaluation_id": "e0a46ae1b03695e4ac5bbf113845cae78b46141dd5d73dde477974176787d6b4",
+  "development_comparison": {
+    "commit_sha": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+    "common_opponent_delta": 0.0,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 24,
+    "per_map": {
+      "collision": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "corners": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "elkring": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "expanse": {
+        "candidate": 0.625,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "interlock": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "lanes": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      }
+    },
+    "source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+    "unknown_reliability": []
+  },
+  "representative_failures": [
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 22,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 8,
+            "B": 5
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 5,
+            "B": 8
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1026,
+            "B": 1100
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 4835,
+            "B": 5200
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 875
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 872,
+            "B": 1012
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 225,
+            "B": 40
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "c9171081e0d3ab178cce5952aebcdf39530846eece8ff2f991c6a79f8cf88986",
+      "round": 875,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 72,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 1,
+            "B": 1
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 1,
+            "B": 1
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 766,
+            "B": 1032
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2120,
+            "B": 850
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 409
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 658,
+            "B": 1032
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 360,
+            "B": 40
+          }
+        }
+      },
+      "map": "corners",
+      "match_id": "6adb00fb67609b270e1acbd1ca81e8ff0a3397c0c76d324b80734a72e64eee81",
+      "round": 409,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 36,
+            "B": 36
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 1,
+            "B": 1
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 1,
+            "B": 1
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 684,
+            "B": 1044
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 3755,
+            "B": 5705
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 435
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 648,
+            "B": 1008
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 675,
+            "B": 605
+          }
+        }
+      },
+      "map": "elkring",
+      "match_id": "ad4d2bfe71a5298cc65269d97cdb986514ce4666590e5f90c33715e4e412272b",
+      "round": 435,
+      "side": "A",
+      "trace": null
+    }
+  ],
+  "known_winning_contrast": {
+    "source": {
+      "build_id": "d22f4444fb8f1ce3bde8ec8d6179bbfcd623f21acdb8db822b33df1c14c043fa",
+      "commit": "672874bb459ad66bfc3e03b3ff7f96a9160fbf56",
+      "revision_id": "1d0e541d62be9b7f8bc3e6ca6ad0243702c9387e7ead4494d1aaa87a10b588ad",
+      "source_hash": "1afc298354488d093706f3c0e637a29ae133ce3484c378daf555a477d9d2a1d6"
+    },
+    "scope": "development map aggregates; no individual winning ID supplied",
+    "interlock": {
+      "candidate": 1.0,
+      "incumbent": 0.125,
+      "pairs": 4
+    },
+    "lanes": {
+      "candidate": 1.0,
+      "incumbent": 0.125,
+      "pairs": 4
+    }
+  },
+  "entry_verification": {
+    "branch": "bot/beta",
+    "head": "672874bb459ad66bfc3e03b3ff7f96a9160fbf56",
+    "entry_edit_source_verified": true,
+    "entry_all_six_matched_edit_blobs": true,
+    "source_file_sha256_at_entry": {
+      "bot.cpp": "f9d4092e9aced0cbac99ecb485bfd6dd42e615e3119e404577cbe0417582d165",
+      "bot.h": "89f2099b5ab009d94534770c4b27f22aa0111484400d84098d4b16b3d90167c5",
+      "draft.cpp": "a514e8514609f8420af35293c2023e75c4057c14d61b8bd23e03c09ed3f476a9",
+      "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+      "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+      "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+    }
+  },
+  "frozen_opponent_manifest": {
+    "path": "/srv/battlecode/public/strategy/task-6be48cfa8a864eaca2308324b0f4cd53/manifest.json",
+    "sha256": "ab20635be24f7d06ffbd06e46035a2361fe9fd15828a58283eff3a9616af9fae",
+    "inspected_sources": [
+      "gamma 1b34f42a5266051ee50bae4cf74197b99b1115cb / 3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "alpha 5f73d0787014e3f712d0eb6234f088fee489b4d8 / ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f (targeted movement/combat sections)"
+    ]
+  },
+  "bot_files_changed_from_edit": [
+    "bots/beta/src/bot.cpp"
+  ],
+  "documentation_changed_or_unrecorded": false,
+  "final_check": {
+    "bot_id": "beta",
+    "exit_code": 0,
+    "finished": 1792338001.0683646,
+    "matches": [
+      "b6dee446b6687e67b919b5ca8c9ebcd5be5f68dcfb52725d99f50c84299cc1d1",
+      "291b302e769984d83eeb5f2332e55a75d84946c6fec562c291614f0936fdcb02"
+    ],
+    "report_reference": "check:task-6be48cfa8a864eaca2308324b0f4cd53:6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+    "source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+    "started": 1792337773.1114101,
+    "state": "PASSED",
+    "task_id": "task-6be48cfa8a864eaca2308324b0f4cd53"
+  },
+  "final_source_file_sha256": {
+    "bot.cpp": "29ea7f6e5bf40eec5774c47f89af2e8982bb884938aa448aa0bfcee755a42d4c",
+    "bot.h": "89f2099b5ab009d94534770c4b27f22aa0111484400d84098d4b16b3d90167c5",
+    "draft.cpp": "a514e8514609f8420af35293c2023e75c4057c14d61b8bd23e03c09ed3f476a9",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "limits": "Smoke validity only; no measured strategic gain, dash coverage or fuel headroom."
+}

@@ -13,31 +13,14 @@ using cambc::team;
 namespace {
 constexpr float retreat_fraction = 0.45f;
 constexpr unsigned shopping_gold = 150;
-constexpr unsigned healthy_shopping_gold = 300;
-constexpr unsigned shopping_gold_per_absent_round = 15;
-constexpr unsigned max_shopping_walk_rounds = 24;
 constexpr unsigned retry_delay = 12;
 constexpr std::uint64_t planning_reserve = 18000;
 constexpr std::uint64_t scan_reserve = 45000;
 constexpr std::size_t max_group_checks = 12;
 constexpr std::uint64_t lock_reserve = 30000;
 constexpr int lock_placement_range = 2; // Pinned SDK consumable contract.
-
-// A healthy farmer must fund a batch and amortize recall, one spawn turn and
-// the estimated walk back to its current location. This is a policy budget,
-// not a prediction of future gold or a claim that every trip pays for itself.
-constexpr unsigned shopping_walk_budget(unsigned gold, unsigned recall_ticks) {
-    if (gold < healthy_shopping_gold) return 0;
-    const auto absence_budget = gold / shopping_gold_per_absent_round;
-    if (absence_budget <= recall_ticks + 1) return 0;
-    return std::min(max_shopping_walk_rounds, absence_budget - recall_ticks - 1);
-}
-static_assert(shopping_walk_budget(299, 5) == 0); // No partial healthy batch.
-static_assert(shopping_walk_budget(300, 5) == 14);
-static_assert(shopping_walk_budget(300, 3) == 16); // Home's shorter channel.
-static_assert(shopping_walk_budget(450, 5) == 24);
-static_assert(shopping_walk_budget(10000, 5) == 24); // Never authorize a long trek.
-static_assert(shopping_walk_budget(300, 20) == 0); // No unsigned underflow.
+constexpr std::uint64_t dash_reserve = 45000;
+constexpr unsigned dash_steps = 2;
 int distance(vec2 a, vec2 b) { return static_cast<int>(a.chebyshev_distance(b)); }
 
 cambc::bitboard around(vec2 p, int range) {
@@ -74,6 +57,76 @@ cambc::bitboard blocked_tiles() {
     return result;
 }
 
+// Spend a cast only for two real route steps, never an unreachable-field artifact.
+constexpr bool useful_dash(unsigned from, unsigned to) {
+    return from != cambc::distance_field::unreachable
+        && to != cambc::distance_field::unreachable && to < from
+        && from - to >= dash_steps;
+}
+static_assert(useful_dash(2, 0));
+static_assert(useful_dash(12, 10));
+static_assert(!useful_dash(1, 0));
+static_assert(!useful_dash(0, 0));
+static_assert(!useful_dash(2, 3));
+static_assert(!useful_dash(cambc::distance_field::unreachable, 0));
+static_assert(!useful_dash(3, cambc::distance_field::unreachable));
+
+// Walk first, retaining reset casts on arrival. Reuse the existing route field;
+// only the occupancy/vision masks are refreshed after walking. No extra search.
+void dash_along_route(const cambc::distance_field& field) {
+    auto& me = cambc::self();
+    const auto abilities = me.abilities();
+    for (const auto& ability : abilities) {
+        if (!ability.is_dash()) continue;
+        if (cambc::fuel_remaining() < dash_reserve || !me.is_alive()
+            || !me.can_cast() || me.is_recalling() || me.is_submitting_gems()
+            || me.is_teleporting()) return;
+        const auto restrictions = me.restrictions();
+        if (restrictions.contains(cambc::buff_restrictions::move)
+            || restrictions.contains(cambc::buff_restrictions::cast)) return;
+        const auto info = ability.get<cambc::ability_dash>();
+        if (info.exclusive_with_movement || info.range < dash_steps
+            || !ability.can_target_ground() || !ability.is_ready()) return;
+        const auto origin = me.position();
+        const auto remaining = field.get(origin);
+        if (!useful_dash(remaining, 0)) return;
+
+        const auto blocked = blocked_tiles();
+        const auto visible = cambc::vision::visible_tiles();
+        const auto range = ability.valid_tiles();
+        cambc::bitboard enemy_danger;
+        for (const auto& enemy : cambc::vision::champions(team::enemy))
+            if (enemy.is_visible() && enemy.health() > 0)
+                enemy_danger |= around(enemy.position(), enemy.attack_range() + 1);
+
+        constexpr std::array directions{vec2::north, vec2::north_east, vec2::east,
+            vec2::south_east, vec2::south, vec2::south_west, vec2::west, vec2::north_west};
+        auto destination = origin;
+        auto best = remaining;
+        for (auto direction : directions) {
+            const auto middle = origin + direction;
+            const auto landing = origin + direction * static_cast<int>(dash_steps);
+            // A deliberately conservative legal subset: a straight, fully seen,
+            // ordinary walkable path, including its intermediate tile. No holes.
+            if (!cambc::map::is_in_bounds(landing) || !range.is_set(landing)
+                || !visible.is_set(middle) || !visible.is_set(landing)
+                || blocked.is_set(middle) || blocked.is_set(landing)
+                || enemy_danger.is_set(landing)) continue;
+            const auto value = field.get(landing);
+            if (useful_dash(remaining, value) && value < best) {
+                destination = landing;
+                best = value;
+            }
+        }
+        if (destination != origin && cambc::fuel_remaining() >= lock_reserve) {
+            // False reveals an obstruction and preserves the cast. Stop this
+            // phase; the caller refreshes observations before subsequent combat.
+            if (ability.use(destination)) lock_nearby_altar();
+        }
+        return; // At most one dash attempt, including a hidden-blocker reveal.
+    }
+}
+
 // Every root is a free approach tile. Retry once after a hidden obstruction.
 bool move_to(cambc::bitboard goals) {
     auto& me = cambc::self();
@@ -92,6 +145,7 @@ bool move_to(cambc::bitboard goals) {
         if (best == me.position()) return false;
         if (me.move_absolute(best)) {
             lock_nearby_altar(); // Refresh visibility after walking into placement range.
+            dash_along_route(field);
             return true;
         }
         if (cambc::fuel_remaining() < planning_reserve) return false;
@@ -217,52 +271,6 @@ void Bot::buy_items() {
     }
     const auto n = me.gold_count() / I::power_shard_of_strength.cost();
     if (n && me.can_buy(I::power_shard_of_strength, n)) me.buy(I::power_shard_of_strength, n);
-}
-
-bool Bot::return_to_shop() {
-    auto& me = cambc::self();
-    const auto gold = me.gold_count();
-    const auto& spawn = cambc::map::spawn_region(team::ally);
-    if (gold < shopping_gold || me.gem_count() != 0
-        || me.champion_name() == cambc::champion_type::tavi
-        || spawn.is_set(me.position())
-        || me.restrictions().contains(cambc::buff_restrictions::move)) return false;
-
-    // Do not abandon a five-round capture for equipment. Our occupied spawn
-    // tile is visible, so this state query never reads a hidden group.
-    for (const auto& g : groups)
-        if (g.spawns.is_set(me.position())
-            && std::holds_alternative<cambc::map::camp_group_reward_available>(g.group.state()))
-            return false;
-    if (exposed(me.position())) return false;
-
-    // Preserve the existing injured, empty-bag shopping return.
-    if (me.health() < me.max_health() * 0.8f) {
-        recovering = true;
-        me.recall();
-        return true;
-    }
-    const auto walk_rounds = shopping_walk_budget(gold, cambc::constants::recall_time);
-    if (!walk_rounds || cambc::fuel_remaining() < scan_reserve) return false;
-    const auto speed = std::max(1, static_cast<int>(me.base_stats().base_move_speed));
-    const auto max_steps = static_cast<std::uint16_t>(walk_rounds * speed);
-    // Cheap rejection before allocating a distance field. Terrain distance,
-    // unlike this lower bound, accounts for walls and holes on the return leg.
-    bool near_spawn = false;
-    for (auto tile : spawn.positions())
-        if (distance(me.position(), tile) <= max_steps) { near_spawn = true; break; }
-    if (!near_spawn) return false;
-    const auto terrain = cambc::map::walls() | cambc::map::holes()
-        | cambc::map::altars() | cambc::map::spawn_region(team::enemy);
-    cambc::distance_field field;
-    cambc::bitboard visited;
-    field.compute_to(terrain, spawn, around(me.position(), 0), visited, max_steps);
-    if (field.get(me.position()) == cambc::distance_field::unreachable
-        || cambc::fuel_remaining() < planning_reserve) return false;
-    // No recovery latch: an interrupted economic recall may be reconsidered
-    // next turn instead of forcing a healthy champion to walk home under fire.
-    me.recall();
-    return true;
 }
 
 void Bot::farm_camps() {
@@ -393,6 +401,12 @@ void Bot::play_turn() {
         }
         initialized = true;
     }
-    if (return_to_shop()) return;
+    // Reinvest captured gold on safe empty-bag returns; field shoppers need no trip.
+    if (me.gold_count() >= shopping_gold && me.champion_name() != cambc::champion_type::tavi
+        && me.health() < me.max_health() * 0.8f && !exposed(me.position())) {
+        recovering = true;
+        me.recall();
+        return;
+    }
     farm_camps();
 }
