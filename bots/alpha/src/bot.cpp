@@ -1,6 +1,7 @@
 // Champion decisions. main.cpp dispatches here after the draft.
 #include <cambc.h>
 #include "bot.h"
+#include "altar_control.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -44,8 +45,11 @@ bool move_towards_closest(cambc::bitboard goals) {
     goals &= ~blocked | cambc::vision::camp_tiles();
     if (goals.is_empty())
         return false;
-    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0]))
-        return me.move_towards(goals.positions()[0]);
+    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0])) {
+        const bool moved = me.move_towards(goals.positions()[0]);
+        if (moved) altar_control::place_lock();
+        return moved;
+    }
 
     // Expand from the goals until our current tile is reached.
     const auto path_walls = blocked & ~goals;
@@ -58,7 +62,9 @@ bool move_towards_closest(cambc::bitboard goals) {
     for (auto tile : blocked.reachable_tiles(step, me.base_stats().base_move_speed).positions())
         if (field.get(tile) < field.get(step)) step = tile;
 
-    return step != me.position() && me.move_absolute(step);
+    const bool moved = step != me.position() && me.move_absolute(step);
+    if (moved) altar_control::place_lock();
+    return moved;
 }
 
 void Bot::buy_items() {
@@ -84,38 +90,20 @@ auto combat_targets() {
 }
 
 template<class Target>
-std::optional<Target> basic_target(bool require_attack_allowance = true) {
+std::optional<Target> basic_target() {
     auto& me = cambc::self();
-    if (!me.is_alive() || (require_attack_allowance && !me.can_attack())
+    if (!me.is_alive() || !me.can_attack()
         || me.restrictions().contains(cambc::buff_restrictions::attack))
         return std::nullopt;
     const auto range = me.attack_tiles();
-    std::optional<Target> best;
-    float lowest_health = 0;
-    std::uint32_t largest_bag = 0;
     unsigned examined = 0;
     for (const auto& target : combat_targets<Target>()) {
         if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
             break;
-        if (!target.is_visible()) continue;
-        const float health = target.health();
-        if (health <= 0 || !range.is_set(target.position())) continue;
-        if constexpr (std::is_same_v<Target, cambc::camp>) {
-            // Keep camp ordering: do not awaken different groups for this policy.
+        if (target.is_visible() && target.health() > 0 && range.is_set(target.position()))
             return target;
-        } else {
-            // Focus wounded enemies rather than engine enumeration order. Equal
-            // health favors a valuable carrier; exact ties keep stable order.
-            if (best && health > lowest_health) continue;
-            const auto bag = target.gem_count();
-            if (!best || health < lowest_health || bag > largest_bag) {
-                best = target;
-                lowest_health = health;
-                largest_bag = bag;
-            }
-        }
     }
-    return best;
+    return std::nullopt;
 }
 
 bool cast_ready(const cambc::ability& ability, bool walked) {
@@ -155,15 +143,20 @@ bool fight(bool walked = false) {
             // Resets have no range; only spend one when a new basic is possible.
             if (me.can_attack() || me.restrictions().contains(cambc::buff_restrictions::attack))
                 continue;
-            // Predict the same target policy that the fresh post-reset basic
-            // will use; only the spent allowance is ignored during planning.
-            if (const auto target = basic_target<Target>(false)) {
-                const float score = std::min(me.strength(), target->health());
+            const auto range = me.attack_tiles();
+            unsigned examined = 0;
+            for (const auto& target : combat_targets<Target>()) {
+                if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
+                    break;
+                if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
+                    continue;
+                const float score = std::min(me.strength(), target.health());
                 if (score > best_score) {
                     best_score = score;
                     selected = ability;
                     selected_target = target;
                 }
+                break; // Match the first-target basic policy used after the reset.
             }
             continue;
         }
@@ -275,15 +268,26 @@ void Bot::play_turn() {
 
     auto& me = cambc::self();
 
+    // Refill control tools while dead so the next sortie can deny an altar.
+    if (!me.is_alive()) {
+        altar_control::buy_lock();
+        return;
+    }
+
     // Leave channels running and skip turns where we cannot act.
-    if (!me.is_alive() || me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
+    if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
         || (!me.can_move() && !me.can_attack() && !me.can_cast()))
         return;
 
     // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
-    if (at_spawn)
+    if (at_spawn) {
+        // Ten gold buys persistent denial; remaining gold follows the base build.
+        altar_control::buy_lock();
         buy_items();
+    }
+
+    altar_control::place_lock();
 
     // Retreat before recall so repeated damage interruptions still allow progress.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {
@@ -301,17 +305,21 @@ void Bot::play_turn() {
 
     // Bank any carried gems before farming.
     if (me.gem_count() > 0) {
+        if (altar_control::bank_or_clear_lock()) return;
+        if (cambc::fuel_remaining() < combat_fuel_reserve) return;
         // Union all altar approach tiles: the field chooses the nearest reachable altar.
         cambc::bitboard goals;
         goals.clear();
+        cambc::bitboard locked_goals;
+        locked_goals.clear();
+        const auto hostile = cambc::vision::altar_lock_tiles(team::enemy);
         for (auto altar : cambc::map::altars().positions()) {
-            if (distance(me.position(), altar) <= cambc::constants::submit_gems_range
-                && !cambc::vision::has_altar_lock(altar)) {
-                    me.submit_gems(altar);
-                    return;
-                }
-            if (!cambc::vision::has_altar_lock(altar)) goals |= tiles_around(altar, cambc::constants::submit_gems_range);
+            const auto approach = tiles_around(altar, cambc::constants::submit_gems_range);
+            if (hostile.is_set(altar)) locked_goals |= approach;
+            else goals |= approach; // Friendly locks permit our tribute.
         }
+        // If all altars are visibly hostile, approach one and clear it next turn.
+        if (goals.is_empty()) goals = locked_goals;
         move_towards_closest(goals);
         return;
     }

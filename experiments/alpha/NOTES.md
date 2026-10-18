@@ -1,83 +1,97 @@
-# Current experiment: task-fad21318699145cb8c6edbeb317401fa
+# Current experiment: task-a625d4c1125a40d08a86a8eb89ddb56a
 
 ## Identity and status
-- Bot alpha; branch bot/alpha; input HEAD 8a8819e101d7d70ff99cf010662456b4184e846c.
+- Bot alpha; branch bot/alpha; input HEAD 5cb8beb08a34cffcb4220edc1cf8eed6068c51d2.
 - Edit commit 6af1685b849ad23ee9eaadb1a8de18742318d87b; base source
   87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01.
-  All six source files verified byte-identical to edit commit before editing.
-  Initial HEAD diff/deleted dash headers were trusted preparation, not unfinished work.
-- Latest candidate has completed INCONCLUSIVE evaluation; pending self-play is
-  separate. Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e remains in Git.
-  Prior operational notes archived as task-b61dfbca8f5349ac832abc6a600f85ab.md.
-- Engine/SDK 2.1.6; historical-panels-v1; lock
+  All six entry files matched this edit commit byte-for-byte. Initial bot.cpp
+  difference from HEAD was trusted preparation, not an unfinished patch.
+- Latest focus-fire candidate finished INCONCLUSIVE evaluation. Continuous
+  self-play pending matches are separate; no evaluation awaited in this worker.
+- Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e remains in Git.
+  Previous operational notes archived as task-fad21318699145cb8c6edbeb317401fa.md.
+- Engine/SDK 2.1.6, suite historical-panels-v1, lock
   00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-- Routine unchanged-doc iteration; prior full-review basis task-b61dfbca8f5349ac832abc6a600f85ab.
-  Consulted compact reference, research/organizer limits, economy/combat playbooks,
-  relevant handbook/API and installed SDK contracts. Header hash matches brief.
-  Organizer page is a download hub; event-policy and production-parity limits remain.
+- Routine unchanged-document iteration. Consulted compact reference, research and
+  organizer ledger, economy/coordination/navigation playbooks, relevant handbook
+  and C++ consumable/lock APIs, and matching installed header. SDK hash verified.
+  The organizer page is a download hub; event-policy/production-parity limits remain.
 
 ## One hypothesis
-Focusing champion basic attacks and reset follow-ups on the lowest-health legal
-visible enemy, breaking equal-health ties by carried gems, will increase matched
-development win rate over the edit base. Unchanged or lower win rate falsifies
-this hypothesis. Kills, deaths and submitted gems diagnose the mechanism.
-This is an unmeasured source/rules deduction, not a causal claim about a loss.
+Opportunistic altar locks with friendly-lock-aware banking and hostile-lock
+recovery will increase matched development win rate over the edit base. Unchanged
+or lower win rate falsifies this prediction. Opponent tribute and completion
+rounds diagnose the mechanism. This is an unmeasured rules/source deduction.
 
 ## Evidence and decision
-- Evaluation b4c8b53911a3b94679ff7e1a1ff36e0fcf03e541da6d790ef8439b2b1ceeb9f2
-  measures 8a8819e / source 8608f03590f10c590a539ccc7070ef74c080607b26aa897df0138be59391dc4e,
-  not the source edited here. Development: 42W/6L, no faults/missing/unknown;
-  matched development-base delta 0.0 across 24 side-paired cells.
-  Contrasting map coverage: collision A/B each 4W/0L; elkring A and B each 3W/1L.
-  Aggregates do not establish target choices or missed finishing attacks.
-- Frozen manifest 13a21f2cd26eab071a4b4743a9e465c4b81c17db25d5a4ee76b2d1b06bc6fdb1:
-  all four source sets hash-verified. Alpha 6af1685b equals edit base; beta 6450f600
-  uses a post-basic unit spell; gamma e9704a21 and starter 144ab5a9 use basics.
-  All select first in-range basic target, with random draft/build, nearest-camp
-  routes and immediate banking. Source observations are not runtime traces.
-- Canonical final slices saved in this task's -evidence.json: historical dash
-  source, corners A loss 57599b1c1943087d7580b16a1693de18401161734d03839db10e214f030b2010,
-  round 415, submitted 292 vs 1004, deaths 5 vs 0; elkring A loss
-  7821425f5bb7c52d1b313cd8c80db1e939f6cf7c2d1d47056ceac18f7eef135c,
-  round 593, submitted 612 vs 1008, deaths 8 vs 7. Both have zero faults.
-  Opponent revision unknown in these final artifacts; no target-choice traces.
-  Artifact engineVersion 0.0.1 is not envelope CLI/SDK 2.1.6.
-- Basic enumeration order ignores wounds and carried value. Repeated basics on
-  one wounded enemy can remove damage/contest sooner, with independently observing
-  allies tending to converge without a shared-memory protocol.
-- Prior area/finish spell scoring regressed matched development (-0.041667).
-  This candidate keeps all spell/camp selection intact and changes champion basics.
-  Do not repeat rejected global capture, fixed draft/Strength, 40-gem batching or
-  spawn-heal-only changes. Latest dashes had zero matched win-rate delta.
+- Evaluation 303207e5eea49848f5c8658e3a5615ad5264e17bc32daa815d4487cbeadf2f5b
+  measures focus-fire commit 5cb8beb / source
+  e028774f1102eeffb4372ca9eee3f54044819b2f48718548dfac7ea262840347,
+  NOT the edit base or this candidate. Development 20W/4L, zero faults/missing/
+  unknown reliability. All four losses were against frozen alpha 6af1685b.
+- Collision A loss 00ade949e627a1e8e46556f918250f6a23d3b08c04a26db4e6dec19a4c14d66f:
+  round 1109, candidate submitted 880 vs 1012, collected 1056 vs 1188,
+  deaths 12 vs 19. Collision B loss
+  2bdf5fc0e4323d7ad09baf86f6a5e4ef95a0e3e5b6d5d376ac093697cd32a454:
+  round 836, candidate submitted 440 vs 1012, deaths 19 vs 4.
+  Both sides have zero faults. These final metrics do not identify delayed channels
+  or any causal effect of locks; no lock use is inferred from these games.
+- Contrasting aggregate development wins: focus-fire won every case against frozen
+  beta/gamma/starter on collision/corners/elkring, both sides; individual winning
+  match IDs unavailable in supplied summary. Retain working combat against them.
+- Frozen manifest 3a68c63a...: all four source sets hash-verified. Beta 6450f600
+  uses unit spells; gamma e9704a21 and starter 144ab5a9 use basics; alpha 6af1685b
+  equals our edit base with independent casts. All share random draft/build,
+  nearest-group farming and immediate banking. Every one avoids ALL visible altar
+  locks and never buys/places/clears them. Source observations, not runtime traces.
+- Handbook 233-241: 10-gold locks block opponents indefinitely until three basics,
+  cancel enemy tribute and allow allied tribute. Consumables do not spend basic,
+  walking or cast allowance. Binding documents two-tile placement and team-filtered
+  lock snapshots. This gives a different strategic axis from combat optimizations.
+- Do not repeat bank-priority, tribute-on-arrival, 40-gem batching, global capture
+  priority, fixed-draft/Strength or spawn-heal-only trials without new rationale.
+  Recent AoE scoring regressed; dashes/focus fire do not replace this edit base.
 
 ## Candidate policy
-- Only bot.cpp differs from edit base. Five other source files unchanged.
-- Scan at most 16 candidates; visibility precedes all live reads, and only living
-  in-range enemies qualify. Prefer minimum absolute health, then maximum carried
-  gems; exact ties retain stable engine order. Camp basics retain first-target order.
-- Reset prediction uses the same selector, ignoring only the spent basic allowance.
-  Actual attack reselects with full allowance/restriction checks after the cast.
-  No cross-turn target cache, new memory, AoE search or fuel overrides.
-- Existing 18,000-fuel reserve bounds scans and leaves cheap legal behavior/yield.
-  This is a guard, not measured headroom. Draft, build, navigation, channels,
-  recovery, banking, spell scores and defensive casts retain edit-base behavior.
+- New altar_control.h owns purchase, placement and adjacent bank/lock interaction.
+  Buy one lock at spawn before shards, or while dead, using SDK can_buy validation.
+- Place only on a currently visible altar within two tiles with no observed lock
+  from either team. Try once, with fresh position/vision at turn start and after
+  successful navigation; no detours, hidden-state cache or extra shared memory.
+- Preserve recall/tribute/teleport channels and consumable restrictions. Placement
+  does not preempt the base's retreat, combat or normal objective travel.
+- Carriers can tribute through allied locks. Prefer an unlocked adjacent altar;
+  otherwise attack a fresh adjacent hostile lock when legal. Normal routes exclude
+  hostile locks, but approach them if every altar is visibly locked, avoiding a
+  permanent empty-goal stall. Enemy-first combat priority remains the base's.
+- Queries retain the 18,000-fuel planning guard. Placement considers at most 25
+  local tiles and makes one attempt; banking adds a fuel guard before routing.
+  This guard is not a measurement of headroom. No fuel/settings overrides.
+- Draft, stat RNG, shard family, combat scoring, capture, channels and scheduling
+  remain the edit base's. Five original files are unchanged.
 
 ## Validation and uncertainty
-- Decision/identity/source audit: task-fad21318699145cb8c6edbeb317401fa-decision.json.
-- git diff --check passed before trusted check.
-- bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json PASSED,
-  exit 0, exact source e028774f1102eeffb4372ca9eee3f54044819b2f48718548dfac7ea262840347.
-  Report .agent/check-task-fad21318699145cb8c6edbeb317401fa.json;
-  check:task-fad21318699145cb8c6edbeb317401fa:e028774f1102eeffb4372ca9eee3f54044819b2f48718548dfac7ea262840347.
-  Smoke IDs 85a92fa459a40301b1fc2d53270c0888a02e3241741bae798607d03068c0e798
-  and ef5bfcbc95392f19890151a922f9bdfc25a342b707c13c5273741dc3fef23b41.
-  Inspected actual summary report: no detailed runtime diagnostics. IDs/exit alone
-  do not establish completed full games, targeting coverage or improvement.
-- Final git diff --check passed. No bot-source edits after trusted check.
-- No tournament evaluation run here. Tactical branch coverage, fuel headroom and
-  win-rate improvement remain unknown. Absolute health ignores shields/mitigation;
-  selecting a wounded shielded enemy may be poor. Different ally vision prevents
-  guaranteed focus. Expanded champion scans increase fuel use.
-- Next: supervisor evaluates exact checked source against edit base and protected
-  champion across maps/both sides. Reject unchanged/lower matched win rate; use
-  deaths, kills and submitted gems to diagnose targeting before changing spells.
+- Identity/decision and historical metrics: this task's -decision.json/-evidence.json.
+- git diff --check passed. No host C++ compiler is available in PATH; no synthetic host
+  policy test is represented as an engine fixture. Trusted wrapper does compilation
+  and runtime smoke.
+- Intermediate bot-check passed source 4b6592b5... before final fuel guards.
+- Final bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
+  PASSED, exit 0; exact source
+  eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133.
+  Report .agent/check-task-a625d4c1125a40d08a86a8eb89ddb56a.json;
+  check:task-a625d4c1125a40d08a86a8eb89ddb56a:eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133.
+  Smoke IDs 1a72cbd252c4f4b6ad7c5c40b1b54d36ac89b4ad14de096b660b0d7797384d3a
+  and 02fc1a4c9c67cd821e984b68e03389afae731264a777eebc23ea6eb601320d1d.
+  check-report returned the same summary; no detailed runtime diagnostics or fuel
+  measurements supplied. IDs/exit do not prove full games or lock branch coverage.
+- Source hashes reverified after final check; no further source edits. Final
+  git diff --check PASSED. No comparative tournament run, strength claim or commit.
+- Remaining risks: locks may arrive late because supply depends on shop/death;
+  10 gold can delay a shard/emblem; lock-aware opponents clear them in three basics.
+  Combat-first banking still delays tribute; channel interruption and fuel headroom
+  are unmeasured. New friendly/hostile lock branches need broader game coverage.
+- Next: supervisor evaluates the exact checked source against edit base/protected
+  champion on both sides and varied maps; compare matched win rate and opponent
+  tribute. Reject unchanged/lower win rate, and inspect lock purchase/placement
+  frequency before adding special travel or restocking missions.

@@ -1,0 +1,71 @@
+{
+  "task_id": "task-a625d4c1125a40d08a86a8eb89ddb56a",
+  "bot_id": "alpha",
+  "base_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+  "edit_commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+  "input_revision": "5cb8beb08a34cffcb4220edc1cf8eed6068c51d2",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "initial_source_verified_against_edit_commit": true,
+  "initial_head_diff": "Trusted preparation replaced focus-fire bot.cpp with edit-base bot.cpp; no unfinished candidate patch.",
+  "prior_candidate_status": "Completed INCONCLUSIVE evaluation 303207e5; pending continuous self-play is separate.",
+  "opponent_manifest": "/srv/battlecode/public/strategy/task-a625d4c1125a40d08a86a8eb89ddb56a/manifest.json",
+  "opponent_manifest_sha256": "3a68c63af81fb7871b457647f7a675560461d8d7aad3b4c5ccb5f675d9beed50",
+  "opponent_file_hashes_verified": true,
+  "opponent_source_observation": "All frozen opponents use random draft/stats, camp farming and immediate banking, but avoid all visible altar locks and never buy, place or clear locks. Alpha edit base has independent combat casts; beta unit spells; gamma/starter basics.",
+  "bottleneck": "Uncontested low-cost altar denial is absent; friendly locks would also deadlock the current bank selector.",
+  "hypothesis": "Opportunistic altar locks with friendly-lock-aware banking and hostile-lock recovery will increase matched development win rate over the edit base. Unchanged or lower win rate falsifies this prediction.",
+  "mechanism": "Persistent opposing tribute denial/cancellation; no special travel mission; preserve friendly tribute access.",
+  "expected_observable_change": "Fewer opponent submissions or later enemy victory, with no own friendly-lock bank deadlock; matched win-rate increase.",
+  "risk": "Ten gold per refill can delay shards; supply may arrive too late; lock-aware opponents clear in three basics; combat-first banking can still delay tribute; fuel headroom unmeasured.",
+  "rejected_alternatives": "Do not repeat previously tested bank priority, tribute-on-arrival, 40-gem batching, global capture priority, fixed-draft/Strength package or spawn-heal-only. Focus fire/dashes/AoE scoring were separate recent candidates, not silently combined.",
+  "rules_references": [
+    ".agent/knowledge/sources/GameRules.md:233-241",
+    ".agent/knowledge/sources/GameRules.md:310-314",
+    ".agent/knowledge/sources/BotAPICpp.md:6217-6307",
+    ".agent/knowledge/sources/BotAPICpp.md:8940-9065"
+  ],
+  "sdk_sha256": "90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d",
+  "native_regression_note": "No host C++ compiler available in PATH; trusted wrapper performs actual compilation and smoke. No host model tests substituted for engine evidence.",
+  "changed_policy_paths": [
+    "bots/alpha/src/bot.cpp",
+    "bots/alpha/src/altar_control.h"
+  ],
+  "final_source_files": {
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/bot.cpp": "aa18c508059206858ef283ac9d8201f7233ffaa5ea9b3b672009d79c2669ecd7",
+    "bots/alpha/src/bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "unchanged_original_files": [
+    "bots/alpha/src/bot.h",
+    "bots/alpha/src/draft.cpp",
+    "bots/alpha/src/draft.h",
+    "bots/alpha/src/main.cpp",
+    "bots/alpha/src/random.h"
+  ],
+  "final_check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792308418.547441,
+    "matches": [
+      "1a72cbd252c4f4b6ad7c5c40b1b54d36ac89b4ad14de096b660b0d7797384d3a",
+      "02fc1a4c9c67cd821e984b68e03389afae731264a777eebc23ea6eb601320d1d"
+    ],
+    "report_path": ".agent/check-task-a625d4c1125a40d08a86a8eb89ddb56a.json",
+    "report_reference": "check:task-a625d4c1125a40d08a86a8eb89ddb56a:eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+    "source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+    "started": 1792308385.3022747,
+    "state": "PASSED",
+    "task_id": "task-a625d4c1125a40d08a86a8eb89ddb56a"
+  },
+  "intermediate_check": {
+    "state": "PASSED",
+    "exit_code": 0,
+    "source_hash": "4b6592b5d9b1d7c28ab3696f32939690275d8dd7b5dc958bbce2dbfb54e40826",
+    "reason_for_recheck": "Added local hostile-mask fast path and fuel checks before routing and during lock enumeration."
+  },
+  "check_report_inspected": "arena-client check-report returned the same summary only; no detailed runtime diagnostics, branch coverage, completion status or fuel measurement supplied."
+}
