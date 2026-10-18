@@ -57,6 +57,14 @@ struct tracked_group {
     std::uint32_t observed_round = 0;
 };
 
+// One turn plan: focus identity is immutable spawn geometry, not live state.
+struct farm_plan {
+    cambc::bitboard goals;
+    cambc::bitboard member_spawns;
+    bool focused = false;
+    bool holding_capture = false;
+};
+
 class rotation {
     std::vector<tracked_group> groups;
     std::size_t cursor = 0;
@@ -122,9 +130,10 @@ public:
         return eligible_goals(cambc::round_number());
     }
 
-    // Rank routes only after the existing camp combat policy has done nothing.
+    // Choose work before camp combat, so a nearby low-return camp cannot preempt
+    // the selected objective. Low fuel retains the original unfocused policy.
     // No shared memory: the commitment is private and is revalidated every turn.
-    cambc::bitboard route_goals(const cambc::bitboard& blocked) {
+    farm_plan plan(const cambc::bitboard& blocked) {
         observe();
         const auto now = cambc::round_number();
         auto& me = cambc::self();
@@ -135,10 +144,10 @@ public:
         for (auto& entry : groups) {
             if (!entry.spawns.is_set(position)) continue;
             if (!(entry.spawns & visible).is_empty()) observe_group(entry, now);
-            if (entry.reward) return entry.spawns;
+            if (entry.reward) return {entry.spawns, entry.spawns, true, true};
         }
         constexpr std::uint64_t route_start_reserve = 65000;
-        if (cambc::fuel_remaining() < route_start_reserve) return eligible_goals(now);
+        if (cambc::fuel_remaining() < route_start_reserve) return {eligible_goals(now), {}, false, false};
 
         struct candidate { std::size_t index; float estimate; };
         std::vector<candidate> candidates;
@@ -162,7 +171,19 @@ public:
             candidates.insert(insertion, {i, estimate});
             if (candidates.size() > route_candidate_limit) candidates.pop_back();
         }
-        if (candidates.empty() || cambc::fuel_remaining() < observation_fuel_reserve) return eligible_goals(now);
+        // Static full-health estimates can hide nearly finished work. Always
+        // re-evaluate our previous group with fresh visibility before switching.
+        if (committed_group >= 0 && std::size_t(committed_group) < groups.size()) {
+            const auto& entry = groups[committed_group];
+            const bool listed = std::any_of(candidates.begin(), candidates.end(),
+                [&](const auto& c) { return int(c.index) == committed_group; });
+            if (!listed && !entry.cooldown.excludes(now)
+                && entry.group.camps().size() <= route_member_limit) {
+                if (candidates.size() == route_candidate_limit) candidates.pop_back();
+                candidates.push_back({std::size_t(committed_group), 0});
+            }
+        }
+        if (candidates.empty() || cambc::fuel_remaining() < observation_fuel_reserve) return {eligible_goals(now), {}, false, false};
 
         // One native forward field serves all candidates, not one search each.
         cambc::bitboard origin;
@@ -219,9 +240,9 @@ public:
                 best = score; selected = int(candidate.index); selected_goals = std::move(goals);
             }
         }
-        if (selected < 0) return eligible_goals(now);
+        if (selected < 0) return {eligible_goals(now), {}, false, false};
         committed_group = selected;
-        return selected_goals;
+        return {selected_goals, groups[selected].spawns, true, false};
     }
 };
 

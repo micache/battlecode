@@ -1,0 +1,20 @@
+{
+  "task_id": "task-844841b0ef694b819a6ab2fcf1a89387",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "checks": {
+    "entire_play_turn_unchanged": true,
+    "navigation_and_items_unchanged": true,
+    "combat_policy_unchanged_except_group_filter": true,
+    "select_before_camp_combat": true,
+    "fresh_camp_handles_filtered_by_spawn_identity": true,
+    "basic_spell_reset_queries_all_filtered": true,
+    "fresh_postmove_combat_and_walk_exclusion": true,
+    "bot.h_unchanged": true,
+    "main.cpp_unchanged": true,
+    "draft.cpp_unchanged": true,
+    "draft.h_unchanged": true,
+    "random.h_unchanged": true,
+    "altar_control.h_unchanged": true
+  },
+  "limitations": "Source invariants, not engine branch coverage or strength evidence."
+}

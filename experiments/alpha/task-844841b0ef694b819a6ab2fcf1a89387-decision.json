@@ -1,0 +1,21 @@
+{
+  "task_id": "task-844841b0ef694b819a6ab2fcf1a89387",
+  "bot_id": "alpha",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "checked_source_hash": "822811f4c9664771c56f9d52d120cd9ed1dcd83b9de3f76c5d1b10e892ed5f1c",
+  "check_report": "check:task-844841b0ef694b819a6ab2fcf1a89387:822811f4c9664771c56f9d52d120cd9ed1dcd83b9de3f76c5d1b10e892ed5f1c",
+  "no_bot_edits_after_check_start": true,
+  "source_file_sha256": {
+    "bot.cpp": "df78e966420001f3180298c92a86c98798a0be0bef9039e96608d138f05f4c95",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "camp_rotation.h": "a66f92d267c7e2501cc1cdabb63695b17d1690d072ee2c94f913d2148fc02af2",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "camp_route_policy.h": "6ad6c6955b61e4fb1b43e4a464e573788d5b08754b9cdb440ab812a695a8d228",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0"
+  },
+  "hypothesis": "Selecting a camp group by reachable travel and expected work per reward before camp combat, and restricting clearing to that group, increases matched development win rate over the edit base; unchanged or lower win rate falsifies it.",
+  "risk": "Fuel, weaker response to off-group camp threats, route duplication and imperfect work estimates; strength unmeasured."
+}

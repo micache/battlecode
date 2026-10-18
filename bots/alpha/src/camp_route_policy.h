@@ -23,5 +23,10 @@ static_assert(route_cost(10, 0, 50, 24, 0, 5) < route_cost(10, 500, 50, 24, 0, 5
 static_assert(route_cost(5, 500, 50, 24, 0, 5) < route_cost(20, 500, 50, 24, 0, 5));
 static_assert(route_cost(10, 500, 100, 24, 0, 5) < route_cost(10, 500, 50, 24, 0, 5));
 static_assert(route_cost(0, 500, 0, 0, 0, 5) > 0); // finite at zero stats/reward
+// Do not engage a nearby wolf merely because it is in range when a modest
+// detour reaches a cheaper gem group; do finish a heavily damaged wolf group.
+static_assert(route_cost(5, 500, 50, 24, 0, 5) < route_cost(0, 1350, 50, 22, 90, 5));
+static_assert(route_cost(0, 50, 50, 22, 90, 5) * commitment_discount
+    < route_cost(5, 500, 50, 24, 0, 5));
 
 } // namespace camp_rotation

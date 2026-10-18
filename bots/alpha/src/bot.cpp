@@ -83,22 +83,29 @@ constexpr unsigned combat_target_limit = 16;
 
 // Handles are refreshed through vision on every action, never cached across turns.
 template<class Target>
-auto combat_targets() {
-    if constexpr (std::is_same_v<Target, cambc::camp>)
-        return cambc::vision::camps();
-    else
+auto combat_targets(const cambc::bitboard* camp_spawns = nullptr) {
+    if constexpr (std::is_same_v<Target, cambc::camp>) {
+        auto targets = cambc::vision::camps();
+        // Immutable spawn identity is safe across walking, casts and kills.
+        // Live position/health still comes only from freshly visible handles.
+        if (camp_spawns)
+            std::erase_if(targets, [&](const auto& camp) {
+                return !camp_spawns->is_set(camp.spawn_position());
+            });
+        return targets;
+    } else
         return cambc::vision::champions(team::enemy);
 }
 
 template<class Target>
-std::optional<Target> basic_target() {
+std::optional<Target> basic_target(const cambc::bitboard* camp_spawns = nullptr) {
     auto& me = cambc::self();
     if (!me.is_alive() || !me.can_attack()
         || me.restrictions().contains(cambc::buff_restrictions::attack))
         return std::nullopt;
     const auto range = me.attack_tiles();
     unsigned examined = 0;
-    for (const auto& target : combat_targets<Target>()) {
+    for (const auto& target : combat_targets<Target>(camp_spawns)) {
         if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
             break;
         if (target.is_visible() && target.health() > 0 && range.is_set(target.position()))
@@ -120,10 +127,10 @@ bool cast_ready(const cambc::ability& ability, bool walked) {
 // Spend the separate basic and cast allowances. Never walk after this routine
 // acts: a spell may exclude movement even when can_move() still reports true.
 template<class Target>
-bool fight(bool walked = false) {
+bool fight(bool walked = false, const cambc::bitboard* camp_spawns = nullptr) {
     auto& me = cambc::self();
     bool acted = false;
-    if (const auto target = basic_target<Target>()) {
+    if (const auto target = basic_target<Target>(camp_spawns)) {
         me.attack(*target);
         acted = true;
     }
@@ -146,7 +153,7 @@ bool fight(bool walked = false) {
                 continue;
             const auto range = me.attack_tiles();
             unsigned examined = 0;
-            for (const auto& target : combat_targets<Target>()) {
+            for (const auto& target : combat_targets<Target>(camp_spawns)) {
                 if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                     break;
                 if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
@@ -169,7 +176,7 @@ bool fight(bool walked = false) {
         const auto range = ability.valid_tiles();
         const float damage = ability.damage_amount();
         unsigned examined = 0;
-        for (const auto& target : combat_targets<Target>()) {
+        for (const auto& target : combat_targets<Target>(camp_spawns)) {
             if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                 break;
             if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
@@ -201,7 +208,7 @@ bool fight(bool walked = false) {
         if (cast) {
             acted = true;
             // Refresh after the cast: a kill, splash or retaliation changes targets.
-            if (const auto next = basic_target<Target>()) me.attack(*next);
+            if (const auto next = basic_target<Target>(camp_spawns)) me.attack(*next);
         }
     }
 
@@ -232,18 +239,21 @@ bool fight(bool walked = false) {
     return acted;
 }
 
-// Attack a camp already in range, otherwise move toward the nearest camp tiles.
+// Route choice and camp combat share one group identity for the whole turn.
 void farm_camps() {
-    if (fight<cambc::camp>() || cambc::fuel_remaining() < combat_fuel_reserve)
-        return;
+    if (cambc::fuel_remaining() < combat_fuel_reserve) return;
+    const auto plan = camp_rotation::memory().plan(blocked_tiles());
+    if (plan.holding_capture) return;
+    const auto* focus = plan.focused ? &plan.member_spawns : nullptr;
+    if (fight<cambc::camp>(false, focus)
+        || cambc::fuel_remaining() < combat_fuel_reserve) return;
 
-    // Include unknown/expired groups, but do not revisit a personally observed
-    // cooldown early merely because its spawn tiles have left our vision.
-    auto goals = camp_rotation::memory().route_goals(blocked_tiles());
-
-    // Fresh vision after movement may reveal a camp already in range.
-    if (move_towards_closest(goals))
-        fight<cambc::camp>(true);
+    // Rebuild vision even after a False move: it may reveal a hidden obstruction.
+    const auto before = cambc::self().position();
+    move_towards_closest(plan.goals);
+    if (cambc::self().is_alive()
+        && cambc::fuel_remaining() >= combat_fuel_reserve)
+        fight<cambc::camp>(cambc::self().position() != before, focus);
 }
 
 void Bot::play_turn() {
