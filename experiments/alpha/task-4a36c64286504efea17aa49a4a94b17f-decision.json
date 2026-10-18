@@ -1,0 +1,63 @@
+{
+  "task_id": "task-4a36c64286504efea17aa49a4a94b17f",
+  "base_source_hash": "0c91f9bf05bff0bfbf70eb1a00633ec2699e650db57a1dcda0316055df93dd26",
+  "edit_commit": "bf616d85ce50cbb69c611788b2fc1660dbd465a2",
+  "input_revision": "ce9555420d862badc57ae3a90aaaa3f8e3556882",
+  "entry_files_match_edit_commit": true,
+  "unchanged_files": [
+    "bots/alpha/src/bot.h",
+    "bots/alpha/src/draft.cpp",
+    "bots/alpha/src/draft.h",
+    "bots/alpha/src/main.cpp",
+    "bots/alpha/src/random.h"
+  ],
+  "unchanged_policies": [
+    "draft",
+    "item purchases",
+    "initialization and existing shared-memory traffic",
+    "shopping and low-health recall",
+    "banking"
+  ],
+  "sdk_sha256_verified": true,
+  "frozen_opponent_hashes_verified": true,
+  "hypothesis": "Using independent basic/cast allowances, attack resets and useful defensive casts will increase matched development win rate over the edit base; unchanged or lower win rate falsifies it.",
+  "rationale": "Base never casts, so spell damage and reset capacity are unused, including on random Focus builds. Beta adds unit spells but misses resets/AoE; other frozen sources are basic-only. Prior fixed-composition/routing experiment has map-specific losses and is not transplanted.",
+  "bounds": {
+    "target_limit_per_scan": 16,
+    "fuel_reserve": 18000,
+    "ability_slots": 2
+  },
+  "manual_safety_review": [
+    "Movement flag disables exclusive spells after walking. Acting before navigation returns to caller and prevents later movement.",
+    "Reset uses self cast without range query; fresh visible targets and can_attack checked after cast.",
+    "Unit target categories, life, visibility and range checked; AoE aims only at a visible unit.",
+    "Channels retained; cast-only turns allowed; low fuel skips additional path planning.",
+    "At most one ordinary basic, one normal cast and one post-cast basic; live allowance checks guard each action."
+  ],
+  "unknowns": [
+    "Comparative outcome and actual fuel headroom unmeasured.",
+    "Broader spell range can divert turns from banking and farming; AoE may wake other camps.",
+    "Random builds, implicit capture/navigation and spawn departure remain inherited weaknesses."
+  ],
+  "source_file_sha256": {
+    "bots/alpha/src/bot.cpp": "97a7709e31e4cd19a715ce44e508c946590479e3ddf987132f60e3920bcfe9d3",
+    "bots/alpha/src/bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "final_check": {
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+    "exit_code": 0,
+    "state": "PASSED",
+    "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+    "report_path": ".agent/check-task-4a36c64286504efea17aa49a4a94b17f.json",
+    "report_reference": "check:task-4a36c64286504efea17aa49a4a94b17f:87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+    "smoke_match_ids": [
+      "041c8f60d32f3abfa222959cbd0d02a0409aa1620b98fede1bf116e3d240d16d",
+      "99c7a98342fcd8106780f301c865da9dd19e5ea941f020e6c60870e93cbff6f0"
+    ],
+    "limitations": "Smoke match IDs and pass status do not establish completed matches, coverage, fuel headroom or comparative strength."
+  }
+}
