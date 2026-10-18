@@ -205,6 +205,27 @@ class PublicationTests(Harness):
         with self.assertRaises(ArenaError):
             recover_publication(self.arena, bot, payload)
 
+    def test_git_poll_before_worker_finished_keeps_frozen_task_attribution(self):
+        from arena.gitstore import poll
+        bot, task = self.envelope()
+        config = self.owner_configs[bot]
+        Path(config['attempts']).mkdir()
+        attempt = make_attempt(config, task)
+        (attempt / 'bots' / bot / 'src/main.cpp').write_text('synthetic poll-race candidate')
+        atomic_json(attempt / '.agent' / f"final-{task['task_id']}.json", self.final_result(bot, task))
+        with patch('arena.worker.request', self.request):
+            publication = publish_attempt(config, attempt)
+        # The service may poll Git and queue evaluation before receiving this
+        # worker's completion mailbox message. It must already know the task.
+        revision = poll(self.arena.db, self.config, bot)
+        self.assertEqual(revision['experiment_id'], task['task_id'])
+        self.assertEqual(revision['base_source_hash'], task['base_source_hash'])
+        self.arena.start_evaluation(revision['id'])
+        evaluation = self.arena.db.one('SELECT suite FROM evaluations WHERE revision_id=?', (revision['id'],))
+        self.assertEqual(json.loads(evaluation['suite'])['coverage'], 'development-six-map')
+        self.request(config, 'worker-finished', publication)
+        self.assertEqual(self.arena.db.one('SELECT state FROM tasks WHERE id=?', (task['task_id'],))['state'], 'PUBLISHED')
+
     def test_manual_handoff_retains_lease_and_uses_trusted_publication(self):
         bot = "alpha"
         handle_request(self.arena, bot, {"operation": "pause"})

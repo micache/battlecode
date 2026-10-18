@@ -12,6 +12,89 @@ from arena.supervisor import handle_request
 
 
 class OperationsTests(Harness):
+    def smoke_fixture(self, bot='alpha', map_name='collision'):
+        import base64
+        from arena.supervisor import check_source, new_task
+        self.establish()
+        task = new_task(self.arena, bot)
+        self.config['evaluation']['screen_maps'] = [map_name]
+        report = check_source(self.arena, bot, {'task_id':task['task_id'],
+                    'source':{'main.cpp':base64.b64encode(b'synthetic smoke candidate').decode()}})
+        jobs = report['matches']
+        for job in jobs:
+            row = self.arena.db.one('SELECT * FROM match_jobs WHERE id=?', (job,))
+            artifacts = Path(row['artifact']) / 'artifacts'
+            artifacts.mkdir(exist_ok=True)
+            (artifacts / 'bot-a.stdout.log').write_text('trusted smoke diagnostic')
+            (artifacts / 'bot-b.stdout.log').write_text('other side smoke diagnostic')
+            (artifacts / 'final.json').write_text('{"synthetic":true}')
+        key = f"check:{task['task_id']}:{report['source_hash']}"
+        return task, jobs[0], key, report
+
+    def test_own_smoke_slice_without_evaluation_membership(self):
+        _, job, _, _ = self.smoke_fixture()
+        self.assertFalse(self.arena.db.one('SELECT job_id FROM evaluation_cases WHERE job_id=?', (job,)))
+        result = handle_request(self.arena, 'alpha', {'operation':'slice',
+                                'payload':{'match_id':job, 'file':'bot-a.stdout.log', 'limit':7}})
+        self.assertEqual(result['text'], 'trusted')
+        self.assertEqual(result['match_id'], job)
+
+    def test_another_lane_cannot_export_smoke_by_guessing_id(self):
+        _, job, _, _ = self.smoke_fixture()
+        with self.assertRaisesRegex(ArenaError, 'development evidence'):
+            handle_request(self.arena, 'beta', {'operation':'slice', 'payload':{'match_id':job}})
+
+    def test_smoke_report_does_not_grant_holdout_access(self):
+        _, job, _, _ = self.smoke_fixture(map_name='monolith')
+        with self.assertRaisesRegex(ArenaError, 'development evidence'):
+            handle_request(self.arena, 'alpha', {'operation':'slice', 'payload':{'match_id':job}})
+
+    def test_smoke_report_must_match_trusted_task_and_actual_source(self):
+        _, job, key, report = self.smoke_fixture()
+        for field, value in [('bot_id','beta'), ('task_id','unknown'), ('source_hash','f'*64), ('matches',[])]:
+            with self.subTest(field=field):
+                self.arena.db.put(key, dict(report, **{field:value}))
+                with self.assertRaisesRegex(ArenaError, 'development evidence'):
+                    handle_request(self.arena, 'alpha', {'operation':'slice', 'payload':{'match_id':job}})
+
+    def test_latest_smoke_evidence_survives_rolling_retention(self):
+        from arena.retention import protected_jobs
+        _, job, _, _ = self.smoke_fixture()
+        self.assertIn(job, protected_jobs(self.arena))
+
+    def test_smoke_recovery_verifies_access_and_preserves_blocked_history(self):
+        import runpy
+        from test_arena import PROJECT
+        resolve = runpy.run_path(str(PROJECT / 'ops/resolve-smoke-pauses.py'))['resolve']
+        task, _, _, _ = self.smoke_fixture()
+        reason = 'Trusted checks passed, but smoke-log export was denied by the evidence gate.'
+        result = json.dumps({'outcome':'BLOCKED', 'blocked_reason':reason})
+        self.arena.db.execute("UPDATE tasks SET state='PAUSED',result=? WHERE id=?", (result,task['task_id']))
+        self.arena.db.execute("UPDATE workers SET state='PAUSED',paused=0,detail=? WHERE id='alpha'", (reason,))
+        self.arena.db.put('paused', True)
+        receipt = resolve(self.arena, 'alpha')
+        self.assertEqual(len(receipt['probes']), 6)
+        self.assertEqual(self.arena.db.one("SELECT state FROM workers WHERE id='alpha'")['state'], 'IDLE')
+        old = self.arena.db.one('SELECT * FROM tasks WHERE id=?', (task['task_id'],))
+        self.assertEqual(old['state'], 'PAUSED')
+        self.assertEqual(old['result'], result)
+        self.assertIsNone(old['published_commit'])
+        self.assertTrue(resolve(self.arena, 'alpha')['already_resolved'])
+
+    def test_smoke_recovery_does_not_resume_other_permission_or_auth_failures(self):
+        import runpy
+        from test_arena import PROJECT
+        resolve = runpy.run_path(str(PROJECT / 'ops/resolve-smoke-pauses.py'))['resolve']
+        task, _, _, _ = self.smoke_fixture()
+        reason = 'Owner must log in again'
+        self.arena.db.execute("UPDATE tasks SET state='PAUSED',result=? WHERE id=?",
+                              (json.dumps({'outcome':'BLOCKED','blocked_reason':reason}),task['task_id']))
+        self.arena.db.execute("UPDATE workers SET state='PAUSED',paused=0,detail=? WHERE id='alpha'", (reason,))
+        self.arena.db.put('paused', True)
+        with self.assertRaisesRegex(ArenaError, 'not the known'):
+            resolve(self.arena, 'alpha')
+        self.assertEqual(self.arena.db.one("SELECT state FROM workers WHERE id='alpha'")['state'], 'PAUSED')
+
     def test_daily_backup_uses_only_service_writer_even_while_paused(self):
         from unittest.mock import patch
         self.config['limits']['backup_interval_seconds'] = 86400

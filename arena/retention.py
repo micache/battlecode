@@ -103,8 +103,14 @@ def protected_jobs(arena):
         for row in rows[:8]:
             metrics = json.loads(row['metrics']) if row['metrics'] else {}
             protected.update(r['match_id'] for r in metrics.get('representative_failures', []))
-        task = db.one('SELECT envelope FROM tasks WHERE bot_id=? ORDER BY created DESC LIMIT 1', (bot,))
+        task = db.one('SELECT id,envelope FROM tasks WHERE bot_id=? ORDER BY created DESC LIMIT 1', (bot,))
         if task:
+            # The latest worker may still need smoke logs, including after an
+            # infrastructure pause. Bound this to four recent checks per lane.
+            for check in db.all('SELECT value FROM meta WHERE key LIKE ? '
+                                "ORDER BY json_extract(value,'$.finished') DESC LIMIT 4",
+                                (f"check:{task['id']}:%",)):
+                protected.update(json.loads(check['value']).get('matches', []))
             rid = json.loads(task['envelope']).get('development_selection', {}).get('revision_id')
             row = db.one('SELECT id FROM evaluations WHERE revision_id=? AND finished IS NOT NULL ORDER BY created DESC LIMIT 1', (rid,))
             if row:

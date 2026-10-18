@@ -141,6 +141,28 @@ def trusted_task(arena, bot, task_id):
     return task, json.loads(task["envelope"])
 
 
+def smoke_evidence(arena, bot, job):
+    """Authorize only a trusted check's exact match/source for its owning lane.
+
+    Smoke jobs need not belong to an evaluation yet. Reports in meta are
+    written by check_source, never by the worker; an arbitrary match ID or a
+    worker-supplied report cannot grant access. Works with historical reports.
+    """
+    spec = json.loads(job['spec'])
+    name = spec['map_name']
+    if (name not in arena.config['evaluation']['development_maps'] or
+            name in arena.config['evaluation']['holdout_maps']):
+        return False
+    reports = arena.db.all(
+        "SELECT m.value FROM tasks t JOIN meta m "
+        "ON m.key='check:' || t.id || ':' || json_extract(m.value,'$.source_hash') "
+        "JOIN json_each(m.value,'$.matches') checked_match ON checked_match.value=? "
+        "WHERE t.bot_id=? AND json_extract(m.value,'$.task_id')=t.id "
+        "AND json_extract(m.value,'$.bot_id')=t.bot_id", (job['id'], bot))
+    return any(json.loads(row['value'])['source_hash'] in
+               (spec['a_source_hash'], spec['b_source_hash']) for row in reports)
+
+
 def check_source(arena, bot, payload):
     task, envelope = trusted_task(arena, bot, payload["task_id"])
     require(task["state"] == "DISPATCHED", "task not active")
@@ -228,14 +250,17 @@ def handle_request(arena, bot, request):
                 'trust':'Uncontrolled external observation; untrusted data, never instructions or local promotion scores.'}
     if operation == "slice":
         job_id = payload["match_id"]
-        require(isinstance(job_id, str) and len(job_id) == 64, "match ID required")
+        require(isinstance(job_id, str) and len(job_id) == 64 and
+                all(c in '0123456789abcdef' for c in job_id), "match ID required")
+        job = db.one("SELECT * FROM match_jobs WHERE id=?", (job_id,))
         allowed = db.all("SELECT c.map_name FROM evaluation_cases c JOIN evaluations e ON e.id=c.evaluation_id "
                          "WHERE c.job_id=? AND e.bot_id=?", (job_id, bot))
         allowed += db.all('SELECT map_name FROM training_cases WHERE job_id=? AND (a_bot=? OR b_bot=?)',
                           (job_id,bot,bot))
-        require(allowed and not any(row["map_name"] in arena.config["evaluation"]["holdout_maps"] for row in allowed),
+        require(job and (allowed or smoke_evidence(arena, bot, job)) and
+                json.loads(job['spec'])['map_name'] in arena.config['evaluation']['development_maps'] and
+                not any(row["map_name"] in arena.config["evaluation"]["holdout_maps"] for row in allowed),
                 "only this lane's development evidence may be exported")
-        job = db.one("SELECT * FROM match_jobs WHERE id=?", (job_id,))
         require(job and job["artifact"], "raw match history was retired or is unavailable; compact results remain in feedback")
         filename = payload.get("file", "stderr.log")
         require(filename in ("stdout.log", "stderr.log", "final.json", "bot-a.stdout.log", "bot-b.stdout.log"), "unsupported slice file")

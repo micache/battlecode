@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import re
 import shutil
 import subprocess
@@ -69,6 +70,16 @@ def ingest(db, config, bot, commit):
     validate_delta(mirror, previous, commit, bot)
     files = source_files(mirror, commit, bot)
     source_hash = identity({path: sha(data) for path, data in sorted(files.items())})
+    # A Git poll can observe the trusted push before worker-finished arrives.
+    # Freeze task/edit-base attribution at ingestion, before evaluation starts.
+    publication = db.one("SELECT id,envelope FROM tasks WHERE bot_id=? AND published_commit=? "
+                         "AND state IN ('PUBLICATION_APPROVED','PUBLISHED')", (bot, commit))
+    experiment_id, base_hash = None, state['accepted_source_hash']
+    if publication:
+        require(db.get(f"publication-source:{publication['id']}") == source_hash,
+                'published source was not approved')
+        experiment_id = publication['id']
+        base_hash = json.loads(publication['envelope'])['base_source_hash']
     revision_id = identity({"bot": bot, "commit": commit})
     destination = Path(config["root"]) / "snapshots" / revision_id
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -89,7 +100,7 @@ def ingest(db, config, bot, commit):
         # Running revisions are retained; only unstarted older revisions are superseded.
         db.execute("UPDATE revisions SET state='SUPERSEDED' WHERE bot_id=? AND state='PENDING'", (bot,))
         db.execute("INSERT INTO revisions VALUES(?,?,?,?,?,?,?,?,?,?)",
-                   (revision_id, bot, commit, source_hash, state["accepted_source_hash"], None,
+                   (revision_id, bot, commit, source_hash, base_hash, experiment_id,
                     str(destination), config["infrastructure_commit"],
                     "NO_CHANGE" if state["accepted_source_hash"] == source_hash else "PENDING", time.time()))
         db.execute("UPDATE bots SET latest_tip=? WHERE id=?", (commit, bot))
