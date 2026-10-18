@@ -15,6 +15,15 @@ notes, commit IDs and old evaluation identities survive the transition.
 `summary.json` provides small per-champion evidence; large original statistics
 and replay bundles remain canonical under rolling retention.
 
+Current JSON statistics include timelines/events and are much larger than the
+old format. Retention losslessly gzips large `final.json` files while removing
+redundant project worktrees. It verifies their original content hash before
+publishing the sealed compact attempt; `arena-client ... --file final.json`
+still returns verified uncompressed slices. Parser/bootstrap files stay raw.
+Replay bundles and compact results are unchanged. Oldest-first retirement still
+applies, with no offloading. Evaluation stages load their exact frozen build
+records after a code-only restart, rather than compiling new inputs mid-suite.
+
 The owner's new GameRules.md is byte-identical to the prior export. The new
 C++ export is preserved byte-for-byte at `sources/BotAPICpp.md`. Its error enum
 matches all 134 installed name/number pairs. **Upstream gap:** ward::owner is

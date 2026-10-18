@@ -5,6 +5,8 @@ evaluation summaries and feedback are never removed. Raw removal is journaled
 before deletion so a restart cannot mistake it for an unexplained missing game.
 """
 import json
+import gzip
+import hashlib
 from pathlib import Path
 import re
 import shutil
@@ -66,17 +68,40 @@ def compact_project(arena, job):
             remove_redundant(stage)  # Old sealed copy above remains authoritative.
         shutil.copytree(old, stage, ignore=lambda src, names:
                         ['project', 'project.zip', 'completion.json'] if Path(src)==old else [])
+        compressed = None
+        stats = stage / 'artifacts/final.json'
+        original_stats = old / 'artifacts/final.json'
+        parser = Path(arena.config['parser_contract'])
+        fixture = read_json(parser).get('fixture_path') if parser.exists() else None
+        bootstrap = json.loads(job['spec']).get('verification_repetition')
+        if (stats.is_file() and 128 * 1024 <= stats.stat().st_size <= 64 * 1024**2 and
+                not bootstrap and (not fixture or Path(fixture).resolve() != original_stats.resolve())):
+            original_size, digest = stats.stat().st_size, file_hash(stats)
+            packed = stats.with_name('final.json.gz')
+            with stats.open('rb') as source, packed.open('xb') as target:
+                with gzip.GzipFile(fileobj=target, mode='wb', mtime=0) as stream:
+                    shutil.copyfileobj(source, stream)
+            with gzip.open(packed, 'rb') as stream:
+                require(hashlib.sha256(stream.read(original_size + 1)).hexdigest() == digest,
+                        'statistics compression changed evidence')
+            compressed = {'uncompressed_sha256':digest, 'uncompressed_bytes':original_size,
+                          'stored_file':'artifacts/final.json.gz', 'compression':'gzip'}
+            stats.unlink()  # Only the verified staging copy; sealed original still exists.
+            removed_bytes += original_size - packed.stat().st_size
         atomic_json(stage / 'history-prune.json', {
             'policy':'rolling-v1', 'previous_directory':old.name,
             'previous_completion_sha256':original_hash, 'previous_completion':read_json(old / 'completion.json'),
             'removed_names':removed, 'removed_bytes':removed_bytes, 'at':time.time(),
+            'compressed_statistics':compressed,
             'recovery':'Redundant per-match worktree discarded, not offloaded. Source/SDK/build identities retained; '
-                       'replays/statistics/logs remain byte-identical. Original worktree is not recoverable here.'})
+                       'Replay/log bytes are unchanged. Large statistics may be losslessly gzipped with '
+                       'their original content hash retained. Original worktree is not recoverable here.'})
         seal_artifacts(stage, job['id'], job['attempt_count'], result)
         stage.rename(final)
     verify_artifacts(final, job['id'], job['attempt_count'])
     require(read_json(final / 'history-prune.json')['previous_completion_sha256'] == original_hash,
             'interrupted history compaction differs')
+    removed_bytes = read_json(final / 'history-prune.json')['removed_bytes']
     with arena.db.transaction():
         arena.db.execute('UPDATE match_jobs SET artifact=? WHERE id=?', (str(final),job['id']))
         arena.db.execute('UPDATE match_attempts SET artifact=? WHERE job_id=? AND number=?',

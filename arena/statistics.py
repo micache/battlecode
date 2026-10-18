@@ -1,12 +1,34 @@
 """Reviewed CLI 2.2.5 readable statistics, not a second game simulator."""
 import math
 import re
+import gzip
+import hashlib
+from pathlib import Path
+import zlib
 
-from .common import require
+from .common import ArenaError, read_json, require
 
 
 ENGINE_BUILD = 'd7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5'
 SIDES = {'teamA': 'A', 'teamB': 'B'}
+
+
+def saved_bytes(path):
+    """Read raw statistics or the byte-verified lossless retained representation."""
+    path = Path(path)
+    if path.is_file():
+        return path.read_bytes()
+    proof = read_json(path.parent.parent / 'history-prune.json')['compressed_statistics']
+    expected = proof['uncompressed_bytes']
+    require(type(expected) is int and 0 <= expected <= 64 * 1024**2, 'invalid retained statistics bound')
+    try:
+        with gzip.open(str(path) + '.gz', 'rb') as stream:
+            data = stream.read(expected + 1)
+    except (OSError, EOFError, zlib.error) as exc:
+        raise ArenaError('retained statistics compression is corrupt') from exc
+    require(len(data) == expected and hashlib.sha256(data).hexdigest() == proof['uncompressed_sha256'],
+            'retained statistics bytes changed')
+    return data
 
 
 def unsigned(value):

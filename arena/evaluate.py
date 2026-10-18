@@ -80,8 +80,8 @@ def summarize(cases, gate, holdouts, full=False):
             "paired_cases": len(paired), "per_opponent": per_opponent,
             "development_metrics": {name: {"available": True, "mean": sum(values) / len(values),
                                             "observations": len(values)} for name, values in observed.items()},
-            "metrics_not_available": ["bag_loss", "capture_completion",
-                                                                    "channel_interruptions", "per_turn_damage"]}
+            "metrics_not_available": [name for name in ("bag_loss", "capture_completion",
+                                     "channel_interruptions", "per_turn_damage") if name not in observed]}
 
 
 def export_feedback(db, config, evaluation):

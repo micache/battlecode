@@ -75,11 +75,12 @@ def normalize_result(artifacts, contract, engine_hash):
                          for name in ("stdout.log", "stderr.log") if (output / name).exists())
         faults = sum(len(re.findall(pattern, logs)) for pattern in contract.get("bot_fault_patterns", []))
         stats_path = output / "final.json"
-        if not stats_path.exists():
+        if not stats_path.exists() and not Path(str(stats_path) + '.gz').is_file():
             truncated = any(re.search(p, logs) for p in contract.get("truncated_patterns", []))
             return dict(result, state="BOT_FAULT" if faults else "TRUNCATED" if truncated else "INFRA_ERROR", bot_faults=faults,
                         detail="missing authoritative final statistics")
-        stats = read_json(stats_path)
+        from .statistics import saved_bytes
+        stats = json.loads(saved_bytes(stats_path))
         current_metrics, current_suspensions = {}, None
         if contract.get('statistics_schema') == 'cambc-225-json-v1':
             from .statistics import read_current
@@ -127,7 +128,7 @@ def normalize_result(artifacts, contract, engine_hash):
         return dict(result, state="COMPLETED", completed=True, winner=winner, terminal_reason=reason,
                     bot_faults=faults if contract.get("fault_detection_verified") else None,
                     fuel_suspensions=suspensions, metrics=metrics)
-    except (ArenaError, KeyError, TypeError, ValueError, IndexError, json.JSONDecodeError) as exc:
+    except (ArenaError, KeyError, TypeError, ValueError, IndexError, OSError, EOFError, json.JSONDecodeError) as exc:
         return dict(result, detail=f"unrecognized engine result: {exc}")
 
 

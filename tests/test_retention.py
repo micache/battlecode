@@ -4,7 +4,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 from test_arena import Harness
-from arena.common import ArenaError, atomic_json, read_json, identity
+from arena.common import ArenaError, atomic_json, read_json, identity, file_hash
+from arena.statistics import saved_bytes
+from arena.supervisor import handle_request
 from arena.engine import seal_artifacts, verify_artifacts
 from arena.retention import compact_project, finish_compaction, maintain, protected_jobs, retire, prune_build_cache
 
@@ -62,6 +64,39 @@ class RetentionTests(Harness):
         finish_compaction(self.arena,job)
         self.assertTrue(old.is_symlink())
         self.assertEqual((old/'artifacts/final.json').read_bytes(),b'original statistics')
+
+    def test_large_statistics_are_lossless_and_slices_remain_transparent(self):
+        import gzip
+        job, old = self.project_job()
+        data = json.dumps({'timeline':['large retained official data'] * 12000}).encode()
+        (old/'artifacts/final.json').write_bytes(data)
+        seal_artifacts(old,job['id'],job['attempt_count'],json.loads(job['result']))
+        compact_project(self.arena,job)
+        current = self.arena.db.one('SELECT * FROM match_jobs WHERE id=?',(job['id'],))
+        path = Path(current['artifact'])/'artifacts/final.json'
+        self.assertFalse(path.exists())
+        self.assertEqual(saved_bytes(path),data)
+        self.assertEqual(gzip.decompress(Path(str(path)+'.gz').read_bytes()),data)
+        self.assertEqual(verify_artifacts(current['artifact'],job['id'],job['attempt_count']),json.loads(job['result']))
+        sliced = handle_request(self.arena,'alpha',{'operation':'slice','payload':{
+            'match_id':job['id'],'file':'final.json','offset':75,'limit':130}})
+        self.assertEqual(sliced['text'],data[75:205].decode())
+        self.assertEqual(sliced['size'],len(data))
+        proof = read_json(Path(current['artifact'])/'history-prune.json')
+        proof['compressed_statistics']['uncompressed_sha256'] = 'f'*64
+        atomic_json(Path(current['artifact'])/'history-prune.json', proof)
+        with self.assertRaisesRegex(ArenaError,'statistics bytes changed'):
+            saved_bytes(path)
+
+    def test_parser_fixture_remains_at_its_exact_uncompressed_path(self):
+        job, old = self.project_job()
+        path=old/'artifacts/final.json';path.write_bytes(b'x'*200000)
+        seal_artifacts(old,job['id'],job['attempt_count'],json.loads(job['result']))
+        atomic_json(self.path/'parser.json',{'fixture_path':str(path)})
+        self.config['parser_contract']=str(self.path/'parser.json')
+        compact_project(self.arena,job)
+        self.assertEqual(len(path.read_bytes()),200000)
+        self.assertFalse(Path(str(path)+'.gz').exists())
 
     def test_raw_retirement_keeps_result_cases_and_journals_intent_before_delete(self):
         job,old=self.project_job()

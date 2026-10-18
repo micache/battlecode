@@ -54,6 +54,17 @@ class Arena:
                          "VALID", build["artifact"], build["wasm_sha256"], json.dumps(build)))
         return build
 
+    def frozen_build(self, build_id, revision_id):
+        """Stage transitions reuse their exact recorded build, even after a code-only restart."""
+        row = self.db.one('SELECT * FROM builds WHERE id=?', (build_id,))
+        revision = self.db.one('SELECT source_hash FROM revisions WHERE id=?', (revision_id,))
+        require(row and revision and row['state'] == 'VALID' and
+                row['source_hash'] == revision['source_hash'] and row['lock_hash'] == self.adapter().lock_hash,
+                'frozen evaluation build is missing or mismatched; preserve and reconcile')
+        saved = json.loads(row['detail'])
+        require(file_hash(saved['artifact']) == saved['wasm_sha256'], 'frozen evaluation artifact changed')
+        return saved
+
     def queue_match(self, a, b, map_info, repetition=None, training_round=None):
         spec = {"a_build": a["build_id"], "b_build": b["build_id"],
                 "a_snapshot": a["snapshot"], "b_snapshot": b["snapshot"],
@@ -157,8 +168,7 @@ class Arena:
         try:
             candidate = self.build(revision_id)
             incumbent = self.build(bot["accepted_revision"]) if bot["accepted_revision"] else None
-            if development_id:
-                self.build(development_id)  # Validate the frozen training base before queueing.
+            development = self.build(development_id) if development_id else None
             # Configured immutable history plus a pinned starter; never a moving opponent branch.
             from .strategy import opponent_panel
             opponent_ids = opponent_panel(self) if bot['accepted_revision'] else [self.db.get('starter_revision')]
@@ -190,6 +200,7 @@ class Arena:
                  "coverage": "full-map-pool" if full else (
                      "development-map-pool" if cumulative else "provisional-three-map-wiring"),
                  "development_incumbent_id": development_id,
+                 'development_build': development['build_id'] if development else None,
                  "candidate_build": candidate["build_id"], "incumbent_build": incumbent["build_id"] if incumbent else None,
                  "gate": self.config["evaluation"], "config_hash": self.config["config_hash"]}
         suite["effective_profile"] = self.adapter().lock.get("effective_profile")
@@ -249,13 +260,21 @@ class Arena:
                 names = self.config["evaluation"]["screen_maps"] if next_stage == "screen" else list(suite["maps"])
                 if suite.get('development_incumbent_id') and next_stage == 'screen':
                     names = self.config['evaluation']['development_maps']
-                candidate = self.build(evaluation["revision_id"])
-                incumbent = self.build(evaluation["incumbent_id"]) if evaluation["incumbent_id"] else None
-                opponents = {rid: self.build(rid) for rid in suite["opponents"]}
+                candidate = self.frozen_build(suite['candidate_build'], evaluation['revision_id'])
+                incumbent = self.frozen_build(suite['incumbent_build'], evaluation['incumbent_id']) if evaluation['incumbent_id'] else None
+                opponents = {rid: self.frozen_build(data['build_id'], rid) for rid, data in suite['opponents'].items()}
                 self.add_cases(evaluation["id"], candidate, incumbent, opponents, suite["maps"], names, next_stage)
                 development_id = suite.get('development_incumbent_id')
                 if development_id and development_id != evaluation['incumbent_id']:
-                    development = self.build(development_id)
+                    development_build = suite.get('development_build')
+                    if not development_build:
+                        # Pre-upgrade suites already recorded these exact inputs in screen cases.
+                        previous = self.db.one("SELECT c.candidate_side,j.spec FROM evaluation_cases c "
+                            "JOIN match_jobs j ON j.id=c.job_id WHERE c.evaluation_id=? "
+                            "AND c.role='development-base' LIMIT 1", (evaluation['id'],))
+                        require(previous, 'legacy frozen development build unavailable; reconcile saved suite')
+                        development_build = json.loads(previous['spec'])[previous['candidate_side'].lower() + '_build']
+                    development = self.frozen_build(development_build, development_id)
                     self.add_cases(evaluation['id'], None, None, opponents, suite['maps'],
                                    [name for name in names if name in self.config['evaluation']['development_maps']],
                                    next_stage, roles=(('development-base', development),))

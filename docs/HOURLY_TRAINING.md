@@ -1,5 +1,12 @@
 # Active training: alpha, beta and gamma
 
+18 October engine update: official CLI 2.2.5 / engine 0.0.3, release mode,
+17 published maps: 14 development and the existing three reserved maps.
+Full qualification uses every map with no daily downgrade. Three-bot continuous
+self-play now has 84 games per round (three pairs × two sides × 14 maps).
+Old/new engine feedback is separated. The six-map counts below are historical.
+See [the current-game transition](TOOLCHAIN_225.md).
+
 18 October storage policy: [rolling local history](ROLLING_HISTORY.md) replaces
 the laptop offloader. Old routine raw history expires automatically while source,
 compact results and important evaluation evidence remain. The offload sections

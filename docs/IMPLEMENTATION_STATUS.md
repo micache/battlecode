@@ -1,5 +1,21 @@
 # Live pilot status — 16 October 2026
 
+18 October current-game upgrade: runtime CLI 2.2.5 / engine 0.0.3 uses release
+mode and the full published 17-map pool. A fresh official five-game series
+finished at 16:12 UTC reports the identical engine build and metric semantics;
+local and server starter statistics are byte-identical and replay-verified.
+The error enum matches all 134 supplied entries. ward::owner is documented
+upstream but absent from the release header and is explicitly prohibited in
+worker guidance. C++ budgets/settings are measured; other languages are unused.
+Old results are retained separately. Full 136-candidate-game evaluations per
+lane are running against four fixed opponents; no completed new full-suite
+qualification is asserted by this snapshot. See
+[the checkpoint](../evidence/blaxel/current-game-225-20261018.json) and
+[deployment details](TOOLCHAIN_225.md). Automatic promotion/uploads remain off.
+Large statistics are losslessly compressed for full-pool capacity; preserved
+build IDs survive a maintenance restart. The historical updates below describe
+earlier configurations, not the active CLI or offload policy.
+
 17 October continuous-play repair: candidate evaluations previously drained the
 game queue between hourly coding jobs. `arena/training.py` now replenishes a
 separate frozen development round-robin, below smoke/evaluation priority. It

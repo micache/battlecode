@@ -72,21 +72,21 @@ Compare the candidate to its task's edit-base source hash, not merely to the pre
 
 Implement a narrow interface: `prepare_bot(snapshot, engine_lock)`, `run_match(spec)`, and `normalize_result(artifacts)`. Inspect real output before defining the parser. Preserve raw output even when normalization fails.
 
-Version 2.1.6 supports these commands:
+The reviewed current CLI 2.2.5 supports these source-project commands:
 
 ```bash
 cambc init --yes /path/to/project
 cambc new bot-name --lang cpp
-cambc build bot-name --output /path/to/build/bot.wasm
-cambc run bot-a bot-b --map /path/to/map.map26a --out-dir /path/to/match --statistics /path/to/match/final.json
-cambc run-batch /path/to/jobs.txt --jobs 2 --timeout 300 --color never
+cambc build bot-name --release --output /path/to/build/bot.wasm
+cambc run bot-a bot-b --release --json --map /path/to/map.map26a --out-dir /path/to/match --statistics /path/to/match/final.json
+cambc run-batch /path/to/jobs.txt --jobs 1 --timeout 300 --release --color never
 cambc maps pull
 cambc bundle bot-name --output /path/to/bot.zip
 ```
 
 Run these from a prepared official project. The text batch manifest has four columns: bot-A project directory, bot-B project directory, map path, replay path ending in `.repl26a`; paths are relative to the manifest. A separate compiled-input JSONL mode exists, but its precise schema was not verified here. Do not invent it.
 
-For the MVP, use a bounded process pool of `cambc run` calls with `--statistics`; this gives a documented final-statistics output to validate. If batch output/replays provide the same verified outcome and fault information, add `run-batch` as an optimization. Keep concurrency owned by one layer: do not launch N batches each with N workers accidentally.
+For the MVP, use a bounded process pool of `cambc run` calls with `--release --statistics PATH --json`; this gives readable final statistics to validate. Omitting `--json` in 2.2.5 produces binary statistics, and omitting `--release` selects debug behavior that differs from the platform. If batch output/replays provide the same verified outcome and fault information, add `run-batch` as an optimization. Keep concurrency owned by one layer: do not launch N batches each with N workers accidentally.
 
 Use full-length games, normally by omitting `--rounds`, and verify the effective settings against the supplied handbook profile: 1,000 submitted gems, 2,000 maximum rounds, 1,024 draft-memory bytes and 8 live team-memory bytes. The documented base fuel is 100,000 per turn for C++/Rust, multiplied by 5 for OCaml and 25 for Python; first draft turn gets 10× and first champion play turn gets 2×. An expected profile in config is a validation target, not a measured engine snapshot. Record the actual values or mark parity unverified. Never pass one flat `--fuel 100000` to every language and assume parity.
 

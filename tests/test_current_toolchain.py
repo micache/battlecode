@@ -3,6 +3,7 @@ import copy
 import json
 from pathlib import Path
 import tempfile
+from unittest.mock import patch
 
 from arena.common import ArenaError, atomic_json, read_json
 from arena.engine import normalize_result
@@ -94,3 +95,15 @@ class CurrentToolchainTests(Harness):
         self.assertEqual(set(roster(self.arena)), {'alpha','beta'})
         self.engine.lock_hash = 'a' * 64
         self.assertEqual(roster(self.arena), {})
+
+    def test_evaluation_restart_keeps_original_builds_instead_of_rebuilding_new_inputs(self):
+        self.establish()
+        self.config['evaluation']['full_evaluation'] = True
+        candidate = self.commit('alpha','frozen complete contender')
+        eid = self.arena.start_evaluation(candidate['id'])
+        frozen = self.arena.db.one('SELECT suite FROM evaluations WHERE id=?',(eid,))['suite']
+        self.config['infrastructure_commit'] = 'a'*40
+        with patch.object(self.arena,'build',side_effect=AssertionError('must use frozen builds')):
+            self.finish_all()
+        self.assertEqual(self.arena.db.one('SELECT suite FROM evaluations WHERE id=?',(eid,))['suite'],frozen)
+        self.assertEqual(len({c['map_name'] for c in self.arena.evaluation_cases(eid)}),9)
