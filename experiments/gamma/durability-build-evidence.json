@@ -1,0 +1,450 @@
+{
+  "task_id": "task-ffac8b92c85645ca803df9d1120ffd48",
+  "edit_commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+  "edit_source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+  "latest_evaluation": {
+    "evaluation_id": "804ae9d1b55c15c904978519941ac03229d6781dfc224b27ba9fff79067c037d",
+    "candidate": {
+      "build_id": "0bb259044b542e17f353d97598c53152fb460c8f4ae4ff0acf097a7bf63468ff",
+      "commit": "eef19f04b32f7a09a3730ecf8464d0bf63a14e0a",
+      "revision_id": "7fb1463481b282284ca17e451c6e76ac13f1a47837f062940d65a22294a7b752",
+      "source_hash": "f857236953b7f785b46f7f465b429635fbf07f961a43e1012b280aede2f970d7"
+    },
+    "coverage": "development-six-map",
+    "decision": "INCONCLUSIVE"
+  },
+  "latest_development_comparison": {
+    "commit_sha": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+    "common_opponent_delta": -0.041666666666666664,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 24,
+    "per_map": {
+      "collision": {
+        "candidate": 0.25,
+        "incumbent": 0.375,
+        "pairs": 4
+      },
+      "corners": {
+        "candidate": 0.5,
+        "incumbent": 0.75,
+        "pairs": 4
+      },
+      "elkring": {
+        "candidate": 0.75,
+        "incumbent": 0.5,
+        "pairs": 4
+      },
+      "expanse": {
+        "candidate": 0.625,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "interlock": {
+        "candidate": 0.375,
+        "incumbent": 0.375,
+        "pairs": 4
+      },
+      "lanes": {
+        "candidate": 0.625,
+        "incumbent": 0.5,
+        "pairs": 4
+      }
+    },
+    "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+    "unknown_reliability": []
+  },
+  "latest_representative_failures": [
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 6,
+            "B": 3
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 3,
+            "B": 6
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 900,
+            "B": 1010
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2230,
+            "B": 2350
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 761
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 720,
+            "B": 1010
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 130,
+            "B": 160
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "8de1fe376614bd1e234627c66ca8ff2101cbaf19e1a5b427ea0e9aefa79fde8f",
+      "round": 761,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 8
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 8,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1024,
+            "B": 576
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2680,
+            "B": 1280
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 835
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 1024,
+            "B": 504
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 280,
+            "B": 200
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "80b937e62772954c0abb021bfc5acc390edcbc1424af2526c38f6a8c2528dd13",
+      "round": 835,
+      "side": "B",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 7,
+            "B": 1
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 7
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 498,
+            "B": 1166
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 1230,
+            "B": 4180
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 567
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 80,
+            "B": 1000
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 30,
+            "B": 880
+          }
+        }
+      },
+      "map": "collision",
+      "match_id": "e66cf0b7c071ca90a4d82ed388393ef3624667b0230a6a80c24dd75a430a1d57",
+      "round": 567,
+      "side": "A",
+      "trace": null
+    }
+  ],
+  "exact_base_contrasts": [
+    {
+      "match_id": "3e3cd7fe03e8848a724c5cb3a7478d676e4d7e0a4fb32e38f8a863014e807f3e",
+      "side": "A",
+      "map": "interlock",
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "opponent_commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "outcome": "teamB",
+      "round": 609,
+      "own_tribute": 968,
+      "opponent_tribute": 1010,
+      "own_collected": 968,
+      "own_deaths": 5,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/camp-claims-evidence.json"
+    },
+    {
+      "match_id": "d36694ea34fad7710a893a7970a447abf89640d425d1b6f833b0628bb4422aaa",
+      "side": "A",
+      "map": "lanes",
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "opponent_commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "outcome": "teamB",
+      "round": 432,
+      "own_tribute": 786,
+      "opponent_tribute": 1010,
+      "own_collected": 786,
+      "own_deaths": 1,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/camp-claims-evidence.json"
+    },
+    {
+      "match_id": "759094967480eed1b72e4d10f0b0d23d2f333c77948c3bd195f5e0652b106962",
+      "side": "B",
+      "map": "lanes",
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "opponent_commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "outcome": "teamA",
+      "round": 447,
+      "own_tribute": 912,
+      "opponent_tribute": 1008,
+      "own_collected": 948,
+      "own_deaths": 2,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/camp-claims-evidence.json"
+    },
+    {
+      "match_id": "4cae2e4e3ee2e0b28310eecc700849b9deb0164dfb981b15c98aa7b292193be0",
+      "side": "A",
+      "map": null,
+      "opponent_commit": null,
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "round": 596,
+      "outcome": "teamA",
+      "own_tribute": 1006,
+      "opponent_tribute": 154,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/smoke-evidence.json",
+      "limit": "Smoke wins, maps/opponent revisions unknown; not controlled comparisons or turn-level cause evidence."
+    },
+    {
+      "match_id": "437e20a563cc5112573c2e614895606deb42a3db7a0cb94100002b88ffadc2bf",
+      "side": "B",
+      "map": null,
+      "opponent_commit": null,
+      "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+      "round": 640,
+      "outcome": "teamB",
+      "own_tribute": 1084,
+      "opponent_tribute": 286,
+      "bot_faults": [
+        0,
+        0
+      ],
+      "artifact": "experiments/gamma/smoke-evidence.json",
+      "limit": "Smoke wins, maps/opponent revisions unknown; not controlled comparisons or turn-level cause evidence."
+    }
+  ],
+  "attribution": "Latest failures describe f8572369 at eef19f04, NOT this edit base or candidate. Finals establish deaths and objective deficits, not a per-turn cause. Base smoke wins have unknown maps/opponent revisions.",
+  "manifest_sha256": "a57dcb89eb62db715074041b7dbff23ee624d33001a3211e55d5a75f701d655f",
+  "verified_opponents": [
+    {
+      "bot_id": "alpha",
+      "commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+      "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+      "path": "/srv/battlecode/public/strategy/task-ffac8b92c85645ca803df9d1120ffd48/2bd9aa09821265ac4c2da4507ba6581fce4fff3cea5e7dda550b94ffc30af31c/src"
+    },
+    {
+      "bot_id": "beta",
+      "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e",
+      "path": "/srv/battlecode/public/strategy/task-ffac8b92c85645ca803df9d1120ffd48/e8aa98b8dcd0ec7757c49ad613e8dc8647518c5e17bffb27be8342e81258c0a0/src"
+    },
+    {
+      "bot_id": "alpha",
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "path": "/srv/battlecode/public/strategy/task-ffac8b92c85645ca803df9d1120ffd48/650eb88bce04b8d8ffdcf70e9c819cdcb3ef0e4e12986aa01cc5e172996e6b0b/src"
+    }
+  ],
+  "frozen_opponent_audit": [
+    {
+      "bot": "beta",
+      "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "policy": "Varg/Tavi/Ryth/Vendetta/Marcella; Jungle Strength, Monster Strength, Durability Health, then Power Strength. Group-valued routing and recovery latch; banks before incidental fights, bounded AoE/reset comparison."
+    },
+    {
+      "bot": "alpha",
+      "commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+      "policy": "Random Power stat/draft; bounded enemy-first reset/direct combat, opportunistic altar locks, spawn-union farming with private respawn observations."
+    }
+  ],
+  "rules_basis": {
+    "file": ".agent/knowledge/sources/GameRules.md",
+    "sections": [
+      "Shards and emblems",
+      "Extra item rules",
+      "Ryth",
+      "Varg",
+      "Death and respawn"
+    ],
+    "facts": [
+      "Five matching shards at 30 gold each complete an emblem; Durability reduces incoming damage by 10%.",
+      "Health adds champion growth; Varg and Ryth gain 100 per shard. Ryth also gains Strength equal to 1% of bonus Health.",
+      "Spawn Health purchases heal the gained amount; field Tavi purchases do not.",
+      "Duplicate passives do not stack; death costs 60 owner turn ends before a free spawn."
+    ]
+  },
+  "decision": {
+    "bottleneck": "All-Strength late build has no Health growth or champion-damage mitigation; measured deaths make lost objective uptime a plausible bottleneck.",
+    "hypothesis": "One Durability Health emblem after the farming core will reduce matched mean champion deaths and increase matched mean submitted gems against the edit base without new bot faults.",
+    "transfer": "Test beta's bounded survival investment in gamma's existing melee farming/banking policy, without importing beta's macro/combat changes. Unmeasured source/rules deduction.",
+    "expected_change": "After 300 farming-item gold, up to 150 gold buys five Health growths and one 10% mitigation passive; subsequent gold buys Power Strength as before.",
+    "falsifier": "Matched deaths not lower, submitted gems not higher, or any new fault rejects the stated mechanism. Wins and configured gates decide selection.",
+    "risk": "Forego up to six Power Strength growths; slower clears can outweigh durability, especially low-contact maps. Tavi Health purchases do not heal in the field and may increase retreat frequency.",
+    "rejected_alternatives": "Do not repeat regressed combat-value, camp-claim or threat-routing experiments. No evidence yet for a broader draft/route rewrite."
+  },
+  "trusted_check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792327556.7674172,
+    "matches": [
+      "289095505f992a52ae7be0d50d5abeade2d1873cb061474878fca4b7743bb816",
+      "3fc501dfc08f3d73459ced366db89ea85f676dda6bee2016f7739a1737d770f3"
+    ],
+    "report_path": ".agent/check-task-ffac8b92c85645ca803df9d1120ffd48.json",
+    "report_reference": "check:task-ffac8b92c85645ca803df9d1120ffd48:a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+    "source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+    "started": 1792327526.4740813,
+    "state": "PASSED",
+    "task_id": "task-ffac8b92c85645ca803df9d1120ffd48"
+  },
+  "source_invariants": {
+    "kind": "source invariants; no runtime purchase or strategic gain claim",
+    "edit_commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+    "bot_cpp_sha256": "5178a8bf8f16e59dfb2f27d15a72ede9886acdacadd40b8b4b4daaebaef095fb",
+    "checks": {
+      "one_survival_emblem_after_farming_core": true,
+      "completed_emblem_skips_family": true,
+      "partial_purchase_bounded_by_remaining_shards_and_gold": true,
+      "purchase_requires_nonzero_count_and_current_shop_permission": true,
+      "actual_completion_gates_later_families": true,
+      "unbounded_scaling_returns_to_power_strength": true,
+      "only_executable_change_is_survival_stage": true,
+      "bot.h_matches_edit_base": true,
+      "main.cpp_matches_edit_base": true,
+      "draft.cpp_matches_edit_base": true,
+      "draft.h_matches_edit_base": true,
+      "random.h_matches_edit_base": true
+    },
+    "passed": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "kind": "source invariants; no runtime purchase or strategic gain claim",
+  "edit_commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+  "bot_cpp_sha256": "5178a8bf8f16e59dfb2f27d15a72ede9886acdacadd40b8b4b4daaebaef095fb",
+  "checks": {
+    "one_survival_emblem_after_farming_core": true,
+    "completed_emblem_skips_family": true,
+    "partial_purchase_bounded_by_remaining_shards_and_gold": true,
+    "purchase_requires_nonzero_count_and_current_shop_permission": true,
+    "actual_completion_gates_later_families": true,
+    "unbounded_scaling_returns_to_power_strength": true,
+    "only_executable_change_is_survival_stage": true,
+    "bot.h_matches_edit_base": true,
+    "main.cpp_matches_edit_base": true,
+    "draft.cpp_matches_edit_base": true,
+    "draft.h_matches_edit_base": true,
+    "random.h_matches_edit_base": true
+  },
+  "passed": true
+}
