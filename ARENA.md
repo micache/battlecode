@@ -7,11 +7,13 @@ counter; automatic champion promotion remains a separate disabled gate.
 See docs/TOOLCHAIN_225.md for migration, evidence and the ward::owner SDK gap.
 
 19 October owner override: enable narrowly scoped unranked exploration for the
-owner-selected v6 C++ bot through the now-verified official CLI 2.2.5 commands,
+owner-selected C++ bot through the now-verified official CLI 2.2.5 commands,
 using its actual shared 50/hour allowance. Upload/activation remain disabled;
 no blanket policy/readiness certification is implied. Actual own submission
 IDs must be independently verified, not inferred from configuration. See
 docs/UNRANKED_EXPLORATION.md for source-proof and operator-online limits.
+Latest selection: await the owner's prepared beta `7cab9b0f` upload, verify its
+actual source, then use beta. Never upload or override another team selection.
 
 Implement the design in README.md as a small, recoverable service. Use Python, SQLite, ordinary files, Git, systemd, and the official cambc CLI. Do not build a web dashboard, distributed broker, Kubernetes stack, vector database, custom game simulator, or LLM routing service for version one.
 

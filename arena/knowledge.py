@@ -16,10 +16,13 @@ def freeze_opponents(arena, bot, task_id):
     from .development import select_base
     from .strategy import opponent_panel
     policy = arena.config.get('official_exploration', {})
-    shared_source = (arena.db.one('SELECT id FROM revisions WHERE bot_id=? AND commit_sha=?',
-                    (policy.get('bot_id'), policy.get('source_commit')))
-                    if policy.get('enabled') and policy.get('share_feedback') else None)
-    ids = [shared_source['id']] if shared_source else []
+    ids = []
+    if policy.get('enabled') and policy.get('share_feedback'):
+        for source in [policy, *policy.get('shared_sources', [])]:
+            row = arena.db.one('SELECT id FROM revisions WHERE bot_id=? AND commit_sha=? AND source_hash=?',
+                              (source.get('bot_id'), source.get('source_commit'), source.get('source_hash')))
+            if row:
+                ids.append(row['id'])
     for other in sorted(arena.config['workers']):
         if other != bot:
             revision, _ = select_base(arena, other)

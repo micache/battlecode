@@ -6,9 +6,11 @@ import json
 from pathlib import Path
 import time
 import unittest
+from unittest.mock import patch
 
 from arena.common import ArenaError, atomic_json, file_hash, identity, read_json
-from arena.exploration import Explorer, NativeCLI, compact_statistics, quota_wait, shared
+from arena.exploration import (CLIThrottle, Explorer, NativeCLI, compact_statistics, quota_wait, shared,
+                               resolved_policy, save_source_proofs)
 from arena.operations import import_external
 from arena.retention import maintain_external
 from arena.strategy import experiment_context
@@ -31,6 +33,10 @@ class QuotaTests(unittest.TestCase):
             with self.assertRaisesRegex(ArenaError, 'allowlisted'):
                 cli.run(args)
 
+    def test_explicit_retry_after_is_respected_not_tight_polled(self):
+        self.assertEqual(CLIThrottle('HTTP 429; retry after 2 seconds',2).retry_after,60)
+        self.assertEqual(CLIThrottle('HTTP 429; retry after 120 seconds',120).retry_after,120)
+
     def test_real_format_projection_produces_small_measured_feedback(self):
         # Existing projection is derived from the saved, reviewed real-engine fixture.
         path = Path(__file__).parent / 'fixtures/cambc-225-starter-projection.json'
@@ -52,6 +58,81 @@ class ExplorationTests(Harness):
             'source_commit':alpha['commit_sha'],'source_hash':alpha['source_hash'],
             'interval_seconds':72,'max_outstanding':50}
         return alpha
+
+    def test_awaiting_beta_never_creates_without_fresh_exact_source_selection(self):
+        self.policy()
+        policy = self.config['official_exploration']
+        policy.update(submission_id=None, awaiting_submission=True, require_selection_proof=True)
+        explorer = Explorer(self.config, cli=object())
+        explorer.create(time.time())
+        self.assertEqual(explorer.state['waiting'], 'AWAITING_VERIFIED_BETA_SELECTION')
+        self.assertEqual(explorer.records(), [])
+
+        different = {'team_id':'own-team','submission_id':'00000000-0000-4000-8000-000000000002',
+                     'source_hash':'a'*64, 'observed_at':time.time()}
+        save_source_proofs(self.config, {'selection':different})
+        self.assertIsNone(resolved_policy(self.config)['submission_id'])
+        correct = dict(different, source_hash=policy['source_hash'])
+        save_source_proofs(self.config, {'selection':correct})
+        self.assertEqual(resolved_policy(self.config)['submission_id'], correct['submission_id'])
+        # Future teammate changes do not rewrite historical beta attribution.
+        save_source_proofs(self.config, {'selection':different})
+        self.assertEqual(resolved_policy(self.config)['submission_id'], correct['submission_id'])
+        explorer.policy = resolved_policy(self.config)
+        explorer.create(time.time())
+        self.assertEqual(explorer.records(), [])
+        save_source_proofs(self.config, {'selection':dict(correct, observed_at=time.time()-181)})
+        explorer.create(time.time())
+        self.assertEqual(explorer.records(), [])
+
+    def test_throttle_wait_issues_no_platform_calls(self):
+        self.policy()
+        explorer = Explorer(self.config, cli=object())
+        explorer.state['official_retry_at'] = time.time()+120
+        with patch.object(explorer,'create') as create, patch.object(explorer,'collect') as collect:
+            explorer.step()
+        create.assert_not_called()
+        collect.assert_not_called()
+
+    def test_mismatch_reaches_server_and_is_checked_before_creation(self):
+        self.policy()
+        explorer = Explorer(self.config, cli=object())
+        rid = '1'*32
+        record = {'request_id':rid,'group_id':'group','submission_id':'own-submission',
+                  'source_commit':explorer.policy['source_commit'], 'source_hash':explorer.policy['source_hash'],
+                  'bot_id':'alpha','state':'QUEUED','created_at':1,'opponent_rank':1}
+        path = explorer.root/'requests'/rid/'record.json'
+        atomic_json(path,record)
+        metadata = {'myTeamId':'own-team','group':{'id':'group','kind':'unranked',
+                    'sides':[{'teamId':'own-team','submissionId':'other-upload'}]}}
+        save_source_proofs(self.config, {'proofs':[{'request_id':rid,'metadata':metadata}]})
+        with patch.object(explorer,'create') as create:
+            explorer.step()
+        create.assert_not_called()
+        self.assertEqual(read_json(path)['state'], 'SOURCE_CHANGED')
+        self.assertIn('different submission', explorer.state['blocked'])
+
+    def test_old_source_mismatch_does_not_block_new_owner_target(self):
+        self.policy()
+        explorer = Explorer(self.config, cli=object())
+        path = explorer.root/'requests'/('2'*32)/'record.json'
+        atomic_json(path, {'request_id':'2'*32,'group_id':'old','submission_id':'previous-source',
+                          'state':'QUEUED','created_at':1,'opponent_rank':1})
+        atomic_json(path.parent/'metadata.json',{'group':{'sides':[
+            {'teamId':'own-team','submissionId':'another-upload'}]}})
+        explorer.step()
+        self.assertEqual(read_json(path)['state'],'SOURCE_CHANGED')
+        self.assertIsNone(explorer.state['blocked'])
+
+    def test_previous_verified_lessons_remain_shared_after_target_switch(self):
+        alpha = self.policy()
+        old = dict(self.config['official_exploration'])
+        self.config['official_exploration'].update(submission_id=None, awaiting_submission=True,
+            source_commit='b'*40, source_hash='c'*64, shared_sources=[old])
+        self.assertTrue(shared(self.config, {'submission_id':old['submission_id'],
+            'source_commit':alpha['commit_sha'], 'source_hash':alpha['source_hash']}))
+        self.assertFalse(shared(self.config, {'submission_id':old['submission_id'],
+            'source_commit':'d'*40, 'source_hash':alpha['source_hash']}))
 
     def test_shared_feedback_has_explicit_source_and_no_extra_model_job(self):
         alpha=self.policy()

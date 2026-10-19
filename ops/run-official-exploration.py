@@ -7,7 +7,7 @@ import time
 sys.path.insert(0, '/opt/battlecode')
 from arena.common import lock
 from arena.config import load
-from arena.exploration import Explorer
+from arena.exploration import CLIThrottle, Explorer
 
 stopping = False
 
@@ -27,6 +27,13 @@ def main():
         while not stopping:
             try:
                 explorer.step()
+            except CLIThrottle as exc:
+                # Safe read commands may wait for an explicit server Retry-After.
+                # A creation timeout/error still leaves UNKNOWN and blocks retries.
+                explorer.state['official_retry_at'] = time.time() + exc.retry_after
+                explorer.state['last_throttle'] = str(exc)[:1000]
+                explorer.save()
+                explorer.publish_status()
             except Exception as exc:
                 # A private simulation must never stop because the website/login failed.
                 explorer.state['blocked'] = str(exc)[:1000]

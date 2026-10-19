@@ -28,6 +28,12 @@ class CLIError(ArenaError):
     pass
 
 
+class CLIThrottle(CLIError):
+    def __init__(self, message, retry_after):
+        super().__init__(message)
+        self.retry_after = max(60, retry_after)
+
+
 def timestamp(value):
     return datetime.datetime.fromisoformat(value.replace('Z', '+00:00')).timestamp()
 
@@ -86,6 +92,9 @@ class NativeCLI:
                            capture_output=True, timeout=20)
             raise CLIError('official CLI timeout; creation outcome must be reconciled') from exc
         if result.returncode:
+            wait = re.search(r'HTTP 429\).*?retry after (\d+) seconds', result.stderr, re.I | re.S)
+            if wait:
+                raise CLIThrottle(result.stderr[-2000:], int(wait.group(1)))
             raise CLIError(result.stderr[-2000:] or 'official CLI failed without diagnostics')
         return json.loads(result.stdout) if '--json' in args and output is None else result.stdout
 
@@ -109,10 +118,52 @@ def compact_statistics(stats):
 
 def shared(config, metadata):
     policy = config.get('official_exploration', {})
-    return bool(policy.get('enabled') and policy.get('share_feedback') and
-                metadata.get('submission_id') == policy.get('submission_id') and
-                metadata.get('source_commit') == policy.get('source_commit') and
-                metadata.get('source_hash') == policy.get('source_hash'))
+    return bool(policy.get('enabled') and policy.get('share_feedback') and any(
+        all(metadata.get(k) == source.get(k) for k in ('submission_id', 'source_commit', 'source_hash'))
+        for source in [resolved_policy(config), *policy.get('shared_sources', [])]))
+
+
+def resolved_policy(config):
+    """Resolve only an exact, owner-preauthorized source; never a moving latest bot."""
+    policy = dict(config.get('official_exploration', {}))
+    path = Path(config['root']) / 'official-exploration/approved-submission.json'
+    if policy.get('awaiting_submission') and path.exists():
+        proof = read_json(path)
+        if (proof.get('team_id') == policy['team_id'] and
+                proof.get('source_hash') == policy['source_hash'] and proof.get('submission_id')):
+            policy.update(submission_id=str(uuid.UUID(proof['submission_id'])), awaiting_submission=False)
+    return policy
+
+
+def save_source_proofs(config, batch):
+    """Trusted read-only browser facts. Mismatches must reach the server too."""
+    policy = config['official_exploration']
+    root = Path(config['root']) / 'official-exploration'
+    selection = batch.get('selection')
+    if selection:
+        require(selection['team_id'] == policy['team_id'], 'source-proof team changed')
+        uuid.UUID(selection['submission_id'])
+        require(re.fullmatch('[a-f0-9]{64}', selection['source_hash']), 'invalid source proof')
+        atomic_json(root / 'selection.json', selection, 0o600)
+        if selection['source_hash'] == policy['source_hash']:
+            atomic_json(root / 'approved-submission.json', selection, 0o600)
+    count = 0
+    for item in batch.get('proofs', []):
+        rid = item['request_id']
+        require(re.fullmatch('[a-f0-9-]{32,36}', rid), 'invalid request identifier')
+        uuid.UUID(rid)
+        directory = root / 'requests' / rid
+        record = read_json(directory / 'record.json')
+        data = item['metadata']
+        require(data['myTeamId'] == policy['team_id'] and data['group']['id'] == record['group_id'],
+                'source-proof team/group mismatch')
+        target = directory / 'metadata.json'
+        if target.exists():
+            require(read_json(target) == data, 'source proof changed; reconcile')
+        else:
+            atomic_json(target, data, 0o600)
+        count += 1
+    return count
 
 
 class Explorer:
@@ -182,6 +233,16 @@ class Explorer:
     def create(self, now):
         if now < self.state['next_create'] or self.state.get('blocked'):
             return
+        if self.policy.get('require_selection_proof'):
+            path = self.root / 'selection.json'
+            proof = read_json(path) if path.exists() else {}
+            ready = (proof.get('submission_id') == self.policy.get('submission_id') and
+                     proof.get('source_hash') == self.policy['source_hash'] and
+                     proof.get('team_id') == self.policy['team_id'] and
+                     -30 <= now - proof.get('observed_at', 0) <= 180)
+            self.state['waiting'] = None if ready else 'AWAITING_VERIFIED_BETA_SELECTION'
+            if not ready:
+                return
         pending = [read_json(p) for p in self.records() if read_json(p)['state'] in ('QUEUED', 'COLLECTING')]
         if len(pending) >= self.policy.get('max_outstanding', 50):
             return
@@ -390,11 +451,30 @@ class Explorer:
 
     def step(self):
         now = time.time()
+        self.policy = resolved_policy(self.config)
         self.validate_source()
         require(self.policy.get('enabled') and self.config['official']['challenges'], 'outside play disabled')
         status_path = Path(self.config['root']) / 'public/status.json'
         arena_status = read_json(status_path) if status_path.exists() else {'paused':True}
         self.state['private_arena_paused'] = arena_status.get('paused', True)
+        if self.state.get('official_retry_at', 0) > now:
+            self.publish_status()
+            return
+        self.state.pop('official_retry_at', None)
+        # Process source changes BEFORE creating another non-idempotent request.
+        for path in self.records():
+            record = read_json(path)
+            proof = path.parent / 'metadata.json'
+            if record['state'] not in ('QUEUED', 'COLLECTING') or not proof.exists():
+                continue
+            data = read_json(proof)
+            own = next(s for s in data['group']['sides'] if s['teamId'] == self.policy['team_id'])
+            if own['submissionId'] != record['submission_id']:
+                record.update(state='SOURCE_CHANGED', actual_submission_id=own['submissionId'])
+                atomic_json(path, record, 0o600)
+                if record['submission_id'] == self.policy.get('submission_id'):
+                    self.state['blocked'] = 'Team selected a different submission; review source mapping'
+                    self.save()
         if not self.state.get('blocked'):
             if (self.state['private_arena_paused'] or arena_status.get('service_error') or
                     shutil.disk_usage(self.root).free <= self.config['limits']['minimum_free_bytes']):
@@ -421,5 +501,6 @@ class Explorer:
         atomic_json(Path(self.config['root']) / 'public/official-pending.json', {
             'team_id':self.policy['team_id'], 'submission_id':self.policy['submission_id'],
             'source_commit':self.policy['source_commit'],
-            'requests':[{'request_id':r['request_id'], 'group_id':r['group_id']} for r in records
+            'source_hash':self.policy['source_hash'],
+            'requests':[{k:r[k] for k in ('request_id','group_id','submission_id','source_commit')} for r in records
                         if r['state'] == 'QUEUED' and r.get('group_id')]}, 0o644)

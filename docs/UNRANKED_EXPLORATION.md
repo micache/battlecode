@@ -1,5 +1,27 @@
 # Outside exploration — 19 October 2026
 
+Current owner update: **use prepared beta `7cab9b0f` after the owner uploads it**.
+The target is source hash `fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa`;
+the expected ZIP is `artifacts/submissions/beta-7cab9b0f.zip`. No upload or
+activation is performed by the arena. The browser helper reads the selected
+own-team ZIP once per new submission ID and checks its source tree, not its
+filename. Until that exact source is selected, outside creation waits; private
+games and hourly improvement continue. Source selection proofs expire after
+180 seconds, so loss of the operator connection stops new outside requests
+promptly rather than filling an unverified backlog.
+
+Submission changes are recorded on the server **before** another creation.
+Mismatched games are quarantined as `SOURCE_CHANGED`, never relabeled. Older
+v6 mismatch records cannot block the newly authorized beta target. Previously
+verified v6 lessons and the frozen v6 source remain shared with all three bots.
+The exact approved beta submission ID is saved once its real source is verified;
+later team uploads cannot rewrite its historical attribution.
+
+An explicit native read-command HTTP 429 with a reported Retry-After waits on
+disk for at least that interval (minimum 60 seconds). Authentication/access
+denials still need owner review. Any ambiguous creation stays `UNKNOWN` and
+is never retried automatically, including when its error mentions throttling.
+
 The owner explicitly authorized using the selected v6 C++ submission and the
 shared 50-per-hour unranked allowance. Current official CLI **2.2.5** now provides
 `ladder`, `match-groups create/quota/show/download`, and `matches summary --json`.
