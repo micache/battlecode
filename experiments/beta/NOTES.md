@@ -1,102 +1,83 @@
 # Operational summary
 
-## task-6be48cfa8a864eaca2308324b0f4cd53 — route-directed dash travel
+## task-a1b6ecd47a594170978ab675dab36d4a — capital-aware gold farming
 
-Hypothesis: appending safe two-tile route-directed dashes to ordinary walking
-improves farming/banking throughput and matched wins versus 9f7ae1c8 / b4e969c7.
-No win gain, lower submitted gems, or increased deaths, faults or suspension
-falsifies it. Unmeasured rules/source deduction; no turn trace proves dash waste.
-Decision, precise evidence and validation artifacts: this task's directory.
+Hypothesis: after 300 gold of cash/equipment, penalizing zero-gem groups in both
+shortlist and final ranking improves matched wins and submitted gems by ending
+low-value gold loops. Falsified by no win gain, lower submitted gems, or increased
+deaths/faults/fuel suspension. Source-supported mechanism; no per-turn proof.
+Decision and compact provenance: this task's decision.md and evidence.json.
 
-Identity: beta / bot/beta; input HEAD 672874bb459ad66bfc3e03b3ff7f96a9160fbf56;
-trusted edit 9f7ae1c88a1bd0d5d62ed7713956efd40c95be33; base source
-b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1.
-All six files matched trusted edit_start hashes and edit Git blobs before editing.
-Prepared bot.cpp/bot.h differences from HEAD were intentional, not unfinished work.
-Prior task PUBLISHED/evaluated; no unpublished candidate awaits evaluation.
-Protected champion 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains in trusted
-Git/snapshot. Previous operational notes archived through task-9485272c.
-No agents, commit, push, official action or comparative tournament invocation.
+Identity: beta / bot/beta; HEAD/input/edit 50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1;
+base source 6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2.
+Clean initial tree; all six source files matched trusted edit-start SHA256s.
+Prior task PUBLISHED and evaluated; pending self-play is for already evaluated
+source, not an unpublished candidate. Protected champion 0ca5c04e stays in its
+trusted snapshot/Git. No recovery needed; prior notes archived through 6be48cfa.
 
-Evidence: evaluation e0a46ae1b03695e4ac5bbf113845cae78b46141dd5d73dde477974176787d6b4
-measured 672874bb / 1afc2983, not today's edit/new source: 42W/6L, zero reported
-faults/missing/unknown reliability, INCONCLUSIVE/development-six-map. Matched
-edit-base delta 0.0 on 24 pairs; +0.75 protected-champion delta is separate.
-- Corners 6adb00fb, A vs gamma 1b34f42a / 3ce565f6, round 409: own 658
-  submitted / 766 collected vs 1032/1032; one death each. Five picks includes
-  Vendetta; throughput concern, not a traced dash cause.
-- Collision c9171081, A, round 875: 872/1026 vs 1012/1100, eight own deaths.
-  Exact opponent source unknown in compact failure record. Three picks have no
-  dash; this change is not expected to solve that loss.
-- Contrasting current wins: interlock and lanes each 8W/0L across both sides;
-  individual winning match IDs/action traces unavailable in supplied summary.
-Full IDs, provenance and supplied authoritative compact metrics: evidence.json.
-Offline final slices are hindsight only; no omniscient state is a runtime input.
+Evaluation ca52f5346e5be88ad045a11e49e274f650ddd46b6c39ec568cdfb3ec63d051c3
+measured this edit base, not this new candidate. INCONCLUSIVE full-map-pool;
+development window 92W/20L, zero own faults/suspensions/missing/unknown. Matched
+development-base delta +0.053571 over 56 side pairs is separate from promotion.
+- Ambush A loss 394a1869ad4eb7b01d5405e7a0b3bc891a59597a60a9b9c7067106c3f24ef2c0:
+  round 795, 394:1014 submitted; own zero deaths/bag loss/suspension. Ryth 1137
+  and Marcella 945 earned gold, zero gems each; Tavi also zero collected.
+- Ambush B loss c52237a027f5a328bb557adb7b5dd02852753d41ac11b5e1f4b6ff98d67ae39b:
+  round 873, 908:1020 submitted, 1148 collected, 240 bag loss, two deaths.
+  Tavi 685 earned gold / 36 collected gems / 19245.5 camp damage.
+- Pilgrimage A loss 0349d0394a8f790182452c9ff77a894e65a709a96ddb0e112334954d4766f920:
+  round 719, 272:1044 submitted, no own deaths/bag loss/suspension. Tavi/Ryth
+  zero collected, 770/700 earned gold. Opponent gamma 1b34f42a / 3ce565f6 per
+  trusted brief. Exact ambush opponent revision unknown from summary alone.
+- Contrasting wins: collision/corners/fragment each 4W/0L per side in development;
+  current-source self-play ambush 2W/0L versus 2dcd14cf (not independent reruns).
+Final-statistics summaries are saved; they do not prove exact turn decisions.
 
-Frozen manifest ab20635b: inspected gamma 1b34f42a / 3ce565f6 draft and full
-farmer: durable melee-first roster, reward/time routes, observed respawn memory,
-300-gold shopping recalls, each-bag banking and lock clearing. Its move helper
-also omits dashes despite Vendetta second. Alpha 5f73d078 / ba646c6e relevant
-movement/combat sections omit dash. New policy is a distinct rules deduction;
-shared arena code does not establish official opponents' behavior.
+Frozen manifest 7a7333e8: inspected gamma 1b34f42a / 3ce565f6 full farming,
+shopping/bank/combat/draft: melee-first, value/time, observed respawns, 300-gold
+shopping recalls and each-bag banking. Older frozen beta d2d57274 / 7daa9117
+shares the current geometric scoring. New policy uses capital-dependent value,
+retains beta's low-cost shortlist, and does not import gamma's whole scheduler.
 
-Current strategy: Varg/Tavi/Ryth/Vendetta/Marcella; Jungle Strength,
-Monster Strength, Durability Health, then Power Strength. Independent group
-farming/capture, bank each bag, full spawn healing, opportunistic altar locks.
-No live shared-memory protocol. New dash_along_route runs after normal walking:
-- Actual ready ground dash, range >=2, compatible with walking; alive, cast
-  allowance, no channel or move/cast restriction. Ordinary move is retained.
-- Reuse original route field; refresh blockers and visibility after walking.
-  Eight compass candidates only, each a straight two-step fully visible path.
-  Both intermediate and landing are free of terrain/units/reservations. No holes,
-  bent paths or blind jumps; range mask alone never authorizes a destination.
-- Require finite distance values and >=2 route steps gained. Fixed compass tie
-  order, minimum remaining distance. At goal or one step away, preserve cast.
-- Reject landing within visible live enemy basic range +1. Camps can remain
-  legitimate farming approaches; hidden enemies/spells are not ruled safe.
-- >=45k fuel to start; >=30k before cast. One attempt even on hidden-blocker
-  reveal. After success refresh altar-lock placement; caller refreshes combat.
-- Seven compiled boundary assertions reject no progress, reversal and unreachable
-  field values. No new distance field or group scan. Cheap walking fallback.
-Draft, items, combat, camp ranking, recovery, bank policy and end_turn preserved.
-Only bot.cpp differs from edit source; bot.h difference from HEAD is restoration.
+Current policy retained: Varg/Tavi/Ryth/Vendetta/Marcella, Jungle Strength,
+Monster Strength, Durability Health, Power Strength; bank each bag, heal fully
+at spawn, group capture, altar locks and guarded route-directed dashes.
+New economy_policy.h: 300 capital threshold; zero-gem penalty +90, bounded
+regardless of capital. Seven constexpr boundary/ranking checks compile with bot.
+Cash + purchased shards/emblems counts Tavi spending, with Power emblems valued
+at five paid shards rather than six stat points. Four equipment lines only;
+no full item-cost scan. Same penalty in shortlist and final score avoids bounded
+scan starvation. Standing available-group capture still returns before scoring.
+Gold remains eligible fallback. No extra pathfinding or shared memory writes.
 
-Risks: cast spent on travel can delay reset clearing. Vendetta monster-kill cooldown
-refresh may mitigate but is unmeasured. Strict path/visibility/fuel filters may
-limit coverage. Partial field is a ranking estimate after moving, not current
-occupancy. Fuel thresholds are not measured headroom. No expected gain for
-three-pick rosters; they incur a small dispatch cost. Hidden threats remain.
+Risks: reduced growth, longer/dangerous gem travel; capped penalty may still be
+insufficient on distant maps. Initial bootstrap/capture/banking/recovery preserved.
+Broader scheduler/circuit/shopping changes not restored. Prior negative findings:
+healthy shopping/banking detours zero matched gain; combat retargeting -0.041667;
+reachable scheduler +0.041667 with interlock regression; harvest circuits zero
+established gain; isolated arrival/item/draft/shield gains unestablished.
 
-Engine 2.1.6; lock 00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668;
-suite historical-panels-v1; pinned C++ header SHA256
-90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-Docs unchanged per trusted handoff; consulted compact BOT_REFERENCE, RESEARCH,
-organizer record, Playbooks B/C/D/F/G and relevant handbook/C++ API/installed
-header movement, dash, restrictions, channel, bounds and distance-field contracts.
-Organizer hub review does not certify all event policies or production parity.
+Engine 2.2.5, lock 0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d;
+suite published-17-release-225-v1. Required refreshed handbook/C++ export, matching
+installed SDK, compact reference, research/organizer record and playbooks reviewed.
+Header SHA256 ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264.
+ward::owner documented but absent in installed SDK; unused. Organizer download
+hub does not establish all event policies or production parity.
 
-Final-source validation (no bot-source edits afterward):
-`bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED/0, source 6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2.
-Report .agent/check-task-6be48cfa8a864eaca2308324b0f4cd53.json;
-reference check:task-6be48cfa8a864eaca2308324b0f4cd53:6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2.
-Exact-source check-report independently returned PASSED/0, saved check-report.json.
-Own-side smoke stdout exports exited 0 and contain zero bytes: smoke-a/b.json.
-Smoke IDs b6dee446b6687e67b919b5ca8c9ebcd5be5f68dcfb52725d99f50c84299cc1d1
-and 291b302e769984d83eeb5f2332e55a75d84946c6fec562c291614f0936fdcb02.
-Compilation includes all seven progress assertions. Smoke success/empty logs do
-not establish complete competitive games, actual dash coverage, no suspensions,
-measured fuel headroom or strategic gains. `git diff --check` PASSED/0; saved
-as diff-check.txt. Only source change from edit base is bot.cpp.
+Validation: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
+PASSED/0, checked source fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa.
+Report .agent/check-task-a1b6ecd47a594170978ab675dab36d4a.json, copied to this
+task's check-report.json; seven new constexpr assertions compiled. Trusted
+smokes 6f60c8376afad3556c34627165f69206b130d5287e76a36e78b126ab6dc689ef and
+c3c31deeae93806b17b896e5941cb0423108d161f34c9fafd1b4f0a991dbc4c8.
+Smoke validity does not establish completed competitive games, improved wins,
+actual policy coverage or measured fuel headroom. No source edits after check.
+`git diff --check` PASSED/0; saved diff-check.txt.
+Existing source-contract suite PASSED/0; invariants.txt covers channel, spawn,
+capture, observation, legal roots, bounded retries, spell exclusions and resets;
+seven unsafe mutations rejected. This is not a gameplay/fuel measurement.
 
-Prior negative findings retained: healthy shopping and banking detours zero
-matched gain; combat retargeting -0.041667; reachable cooldown scheduler +0.041667
-with interlock regression; harvest circuits zero established gain. Isolated
-arrival-tribute/item/draft/shield changes did not establish additive gains.
-No rejected system or healthy-shopping policy silently restored.
-
-Next: supervisor evaluates exact checked source against 9f7ae1c8 on matched maps,
-both sides and frozen opponents. Compare wins/submitted gems first, then larger-
-draft Vendetta contribution, deaths and available fuel telemetry. If dash use is
-rare, inspect fuel/path admission before broadening range or changing roster.
-Development continuation still requires the full champion promotion gate.
+Next: supervisor evaluates checked candidate against 50a0d7d5 / 6d66a77f on
+matched development maps/sides/opponents. Prioritize wins/submitted gems and
+per-champion gem participation on ambush/pilgrimage; guard collision/corners/
+fragment wins, deaths and suspension. Promotion remains a separate full gate.

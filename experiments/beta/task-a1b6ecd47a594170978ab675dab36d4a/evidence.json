@@ -1,0 +1,186 @@
+{
+  "task_id": "task-a1b6ecd47a594170978ab675dab36d4a",
+  "base_source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+  "edit_commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+  "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+  "evaluation_id": "ca52f5346e5be88ad045a11e49e274f650ddd46b6c39ec568cdfb3ec63d051c3",
+  "candidate": {
+    "build_id": "2b2a613a544cd7e4dab05192e1d70068dc7c7609e57db184a03aa34d7a43373e",
+    "commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+    "revision_id": "675607adcb7820a4fcfadabb79a5fe96eb1363387048aa72b7ac124093503e1b",
+    "source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2"
+  },
+  "development_metrics": {
+    "bag_loss": {
+      "available": true,
+      "mean": 25.571428571428573,
+      "observations": 112
+    },
+    "bot_faults_by_side": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 112
+    },
+    "carried_gems": {
+      "available": true,
+      "mean": 22.803571428571427,
+      "observations": 112
+    },
+    "champion_damage_done": {
+      "available": true,
+      "mean": 5753.076357296535,
+      "observations": 112
+    },
+    "champion_damage_taken": {
+      "available": true,
+      "mean": 10031.964935013226,
+      "observations": 112
+    },
+    "champion_deaths": {
+      "available": true,
+      "mean": 1.8035714285714286,
+      "observations": 112
+    },
+    "champion_kills": {
+      "available": true,
+      "mean": 3.107142857142857,
+      "observations": 112
+    },
+    "collected_gems": {
+      "available": true,
+      "mean": 876.4107142857143,
+      "observations": 112
+    },
+    "fuel_suspensions_by_side": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 112
+    },
+    "lifetime_earned_gold": {
+      "available": true,
+      "mean": 5612.410714285715,
+      "observations": 112
+    },
+    "monster_damage_done": {
+      "available": true,
+      "mean": 85979.45181097303,
+      "observations": 112
+    },
+    "monster_damage_taken": {
+      "available": true,
+      "mean": 10825.017780167716,
+      "observations": 112
+    },
+    "round": {
+      "available": true,
+      "mean": 898.6785714285714,
+      "observations": 112
+    },
+    "sale_refunds": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 112
+    },
+    "spent_gold": {
+      "available": true,
+      "mean": 3828.4821428571427,
+      "observations": 112
+    },
+    "submitted_gems": {
+      "available": true,
+      "mean": 828.0357142857143,
+      "observations": 112
+    },
+    "unspent_gold": {
+      "available": true,
+      "mean": 1783.9285714285713,
+      "observations": 112
+    }
+  },
+  "development_comparison": {
+    "commit_sha": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+    "common_opponent_delta": 0.05357142857142857,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 56,
+    "per_map": {
+      "ambush": {
+        "candidate": 0.5,
+        "incumbent": 0.5,
+        "pairs": 4
+      },
+      "collision": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "contest": {
+        "candidate": 0.5,
+        "incumbent": 0.375,
+        "pairs": 4
+      },
+      "corners": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "eight": {
+        "candidate": 0.875,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "elkring": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "expanse": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "fragment": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "interlock": {
+        "candidate": 0.875,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "lanes": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "pilgrimage": {
+        "candidate": 0.625,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "rushbait-v2": {
+        "candidate": 0.875,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "stampede": {
+        "candidate": 0.75,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "swirl": {
+        "candidate": 0.875,
+        "incumbent": 0.75,
+        "pairs": 4
+      }
+    },
+    "source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+    "unknown_reliability": []
+  },
+  "manifest": {
+    "count": 6,
+    "manifest": "/srv/battlecode/public/strategy/task-a1b6ecd47a594170978ab675dab36d4a/manifest.json",
+    "sha256": "7a7333e8e481f9f8045aaade2c965db3f26a189bed559c4e4513367860141671"
+  }
+}

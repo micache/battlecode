@@ -1,5 +1,6 @@
 #include <cambc.h>
 #include "bot.h"
+#include "economy_policy.h"
 #include <algorithm>
 #include <array>
 #include <limits>
@@ -284,6 +285,23 @@ void Bot::farm_camps() {
     bool reward = false;
     const auto position = me.position();
     const auto strength = std::max(1.0f, me.strength());
+    // Count equipment at purchase value, not stat points (Power has an extra
+    // stat point). Tavi spends in the field, so cash alone misses his progress.
+    // Only our four purchased equipment lines are relevant; no host cost scan.
+    using I = cambc::item_type;
+    const auto items = me.item_count();
+    std::uint64_t capital = me.gold_count();
+    const auto shard_cost = I::jungle_shard_of_strength.cost();
+    const auto emblem_cost = shard_cost * I::jungle_shard_of_strength.combine_count();
+    for (auto shard : {I::jungle_shard_of_strength, I::monster_shard_of_strength,
+                      I::durability_shard_of_health, I::power_shard_of_strength})
+        capital += std::uint64_t(items[shard]) * shard_cost;
+    for (auto emblem : {I::jungle_emblem_of_strength, I::monster_emblem_of_strength,
+                       I::durability_emblem_of_health, I::power_emblem_of_strength})
+        capital += std::uint64_t(items[emblem]) * emblem_cost;
+    const auto economy_penalty = [&](const Group& group) {
+        return economy_policy::opportunity_penalty(group.group.gem_value(), capital);
+    };
     // Rank with cached geometry before making expensive visibility/state calls.
     // Include our committed group first so an ongoing capture is always checked.
     std::vector<std::size_t> order(groups.size());
@@ -294,7 +312,8 @@ void Bot::farm_camps() {
         if (static_cast<int>(b) == target_group) return false;
         const auto rank = [&](auto i) {
             return distance(position, groups[i].center) * 3.0f
-                + groups[i].initial_health / strength * 0.35f;
+                + groups[i].initial_health / strength * 0.35f
+                + economy_penalty(groups[i]);
         };
         const auto ra = rank(a), rb = rank(b);
         return ra != rb ? ra < rb : a < b;
@@ -323,7 +342,8 @@ void Bot::farm_camps() {
         // Travel and expected clearing work, with a strong preference for free rewards.
         float score = distance(position, g.center) * 3.0f
             + (available ? -40.0f : hp / strength * 0.35f)
-            - std::min(40.0f, g.group.gem_value() * 0.15f);
+            - std::min(40.0f, g.group.gem_value() * 0.15f)
+            + economy_penalty(g);
         if (static_cast<int>(i) == target_group) score -= 12; // Avoid route oscillation.
         if (!available && !(around(g.center, 2) & allies).is_empty()
             && !around(g.center, 2).is_set(me.position())) score += 8;
