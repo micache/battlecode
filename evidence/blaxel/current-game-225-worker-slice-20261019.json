@@ -1,0 +1,26 @@
+{
+  "at": 1792380073.582125,
+  "command": [
+    "runuser",
+    "-u",
+    "bc-alpha",
+    "--",
+    "/usr/local/bin/arena-client",
+    "--config",
+    "/etc/battlecode/alpha.json",
+    "slice",
+    "--match-id",
+    "b3cd65d95c5d17c52797c7fe8c99d6d40b6423e5ae66b63b290034f1988556e5",
+    "--file",
+    "final.json",
+    "--offset",
+    "0"
+  ],
+  "match_id": "b3cd65d95c5d17c52797c7fe8c99d6d40b6423e5ae66b63b290034f1988556e5",
+  "original_size": 362574,
+  "owner": "bc-alpha",
+  "prefix_matches_saved_bytes": true,
+  "returncode": 0,
+  "returned_bytes": 8192,
+  "storage": "lossless gzip; original content hash verified"
+}

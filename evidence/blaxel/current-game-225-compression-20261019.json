@@ -1,0 +1,45 @@
+{
+  "at": 1792380016.1379576,
+  "compressed_matches": [
+    {
+      "artifact": "/srv/battlecode/matches/b3cd65d95c5d17c52797c7fe8c99d6d40b6423e5ae66b63b290034f1988556e5/1-retained",
+      "bot": "alpha",
+      "compressed_bytes": 16888,
+      "first_bytes": "{\n  \"championTimelines\": [\n    {\n      \"metric\": \"earnedGold\",\n      \"owner\": {\n        \"id\": 0,\n        \"kind\": \"champion\",\n   ",
+      "job_id": "b3cd65d95c5d17c52797c7fe8c99d6d40b6423e5ae66b63b290034f1988556e5",
+      "map": "corners",
+      "original_sha256": "e39bf67f2704fa31db78e4a4b2a0a0158064a59232661419178a575dcce94a80",
+      "raw_bytes": 362574,
+      "renormalized_identically": true,
+      "seal_verified": true
+    },
+    {
+      "artifact": "/srv/battlecode/matches/1c2ddb61fb4503d8ee28a7c6c3afc2ad8277cd3102cce9bd141e0f934980ec7c/1-retained",
+      "bot": "alpha",
+      "compressed_bytes": 21013,
+      "first_bytes": "{\n  \"championTimelines\": [\n    {\n      \"metric\": \"earnedGold\",\n      \"owner\": {\n        \"id\": 0,\n        \"kind\": \"champion\",\n   ",
+      "job_id": "1c2ddb61fb4503d8ee28a7c6c3afc2ad8277cd3102cce9bd141e0f934980ec7c",
+      "map": "corners",
+      "original_sha256": "fd768f35106c6d70685a7806e78c15bf99525de5e2c72d290c1dbe77b00b5407",
+      "raw_bytes": 443708,
+      "renormalized_identically": true,
+      "seal_verified": true
+    },
+    {
+      "artifact": "/srv/battlecode/matches/4000eedeb5a8048325a4943730a99a2aa62f9e80b9a1241b44ec5ad86c30f146/1-retained",
+      "bot": "alpha",
+      "compressed_bytes": 40709,
+      "first_bytes": "{\n  \"championTimelines\": [\n    {\n      \"metric\": \"earnedGold\",\n      \"owner\": {\n        \"id\": 0,\n        \"kind\": \"champion\",\n   ",
+      "job_id": "4000eedeb5a8048325a4943730a99a2aa62f9e80b9a1241b44ec5ad86c30f146",
+      "map": "corners",
+      "original_sha256": "1ffc80551ef24a7b978336635ce2da0d6c9e40fa374b1e03bcd8ff99507bcb0c",
+      "raw_bytes": 879184,
+      "renormalized_identically": true,
+      "seal_verified": true
+    }
+  ],
+  "database_quick_check": "ok",
+  "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+  "foreign_key_errors": 0,
+  "infrastructure_commit": "bbfd0d517a57dcaa12338581c550661886f3bb53"
+}

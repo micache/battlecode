@@ -1,0 +1,241 @@
+{
+  "at": 1792380092.5535874,
+  "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+  "evaluations": [
+    {
+      "bot": "alpha",
+      "builds": [
+        {
+          "build_id": "5dbd05439317c2f6d4bdaa8b40cd1f0e01215a65f575540d078d82b63e11ad71",
+          "commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+          "revision": "2bd9aa09821265ac4c2da4507ba6581fce4fff3cea5e7dda550b94ffc30af31c",
+          "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+          "wasm_sha256": "2f002d9eef1ddcc7cd1d2b7404f31bc522fe26f91833b8fcd76ecdf364d982dc"
+        },
+        {
+          "build_id": "dc52ad443795a3dfa2e4419fffed0d37afcc98016f83579ef34dd33af11df008",
+          "commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+          "revision": "a10ff1b6607cfd0036e3bbbbd1c7ab6705e7b8b9c7c6bd6cf7cac5eca7ff7266",
+          "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+          "wasm_sha256": "fae8d96f043070f77c9c969696dbde61c4fbebdd5288547c6cf1df942821abc6"
+        },
+        {
+          "build_id": "90b41d32577366bb43173e4940d8559b9da468b4d08b7ab4f76b8a92fe72e961",
+          "commit": "8997663261094dcd84628cac5c1e81822278bde4",
+          "revision": "aa6202c9a736b04095d0a4f481acd9b6006c68e7a852aef5a7452aa4b1ed9f98",
+          "source_hash": "f7a2a4c5cf932dd527e6783db64c97d6fbf5f45910a2e5571deaa0f59dc92495",
+          "wasm_sha256": "a0f89e325555c1a2d672c1fed3aa604ba2e5679997c9a97f0e42c9953ee1d617"
+        },
+        {
+          "build_id": "7d378612c67d7a1638fc7e3b7a3332195e0e08935412e76bb63cb30cc3f70080",
+          "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+          "revision": "650eb88bce04b8d8ffdcf70e9c819cdcb3ef0e4e12986aa01cc5e172996e6b0b",
+          "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+          "wasm_sha256": "acefc683f1badacaac17631eee8e579e9f41d584359cd6ed68cf64bb4b6713ca"
+        },
+        {
+          "build_id": "c9b6c7ebf1ba0e104c1029d3cb01c0bbda09c3df78048f8c45a8838e31d61c0e",
+          "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+          "revision": "e8aa98b8dcd0ec7757c49ad613e8dc8647518c5e17bffb27be8342e81258c0a0",
+          "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e",
+          "wasm_sha256": "e2a9f4d1af374a553edcdd555dbd67bcbd1f0d90e425470c465f317f283a5cc0"
+        },
+        {
+          "build_id": "4a619ab3d1f5efa2f3f355de325a177c0f67d52fb01a559e4f1ca3feb6682c71",
+          "commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+          "revision": "54338dc8eaa7f1cf288206540974dcf92a0ea5f6d99c3677dc15a612793547f0",
+          "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+          "wasm_sha256": "b12b0a8b18ca42b3d021950a8961c111518b4320b38e95ae07f8d8c343d4f850"
+        },
+        {
+          "build_id": "939b575ade5241b465101089c726a06233947e200043f47bd4afc002a1db67c3",
+          "commit": "2e82fe1839be5b90390f1c625c0f1f2ec8df7cb5",
+          "revision": "8bdabe809d2e9bfa47c670cdb6d1c70b2d6d5e824c0bff186fe45f52829e145c",
+          "source_hash": "eee9346f25577fc3fee419a27bfe416ba0d3b21f9405cca9ac02b24401873133",
+          "wasm_sha256": "67a29954161637837955e0df72873155b45adcc8394a6792564db5f2476db95f"
+        }
+      ],
+      "evaluation": "8d7946ddea23dee47896339bf3a6de29ce1ab08b2beace2bb0853ef9ea48da98",
+      "maps": [
+        "ambush",
+        "collision",
+        "contest",
+        "corners",
+        "eight",
+        "elkring",
+        "expanse",
+        "fragment",
+        "interlock",
+        "lanes",
+        "monolith",
+        "packs",
+        "pilgrimage",
+        "rows",
+        "rushbait-v2",
+        "stampede",
+        "swirl"
+      ],
+      "original_suite_unchanged": true,
+      "stage": "screen",
+      "state": "EVALUATING",
+      "suite_hash": "780fe82e973579b8f34bf0ffa5d569cc5f96adeb3791f77553b7ea81639d64be"
+    },
+    {
+      "bot": "beta",
+      "builds": [
+        {
+          "build_id": "5d9f20e45db063ced92a55e34ff8aea3a4d19c57ee8bb513f005238257dde2f7",
+          "commit": "9f7ae1c88a1bd0d5d62ed7713956efd40c95be33",
+          "revision": "7c907fce04d371c8002d6f80c24ca879559f4334b02cce88eb1bdf89fe8ac78c",
+          "source_hash": "b4e969c76d293beb3fdfd75251814a80cb81d2e147e64ee34f5d7feedcdbb1a1",
+          "wasm_sha256": "f25d052747ac79d4fd0e99965df06da84906fbc0f1bf368fea1a01499cc3b467"
+        },
+        {
+          "build_id": "dc52ad443795a3dfa2e4419fffed0d37afcc98016f83579ef34dd33af11df008",
+          "commit": "0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9",
+          "revision": "81aa26167e8a921f1546965f95efb3dda21178cdad2679f68bcd32ef08f6acf5",
+          "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+          "wasm_sha256": "fae8d96f043070f77c9c969696dbde61c4fbebdd5288547c6cf1df942821abc6"
+        },
+        {
+          "build_id": "90b41d32577366bb43173e4940d8559b9da468b4d08b7ab4f76b8a92fe72e961",
+          "commit": "8997663261094dcd84628cac5c1e81822278bde4",
+          "revision": "aa6202c9a736b04095d0a4f481acd9b6006c68e7a852aef5a7452aa4b1ed9f98",
+          "source_hash": "f7a2a4c5cf932dd527e6783db64c97d6fbf5f45910a2e5571deaa0f59dc92495",
+          "wasm_sha256": "a0f89e325555c1a2d672c1fed3aa604ba2e5679997c9a97f0e42c9953ee1d617"
+        },
+        {
+          "build_id": "7d378612c67d7a1638fc7e3b7a3332195e0e08935412e76bb63cb30cc3f70080",
+          "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+          "revision": "650eb88bce04b8d8ffdcf70e9c819cdcb3ef0e4e12986aa01cc5e172996e6b0b",
+          "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+          "wasm_sha256": "acefc683f1badacaac17631eee8e579e9f41d584359cd6ed68cf64bb4b6713ca"
+        },
+        {
+          "build_id": "c9b6c7ebf1ba0e104c1029d3cb01c0bbda09c3df78048f8c45a8838e31d61c0e",
+          "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+          "revision": "e8aa98b8dcd0ec7757c49ad613e8dc8647518c5e17bffb27be8342e81258c0a0",
+          "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e",
+          "wasm_sha256": "e2a9f4d1af374a553edcdd555dbd67bcbd1f0d90e425470c465f317f283a5cc0"
+        },
+        {
+          "build_id": "4a619ab3d1f5efa2f3f355de325a177c0f67d52fb01a559e4f1ca3feb6682c71",
+          "commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+          "revision": "54338dc8eaa7f1cf288206540974dcf92a0ea5f6d99c3677dc15a612793547f0",
+          "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+          "wasm_sha256": "b12b0a8b18ca42b3d021950a8961c111518b4320b38e95ae07f8d8c343d4f850"
+        },
+        {
+          "build_id": "c9b6c7ebf1ba0e104c1029d3cb01c0bbda09c3df78048f8c45a8838e31d61c0e",
+          "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+          "revision": "e8aa98b8dcd0ec7757c49ad613e8dc8647518c5e17bffb27be8342e81258c0a0",
+          "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e",
+          "wasm_sha256": "e2a9f4d1af374a553edcdd555dbd67bcbd1f0d90e425470c465f317f283a5cc0"
+        }
+      ],
+      "evaluation": "a37d18538d55ada96c6177dc1b39c419e82dd17a595d3a7b92344bb37bf9279a",
+      "maps": [
+        "ambush",
+        "collision",
+        "contest",
+        "corners",
+        "eight",
+        "elkring",
+        "expanse",
+        "fragment",
+        "interlock",
+        "lanes",
+        "monolith",
+        "packs",
+        "pilgrimage",
+        "rows",
+        "rushbait-v2",
+        "stampede",
+        "swirl"
+      ],
+      "original_suite_unchanged": true,
+      "stage": "screen",
+      "state": "EVALUATING",
+      "suite_hash": "b012b0a5ffc1497d098a3c4dce6c33488fef64c6fa9549724d9ef44bcba9e4d1"
+    },
+    {
+      "bot": "gamma",
+      "builds": [
+        {
+          "build_id": "2deb12663bb79f71c273dfc3944995d5847519d0283939cd1b38259f306750dc",
+          "commit": "63d05e37a937fa2bfebf3de613af2ee3113b21a8",
+          "revision": "e6aad2dac6dc33c0996081228377895ce8c8e809353f9d76f6a5d65b07e14c97",
+          "source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+          "wasm_sha256": "4e9454da1104bb184774c67f701ddc06fb672968394654cf5f37bb76d11f909a"
+        },
+        {
+          "build_id": "dc52ad443795a3dfa2e4419fffed0d37afcc98016f83579ef34dd33af11df008",
+          "commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+          "revision": "ecdee203d2b83b0a567f1145f1b7965b19d7dd8b5490012fdcd6d2bbc4b4811a",
+          "source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+          "wasm_sha256": "fae8d96f043070f77c9c969696dbde61c4fbebdd5288547c6cf1df942821abc6"
+        },
+        {
+          "build_id": "90b41d32577366bb43173e4940d8559b9da468b4d08b7ab4f76b8a92fe72e961",
+          "commit": "8997663261094dcd84628cac5c1e81822278bde4",
+          "revision": "aa6202c9a736b04095d0a4f481acd9b6006c68e7a852aef5a7452aa4b1ed9f98",
+          "source_hash": "f7a2a4c5cf932dd527e6783db64c97d6fbf5f45910a2e5571deaa0f59dc92495",
+          "wasm_sha256": "a0f89e325555c1a2d672c1fed3aa604ba2e5679997c9a97f0e42c9953ee1d617"
+        },
+        {
+          "build_id": "7d378612c67d7a1638fc7e3b7a3332195e0e08935412e76bb63cb30cc3f70080",
+          "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+          "revision": "650eb88bce04b8d8ffdcf70e9c819cdcb3ef0e4e12986aa01cc5e172996e6b0b",
+          "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+          "wasm_sha256": "acefc683f1badacaac17631eee8e579e9f41d584359cd6ed68cf64bb4b6713ca"
+        },
+        {
+          "build_id": "c9b6c7ebf1ba0e104c1029d3cb01c0bbda09c3df78048f8c45a8838e31d61c0e",
+          "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+          "revision": "e8aa98b8dcd0ec7757c49ad613e8dc8647518c5e17bffb27be8342e81258c0a0",
+          "source_hash": "7daa9117b8727b0da55d9282f8693e88107406d3b554eb644f3b9cf7b6f4ad6e",
+          "wasm_sha256": "e2a9f4d1af374a553edcdd555dbd67bcbd1f0d90e425470c465f317f283a5cc0"
+        },
+        {
+          "build_id": "4a619ab3d1f5efa2f3f355de325a177c0f67d52fb01a559e4f1ca3feb6682c71",
+          "commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+          "revision": "54338dc8eaa7f1cf288206540974dcf92a0ea5f6d99c3677dc15a612793547f0",
+          "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+          "wasm_sha256": "b12b0a8b18ca42b3d021950a8961c111518b4320b38e95ae07f8d8c343d4f850"
+        },
+        {
+          "build_id": "4a619ab3d1f5efa2f3f355de325a177c0f67d52fb01a559e4f1ca3feb6682c71",
+          "commit": "1b34f42a5266051ee50bae4cf74197b99b1115cb",
+          "revision": "54338dc8eaa7f1cf288206540974dcf92a0ea5f6d99c3677dc15a612793547f0",
+          "source_hash": "3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565",
+          "wasm_sha256": "b12b0a8b18ca42b3d021950a8961c111518b4320b38e95ae07f8d8c343d4f850"
+        }
+      ],
+      "evaluation": "c65605913f7a15d515260600b4025d6b7f06c69e7183ccf83b78dd328591df18",
+      "maps": [
+        "ambush",
+        "collision",
+        "contest",
+        "corners",
+        "eight",
+        "elkring",
+        "expanse",
+        "fragment",
+        "interlock",
+        "lanes",
+        "monolith",
+        "packs",
+        "pilgrimage",
+        "rows",
+        "rushbait-v2",
+        "stampede",
+        "swirl"
+      ],
+      "original_suite_unchanged": true,
+      "stage": "screen",
+      "state": "EVALUATING",
+      "suite_hash": "1227f6c0b9e61d1594f9c8a3bd47484de543abf9a4a1c7c881bf7f17ac3de3b8"
+    }
+  ],
+  "infrastructure_commit": "bbfd0d517a57dcaa12338581c550661886f3bb53"
+}

@@ -1,5 +1,26 @@
 # Live pilot status — 16 October 2026
 
+19 October stopped-service deployment completed: runtime `bbfd0d5` is running
+under managed process `arena-current-game-225-storage-supervisor-20261019`.
+At 03:20 UTC all four units had zero restarts, scheduling was unpaused, SQLite
+checks passed, and no adapter/service/disk-pressure error was present. Current
+engine completed games advanced from 67 to 78 across independent requests;
+the two historical pre-parser probes remain explicitly unrecognized.
+The three baseline evaluations still have their original identities, source
+commits, opponents and suite files. All 21 referenced build records passed
+artifact checks. Three real large statistics files compressed by about 95%,
+decompressed to their original hashes and normalized identically; the actual
+alpha owner mailbox successfully returned a verified uncompressed slice.
+See [the running checkpoint](../evidence/blaxel/current-game-225-post-storage-20261019.json),
+[frozen inputs](../evidence/blaxel/current-game-225-frozen-inputs-20261019.json),
+[compression](../evidence/blaxel/current-game-225-compression-20261019.json) and
+[worker access](../evidence/blaxel/current-game-225-worker-slice-20261019.json).
+All 130 local tests passed. Full new-engine evaluations remain in progress;
+this is not a new submission-ready or full-suite-passed claim. No owner login
+or administrator action is currently required. Physical VM reboot persistence
+remains unverified. A subsequent evidence-only Git commit does not require
+another runtime restart.
+
 18 October current-game upgrade: runtime CLI 2.2.5 / engine 0.0.3 uses release
 mode and the full published 17-map pool. A fresh official five-game series
 finished at 16:12 UTC reports the identical engine build and metric semantics;

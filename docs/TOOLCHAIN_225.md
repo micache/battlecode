@@ -24,6 +24,12 @@ Replay bundles and compact results are unchanged. Oldest-first retirement still
 applies, with no offloading. Evaluation stages load their exact frozen build
 records after a code-only restart, rather than compiling new inputs mid-suite.
 
+Deployed runtime: `bbfd0d517a57dcaa12338581c550661886f3bb53`, 19 October.
+The managed supervisor is `arena-current-game-225-storage-supervisor-20261019`.
+Real gzip/readback, owner-mailbox access, frozen-build and resumed-match evidence
+is linked from [implementation status](IMPLEMENTATION_STATUS.md). PyPI was
+rechecked that day: 2.2.5 remains current and the x86 wheel hash is unchanged.
+
 The owner's new GameRules.md is byte-identical to the prior export. The new
 C++ export is preserved byte-for-byte at `sources/BotAPICpp.md`. Its error enum
 matches all 134 installed name/number pairs. **Upstream gap:** ward::owner is
