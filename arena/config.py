@@ -30,8 +30,17 @@ def load(path):
             policy.get('check_interval_seconds', 18000) >= 18000 and
             type(policy.get('unchanged_recheck_seconds', 10800)) is int and
             policy.get('unchanged_recheck_seconds', 10800) >= 10800, 'invalid official check cadence')
-    require(config["official"] == {"upload": False, "activation": False, "challenges": False},
-            "official mutations disabled for this pilot")
+    require(config['official'].get('upload') is False and config['official'].get('activation') is False and
+            type(config['official'].get('challenges')) is bool, 'uploads and activation remain disabled')
+    if config['official']['challenges']:
+        outside = config.get('official_exploration', {})
+        require(config['engine']['version'] == '2.2.5' and outside.get('enabled') is True and
+                outside.get('owner_authorized') is True and outside.get('interface') == 'cambc-225-match-groups' and
+                outside.get('bot_id') in workers and
+                re.fullmatch('[a-f0-9]{40}', outside.get('source_commit', '')) and
+                re.fullmatch('[a-f0-9]{64}', outside.get('source_hash', '')) and
+                outside.get('interval_seconds', 0) >= 72,
+                'owner-approved pinned-source native CLI outside-play configuration required')
     require(config["billing"] == {"subscription_only": True, "api_fallback": False,
                                   "cross_account_failover": False}, "subscription isolation required")
     require(config["engine"]["version"] in ("2.1.6", "2.2.5"), "review engine update before use")

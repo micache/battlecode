@@ -15,7 +15,11 @@ DOCUMENTS = ('AGENTS.md', 'BOT_REFERENCE.md', 'PLAYBOOKS.md', 'RESEARCH.md',
 def freeze_opponents(arena, bot, task_id):
     from .development import select_base
     from .strategy import opponent_panel
-    ids = []
+    policy = arena.config.get('official_exploration', {})
+    shared_source = (arena.db.one('SELECT id FROM revisions WHERE bot_id=? AND commit_sha=?',
+                    (policy.get('bot_id'), policy.get('source_commit')))
+                    if policy.get('enabled') and policy.get('share_feedback') else None)
+    ids = [shared_source['id']] if shared_source else []
     for other in sorted(arena.config['workers']):
         if other != bot:
             revision, _ = select_base(arena, other)

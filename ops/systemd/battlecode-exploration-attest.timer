@@ -1,0 +1,10 @@
+[Unit]
+Description=Check source proofs for outside matches once per minute
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=60s
+Unit=battlecode-exploration-attest.service
+
+[Install]
+WantedBy=timers.target

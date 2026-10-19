@@ -88,7 +88,7 @@ def selection_status(arena, now=None):
     if now - arena.db.get('official_last_upload_at', 0) < interval:
         blockers.append('five-hour submission interval')
     # Deliberately impossible to enable via configuration: implement only after interface review.
-    blockers.append('official adapter not verified: upload activation effects, event policies, quotas and challenge interface')
+    blockers.append('official upload/activation adapter disabled; unranked exploration is a separate scoped service')
     return {'enabled': False, 'candidate': leader, 'stable_seconds': stable,
             'schedule': cadence_status(arena, leader, now),
             'selection_scope':'best among full-gate eligible evaluated lane champions', 'excluded_lanes':excluded,

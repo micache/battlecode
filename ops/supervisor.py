@@ -77,20 +77,22 @@ def terminate_children():
 
 def unit(name):
     ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0)  # PR_SET_CHILD_SUBREAPER
-    user = pwd.getpwnam("bc-arena" if name == "arena" else f"bc-{name}")
-    args = ["/usr/local/bin/arena", "serve"] if name == "arena" else [
-        "/usr/local/bin/arena", "worker", "--owner-config", f"/etc/battlecode/{name}.json"]
+    operator = name in ('arena', 'exploration')
+    user = pwd.getpwnam('bc-arena' if operator else f'bc-{name}')
+    args = ([sys.executable, '/opt/battlecode/ops/run-official-exploration.py'] if name == 'exploration' else
+            ['/usr/local/bin/arena', 'serve'] if name == 'arena' else
+            ['/usr/local/bin/arena', 'worker', '--owner-config', f'/etc/battlecode/{name}.json'])
     env = {"HOME": user.pw_dir, "USER": user.pw_name, "LOGNAME": user.pw_name,
            "PATH": "/usr/local/bin:/usr/bin:/bin", "LANG": "C.UTF-8",
-           "XDG_RUNTIME_DIR": "/run/battlecode-arena" if name == "arena" else f"{user.pw_dir}/.runtime"}
+           "XDG_RUNTIME_DIR": "/run/battlecode-arena" if operator else f"{user.pw_dir}/.runtime"}
     restarts = 0
     history = []
     def identity():
         parent = os.getppid()
         if read_json('/etc/battlecode/arena.json').get('deployment', {}).get('mode') == 'blaxel':
-            group = '/sys/fs/cgroup/battlecode-arena/service' if name == 'arena' else f'/sys/fs/cgroup/battlecode-workers/{name}'
+            group = '/sys/fs/cgroup/battlecode-arena/service' if operator else f'/sys/fs/cgroup/battlecode-workers/{name}'
             Path(group, 'cgroup.procs').write_text(str(os.getpid()))
-        if name != 'arena':
+        if not operator:
             resource.setrlimit(resource.RLIMIT_FSIZE, (256*1024**2, 256*1024**2))
             resource.setrlimit(resource.RLIMIT_NOFILE, (512,512))
             resource.setrlimit(resource.RLIMIT_CORE, (0,0))
@@ -164,7 +166,7 @@ def main():
     config = read_json('/etc/battlecode/arena.json')
     mode = config.get('deployment', {}).get('mode')
     require(mode in ('temporary-colab', 'blaxel'), 'non-systemd deployment profile required')
-    UNITS = ('arena', *config['workers'])
+    UNITS = ('arena', *config['workers'], *(['exploration'] if config['official']['challenges'] else []))
     if mode == 'blaxel':
         ROOT = Path('/var/lib/battlecode-volume/supervisor')
     parser = argparse.ArgumentParser()

@@ -1,0 +1,12 @@
+[Unit]
+Description=Verify actual own-team submission IDs for official arena exploration
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/micache/workspace/battlecode-arena-design
+ExecStart=/home/micache/miniconda3/bin/python3 /home/micache/workspace/battlecode-arena-design/ops/attest-official-exploration.py --max-groups 10
+UMask=0077
+NoNewPrivileges=true
+TimeoutStartSec=5min

@@ -230,9 +230,43 @@ def retire(arena, job):
     return record
 
 
+def maintain_external(arena):
+    """Old outside attachments roll away; source/match IDs and compact outcomes stay in SQLite."""
+    policy = arena.config.get('official_exploration', {})
+    if not policy.get('enabled'):
+        return
+    rows = arena.db.all('SELECT * FROM external_matches ORDER BY created DESC,official_id DESC')
+    base = arena.root / 'external'
+    total = size(base) if base.exists() else 0
+    budget = policy.get('feedback_budget_bytes', 128 * 1024**2)
+    for index, row in reversed(list(enumerate(rows))):
+        metadata = json.loads(row['metadata'])
+        pending = metadata.get('raw_retired', {}).get('state') == 'DELETING'
+        if not pending and (index < 500 or total <= budget or metadata.get('raw_retired')):
+            continue
+        directory = Path(row['artifact'])
+        require(not directory.is_symlink() and directory == base / identity(row['official_id']),
+                'unsafe outside-history retirement path')
+        if not pending:
+            require(all((directory / name).is_file() and file_hash(directory / name) == digest
+                        for name,digest in metadata['file_sha256'].items()), 'outside history changed')
+            metadata['raw_retired'] = {'state':'DELETING', 'at':time.time(), 'bytes':size(directory),
+                'reason':'Oldest outside attachments retired; newest 500, match/source mapping and outcomes retained.',
+                'recoverable':False}
+            arena.db.execute('UPDATE external_matches SET metadata=? WHERE official_id=?',
+                             (json.dumps(metadata), row['official_id']))
+        if directory.exists():
+            remove_redundant(directory)
+        total -= metadata['raw_retired']['bytes']
+        metadata['raw_retired']['state'] = 'DELETED'
+        arena.db.execute('UPDATE external_matches SET metadata=? WHERE official_id=?',
+                         (json.dumps(metadata), row['official_id']))
+
+
 def maintain(arena, compaction_limit=8, deletion_limit=128):
     if not arena.config['limits'].get('rolling_history', False):
         return {'enabled':False}
+    maintain_external(arena)
     for row in arena.db.all("SELECT record FROM artifact_retirements WHERE state='DELETING'"):
         finish_retirement(arena, json.loads(row['record']))
     removed_builds,reclaimed = prune_build_cache(arena)

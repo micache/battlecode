@@ -231,10 +231,13 @@ def handle_request(arena, bot, request):
         row = db.one('SELECT * FROM external_matches WHERE official_id=?', (payload['match_id'],))
         require(row, 'external observation not imported')
         metadata = json.loads(row['metadata'])
+        from .exploration import shared
         require(db.one('SELECT id FROM revisions WHERE bot_id=? AND commit_sha=?',
-                       (bot, metadata.get('source_commit'))), 'external source does not belong to this lane')
+                       (bot, metadata.get('source_commit'))) or shared(arena.config, metadata),
+                'external source does not belong to this lane or the owner-approved shared submission')
         require(metadata.get('map_name') in arena.config['evaluation']['development_maps'],
                 'external trace requires an identified development map; unknown/holdout details remain reserved')
+        require(not metadata.get('raw_retired'), 'older outside attachments were retired; compact outcomes remain in feedback')
         name = payload.get('file', 'observations.json')
         require(name in ('observations.json', 'final.json', 'stdout.log', 'stderr.log',
                          'bot-a.stdout.log', 'bot-b.stdout.log'), 'unsupported external diagnostic')

@@ -1,5 +1,14 @@
 # Official publishing and exploration
 
+19 October update: the owner selected v6 and authorized using the actual shared
+50/hour unranked allowance. CLI 2.2.5 now has official challenge/quota/download
+and JSON statistics commands. A real five-game series against #1 finished;
+its actual v6 source was confirmed independently. The separate scoped service,
+hourly compressed shared feedback and source-proof limitations are documented
+in [unranked exploration](UNRANKED_EXPLORATION.md). Upload/activation remain off.
+The earlier "no challenge command" and nine-map/daily-cap statements below are
+historical, not descriptions of the current interface or evaluation coverage.
+
 17 October results update: authorized own-team browser collection and exact-ZIP
 mapping are now exercised against real games. All 150 completed games for the
 submitted beta revision are downloaded and their compact evidence is imported.
