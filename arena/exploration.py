@@ -111,7 +111,8 @@ def shared(config, metadata):
     policy = config.get('official_exploration', {})
     return bool(policy.get('enabled') and policy.get('share_feedback') and
                 metadata.get('submission_id') == policy.get('submission_id') and
-                metadata.get('source_commit') == policy.get('source_commit'))
+                metadata.get('source_commit') == policy.get('source_commit') and
+                metadata.get('source_hash') == policy.get('source_hash'))
 
 
 class Explorer:
@@ -173,7 +174,8 @@ class Explorer:
         atomic_json(path, {'request_id':gid, 'group_id':gid, 'state':'QUEUED',
                     'created_at':old['created_at'], 'next_poll':0, 'opponent_id':old['opponent'],
                     'opponent_rank':old['opponent_rank'], 'opponent_name':old['response']['teamName'],
-                    'source_commit':old['source_commit'], 'submission_id':old['expected_submission']}, 0o600)
+                    'source_commit':old['source_commit'], 'submission_id':old['expected_submission'],
+                    'source_hash':old['source_hash'], 'bot_id':'alpha'}, 0o600)
         self.state['sequence'] = max(1, self.state['sequence'])
         self.reconcile_records()
 
@@ -202,7 +204,8 @@ class Explorer:
         record = {'request_id':rid, 'state':'UNKNOWN', 'created_at':time.time(), 'next_poll':0,
                   'opponent_id':opponent['teamId'], 'opponent_rank':opponent['rank'],
                   'opponent_name':opponent['name'], 'source_commit':self.policy['source_commit'],
-                  'submission_id':self.policy['submission_id']}
+                  'submission_id':self.policy['submission_id'], 'source_hash':self.policy['source_hash'],
+                  'bot_id':self.policy['bot_id']}
         # This intent is durable BEFORE the non-idempotent command is issued.
         atomic_json(path, record, 0o600)
         try:
@@ -218,7 +221,7 @@ class Explorer:
         self.save()
 
     def import_payload(self, payload):
-        bot = self.policy['bot_id']
+        bot = payload.get('source_bot_id', self.policy['bot_id'])
         with self.db() as db:
             old = db.execute('SELECT metadata FROM external_matches WHERE official_id=?',
                              (payload['official_match_id'],)).fetchone()
@@ -262,7 +265,7 @@ class Explorer:
             require(data['myTeamId'] == self.policy['team_id'] and group['kind'] == 'unranked',
                     'official group identity/type changed')
             own = next(s for s in group['sides'] if s['teamId'] == self.policy['team_id'])
-            require(own['submissionId'] == self.policy['submission_id'],
+            require(own['submissionId'] == record.get('submission_id', self.policy['submission_id']),
                     'Team selected a different submission; stop challenges rather than overwrite it')
             if group['status'] not in ('finished', 'error'):
                 record['next_poll'] = now + 60
@@ -321,8 +324,8 @@ class Explorer:
         require(canonical_map, 'official map bytes are absent from the frozen pool; retain and review')
         # The official raw replay and statistics stay on this server under rolling retention.
         observation = {'official_match_id':match['id'], 'group_id':record['group_id'],
-            'source_commit':self.policy['source_commit'], 'source_hash':self.policy['source_hash'],
-            'submission_id':self.policy['submission_id'], 'own_side':own['side'].upper(),
+            'source_commit':record['source_commit'], 'source_hash':record['source_hash'],
+            'submission_id':record['submission_id'], 'own_side':own['side'].upper(),
             'outcome':winners[0]['side'].upper(), 'map_name':canonical_map, 'official_map_name':match['map'],
             'official_patch':match['patchId'], 'opponent_version':enemy.get('version'),
             'opponent_team_id':record['opponent_id'], 'opponent_rank_at_request':record['opponent_rank'],
@@ -341,6 +344,7 @@ class Explorer:
                 'submission_id', 'own_side', 'outcome', 'map_name', 'official_patch', 'opponent_version',
                 'opponent_team_id', 'opponent_rank_at_request', 'own_bot_faults')},
                 'official_group_id':record['group_id'],
+                'source_bot_id':record['bot_id'],
                 'files':{name:base64.b64encode(value).decode() for name,value in files.items()}}
 
     def prune(self):

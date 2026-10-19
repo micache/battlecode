@@ -267,8 +267,10 @@ def import_external(arena, bot, payload):
     official_id = payload["official_match_id"]
     require(isinstance(official_id, str) and 0 < len(official_id) <= 200, "official match ID required")
     require(payload.get("source_commit") and payload.get("submission_id"), "immutable own submission mapping required")
-    source = arena.db.one("SELECT id FROM revisions WHERE bot_id=? AND commit_sha=?", (bot, payload["source_commit"]))
+    source = arena.db.one("SELECT id,source_hash FROM revisions WHERE bot_id=? AND commit_sha=?", (bot, payload["source_commit"]))
     require(source, "unknown source commit")
+    require(not payload.get('source_hash') or payload['source_hash'] == source['source_hash'],
+            'outside evidence source hash differs from immutable revision')
     require(payload.get("outcome") in ("A", "B", "UNKNOWN"), "external outcome must be explicit")
     directory = arena.root / "external" / identity(official_id)
     files = payload.get("files", {})
