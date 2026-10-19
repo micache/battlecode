@@ -1,0 +1,24 @@
+{
+  "kind": "manual source-isolation audit, not runtime testing",
+  "base_commit": "63d05e37a937fa2bfebf3de613af2ee3113b21a8",
+  "changed_from_edit_base": [
+    "bots/gamma/src/bot.cpp"
+  ],
+  "sha256": {
+    "bots/gamma/src/bot.cpp": "87d23172d01be652de13a2cd0c185eb3ab11aa9c1e82158d2d3ee1dad6010f2f",
+    "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/gamma/src/bot.h": "bf6ed7d94c1c4454e5f44e7703ba3767e05e0dfa5ca16c2d50ce0347c911a310",
+    "bots/gamma/src/main.cpp": "786c1365f90c1eb409b163f584c97a4f596191c946d4bd2b2eb4d0682c9f751c",
+    "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/gamma/src/draft.cpp": "bfac1b1879665b73b2bcb33ff3567641d73e40afd760d08d0498f53ddfa375b3"
+  },
+  "other_files_identical": true,
+  "prepared_draft_change": "Restores edit-base draft from HEAD. Not a new experiment.",
+  "legal_review": [
+    "Place only visible static altar intersected with radius two and inverse visible lock mask.",
+    "Guard dead/channel/restricted consumable states and retain 18000 fuel before attempts.",
+    "At most one attempt per observation phase. Post-movement placement refreshes all vision.",
+    "No navigation, attacks, casts, recall, tribute or shared-memory writes inside lock helper.",
+    "Main dispatcher and official end_turn unchanged. No fuel settings changed."
+  ]
+}

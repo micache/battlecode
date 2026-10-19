@@ -15,6 +15,8 @@ constexpr float HEALED_HEALTH = 0.98f;
 constexpr unsigned SHOP_RECALL_GOLD = 300;
 constexpr std::uint64_t PLAN_FUEL = 30000;
 constexpr std::uint64_t ACTION_FUEL = 10000;
+constexpr std::uint64_t LOCK_FUEL = 18000;
+constexpr int LOCK_RANGE = 2; // Pinned SDK consumable_type contract.
 
 int distance(vec2 a, vec2 b) { return static_cast<int>(a.chebyshev_distance(b)); }
 cambc::bitboard around(vec2 p, int r) {
@@ -22,6 +24,24 @@ cambc::bitboard around(vec2 p, int r) {
     mask.draw_chebyshev(p, r);
     return mask;
 }
+
+// Use inventory on the ordinary farming/banking route. Never detour, replace a
+// visible lock, or interrupt our own channel. Consumption has its own allowance.
+void lock_nearby_altar() {
+    auto& me = cambc::self();
+    if (cambc::fuel_remaining() < LOCK_FUEL || !me.is_alive()
+        || me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
+        || me.restrictions().contains(cambc::buff_restrictions::consumable)) return;
+    const auto lock = me.consumables()[cambc::consumable_type::altar_lock];
+    if (!lock.count()) return;
+    const auto candidates = around(me.position(), LOCK_RANGE) & cambc::map::altars()
+        & cambc::vision::visible_tiles() & ~cambc::vision::altar_lock_tiles();
+    for (auto altar : candidates.positions()) {
+        lock.use(altar); // False reveals an obstruction; no retry on this snapshot.
+        return;
+    }
+}
+
 cambc::bitboard blocked_tiles() {
     auto result = cambc::map::walls() | cambc::map::holes() | cambc::map::altars()
         | cambc::map::spawn_region(team::enemy) | cambc::vision::champion_tiles()
@@ -49,7 +69,10 @@ bool move_to(cambc::bitboard goals) {
             if (field.get(p) < best) { step = p; best = field.get(p); }
         }
         if (step == me.position()) return false;
-        if (me.move_absolute(step)) return true;
+        if (me.move_absolute(step)) {
+            lock_nearby_altar(); // Fresh vision, before an arrival tribute starts.
+            return true;
+        }
         if (!me.can_move() || cambc::fuel_remaining() < ACTION_FUEL) return false;
     }
     return false;
@@ -163,6 +186,9 @@ bool bank(bool allow_move) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
+    // can_buy validates shop access, ten-gold cost and the one-lock carry limit.
+    const auto lock = cambc::consumable_type::altar_lock;
+    if (me.can_buy(lock)) me.buy(lock);
     using I = cambc::item_type;
     // Keep the farming damage core, then protect capture/tribute uptime with
     // one Health/Durability emblem. Further gold returns to Strength scaling.
@@ -313,6 +339,7 @@ void Bot::play_turn() {
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
     buy_items(); // can_buy validates spawn/dead/Tavi and active shop restrictions.
     if (me.buffs().has_stun()) return;
+    lock_nearby_altar();
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
     if (at_spawn && me.health() < me.max_health() * HEALED_HEALTH) return;
     if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;

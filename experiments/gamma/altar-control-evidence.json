@@ -1,0 +1,144 @@
+{
+  "task_id": "task-cf1855961cf741329d7612ce37c0e3cb",
+  "bot_id": "gamma",
+  "base_source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+  "edit_commit": "63d05e37a937fa2bfebf3de613af2ee3113b21a8",
+  "input_revision": "66c7cc5c5ad6cc9a583ad9a79d0c04514bc6db83",
+  "accepted_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "mode": "exploration",
+  "documentation_review_required": false,
+  "hypothesis": "Opportunistic ten-gold altar locks on existing routes will increase matched development win rate versus a4d664c8, with no new bot faults.",
+  "falsifier": "Matched win rate fails to increase, or new bot faults occur. Submitted-gem margin, lock use, item timing and enemy tribute delays explain the outcome but do not replace wins or promotion gates.",
+  "bottleneck": "The edit base devotes all gold to personal farming/survival and has no way to delay enemy scoring except combat; banking repeatedly visits altar placement range.",
+  "mechanism_status": "Unmeasured rules/source deduction; final statistics do not prove a lock opportunity or a causal delay.",
+  "policy": {
+    "purchase": "Buy at most one altar lock before shards whenever can_buy permits. Carry limit/cost/shop access come from SDK.",
+    "placement": "On active non-stunned turns and immediately after successful ordinary movement, place on first visible unlocked altar within Chebyshev 2. No detours; no placement during own channels or consumable restrictions; fuel reserve 18000; at most one attempt per observation phase.",
+    "preserved": "All edit-base drafting, routing, capture occupancy, banking, item families, combat, recovery, no shared memory, intentional yield and fuel settings."
+  },
+  "alternatives_deferred": [
+    "Repeat Ryth draft change: latest matched development delta -0.017857142857142856; not evidence for current base.",
+    "Threat-aware banking and camp reservations: prior notes record regressions.",
+    "Coupling dash/shield or new combat with lock control would confound the economy-denial experiment."
+  ],
+  "risk": [
+    "Ten-gold reserve can delay a 30-gold shard or completed emblem.",
+    "Lock may guard an unused altar, or a ranged enemy may clear it cheaply.",
+    "Normal route may miss contested altars; known locked altars are deliberately untouched."
+  ],
+  "opponents": [
+    {
+      "revision": "47ad41aa7d7c953f658e5812278132cff64af9c08efa487687e7f91a6d4cbd31",
+      "commit": "046f1c3a41fe746c65c0982d06062623200fa931",
+      "learned": "alpha altar_control.h buys before items; places visible unlocked altars without detours on active turns and after movement; existing random-composition/stat, bounded combat and recovery are not imported."
+    },
+    {
+      "revision": "675607adcb7820a4fcfadabb79a5fe96eb1363387048aa72b7ac124093503e1b",
+      "commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+      "learned": "beta adds locks and dash to its Varg/Tavi/Ryth farming core; reserve ten gold and exploit arrival before own channel. Import just locks into gamma bank-any-bag farmer; retain distinct composition/routes/build and no dash."
+    },
+    {
+      "revision": "e8aa98b8dcd0ec7757c49ad613e8dc8647518c5e17bffb27be8342e81258c0a0",
+      "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "learned": "evaluated beta has Varg/Tavi/Ryth opening, group routes, resets/AoE, recovery latch and survival items; no locks in this older revision."
+    }
+  ],
+  "manifest_sha256": "079ed02010a32e2d995690fae536fc83cec46c5eb5411e19aea50d6a6b3748e1",
+  "all_manifest_file_hashes_verified": true,
+  "evaluation": {
+    "id": "054b1a16de90845c74e6ef02fa0551d50756cb27d45dd8f2f411f8fba398639f",
+    "candidate_source": "c11c50fe59ace9c2050647d63b45032ba2ae34e2aad85c66e3751723e7f7604c",
+    "candidate_commit": "66c7cc5c5ad6cc9a583ad9a79d0c04514bc6db83",
+    "development_vs_edit_base_delta": -0.017857142857142856,
+    "side_pairs": 56,
+    "meaning": "Completed evaluation of Ryth draft candidate, not the code now edited."
+  },
+  "examples": [
+    {
+      "match_id": "20c460d7eef1f20b2d00d3fe8fab32ad7ce14aef34c68f2586ccbc6a0a102832",
+      "source": "c11c50fe59ace9c2050647d63b45032ba2ae34e2aad85c66e3751723e7f7604c",
+      "side": "A",
+      "map": "collision",
+      "opponent_revision": "UNKNOWN in summary",
+      "result": "112-1012 tribute, 9 deaths, 242 bag loss, zero faults/suspensions; finalRound556. Does not establish lock causality."
+    },
+    {
+      "match_id": "294d09269af4ece82722c1fac0dd7d9695d21dc59221f1e70899da1160583e33",
+      "source": "c11c50fe59ace9c2050647d63b45032ba2ae34e2aad85c66e3751723e7f7604c",
+      "side": "A",
+      "map": "collision",
+      "opponent_revision": "UNKNOWN in summary",
+      "result": "1078-286 tribute, round712, completed smoke win. Contrasts with loss on same mapHash; not a controlled opponent comparison. Saved in ryth-draft-smoke.json."
+    },
+    {
+      "match_id": "12d552bb0d46f68fdffff706151e6602abc99a039e749826dfe0509f346823b2",
+      "source": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+      "side": "B",
+      "map": "lanes",
+      "opponent_revision": "e8aa98b8 per prior brief; summary alone UNKNOWN",
+      "result": "902-1008 tribute, round519, no faults; exact-base close race provides possible value of delaying score, not proof of a lock opportunity. Saved in ryth-draft-summaries.json."
+    }
+  ],
+  "rules_references": [
+    ".agent/knowledge/sources/GameRules.md:233-241",
+    ".agent/knowledge/BOT_REFERENCE.md:59-94",
+    ".agent/knowledge/sources/BotAPICpp.md:6317-6505",
+    "Pinned cambc.h consumable_type, consumable::use, champion::can_buy(consumable_type)"
+  ],
+  "rules_limits": "Organizer Agents page is a download hub; no official policy/production-parity claim. Unchanged routine SDK/docs; consulted relevant C++ sections only.",
+  "checks": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792400502.960222,
+    "matches": [
+      "41c22e31989d7f3134bb2f4da0afdcc16f151d72d994fd90a6b1f14dff082ff0",
+      "61cbb3926bef91c14be2d24b142890fc2e512019855495d858e62cd639e6cb2e"
+    ],
+    "report_path": ".agent/check-task-cf1855961cf741329d7612ce37c0e3cb.json",
+    "report_reference": "check:task-cf1855961cf741329d7612ce37c0e3cb:ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+    "source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+    "started": 1792400278.4682722,
+    "state": "PASSED",
+    "task_id": "task-cf1855961cf741329d7612ce37c0e3cb"
+  },
+  "candidate_source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+  "smoke_observations": [
+    {
+      "match_id": "41c22e31989d7f3134bb2f4da0afdcc16f151d72d994fd90a6b1f14dff082ff0",
+      "candidate_side": "A",
+      "map": "collision",
+      "map_hash": "ebfcace19ebb3bca84d63856c5cb56285042057d751ff41dc011d8a2c8c085dc",
+      "source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+      "opponent_revision": "UNKNOWN in summary",
+      "state": "COMPLETED",
+      "winner": "A",
+      "round": 716,
+      "submitted_gems": {
+        "A": 1028,
+        "B": 66
+      },
+      "bot_faults": 0,
+      "fuel_suspensions": 0,
+      "candidate_deaths": 1
+    },
+    {
+      "match_id": "61cbb3926bef91c14be2d24b142890fc2e512019855495d858e62cd639e6cb2e",
+      "candidate_side": "B",
+      "map": "collision",
+      "map_hash": "ebfcace19ebb3bca84d63856c5cb56285042057d751ff41dc011d8a2c8c085dc",
+      "source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+      "opponent_revision": "UNKNOWN in summary",
+      "state": "COMPLETED",
+      "winner": "B",
+      "round": 826,
+      "submitted_gems": {
+        "A": 198,
+        "B": 1002
+      },
+      "bot_faults": 0,
+      "fuel_suspensions": 0,
+      "candidate_deaths": 2
+    }
+  ],
+  "smoke_limit": "Two completed validity smoke games only. No matched-baseline improvement claim. Normalized diagnostics show no bot faults or fuel suspensions on either side."
+}
