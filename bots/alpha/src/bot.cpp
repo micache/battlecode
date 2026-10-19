@@ -3,8 +3,8 @@
 #include "bot.h"
 #include "altar_control.h"
 #include "camp_rotation.h"
+#include "camp_focus.h"
 #include "recovery.h"
-#include "farming_equipment.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -72,15 +72,6 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    if (!farming_equipment::has_jungle(me.item_count())) {
-        const auto shard = farming_equipment::jungle_shards[chosen_stat];
-        const auto count = farming_equipment::purchase_count(
-            me.item_count()[shard], shard.combine_count(), me.gold_count(), shard.cost());
-        if (count && me.can_buy(shard, count)) me.buy(shard, count);
-        // Reobserve the automatic combination. A failed/partial purchase must
-        // not advance the build, and a large shop visit can finish both stages.
-        if (!farming_equipment::has_jungle(me.item_count())) return;
-    }
     const std::array items{cambc::item_type::power_shard_of_strength,
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto item = items[chosen_stat];
@@ -108,6 +99,8 @@ std::optional<Target> basic_target() {
         || me.restrictions().contains(cambc::buff_restrictions::attack))
         return std::nullopt;
     const auto range = me.attack_tiles();
+    if constexpr (std::is_same_v<Target, cambc::camp>)
+        return camp_focus::select(range);
     unsigned examined = 0;
     for (const auto& target : combat_targets<Target>()) {
         if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
@@ -142,6 +135,13 @@ bool fight(bool walked = false) {
         || cambc::fuel_remaining() < combat_fuel_reserve)
         return acted;
 
+    // Refresh after the first hit/splash. Spend a reset or direct spell on the
+    // next basic's camp rather than spreading damage among surviving camps.
+    // No basic-range survivor leaves the existing longer-range spell policy.
+    std::optional<cambc::camp> focused_camp;
+    if constexpr (std::is_same_v<Target, cambc::camp>)
+        focused_camp = camp_focus::select(me.attack_tiles());
+
     // At most two slots and sixteen visible aim points per slot; no tile search.
     // Compare useful direct damage against the additional basic from a reset.
     std::optional<cambc::ability> selected;
@@ -160,6 +160,8 @@ bool fight(bool walked = false) {
             for (const auto& target : combat_targets<Target>()) {
                 if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                     break;
+                if constexpr (std::is_same_v<Target, cambc::camp>)
+                    if (focused_camp && target != *focused_camp) continue;
                 if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
                     continue;
                 const float score = std::min(me.strength(), target.health());
@@ -168,7 +170,7 @@ bool fight(bool walked = false) {
                     selected = ability;
                     selected_target = target;
                 }
-                break; // Match the first-target basic policy used after the reset.
+                break; // Match the basic policy used after the reset.
             }
             continue;
         }
@@ -183,6 +185,8 @@ bool fight(bool walked = false) {
         for (const auto& target : combat_targets<Target>()) {
             if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                 break;
+            if constexpr (std::is_same_v<Target, cambc::camp>)
+                if (focused_camp && target != *focused_camp) continue;
             if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
                 continue;
             // Ground spells aim at a visible enemy/camp, not unexplored terrain.

@@ -1,0 +1,95 @@
+{
+  "task_id": "task-8dbeeaaf739e428597d05685211480df",
+  "bot_id": "alpha",
+  "base_source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+  "edit_commit": "046f1c3a41fe746c65c0982d06062623200fa931",
+  "input_revision": "60001c32ba5c5a08b45e6f46fb65a2b8dda50cc1",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "hypothesis": "Concentrating camp basics, resets and nearby offensive casts on the lowest-health legal camp increases matched development win rate over the edit base. Unchanged or lower win rate falsifies it.",
+  "bottleneck": "Unmeasured source deduction: first-in-enumeration basics and independent maximum-useful-damage casts can divide damage among static camps instead of finishing wounded targets.",
+  "expected_diagnostics": [
+    "higher collected and submitted gems",
+    "lower camp damage per collected gem",
+    "no new faults or fuel suspensions"
+  ],
+  "policy": {
+    "target_limit": 16,
+    "fuel_reserve": 18000,
+    "rank": "lowest positive visible in-range health; stable engine order on ties",
+    "cast_focus": "fresh basic-range survivor after initial attack; existing long-range policy when none exists",
+    "no_live_cache": true
+  },
+  "evidence": {
+    "evaluation_id": "83be320a01471ffec06800aae8d679915207602f7a5e59272827124434012b0f",
+    "evaluated_commit": "60001c32ba5c5a08b45e6f46fb65a2b8dda50cc1",
+    "evaluated_source_hash": "1d7d75b300bf28176744437a80f6bcbc83da195b43a631ddad66a1bbf4fbd39a",
+    "matched_development_delta": -0.008928571428571428,
+    "paired_cases": 56,
+    "interpretation": "Previous Jungle trial, not current edit base or this candidate; no turn-level target-choice evidence. Fragment/stampede contrasting aggregate wins each 8/8, not reconstructed traces."
+  },
+  "opponents_inspected": [
+    {
+      "bot_id": "gamma",
+      "commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+      "source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+      "observation": "Melee-heavy roster, value/cost routes, lowest-health camp within selected group, farming emblems, selective PvP."
+    },
+    {
+      "bot_id": "beta",
+      "commit": "7cab9b0f6b948b0ea0b3b284425a3501c564d16b",
+      "source_hash": "fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa",
+      "observation": "Persistent group farming, farming item passives, recovery/shopping; not cloned."
+    }
+  ],
+  "rationale_against_rejected_trials": "Unlike rejected PvP focus, camps do not chase, escape or carry shields. Unlike broad AoE/finish scoring, this aligns basic/reset/direct-spell aim without splash search or bonuses. Unlike group-first routing, it changes no route or group commitment.",
+  "risks": [
+    "a low-health camp can be in a less useful group",
+    "camp kills alone do not collect rewards",
+    "focused aim can sacrifice splash and useful damage",
+    "extra scans can consume fuel",
+    "low-health sleeping target may wake another group"
+  ],
+  "changed_source_paths": [
+    "bots/alpha/src/bot.cpp",
+    "bots/alpha/src/camp_focus.h"
+  ],
+  "unchanged_source_paths": [
+    "bots/alpha/src/altar_control.h",
+    "bots/alpha/src/bot.h",
+    "bots/alpha/src/camp_rotation.h",
+    "bots/alpha/src/draft.cpp",
+    "bots/alpha/src/draft.h",
+    "bots/alpha/src/main.cpp",
+    "bots/alpha/src/random.h",
+    "bots/alpha/src/recovery.h"
+  ],
+  "source_file_sha256": {
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/bot.cpp": "183ab2cf0aa744d49e33a84691b92c66a76c8b67fcccba73a99dadbbc0ff9bb6",
+    "bots/alpha/src/bot.h": "366fb1bfa19ab21c1059a5f478b646ab911b5cda545b01978d4fe545fd05a873",
+    "bots/alpha/src/camp_focus.h": "ead8b801f2a85e38aad57a53f96e4849797f3bb660b4d50cd38f0241e7e4eac3",
+    "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/alpha/src/recovery.h": "8114023e60067de0cb4e053da7d4fc58002f7eb0198227c46b4fb7ed3c372e36"
+  },
+  "check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792435330.7024274,
+    "matches": [
+      "ebb95790106b70ff619d7683e470d1a7a1af8c334a63ebb11e5c6fb76ee81a4e",
+      "5d0f6f99597ee4042cd15f85a60977520b826f592b2e27e002dbe4acec4b87e4"
+    ],
+    "report_path": ".agent/check-task-8dbeeaaf739e428597d05685211480df.json",
+    "report_reference": "check:task-8dbeeaaf739e428597d05685211480df:a66053e075bb40f86561f53a77318cf06511304c9a1fb2ca6334ff413c93d1ba",
+    "source_hash": "a66053e075bb40f86561f53a77318cf06511304c9a1fb2ca6334ff413c93d1ba",
+    "started": 1792435294.861346,
+    "state": "PASSED",
+    "task_id": "task-8dbeeaaf739e428597d05685211480df"
+  },
+  "tests_limit": "Compile-time selection contracts and trusted build/smoke pass; no target-selection branch coverage, completed full-game or measured normal-turn headroom claim.",
+  "next_action": "Supervisor evaluates this exact source against edit base and protected champion across maps and both sides."
+}
