@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
-#include <iostream>
 #include <optional>
 #include <type_traits>
 #include <variant>
@@ -16,10 +15,6 @@ constexpr float HEALED_HEALTH = 0.98f;
 constexpr unsigned SHOP_RECALL_GOLD = 300;
 constexpr std::uint64_t PLAN_FUEL = 30000;
 constexpr std::uint64_t ACTION_FUEL = 10000;
-constexpr int TRANSIT_DASH_RANGE = 2;
-constexpr unsigned TRANSIT_LOG_LIMIT = 3;
-unsigned transit_dash_logs = 0;
-unsigned transit_shield_logs = 0;
 
 int distance(vec2 a, vec2 b) { return static_cast<int>(a.chebyshev_distance(b)); }
 cambc::bitboard around(vec2 p, int r) {
@@ -37,67 +32,27 @@ cambc::bitboard blocked_tiles() {
 
 // Goals are FREE approach/capture tiles, never occupied camps or an altar.
 // A failed hidden-obstruction step permits one refreshed alternative.
-bool move_to(cambc::bitboard goals, bool transit = false) {
+bool move_to(cambc::bitboard goals) {
     auto& me = cambc::self();
     if (!me.can_move() || me.restrictions().contains(cambc::buff_restrictions::move)
         || cambc::fuel_remaining() < ACTION_FUEL) return false;
-    bool progressed = false;
     for (int retry = 0; retry < 2; ++retry) {
         auto blocked = blocked_tiles();
         goals &= ~blocked;
-        if (goals.is_empty() || goals.is_set(me.position())) return progressed;
+        if (goals.is_empty() || goals.is_set(me.position())) return false;
         cambc::distance_field field;
         cambc::bitboard visited;
         field.compute_to(blocked, goals, around(me.position(), 0), visited);
-        // Banking/recovery only: use a spare walking-compatible dash when it
-        // advances at least two route steps. Ordinary walk-reachable destinations
-        // are a conservative subset of dash paths: no hole/wall shortcuts.
-        if (transit && me.can_cast() && cambc::fuel_remaining() >= PLAN_FUEL
-            && !me.restrictions().contains(cambc::buff_restrictions::cast)) {
-            bool attempted = false;
-            for (const auto& a : me.abilities()) {
-                if (!a.is_dash() || !a.can_target_ground() || !a.is_ready()) continue;
-                const auto info = a.get<cambc::ability_dash>();
-                if (info.exclusive_with_movement) continue;
-                const auto origin = me.position();
-                auto landing = origin;
-                auto best = field.get(origin);
-                if (best == cambc::distance_field::unreachable) break;
-                const int range = std::min(TRANSIT_DASH_RANGE, static_cast<int>(info.range));
-                if (range <= 0) break;
-                const auto candidates = blocked.reachable_tiles(origin, range)
-                    & a.valid_tiles() & ~blocked;
-                for (auto p : candidates.positions()) {
-                    if (field.get(p) + 1 < best) { landing = p; best = field.get(p); }
-                }
-                if (landing == origin) break;
-                attempted = true;
-                if (!a.use(landing)) break; // Hidden blocker: ordinary fallback refreshes below.
-                progressed = true;
-                if (transit_dash_logs++ < TRANSIT_LOG_LIMIT)
-                    std::cout << "transit dash round " << cambc::round_number() << '\n';
-                break;
-            }
-            // Dash/reveal changes vision. The old field is only a direction
-            // heuristic; fresh occupancy determines the legality of the walk.
-            if (attempted) {
-                blocked = blocked_tiles();
-                goals &= ~blocked;
-                if (goals.is_empty() || goals.is_set(me.position())) return progressed;
-                if (!me.can_move() || cambc::fuel_remaining() < ACTION_FUEL
-                    || me.restrictions().contains(cambc::buff_restrictions::move)) return progressed;
-            }
-        }
         auto step = me.position();
         auto best = field.get(step);
         for (auto p : blocked.reachable_tiles(me.position(), me.base_stats().base_move_speed).positions()) {
             if (field.get(p) < best) { step = p; best = field.get(p); }
         }
-        if (step == me.position()) return progressed;
+        if (step == me.position()) return false;
         if (me.move_absolute(step)) return true;
-        if (!me.can_move() || cambc::fuel_remaining() < ACTION_FUEL) return progressed;
+        if (!me.can_move() || cambc::fuel_remaining() < ACTION_FUEL) return false;
     }
-    return progressed;
+    return false;
 }
 
 // Visibility is checked again after every action; retaliation can kill self.
@@ -166,23 +121,6 @@ bool threatened() {
     return false;
 }
 
-// Cast before starting a channel, never interrupt one. Preserve the route and
-// walk allowance; an existing shield remains useful and must not be replaced.
-void protect_transit() {
-    auto& me = cambc::self();
-    if (cambc::fuel_remaining() < ACTION_FUEL || !me.can_cast()
-        || me.restrictions().contains(cambc::buff_restrictions::cast)
-        || me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
-    for (const auto& a : me.abilities()) {
-        if (!a.is_shield() || !a.can_target_self() || !a.is_ready()) continue;
-        if (a.get<cambc::ability_shield>().exclusive_with_movement
-            || me.buffs().has_shield() || !threatened()) return;
-        if (a.use() && transit_shield_logs++ < TRANSIT_LOG_LIMIT)
-            std::cout << "transit shield round " << cambc::round_number() << '\n';
-        return;
-    }
-}
-
 // Score first, fight only adjacent threats/cheap finishes; never chase enemies.
 bool defend(bool walked) {
     auto& me = cambc::self();
@@ -207,7 +145,6 @@ bool bank(bool allow_move) {
             if (distance(me.position(), altar) > cambc::constants::submit_gems_range) continue;
             if (hostile.is_set(altar) && (!me.can_attack()
                 || me.restrictions().contains(cambc::buff_restrictions::attack))) continue;
-            protect_transit();
             me.submit_gems(altar); // May hit a hostile lock; never a boolean.
             return true;
         }
@@ -215,15 +152,11 @@ bool bank(bool allow_move) {
     };
     if (try_submit()) return true;
     if (!allow_move) return false;
-    protect_transit();
     cambc::bitboard goals;
     // A locked altar remains reachable: three attacks can clear it.
     for (auto altar : cambc::map::altars().positions())
         goals |= around(altar, cambc::constants::submit_gems_range);
-    if (move_to(goals, true)) {
-        protect_transit(); // Fresh threats may have appeared after dash/walking.
-        try_submit();
-    }
+    if (move_to(goals)) try_submit(); // Refresh vision and position after walking.
     return true;
 }
 } // namespace
@@ -387,9 +320,7 @@ void Bot::play_turn() {
     if (bank(false)) return;
     if (!at_spawn && me.health() < me.max_health() * RETREAT_HEALTH) {
         const auto& spawn = cambc::map::spawn_region(team::ally);
-        protect_transit();
-        move_to(spawn, true);
-        protect_transit();
+        move_to(spawn);
         if (!spawn.is_set(me.position()) && (me.can_move() || me.can_attack() || me.can_cast())) me.recall();
         return;
     }

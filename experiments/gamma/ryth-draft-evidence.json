@@ -1,0 +1,145 @@
+{
+  "task_id": "task-be62cdde8f4f40b1b40c40728bf66a78",
+  "bot_id": "gamma",
+  "base_source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+  "edit_commit": "63d05e37a937fa2bfebf3de613af2ee3113b21a8",
+  "input_revision": "7ed7e6a36e1795158656ed80c06d72b337f2192d",
+  "accepted_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "hypothesis": "On three-pick maps, replacing Marcella with Ryth while retaining Varg/Vendetta and the complete existing gameplay policy will increase matched mean submitted gems and win rate versus the edit base without new bot faults.",
+  "falsifier": "Reject if either matched three-pick submitted-gem mean or win rate fails to increase, or a new bot fault occurs. Apply unchanged full-suite promotion gates; this is an unmeasured rules/source deduction.",
+  "bottleneck": "The first three fixed picks exclude Ryth, despite his stronger starting farming damage, equal base health, area stun and synergy with the existing Health emblem. Marcella remains useful on larger teams.",
+  "policy": {
+    "3": [
+      "varg",
+      "vendetta",
+      "ryth"
+    ],
+    "4": [
+      "varg",
+      "vendetta",
+      "marcella",
+      "ryth"
+    ],
+    "5": [
+      "varg",
+      "vendetta",
+      "marcella",
+      "ryth",
+      "tavi"
+    ]
+  },
+  "source_isolation": {
+    "changed_from_edit_commit": [
+      "bots/gamma/src/draft.cpp"
+    ],
+    "other_source_files_identical": true,
+    "prepared_bot_cpp_change": "Restores edit base from HEAD; not a new worker modification."
+  },
+  "rules": {
+    "ryth": {
+      "health": 1200,
+      "strength": 50,
+      "focus": 100,
+      "health_strength_passive": 0.01,
+      "spell": "range 4, radius 1, Focus damage plus stun; walk-exclusive"
+    },
+    "marcella": {
+      "health": 1200,
+      "strength": 45,
+      "focus": 50,
+      "spell": "range 4, 2*Focus damage; walk-exclusive",
+      "passive": "stun immunity"
+    },
+    "common": "Both have self attack resets and 100 Health / 5 Strength shard growth."
+  },
+  "match_attribution": {
+    "2ac9c4a85653e75e732974e92a83ee05eb15367bcdab91f1267c52dc6614dfe6": {
+      "source_hash": "85c39989f37666a2b352a143f278998a98770cc7a97b057dbd9daf5f1e4fc42a",
+      "side": "A",
+      "map": "ambush",
+      "opponent_revision": "UNKNOWN in summary",
+      "use": "Ryth390 vs Marcella30 submitted; outcome720-1010. Not causal evidence; 5-pick roster is preserved."
+    },
+    "38f16f3c23229d96bf1d0f5526990c0f69696172e36f7ebe6bcec46534624b98": {
+      "source_hash": "85c39989f37666a2b352a143f278998a98770cc7a97b057dbd9daf5f1e4fc42a",
+      "side": "A",
+      "map": "collision",
+      "opponent_revision": "UNKNOWN in summary; roster consistent with frozen alpha, not identity proof",
+      "use": "Three-pick roster has no Ryth; Marcella36 collected/0 submitted/3 deaths. Team72-1052,9 deaths,0 faults."
+    },
+    "12d552bb0d46f68fdffff706151e6602abc99a039e749826dfe0509f346823b2": {
+      "source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+      "side": "B",
+      "map": "lanes",
+      "opponent_revision": "e8aa98b8dcd0ec7757c49ad613e8dc8647518c5e17bffb27be8342e81258c0a0, beta d2d57274 per brief",
+      "use": "Counterexample: Marcella318 submitted/0 deaths, Ryth168/0. Team902-1008. Supports preserving larger-team roster/order, not universal champion superiority."
+    }
+  },
+  "frozen_manifest": {
+    "count": 6,
+    "manifest": "/srv/battlecode/public/strategy/task-be62cdde8f4f40b1b40c40728bf66a78/manifest.json",
+    "sha256": "d4ad358872259a3ae77ef9f69641d3c8a46d5a85dbd4040265095ce26d1b8d32"
+  },
+  "opponents_reviewed": [
+    {
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "policy": "Alpha random legal draft and Power stat, enemy-first bounded combat, spawn-union farming, retreat and immediate bank. Extra Cassi/Issac body can overwhelm small teams, but linked death is a tradeoff."
+    },
+    {
+      "commit": "d2d57274232ca7cead5bacf650d6f51fd5b3bc3d",
+      "policy": "Beta Varg/Tavi/Ryth opening, group routes, reset/AoE combat, farming passives then Durability Health, recovery latch and immediate banking. Demonstrates established use of Ryth in small-team farming; not proof that its full policy transfers."
+    },
+    {
+      "commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+      "policy": "Beta adds progress-only dashes and opportunistic locks to that macro; frozen source includes the same Ryth third pick."
+    },
+    {
+      "commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+      "policy": "Alpha adds nearby altar lock purchase/use and hostile-lock clearance; the small-team roster hypothesis does not depend on copying that system."
+    }
+  ],
+  "rejected_alternatives": [
+    "Do not reapply target-aware combat, team camp claims or threat-aware banking: prior measured regressions.",
+    "Do not bundle the later shield/dash candidate: it is not the assigned edit base.",
+    "Do not replace all farming with beta or add linked Cassi/Issac without dedicated survival policy.",
+    "Do not replace Marcella on larger teams: exact-base Lanes counterexample."
+  ],
+  "risks": [
+    "Loss of Marcella stun immunity on three-pick maps.",
+    "Existing Ryth reset-first code may underspend AoE value; do not combine a previously regressed combat rewrite.",
+    "Draft changes spawn placement, scheduling and camp routes as well as champion stats; causality requires matched evaluation."
+  ],
+  "runtime": {
+    "engine": "2.2.5",
+    "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+    "sdk_sha256": "ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264"
+  },
+  "documentation": "Changed-document review: current supplied rules, C++ API contracts and matching header, BOT_REFERENCE, RESEARCH, organizer ledger and playbooks A/B/E/G. ward::owner is documented but absent in installed header. No unrelated Python export used. Organizer page is a download hub; production/policy parity not certified.",
+  "comparative_result": "NOT RUN; supervisor owns evaluation.",
+  "check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792396875.339447,
+    "matches": [
+      "294d09269af4ece82722c1fac0dd7d9695d21dc59221f1e70899da1160583e33",
+      "8a73ba1019a4eef0ad82bd7f3323b4c6cc966d703aa604ad0acaf678b4d6902d"
+    ],
+    "report_path": ".agent/check-task-be62cdde8f4f40b1b40c40728bf66a78.json",
+    "report_reference": "check:task-be62cdde8f4f40b1b40c40728bf66a78:c11c50fe59ace9c2050647d63b45032ba2ae34e2aad85c66e3751723e7f7604c",
+    "source_hash": "c11c50fe59ace9c2050647d63b45032ba2ae34e2aad85c66e3751723e7f7604c",
+    "started": 1792396766.6742496,
+    "state": "PASSED",
+    "task_id": "task-be62cdde8f4f40b1b40c40728bf66a78"
+  },
+  "smoke_reference": "experiments/gamma/ryth-draft-smoke.json",
+  "smoke_limits": "Both completed, candidate won both sides, no faults or suspensions; source c11c50fe verified by bot-check. Map hashes identify Collision; exact frozen opponent revisions unavailable in summary. No comparative gain inferred.",
+  "smoke_logs_reference": "experiments/gamma/ryth-draft-smoke-logs.json",
+  "final_source_file_sha256": {
+    "bot.cpp": "5178a8bf8f16e59dfb2f27d15a72ede9886acdacadd40b8b4b4daaebaef095fb",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bot.h": "bf6ed7d94c1c4454e5f44e7703ba3767e05e0dfa5ca16c2d50ce0347c911a310",
+    "main.cpp": "786c1365f90c1eb409b163f584c97a4f596191c946d4bd2b2eb4d0682c9f751c",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "draft.cpp": "929d5fa5a5cd957b89fa275a7b24001437767060b8df2326f4abae75a5123e9b"
+  }
+}

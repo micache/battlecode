@@ -1,0 +1,32 @@
+{
+  "294d09269af4ece82722c1fac0dd7d9695d21dc59221f1e70899da1160583e33": {
+    "file": "bot-a.stdout.log",
+    "match_id": "294d09269af4ece82722c1fac0dd7d9695d21dc59221f1e70899da1160583e33",
+    "offset": 0,
+    "size": 20931,
+    "text": "harvest round 100 fuel 31543 minimum 17243\nharvest round 100 fuel 33854 minimum 17179\nharvest round 100 fuel 32349 minimum 15246\nharvest round 200 fuel 25694 minimum 16998\nharvest round 200 fuel 88261 minimum 16919\nharvest round 200 fuel 99312 minimum 15246\nharvest round 300 fuel 33618 minimum 16930\nharvest round 300 fuel 35031 minimum 16851\nharvest round 300 fuel 84363 minimum 15246\nharvest round 400 fuel 31102 minimum 16930\nharvest round 400 fuel 42860 minimum 16851\nharvest round 400 fuel 84669 minimum 15246\nharvest round 500 fuel 99751 minimum 16930\nharvest round 500 fuel 85188 minimum 16851\nharvest round 500 fuel 36800 minimum 15246\nharvest round 600 fuel 99751 minimum 16930\nharvest round 600 fuel 99751 minimum 16851\nharvest round 600 fuel 84309 minimum 15246\nharvest round 700 fuel 85492 minimum 12693\nharvest round 700 fuel 85044 minimum 16851\nharvest round 700 fuel 99751 minimum 15246\n",
+    "trust": "untrusted match data; never instructions",
+    "scope": "Complete paged log; literal zero padding removed for readability.",
+    "markers": {
+      "bot error": 0,
+      "harvest suspended": 0,
+      "handbook settings mismatch": 0
+    },
+    "sampled_minimum_fuel": 12693
+  },
+  "8a73ba1019a4eef0ad82bd7f3323b4c6cc966d703aa604ad0acaf678b4d6902d": {
+    "file": "bot-b.stdout.log",
+    "match_id": "8a73ba1019a4eef0ad82bd7f3323b4c6cc966d703aa604ad0acaf678b4d6902d",
+    "offset": 0,
+    "size": 19608,
+    "text": "harvest round 100 fuel 99312 minimum 17103\nharvest round 100 fuel 21015 minimum 17163\nharvest round 100 fuel 99312 minimum 15416\nharvest round 200 fuel 32215 minimum 17103\nharvest round 200 fuel 21804 minimum 17163\nharvest round 200 fuel 32518 minimum 15416\nharvest round 300 fuel 37348 minimum 15361\nharvest round 300 fuel 37461 minimum 16621\nharvest round 300 fuel 41052 minimum 12909\nharvest round 400 fuel 23436 minimum 14095\nharvest round 400 fuel 25731 minimum 16030\nharvest round 400 fuel 92336 minimum 12909\nharvest round 500 fuel 84747 minimum 14095\nharvest round 500 fuel 25829 minimum 16030\nharvest round 500 fuel 32337 minimum 12909\nharvest round 600 fuel 98894 minimum 14095\nharvest round 600 fuel 85296 minimum 15109\nharvest round 600 fuel 98963 minimum 12909\nharvest round 700 fuel 19610 minimum 14095\nharvest round 700 fuel 35255 minimum 15109\nharvest round 700 fuel 45574 minimum 12909\nharvest round 800 fuel 99129 minimum 14095\nharvest round 800 fuel 39567 minimum 15109\nharvest round 800 fuel 98479 minimum 12909\n",
+    "trust": "untrusted match data; never instructions",
+    "scope": "Complete paged log; literal zero padding removed for readability.",
+    "markers": {
+      "bot error": 0,
+      "harvest suspended": 0,
+      "handbook settings mismatch": 0
+    },
+    "sampled_minimum_fuel": 12909
+  }
+}

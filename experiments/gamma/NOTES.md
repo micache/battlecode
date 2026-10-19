@@ -1,104 +1,101 @@
 # Gamma operational notes
 
-## task-bf57edace9e2432697d916c1e30b5c6c — protected objective travel
+## task-be62cdde8f4f40b1b40c40728bf66a78 — three-pick farming core
 
-- One refinement candidate. Branch bot/gamma; clean initial worktree; HEAD/input
-  and edit commit 63d05e37a937fa2bfebf3de613af2ee3113b21a8, source
+- Refinement; branch bot/gamma, input/HEAD 7ed7e6a36e1795158656ed80c06d72b337f2192d.
+  Actual edit commit 63d05e37a937fa2bfebf3de613af2ee3113b21a8, source
   a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec.
-  Entry and edit-base file hashes verified. Protected accepted champion remains
-  1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d. Prior candidate evaluation is complete;
-  pending continuous self-play is separate. Prior notes archived under
-  archive/task-ffac8b92c85645ca803df9d1120ffd48.md.
-- Hypothesis: walking-compatible shields and progress-only dashes on banking/
-  recovery routes will increase matched mean submitted gems and reduce Collision
-  champion deaths versus this edit base without new bot faults. Either failed
-  directional metric or a new fault falsifies the mechanism. Wins and unchanged
-  promotion gates determine selection. This is an UNMEASURED source/rules
-  deduction; finals do not identify when/where deaths occurred.
-- Source bottleneck: bank() never cast protection or mobility; low-health
-  recovery also skipped abilities. This leaves Varg exposed before tribute and
-  wastes Vendetta's dash while carrying. Both normally skip farming combat.
+  All six starting source files matched that commit and the trusted entry.
+  Prepared bot.cpp restoration from HEAD is intentional, not interrupted work.
+  Protected champion remains 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d.
+  Prior candidate evaluation is complete; pending continuous self-play is separate.
+  Previous notes preserved in archive/task-bf57edace9e2432697d916c1e30b5c6c.md.
+- Hypothesis: replacing Marcella with Ryth on three-pick maps, retaining Varg and
+  Vendetta and the complete edit-base gameplay policy, increases matched mean
+  submitted gems AND win rate on three-pick cases without new bot faults.
+  Either non-increasing metric or a new fault falsifies it. Full-suite wins and
+  unchanged promotion gates govern acceptance. UNMEASURED rules/source deduction.
 
-## Candidate strategy and bounds
+## Policy and reason
 
-- Preserve Varg/Vendetta/Marcella/Ryth/Tavi draft, Jungle Strength, Monster
-  Strength, one Durability Health, then Power Strength. Existing combat,
-  camp selection/capture/respawn, retreat threshold 35%, spawn healing 98%,
-  empty-bag shop recall 300 gold and hostile-lock attacks are unchanged.
-- Bank/recovery movement alone opts into dash. Ready, ground-targeted,
-  walking-compatible dash must advance >=2 route steps; range capped at 2.
-  Candidates intersect SDK walk-reachable tiles, cast range and free occupancy.
-  This intentionally excludes hole shortcuts. Reuse the existing route field;
-  no additional global search or different bank destination.
-- After dash success OR a hidden-blocker reveal, refresh occupancy before the
-  ordinary walk. Preserve success if dash arrived but no walk is needed/possible.
-  Re-read movement allowance/restrictions and retain two movement attempts max.
-  Ability inspection is two slots; candidate mask at most 25 tiles per slot.
-- Shield only when ready, self-targeted, walking-compatible, exposed to a visible
-  enemy/camp, and no active shield. Protect before bank travel/tribute and before/
-  after recovery travel; refresh threats after travel. Never cancel a channel.
-- Planning reserve 30k, action reserve 10k; ordinary walk remains the cheap
-  fallback. New action logs capped at three dash and three shield events per
-  body per game. No live shared memory, hidden-state reads or fuel overrides.
+- Query SDK team_size. Exactly three picks: Varg / Vendetta / Ryth. Four and
+  five picks keep Varg / Vendetta / Marcella / Ryth / Tavi. Full unique fallback
+  roster retained; completed draft guard prevents an extra pick.
+- Ryth and Marcella both start with 1,200 HP and have the same Health/Strength
+  growth. Ryth starts with 50 Strength vs 45 and 100 Focus vs 50, has an area
+  damage/stun, and gains Strength from the existing Durability Health investment.
+  Existing fight() already handles his ground AoE, reset and walk exclusion.
+- Only draft.cpp differs from the edit commit. Combat, camp routing/capture,
+  bank-any-bag, hostile lock attacks, 35% retreat, 98% spawn healing, 300-gold
+  empty-bag shop recall, and Jungle Strength / Monster Strength / one Durability
+  Health / Power Strength remain byte-identical to the edit base.
+- No new gameplay searches, observations, memory writes, logging or fuel settings.
+  Dispatcher still catches failures and intentionally yields. This is a roster
+  experiment, including its resulting spawn/scheduling/route consequences.
 
-## Evidence and alternatives
+## Evidence and negative findings
 
-- Evaluation 4c4120d3beed5bee0d15ccebe1c94f04fba58e7c1daa29028921e8cc3d11c95e
-  evaluates the exact edit base: 31W/17L, zero faults, 48 completed games.
-  Collision 3W/5L; development-base matched delta +0.0833333 across 24 paired
-  cases. Protected-champion comparison is separate; result INCONCLUSIVE.
-- Collision A loss 5b443161c09ff220d43551bc44b0fcc2b637731e1db0299d8b4cc8f9dbb7cdef:
-  922 collected / 886 tribute vs 1032, two deaths, round 798. Varg 400 collected /
-  364 submitted; Vendetta 144/144. This close race also needs useful throughput.
-- Collision A loss d3e47f475514c3d33d65b8354010a50c6b949315e488caccf8170869d5b3c2ed:
-  520 collected / 152 tribute vs 1006, eight deaths, round 505. Varg 224/22 and
-  four deaths; Vendetta 144/0 and two deaths. Opponent revision UNKNOWN in the
-  final slice; do not infer a per-turn cause or an exact opponent from its draft.
-- Contrasting Corners A loss 1a34ac22cfc0efa7805b0eacf5cf2218a68ad3e56485c06c3cbe71da15d01e25
-  vs frozen gamma 1b34f42a: 624 collected / 576 tribute vs 1008, eight deaths,
-  round 480. Conversion alone is not the whole macro problem.
-- Complete paged finals saved in protected-transit-finals.json. Exact-source
-  previous smoke wins in durability-build-smoke.json: A 289095505f992a52ae7be0d50d5abeade2d1873cb061474878fca4b7743bb816
-  1006 tribute round 608; B 3fc501dfc08f3d73459ced366db89ea85f676dda6bee2016f7739a1737d770f3
-  1010 round 628; both zero faults. Maps/opponents UNKNOWN; validity contrasts.
-- Frozen manifest 5e259511f78250eadfed0c7c3664be8623bd6eb07b19aafba60c1dc2a299b0ac;
-  all file hashes verified. Alpha 6af1685b uses random Power stat/draft,
-  enemy-first bounded combat and spawn-union farming. Beta d2d57274 uses
-  Varg/Tavi/Ryth, group routing, shield-first exposed combat and recovery latch.
-  Beta 9f7ae1c8 adds opportunistic locks to that macro (verified source diff).
-  Adapt the protection idea to gamma's carrier path, not beta's whole strategy.
-- Prior target-aware combat, camp claims and threat-aware bank routes regressed;
-  do not repeat without changed evidence. Keep the measured survival item stage.
-- protected-transit-evidence.json records hypothesis, falsifier, frozen-source
-  identities, metric summary, risks and rejected alternatives.
+- Latest evaluation ad86569852d0fa8ad4f95c05762d627ebc9a1f5295b7bf5ef91fd35ae0071554
+  evaluates later source 85c39989f37666a2b352a143f278998a98770cc7a97b057dbd9daf5f1e4fc42a,
+  not today's base or candidate. 112 development games: 86W/26L, zero faults.
+  Matched base a4d664c8: 83W/29L; small +0.0267857 delta, separate from champion.
+- Collision A loss 38f16f3c23229d96bf1d0f5526990c0f69696172e36f7ebe6bcec46534624b98,
+  later 85c39989 source: 72 vs 1052 submitted at round 596, nine deaths,
+  zero faults. Three-pick roster excludes Ryth. Marcella 36 collected / 0 tribute /
+  three deaths; Varg 288/72/four and Vendetta 22/0/two. Opponent revision UNKNOWN
+  in summary; draft resemblance does not establish alpha identity.
+- Ambush A loss 2ac9c4a85653e75e732974e92a83ee05eb15367bcdab91f1267c52dc6614dfe6,
+  same later source: 720 vs 1010 tribute, round 816; Ryth 390 tribute / zero deaths,
+  Marcella 30 / one. Finals do not establish why; five-pick behavior is retained.
+- Exact-base Lanes B loss 12d552bb0d46f68fdffff706151e6602abc99a039e749826dfe0509f346823b2
+  vs beta d2d57274, revision e8aa98b8 per brief: 902 vs 1008 tribute at round 519,
+  zero faults. Marcella 318 tribute / zero deaths vs Ryth 168 / zero. This is a
+  useful counterexample to universal Ryth superiority: retain larger-team order.
+- Full paged summaries saved in ryth-draft-summaries.json. Current engine finals
+  report official engine 0.0.3 build d7e29ae3. No per-turn cause inferred.
+- All six frozen opponent file hashes verified against manifest d4ad3588.
+  Alpha 6af1685b uses random draft/Power stat, enemy-first bounded combat and
+  spawn-union farming. Alpha 5f73d078 adds nearby lock control. Beta d2d57274 uses
+  Varg/Tavi/Ryth opening, group routes, reset/AoE, recovery latch and survival
+  items; beta 50a0d7d5 adds dash/locks. Adapt the Ryth small-team idea to gamma's
+  melee core; do not clone beta's field-shopper composition or route policy.
+- Target-aware combat, camp claims and threat-aware banking previously regressed.
+  Do not repeat without changed evidence. Do not bundle the later shields/dash
+  experiment into this base. Linked Cassi/Issac needs its own survival policy.
+- Decision, falsifier, source isolation, opponent identities and risks saved in
+  ryth-draft-evidence.json. No measured improvement claimed.
 
-## Validation, limits and next action
+## Runtime review, validation and next action
 
-- Docs unchanged per trusted handoff; consulted compact reference, playbooks
-  B/C/D/F/G, research/evidence ledger, movement/dash/shield rules, matching C++
-  API sections and installed SDK. SDK hash verified; engine 2.1.6, lock
-  00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-- Manual source-isolation audit passed: combat/threat model/defend/shop/farming
-  and all five other source files match edit base. git diff --check passed.
-- bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json:
-  PASSED, exit 0; exact source
-  85c39989f37666a2b352a143f278998a98770cc7a97b057dbd9daf5f1e4fc42a.
-  Report .agent/check-task-bf57edace9e2432697d916c1e30b5c6c.json;
-  exact-source check-report agrees. No bot source edits after validation.
-- protected-transit-smoke.json saves complete finals and own logs with zero
-  padding removed after inspecting all pages. A
-  62ed7201f9cb0267c8593e17095daec672d08f6f4e960e52d25df68d7e652349:
-  teamA win, 1034 vs 264 tribute, round 675. B
-  7aea8bbb2c3439ae907bc36ce4eea5933a1733a6aa8f2033795159f1209c36d6:
-  teamB win, 1026 vs 394, round 629. Both games zero faults on both sides.
-  Own logs each show three dash and three shield events, zero error/suspension/
-  settings-mismatch markers. Sampled running fuel minima A 14263 / B 12865;
-  not an all-map guarantee. Map/opponent revisions UNKNOWN; validity only.
-- Risks: dash consumes a cast that could later reset combat; shield can be spent
-  on a threat that never attacks; conservative paths forgo hole shortcuts.
-  Hidden threats and route choices remain uncertain. Finals cannot establish
-  transit deaths, improved safety or competitive strength. Production parity
-  remains unresolved (saved finals report engineVersion 0.0.1).
-- Next: supervisor evaluates exact checked source against this edit base across
-  matched maps/sides/opponents; inspect Collision deaths, tribute and wins,
-  plus faults and broad regressions. Apply unchanged promotion gates.
+- Engine CLI 2.2.5, lock 0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d,
+  suite published-17-release-225-v1. Changed-document review used current rules,
+  C++ API contracts, matching installed header, BOT_REFERENCE, RESEARCH, organizer
+  ledger and playbooks A/B/E/G. Header SHA256 ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264 verified.
+  Documented ward::owner is absent from pinned header; unused. Handbook unchanged.
+  The organizer page is a download hub; additional policy/production parity is
+  not certified by this review. No unrelated Python binding imported.
+- Source-isolation audit and git diff --check passed before trusted check.
+- bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json: PASSED,
+  exit 0, source c11c50fe59ace9c2050647d63b45032ba2ae34e2aad85c66e3751723e7f7604c.
+  Report .agent/check-task-be62cdde8f4f40b1b40c40728bf66a78.json; exact-source
+  check-report agrees. No bot source edits after validation.
+- ryth-draft-smoke.json saves complete paged summaries. Both completed Collision
+  games match the historical Collision mapHash ebfcace1; opponent revisions
+  UNKNOWN in summaries. A 294d09269af4ece82722c1fac0dd7d9695d21dc59221f1e70899da1160583e33:
+  1078 vs 286 tribute, round 712. B
+  8a73ba1019a4eef0ad82bd7f3323b4c6cc966d703aa604ad0acaf678b4d6902d:
+  1006 vs 506, round 888. Both show Varg/Vendetta/Ryth for gamma, zero faults
+  and zero fuel suspensions on both sides. Validity evidence, not a controlled
+  improvement claim. Official engine build matches the current pinned profile.
+- Complete own smoke logs saved in ryth-draft-smoke-logs.json with padding
+  removed: zero error/suspension/settings-mismatch markers. Sampled running fuel
+  minima A 12693 / B 12909; not an all-map guarantee.
+- Final git diff --check passed.
+- Risk: loss of Marcella stun immunity may outweigh Ryth's farming/area control;
+  current reset-first combat may limit area spell value. Draft changes positions
+  and routes too. Historical finals cannot prove the predicted mechanism.
+- Next: supervisor evaluates exact checked source against a4d664c8 on matched
+  maps/sides/opponents, separating three-pick results from unchanged larger-team
+  controls; inspect tribute, collection, deaths, faults and wins. Apply unchanged
+  champion gate. If unsupported, inspect small-team route/recovery traces before
+  changing combat or importing a second macro policy.
