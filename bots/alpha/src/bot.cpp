@@ -3,8 +3,8 @@
 #include "bot.h"
 #include "altar_control.h"
 #include "camp_rotation.h"
+#include "economy_route.h"
 #include "recovery.h"
-#include "route_teleport.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -38,6 +38,20 @@ cambc::bitboard blocked_tiles() {
     return blocked;
 }
 
+bool move_down_field(const cambc::distance_field& field) {
+    auto& me = cambc::self();
+    if (!me.can_move() || me.restrictions().contains(cambc::buff_restrictions::move))
+        return false;
+    // Reobserve occupancy even when the field was built before target checks.
+    const auto blocked = blocked_tiles();
+    auto step = me.position();
+    for (const auto tile : blocked.reachable_tiles(step, me.base_stats().base_move_speed).positions())
+        if (field.get(tile) < field.get(step)) step = tile;
+    const bool moved = step != me.position() && me.move_absolute(step);
+    if (moved) altar_control::place_lock();
+    return moved;
+}
+
 bool move_towards_closest(cambc::bitboard goals) {
     auto& me = cambc::self();
     if (!me.can_move() || goals.is_set(me.position()))
@@ -48,8 +62,7 @@ bool move_towards_closest(cambc::bitboard goals) {
     goals &= ~blocked | cambc::vision::camp_tiles();
     if (goals.is_empty())
         return false;
-    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0])
-        && !route_teleport::ready()) {
+    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0])) {
         const bool moved = me.move_towards(goals.positions()[0]);
         if (moved) altar_control::place_lock();
         return moved;
@@ -60,10 +73,6 @@ bool move_towards_closest(cambc::bitboard goals) {
     cambc::distance_field field;
     cambc::bitboard visited;
     field.compute_to(path_walls, goals, tiles_around(me.position(), 0), visited);
-
-    // A successful channel or a False/reveal ends this navigation phase. False
-    // is deliberately not reported as movement: farming must not attack next.
-    if (route_teleport::try_shortcut(field, blocked)) return false;
 
     // Choose a reachable step with a smaller distance to the goal.
     auto step = me.position();
@@ -98,7 +107,15 @@ auto combat_targets() {
 }
 
 template<class Target>
-std::optional<Target> basic_target() {
+bool allowed_target(const Target& target, const cambc::bitboard* allowed) {
+    if constexpr (std::is_same_v<Target, cambc::camp>)
+        return !allowed || allowed->is_set(target.spawn_position());
+    else
+        return true;
+}
+
+template<class Target>
+std::optional<Target> basic_target(const cambc::bitboard* allowed = nullptr) {
     auto& me = cambc::self();
     if (!me.is_alive() || !me.can_attack()
         || me.restrictions().contains(cambc::buff_restrictions::attack))
@@ -108,7 +125,8 @@ std::optional<Target> basic_target() {
     for (const auto& target : combat_targets<Target>()) {
         if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
             break;
-        if (target.is_visible() && target.health() > 0 && range.is_set(target.position()))
+        if (target.is_visible() && target.health() > 0 && allowed_target(target, allowed)
+            && range.is_set(target.position()))
             return target;
     }
     return std::nullopt;
@@ -127,10 +145,10 @@ bool cast_ready(const cambc::ability& ability, bool walked) {
 // Spend the separate basic and cast allowances. Never walk after this routine
 // acts: a spell may exclude movement even when can_move() still reports true.
 template<class Target>
-bool fight(bool walked = false) {
+bool fight(bool walked = false, const cambc::bitboard* allowed = nullptr) {
     auto& me = cambc::self();
     bool acted = false;
-    if (const auto target = basic_target<Target>()) {
+    if (const auto target = basic_target<Target>(allowed)) {
         me.attack(*target);
         acted = true;
     }
@@ -156,7 +174,8 @@ bool fight(bool walked = false) {
             for (const auto& target : combat_targets<Target>()) {
                 if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                     break;
-                if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
+                if (!target.is_visible() || target.health() <= 0 || !allowed_target(target, allowed)
+                    || !range.is_set(target.position()))
                     continue;
                 const float score = std::min(me.strength(), target.health());
                 if (score > best_score) {
@@ -179,7 +198,8 @@ bool fight(bool walked = false) {
         for (const auto& target : combat_targets<Target>()) {
             if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                 break;
-            if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
+            if (!target.is_visible() || target.health() <= 0 || !allowed_target(target, allowed)
+                || !range.is_set(target.position()))
                 continue;
             // Ground spells aim at a visible enemy/camp, not unexplored terrain.
             // Only the primary damage is scored: splash is a conservative bonus.
@@ -208,7 +228,7 @@ bool fight(bool walked = false) {
         if (cast) {
             acted = true;
             // Refresh after the cast: a kill, splash or retaliation changes targets.
-            if (const auto next = basic_target<Target>()) me.attack(*next);
+            if (const auto next = basic_target<Target>(allowed)) me.attack(*next);
         }
     }
 
@@ -241,6 +261,46 @@ bool fight(bool walked = false) {
 
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
+    // End the gold-only bootstrap without replacing the nearest-group policy
+    // with a global work/reward scorer. Use two native fields, no group search.
+    if (cambc::fuel_remaining() >= economy_route::planning_reserve
+        && economy_route::capital() >= economy_route::bootstrap_capital) {
+        const auto all = camp_rotation::memory().goals();
+        const auto gems = camp_rotation::memory().gem_goals(all);
+        const auto position = cambc::self().position();
+        // Preserve all existing spawn occupancy, especially capture progress.
+        if (!all.is_set(position) && !gems.is_empty() && !(all & ~gems).is_empty()
+            && cambc::fuel_remaining() >= economy_route::planning_reserve) {
+            const auto blocked = blocked_tiles();
+            const auto usable = ~blocked | cambc::vision::camp_tiles();
+            const auto all_goals = all & usable;
+            const auto gem_goals = gems & usable;
+            if (!all_goals.is_empty() && !gem_goals.is_empty()) {
+                cambc::distance_field ordinary, preferred;
+                cambc::bitboard visited;
+                const auto destination = tiles_around(position, 0);
+                ordinary.compute_to(blocked & ~all_goals, all_goals, destination, visited);
+                const unsigned nearest = ordinary.get(position);
+                if (nearest != cambc::distance_field::unreachable
+                    && cambc::fuel_remaining() >= economy_route::second_field_reserve) {
+                    const auto limit = static_cast<std::uint16_t>(std::min<unsigned>(
+                        cambc::distance_field::unreachable - 1,
+                        nearest + economy_route::gem_detour_steps));
+                    preferred.compute_to(blocked & ~gem_goals, gem_goals, destination, visited, limit);
+                    if (economy_route::prefer_gems(economy_route::bootstrap_capital,
+                                                  nearest, preferred.get(position), false)) {
+                        if (fight<cambc::camp>(false, &gems)) return;
+                        if (cambc::fuel_remaining() < economy_route::movement_reserve) return;
+                        // Reuse the chosen field; movement refreshes occupants,
+                        // and combat refreshes live targets after arrival.
+                        if (move_down_field(preferred)) fight<cambc::camp>(true, &gems);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     if (fight<cambc::camp>() || cambc::fuel_remaining() < combat_fuel_reserve)
         return;
 
@@ -330,7 +390,6 @@ void Bot::play_turn() {
     if (!me.is_alive()) {
         recovering = false;
         altar_control::buy_lock();
-        route_teleport::buy_crystal();
         return;
     }
 
@@ -344,7 +403,6 @@ void Bot::play_turn() {
     if (at_spawn) {
         // Ten gold buys persistent denial; remaining gold follows the base build.
         altar_control::buy_lock();
-        route_teleport::buy_crystal();
         buy_items();
     }
 

@@ -1,97 +1,97 @@
-# Current experiment: task-5da9c09daeab4e33839a785c51b5c1a8
+# Current experiment: task-a32cd5b120d14daba1589d8ca4560ff1
 
 ## Identity and status
-- Alpha, bot/alpha; HEAD/input/edit commit 046f1c3a41fe746c65c0982d06062623200fa931.
-  Base source 07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2.
-  All nine starting files matched trusted edit-start hashes; working tree was clean.
-  Protected accepted champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e stays in Git.
-- Prior task-758e6444 checkpoint patch is empty, notes are the same as base and
-  final result is absent. Those supplied prior paths remain intact; no edits to
-  recover. Latest published candidate has evaluated feedback; no pending candidate.
-  Continuous self-play pending matches in the brief are separate ongoing coverage.
+- Alpha, bot/alpha. HEAD/input c2f99412bc40526f1cf83b0ae91d64110766fbdd;
+  edit commit 046f1c3a41fe746c65c0982d06062623200fa931, source
+  07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2.
+  All nine starting files byte-matched the trusted edit commit. Prepared bot.cpp
+  and removed route_teleport.h differ from HEAD because the teleport trial lost
+  against this development base; those differences are not unfinished edits.
+  Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e remains in Git.
+- Latest candidate evaluated, no pending evaluation. Earlier task-758e6444 quota
+  checkpoint is empty, its notes match base, final absent; original paths intact.
 - Engine/SDK 2.2.5, lock 0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d;
-  suite published-17-release-225-v1. Documentation unchanged since task-59a846e1.
-  Consulted compact reference, playbooks B/C/D/F/G, RESEARCH/organizer limits and
-  targeted crystal/channel/movement API and matching installed header sections.
-  Handbook 1000 tribute / 2000 rounds / absolute B final tiebreak remain applicable.
-  Organizer page is a download hub; no new production/policy certification.
-- Previous operational notes archived as task-59a846e1bfeb476f999d44d2266677a1-NOTES.md.
+  suite published-17-release-225-v1. Documentation unchanged. Consulted compact
+  reference, playbooks C/D/F/G, RESEARCH/organizer limits and relevant C++/SDK
+  distance-field, item purchase-value, camp spawn and group-reward declarations.
+  Organizer page is a download hub; no additional policy/parity certification.
+- Previous operational notes archived as task-5da9c09daeab4e33839a785c51b5c1a8-NOTES.md.
 
 ## One hypothesis
-Using teleport crystals only for quiet, personally visible terrain shortcuts that
-save at least channel duration plus three walking turns increases matched
-development win rate over this edit base. Unchanged or lower win rate falsifies
-this prediction. Earlier arrivals/tribute, collection and paired-win completion
-rounds are mechanism diagnostics. This is an unmeasured rules/source deduction,
-not a traced explanation of any supplied match loss.
+After 300 gold of cash plus equipment, preferring eligible gem-bearing camp
+groups within twelve extra path steps and applying the same filter to camp combat
+increases matched development win rate over this edit base. Unchanged or lower
+win rate falsifies this prediction. Collection/tribute and time spent on gold-only
+camp cycles are mechanism diagnostics. This is an unmeasured rules/source deduction;
+final statistics do not establish the cause of any particular lost game.
 
 ## Evidence and decision
-- Evaluation 130f31b3b08bd47cacbc735c483b463c53bee38b57854575fd15200b2e06cf44
-  measures this exact edit source: 106W/30L overall, zero faults/missing/unknown;
-  development-base matched delta +0.0535714 across 56 side-paired cases. Protected
-  champion comparison +0.6470588 is separate; result remains INCONCLUSIVE.
-- Ambush A loss d4c63b042b47f5bf760a2097114f5c8d29b303b2097e3294b91a3e7e97ae6424:
-  round 882, own collection/tribute 918/846 vs 1326/1014, deaths 1 vs 4, faults 0.
-  Ambush B loss 6ef846d2082efb5b6cfaeb8f99b8e909e40f32458463c46a19181909e2a6943c:
-  round 966, own collection/tribute 870/750 vs 1200/1020, own deaths 0, faults 0.
-  These support a remaining objective throughput deficit despite good survival;
-  finals do not establish missed shortcuts, actual travel time or channel safety.
-  Exact supplied final metrics saved in this task's decision JSON.
-- Contrasting exact-source development map aggregates: elkring, fragment,
-  pilgrimage and stampede each 8/8 wins. No per-turn win trace is claimed.
-  Continuous self-play source revisions/opponents are separate, not pooled scores.
-- Frozen manifest ffc1de857d326e21fab7a984945f035eb57d62799c62e83de25e25b5e4ea2f62:
-  verified all files, inspected gamma ecbc8203 (ff511c52...) and beta 50a0d7d5
-  (6d66a77f...). Melee farming, passives, capture deference/commitment, lock tools;
-  beta has terrain-respecting two-step dashes. Neither inspected route uses crystals.
-  Source inspection does not identify any unknown runtime opponent revision.
-- Prior fixed draft/stat/items, banking/batching, capture priority/follow-through,
-  arrival-aware cooldowns, focus-fire/AoE, economic resupply, travel dashes and
-  group-first/ranked routing negative/deferred findings remain. No repeat here.
-  Crystal crossings differ from dashes: ignore intervening terrain, and must save
-  >=6 walking turns under the default channel instead of merely two route steps.
+- Latest evaluation c8ca92a9...89e6 measures c2f99412 / source 0ef30884...4fd6,
+  not today's edit base. Development 80W/32L vs base 84W/28L, matched delta
+  -0.0357143 over 56 side-paired cases; faults/missing/unknown zero. Teleport
+  trial is not reapplied. Champion comparison 94W/42L is separate.
+- Exact-base continuous self-play: 0W/5L, collection/tribute means 346/271.2,
+  earned gold 1935.2, deaths 0.6, faults/fuel suspensions zero. Three games
+  face gamma ecbc8203, two beta 61d59667; source revisions are not pooled.
+  Examples: collision B a0cad9ca...bbe93 and collision A be23d074...0a71a vs
+  gamma. Requested first summary is retired/unavailable; no turn trace inferred.
+- Later-source ambush B loss 55684e0a...04439: own collection/tribute 990/942
+  vs 1140/1034, deaths zero, PvP damage zero, round 1091, faults zero.
+  Ambush A loss c89c456b...7f06d: own collection/tribute 712/712 vs 1052/1052,
+  deaths zero, round 755, faults zero. These support throughput concerns only.
+- Contrasting exact-base development aggregate: fragment and stampede each 8/8
+  wins; collision 6/8, ambush 4/8. No per-turn causal claims from aggregates.
+- Frozen manifest 42620aaa...9eb verified, all file hashes matched. Inspected
+  gamma ecbc8203 / ff511c52 (melee farmers, passives, cost/value routing,
+  selective PvP) and beta 7cab9b0f / fd5e2554 (300-capital soft penalty for
+  gold-only groups). This beta revision is not a proven opponent in named losses.
+  Its opportunity-cost idea fits our gem objective, but its whole scorer does not
+  transfer: broad ranked/group-first route experiments previously regressed.
+- Retain negative/deferred findings for fixed draft/stats/items, recall/resupply,
+  banking/batching/arrival, capture/deference/follow-through, broad AoE, focus-fire,
+  dashes, arrival cooldown, ranked/group-first and teleport trials. This trial
+  adds a bounded gold-only preference rather than repeating those policies.
 
 ## Candidate policy
-- route_teleport.h owns purchase, pure timing contracts and bounded route selection.
-  Buy one ten-gold tp_crystal at spawn/while dead, after lock before base shopping.
-- Reuse the existing objective distance field before walking. Keep only personally
-  visible, free landings <=3 Chebyshev away that cannot be terrain-walked to within
-  three steps. Origin and landing fields must be finite: no stranding in a region
-  reachable only with our single crystal. Existing goals and route priorities stay.
-- Require ceil(from/base_speed)-ceil(to/base_speed) >= SDK tp_crystal_time + 3.
-  SDK duration, not a hard-coded timer, prices the channel. Normal handbook duration
-  is three ticks; choose the greatest saving. Open-ground jumps are rejected.
-- No visible damaging camp, including sleepers, may reach either endpoint. Visible
-  enemy exclusion radius is max(4, basic range)+channel*base_move_speed; four covers
-  published spell range. Hidden enemies, dashes, future CC/spells remain uncertainty.
-- Entry reserve 45k fuel, scan/action reserve 28k; <=32 camps, <=6 enemies, <=49
-  landing tiles; partial scans abort. Native local terrain reach mask plus existing
-  route field only. No recursive planning, new shared bytes or enemy cache.
-- One use attempt ends navigation even on False/reveal, preventing stale walking
-  or postwalk fighting. Existing channel guard and exception-safe end_turn remain.
-  Singleton routes retain native move_towards when shortcut planning is unavailable.
-- Recovery, camp rotation, draft/stat RNG, combat, banking/locks and four-byte
-  shared-round protocol retain the base policy. Buying crystals changes economy.
+- economy_route.h: 300 cash + actual equipment purchase-value threshold, including
+  combined Power emblems of any of the three existing stat lines. Consumable
+  spending is excluded. No new shopping, stat or draft choice.
+- camp_rotation.h caches immutable gem-bearing spawn geometry once. Mixed groups
+  stay eligible; the existing private cooldown observations filter both masks.
+  No hidden live state, new team memory, target reservation or enemy cache.
+- Before camp combat, and only with >=60k fuel, compare nearest eligible ordinary
+  spawn distance with nearest eligible gem-bearing spawn distance. Two native
+  fields use existing free/occupied-camp goal semantics. Gem field expansion is
+  capped at ordinary distance +12. Prefer gems within that bound, else run the
+  base farm/combat policy. No reachable gems means fallback, not idle exclusion.
+- Any current eligible spawn occupancy bypasses preference, preserving base
+  capture behavior even on gold-only groups. No new group state scan or commitment.
+- Selected gem policy restricts basic/reset/direct-spell aim points to those
+  group spawns. Splash can still hit adjacent gold camps. Reuse the chosen field
+  for movement, refresh occupancy before moving and live targets after arrival.
+- Fuel gates: entry 60k, second native field 40k, movement 28k; existing combat
+  reserve 18k and 16-target cap. Below reserve use base fallback or yield.
+- Recovery, PvP, banking/locks, draft/stat RNG, channel guards, four-byte
+  shared-round protocol and exception-safe official turn yield retain base policy.
 
-## Checks and uncertainty
-- Nine embedded constexpr contracts cover exact channel+margin boundary, ordinary
-  open-ground rejection, speed conversion, SDK duration changes, disconnected
-  origin/destination and zero speed. Trusted build compiled these contracts.
+## Checks, uncertainty and next step
+- Seven embedded constexpr contracts cover bootstrap boundary, exact detour
+  boundary, overlong detour, existing occupancy and unreachable routes.
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json PASSED,
-  exit 0; exact source 0ef30884a3076a9a2750ff5d808e8c8bfa3d2e4851f5706df1b97ef6f1224fd6.
-  Report .agent/check-task-5da9c09daeab4e33839a785c51b5c1a8.json, copied into
-  experiments/alpha/task-5da9c09daeab4e33839a785c51b5c1a8-bot-check.json.
-  Smoke IDs 0c51a0b62e6dcc56ab94c8769772f087a8d8a67a3f90d05b5a614ba1ac6514f5
-  and 4a89bd45ef704afe56bbb9d43a9c2c1e03d835cd6a58c6152dbf3fe4b407342f.
-  This summary establishes wrapper success; full game completion, shortcut branch
-  coverage and normal-turn fuel headroom are not established by that summary.
-- git diff --check PASSED, exit 0. Per-file hashes still match the checked source.
-  READY_FOR_EVAL; no comparative tournament was invoked.
-- Risks: extra ten gold delays shards, targets/occupancy can change during channel,
-  dynamic blockers can inflate field savings even with terrain-only landing gate,
-  visibility/threat conservatism can leave crystals unused, and normal-turn fuel
-  headroom/shortcut branch coverage are not yet measured. No strength claim.
-- Supervisor should evaluate the exact checked candidate against edit base and
-  protected champion across maps/both sides. If wins do not improve, reject;
-  inspect crystal usage, travel/tribute timing and gold opportunity cost before
-  relaxing safety/saving gates. No agents, publication, commit/push or official action.
+  exit 0, source f9b70535ec37a82250e8507a7ffaff7df204a2bc51ccee064a75c08e2421d657.
+  Report .agent/check-task-a32cd5b120d14daba1589d8ca4560ff1.json; saved copy
+  experiments/alpha/task-a32cd5b120d14daba1589d8ca4560ff1-bot-check.json.
+  Smoke IDs 46b51738f873cba2824a483e8b0e8bf57be063e131183a0a3b896c262e022c7a
+  and 108a02926ee746347938d875a5a299acdd86e624d3ca221856d20ce06c39999c.
+  The wrapper summary establishes compilation/smoke success, not complete-game
+  outcomes, economic branch coverage or normal-turn fuel headroom. All final
+  source file hashes match the precheck decision snapshot; no later source edits.
+- READY_FOR_EVAL; no comparative tournament invoked.
+- git diff --check PASSED, exit 0.
+- Risks: gem groups may be harder or riskier than gold; extra fields consume
+  fuel; hidden cooldowns remain uncertain; partial gold clears away from spawn
+  may be abandoned. No measured mechanism, branch coverage or strength claim.
+- Supervisor should evaluate exact checked source against development base and
+  protected champion across maps/both sides. If win rate fails to improve, reject;
+  inspect gold-only cycles, collection, travel and fuel before changing detour.
+  No agents, comparative evaluation, publication, commit/push or official action.
