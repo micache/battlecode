@@ -1,0 +1,59 @@
+{
+  "protocol_version": 1,
+  "task_id": "task-b117f31ca086427583ad098da9e76b71",
+  "bot_id": "beta",
+  "base_source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+  "outcome": "READY_FOR_EVAL",
+  "hypothesis": "At the unchanged retreat trigger, observed-danger escape routing will improve matched wins and submitted gems by reducing recovery deaths and lost bags. No win gain, lower submissions, or increased faults/fuel suspension falsifies it.",
+  "changed_paths": [
+    "bots/beta/src/bot.cpp",
+    "bots/beta/src/recovery_policy.h",
+    "experiments/beta/NOTES.md",
+    "experiments/beta/archive/through-task-7c1e0776bcb74ea29892049a3c08c5e2.md",
+    "experiments/beta/task-b117f31ca086427583ad098da9e76b71/"
+  ],
+  "evidence": [
+    {
+      "kind": "match",
+      "reference": "c52237a027f5a328bb557adb7b5dd02852753d41ac11b5e1f4b6ff98d67ae39b",
+      "claim": "Edit-source ambush B loss: two deaths, 240 lost gems, 908:1020 submitted; recovery-path causality remains unmeasured. Provenance saved in evidence.json."
+    },
+    {
+      "kind": "evaluation",
+      "reference": "2168212424230b5053d5d849fa04d4602519a19db3fe45c29b604c1e1fa9827b",
+      "claim": "Evaluates 61d59667/e05d7dfc, not the edit source. Collision A loss a2831c57 had nine deaths and 154 lost gems; no new-candidate strength claim."
+    },
+    {
+      "kind": "source",
+      "reference": "experiments/beta/task-b117f31ca086427583ad098da9e76b71/decision.md",
+      "claim": "Adapted frozen alpha recovery ordering while preserving beta retreat entry and healthy farming. Bounded visible threats, refreshed observations, quiet-recall guards and compiled decision fixtures."
+    },
+    {
+      "kind": "check",
+      "reference": "experiments/beta/task-b117f31ca086427583ad098da9e76b71/check-report.json",
+      "claim": "Exact candidate 72275bc2ad79fed78c0456f8bfe83d2fd5dccd24ef10bcee1c492adb64968e67 passed trusted build/smokes; own stdout empty. Competitive improvement and fuel headroom unmeasured."
+    }
+  ],
+  "tests": [
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/beta.json",
+      "status": "FAILED",
+      "exit_code": 1,
+      "report_path": "experiments/beta/task-b117f31ca086427583ad098da9e76b71/check-initial-failed.json"
+    },
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/beta.json",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": ".agent/check-task-b117f31ca086427583ad098da9e76b71.json"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": "experiments/beta/task-b117f31ca086427583ad098da9e76b71/diff-check.txt"
+    }
+  ],
+  "blocked_reason": null,
+  "next_action": "Supervisor evaluates checked source 72275bc2ad79fed78c0456f8bfe83d2fd5dccd24ef10bcee1c492adb64968e67 against the trusted edit base on matched development maps, both sides and frozen opponents."
+}
