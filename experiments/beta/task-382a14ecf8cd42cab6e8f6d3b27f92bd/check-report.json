@@ -1,0 +1,14 @@
+{
+  "bot_id": "beta",
+  "exit_code": 0,
+  "finished": 1792425868.5037594,
+  "matches": [
+    "9dc0d4881b140a95cf7ad8fe05bd5582ab8de2a119fa220b2cd007b5440c1bf2",
+    "f53bf709d352b3802b8f27ef684858a4e0d112186e0a601c405a9a666379ca12"
+  ],
+  "report_reference": "check:task-382a14ecf8cd42cab6e8f6d3b27f92bd:4ba62e96fe958a8c342a85175e579584e5601238a398ae0a37a815627060c6a9",
+  "source_hash": "4ba62e96fe958a8c342a85175e579584e5601238a398ae0a37a815627060c6a9",
+  "started": 1792425836.9777188,
+  "state": "PASSED",
+  "task_id": "task-382a14ecf8cd42cab6e8f6d3b27f92bd"
+}

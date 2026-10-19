@@ -10,6 +10,11 @@ class Bot {
         cambc::vec2 center;
         float initial_health;
         unsigned retry_round = 0;
+        unsigned observed_respawn_until = 0;
+        unsigned gems = 0;
+        unsigned gold = 0;
+        unsigned bank_distance = 0;
+        bool monolith = false;
     };
     std::vector<Group> groups;
     int target_group = -1;

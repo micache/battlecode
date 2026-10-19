@@ -1,0 +1,12 @@
+{
+  "checked_source_hash": "4ba62e96fe958a8c342a85175e579584e5601238a398ae0a37a815627060c6a9",
+  "files": {
+    "bots/beta/src/bot.cpp": "c8317b3fb2bd32d2f38aa44cd08f350679e442656641e0fcc107f5986ee8867b",
+    "bots/beta/src/bot.h": "6296cd62cda3525fe72d2faf8e8993227399dd7259d45413c764c8873eb16fb9",
+    "bots/beta/src/draft.cpp": "a514e8514609f8420af35293c2023e75c4057c14d61b8bd23e03c09ed3f476a9",
+    "bots/beta/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/beta/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/beta/src/objective_policy.h": "0dc417848a14449d9fd3d81a69c0c8124ba0c4e4e86d74d630f914f5535c29f3",
+    "bots/beta/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  }
+}

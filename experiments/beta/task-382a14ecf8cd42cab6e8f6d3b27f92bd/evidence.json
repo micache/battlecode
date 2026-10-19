@@ -1,0 +1,223 @@
+{
+  "task_id": "task-382a14ecf8cd42cab6e8f6d3b27f92bd",
+  "bot_id": "beta",
+  "base_source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+  "edit_commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+  "input_revision": "d42689eb877943df1c4b83c2613650b63249199c",
+  "accepted_commit": "0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9",
+  "engine_version": "2.2.5",
+  "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+  "suite": "published-17-release-225-v1",
+  "documentation_changed": false,
+  "prior_task": {
+    "id": "task-b117f31ca086427583ad098da9e76b71",
+    "state": "PUBLISHED",
+    "evaluated": true
+  },
+  "evaluation": {
+    "id": "f5b67475fe72b7945148c2b9c7e91cb4709961e374818b8716f56ab6c03dc9bd",
+    "candidate": {
+      "build_id": "2c6ff3594d0f702b27d2ccab13e3a3c473cbb26b97958c2009e056c7896d6f9d",
+      "commit": "d42689eb877943df1c4b83c2613650b63249199c",
+      "revision_id": "82f76ff9b03469bc55beaf70f21f81f110a082d6836ddb26beddec38ebaa2f01",
+      "source_hash": "72275bc2ad79fed78c0456f8bfe83d2fd5dccd24ef10bcee1c492adb64968e67"
+    },
+    "development_comparison": {
+      "commit_sha": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+      "common_opponent_delta": 0.026785714285714284,
+      "fault_matches": [],
+      "missing": [],
+      "paired_cases": 56,
+      "per_map": {
+        "ambush": {
+          "candidate": 0.25,
+          "incumbent": 0.5,
+          "pairs": 4
+        },
+        "collision": {
+          "candidate": 1.0,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "contest": {
+          "candidate": 0.5,
+          "incumbent": 0.5,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 1.0,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "eight": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 0.75,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.75,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "fragment": {
+          "candidate": 0.625,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 0.75,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 0.75,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "pilgrimage": {
+          "candidate": 0.625,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "rushbait-v2": {
+          "candidate": 0.625,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "stampede": {
+          "candidate": 0.75,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "swirl": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        }
+      },
+      "source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+      "unknown_reliability": []
+    },
+    "development_metrics": {
+      "bag_loss": {
+        "available": true,
+        "mean": 42.767857142857146,
+        "observations": 112
+      },
+      "bot_faults_by_side": {
+        "available": true,
+        "mean": 0.0,
+        "observations": 112
+      },
+      "carried_gems": {
+        "available": true,
+        "mean": 33.57142857142857,
+        "observations": 112
+      },
+      "champion_damage_done": {
+        "available": true,
+        "mean": 6310.452238764082,
+        "observations": 112
+      },
+      "champion_damage_taken": {
+        "available": true,
+        "mean": 10739.248135719981,
+        "observations": 112
+      },
+      "champion_deaths": {
+        "available": true,
+        "mean": 2.2410714285714284,
+        "observations": 112
+      },
+      "champion_kills": {
+        "available": true,
+        "mean": 2.892857142857143,
+        "observations": 112
+      },
+      "collected_gems": {
+        "available": true,
+        "mean": 851.5178571428571,
+        "observations": 112
+      },
+      "fuel_suspensions_by_side": {
+        "available": true,
+        "mean": 0.008928571428571428,
+        "observations": 112
+      },
+      "lifetime_earned_gold": {
+        "available": true,
+        "mean": 5490.714285714285,
+        "observations": 112
+      },
+      "monster_damage_done": {
+        "available": true,
+        "mean": 84277.34380136218,
+        "observations": 112
+      },
+      "monster_damage_taken": {
+        "available": true,
+        "mean": 10407.825824541706,
+        "observations": 112
+      },
+      "round": {
+        "available": true,
+        "mean": 918.1517857142857,
+        "observations": 112
+      },
+      "sale_refunds": {
+        "available": true,
+        "mean": 0.0,
+        "observations": 112
+      },
+      "spent_gold": {
+        "available": true,
+        "mean": 3693.3928571428573,
+        "observations": 112
+      },
+      "submitted_gems": {
+        "available": true,
+        "mean": 775.1785714285714,
+        "observations": 112
+      },
+      "unspent_gold": {
+        "available": true,
+        "mean": 1797.3214285714287,
+        "observations": 112
+      }
+    },
+    "failures": [
+      {
+        "map": "ambush",
+        "match_id": "cfdfa2b70be19323169334e189a0fb3deee26ccf971bad95ea35ed16e16bc4bd",
+        "round": 1069,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "map": "ambush",
+        "match_id": "405a38f861c545db74ea87e304c062371b46952b400b195866b3224b1d3cc719",
+        "round": 1091,
+        "side": "B",
+        "trace": null
+      }
+    ],
+    "contrasting_wins": "Supplied brief: collision, corners, eight and swirl each 4W/0L on each side for evaluated 72275bc2; individual win IDs unknown. These are aggregate evidence, not turn traces."
+  },
+  "opponents": {
+    "count": 6,
+    "manifest": "/srv/battlecode/public/strategy/task-382a14ecf8cd42cab6e8f6d3b27f92bd/manifest.json",
+    "sha256": "f94b342276c0ca2c42fa496985e1b6c381d455516b84f0d1ed836a4d08843c8f"
+  },
+  "limits": [
+    "Latest evaluated recovery candidate differs from edit base and from this candidate.",
+    "Final statistics do not establish action sequences. Gold-loop mechanism is source/rules-based inference.",
+    "Opponent revisions in the two failure summaries are unknown; no identity inferred from drafted champions.",
+    "ce3253a0 summary shows B victory 1042:978, but source/side assignment is unknown beyond advance association; do not attribute as candidate win.",
+    "Official observations refer to alpha source 82a14a04, not beta edit; not used as controlled evidence."
+  ]
+}
