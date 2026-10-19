@@ -3,6 +3,7 @@
 #include "bot.h"
 #include "altar_control.h"
 #include "camp_rotation.h"
+#include "recovery.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -83,29 +84,22 @@ constexpr unsigned combat_target_limit = 16;
 
 // Handles are refreshed through vision on every action, never cached across turns.
 template<class Target>
-auto combat_targets(const cambc::bitboard* camp_spawns = nullptr) {
-    if constexpr (std::is_same_v<Target, cambc::camp>) {
-        auto targets = cambc::vision::camps();
-        // Immutable spawn identity is safe across walking, casts and kills.
-        // Live position/health still comes only from freshly visible handles.
-        if (camp_spawns)
-            std::erase_if(targets, [&](const auto& camp) {
-                return !camp_spawns->is_set(camp.spawn_position());
-            });
-        return targets;
-    } else
+auto combat_targets() {
+    if constexpr (std::is_same_v<Target, cambc::camp>)
+        return cambc::vision::camps();
+    else
         return cambc::vision::champions(team::enemy);
 }
 
 template<class Target>
-std::optional<Target> basic_target(const cambc::bitboard* camp_spawns = nullptr) {
+std::optional<Target> basic_target() {
     auto& me = cambc::self();
     if (!me.is_alive() || !me.can_attack()
         || me.restrictions().contains(cambc::buff_restrictions::attack))
         return std::nullopt;
     const auto range = me.attack_tiles();
     unsigned examined = 0;
-    for (const auto& target : combat_targets<Target>(camp_spawns)) {
+    for (const auto& target : combat_targets<Target>()) {
         if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
             break;
         if (target.is_visible() && target.health() > 0 && range.is_set(target.position()))
@@ -127,10 +121,10 @@ bool cast_ready(const cambc::ability& ability, bool walked) {
 // Spend the separate basic and cast allowances. Never walk after this routine
 // acts: a spell may exclude movement even when can_move() still reports true.
 template<class Target>
-bool fight(bool walked = false, const cambc::bitboard* camp_spawns = nullptr) {
+bool fight(bool walked = false) {
     auto& me = cambc::self();
     bool acted = false;
-    if (const auto target = basic_target<Target>(camp_spawns)) {
+    if (const auto target = basic_target<Target>()) {
         me.attack(*target);
         acted = true;
     }
@@ -153,7 +147,7 @@ bool fight(bool walked = false, const cambc::bitboard* camp_spawns = nullptr) {
                 continue;
             const auto range = me.attack_tiles();
             unsigned examined = 0;
-            for (const auto& target : combat_targets<Target>(camp_spawns)) {
+            for (const auto& target : combat_targets<Target>()) {
                 if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                     break;
                 if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
@@ -176,7 +170,7 @@ bool fight(bool walked = false, const cambc::bitboard* camp_spawns = nullptr) {
         const auto range = ability.valid_tiles();
         const float damage = ability.damage_amount();
         unsigned examined = 0;
-        for (const auto& target : combat_targets<Target>(camp_spawns)) {
+        for (const auto& target : combat_targets<Target>()) {
             if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                 break;
             if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
@@ -208,7 +202,7 @@ bool fight(bool walked = false, const cambc::bitboard* camp_spawns = nullptr) {
         if (cast) {
             acted = true;
             // Refresh after the cast: a kill, splash or retaliation changes targets.
-            if (const auto next = basic_target<Target>(camp_spawns)) me.attack(*next);
+            if (const auto next = basic_target<Target>()) me.attack(*next);
         }
     }
 
@@ -239,21 +233,75 @@ bool fight(bool walked = false, const cambc::bitboard* camp_spawns = nullptr) {
     return acted;
 }
 
-// Route choice and camp combat share one group identity for the whole turn.
+// Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
-    if (cambc::fuel_remaining() < combat_fuel_reserve) return;
-    const auto plan = camp_rotation::memory().plan(blocked_tiles());
-    if (plan.holding_capture) return;
-    const auto* focus = plan.focused ? &plan.member_spawns : nullptr;
-    if (fight<cambc::camp>(false, focus)
-        || cambc::fuel_remaining() < combat_fuel_reserve) return;
+    if (fight<cambc::camp>() || cambc::fuel_remaining() < combat_fuel_reserve)
+        return;
 
-    // Rebuild vision even after a False move: it may reveal a hidden obstruction.
-    const auto before = cambc::self().position();
-    move_towards_closest(plan.goals);
-    if (cambc::self().is_alive()
-        && cambc::fuel_remaining() >= combat_fuel_reserve)
-        fight<cambc::camp>(cambc::self().position() != before, focus);
+    // Include unknown/expired groups, but do not revisit a personally observed
+    // cooldown early merely because its spawn tiles have left our vision.
+    auto goals = camp_rotation::memory().goals();
+
+    // Fresh vision after movement may reveal a camp already in range.
+    if (move_towards_closest(goals))
+        fight<cambc::camp>(true);
+}
+
+bool Bot::recover() {
+    auto& me = cambc::self();
+    const auto& spawn = cambc::map::spawn_region(team::ally);
+    const auto maximum = me.max_health();
+    const auto health = me.health();
+    if (spawn.is_set(me.position())) {
+        // Complete a recovery sortie. Recall resolves at turn start, whereas
+        // spawn healing needs this turn end. Do not immediately walk away.
+        if (recovering && health < maximum) return true;
+        recovering = false;
+        return false;
+    }
+    // Most healthy farming turns pay no threat scan cost.
+    if (!recovering && health >= maximum * recovery::scan_health_fraction) return false;
+    auto seen = recovery::observe();
+    if (!recovering && !recovery::needs_recovery(health, maximum, seen.at(me.position()).damage))
+        return false;
+    recovering = true;
+    recovery::shield(seen);
+
+    // Begin a quiet recall immediately. Walking is useful only to escape a
+    // threat, reach spawn directly, or when the observation is incomplete.
+    if (seen.complete && seen.at(me.position()).damage == 0
+        && !me.restrictions().contains(cambc::buff_restrictions::move)
+        && cambc::fuel_remaining() >= recovery::action_reserve) {
+        me.recall();
+        return true;
+    }
+
+    if (me.can_move() && !me.restrictions().contains(cambc::buff_restrictions::move)
+        && cambc::fuel_remaining() >= recovery::navigation_reserve) {
+        auto blocked = blocked_tiles();
+        auto goals = spawn & ~blocked;
+        cambc::distance_field home;
+        cambc::bitboard visited;
+        if (!goals.is_empty()) {
+            home.compute(blocked, goals, visited);
+            const auto step = recovery::escape(seen, blocked, home);
+            if (step != me.position()) {
+                if (me.move_absolute(step)) altar_control::place_lock();
+                // False may reveal a hidden obstruction. Do not reuse the old
+                // observation to decide whether a recall is safe here.
+            }
+        }
+    }
+    if (spawn.is_set(me.position())) return true;
+    if (cambc::fuel_remaining() < recovery::scan_reserve) return true;
+    seen = recovery::observe();
+    // A quiet personally observed tile allows recall. Hidden attackers and
+    // spells remain uncertainty; a partial scan never certifies a quiet tile.
+    if (seen.complete && seen.at(me.position()).damage == 0
+        && !me.restrictions().contains(cambc::buff_restrictions::move)
+        && cambc::fuel_remaining() >= recovery::action_reserve)
+        me.recall();
+    return true;
 }
 
 void Bot::play_turn() {
@@ -274,6 +322,7 @@ void Bot::play_turn() {
 
     // Refill control tools while dead so the next sortie can deny an altar.
     if (!me.is_alive()) {
+        recovering = false;
         altar_control::buy_lock();
         return;
     }
@@ -293,15 +342,7 @@ void Bot::play_turn() {
 
     altar_control::place_lock();
 
-    // Retreat before recall so repeated damage interruptions still allow progress.
-    if (!at_spawn && me.health() < me.max_health() * 0.35f) {
-        const auto spawn = cambc::map::spawn_region(team::ally);
-        move_towards_closest(spawn);
-        // Arrival by walking can heal at turn end without starting a channel.
-        if (!spawn.is_set(me.position()))
-            me.recall();
-        return;
-    }
+    if (recover()) return;
 
     // Keep the enemy-first policy, spending independent combat allowances.
     if (fight<cambc::champion>() || cambc::fuel_remaining() < combat_fuel_reserve)

@@ -1,0 +1,578 @@
+{
+  "task_id": "task-59a846e1bfeb476f999d44d2266677a1",
+  "bot_id": "alpha",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "input_revision": "2dcd14cf3ed7e4e224208ea02920fc90b0f69a5c",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "engine_version": "2.2.5",
+  "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+  "evaluation_suite": "published-17-release-225-v1",
+  "feedback_id": "710f58a196dd1fc67d5e820bbd1947dfb56b16ca153e6dc159005df7db377ab5",
+  "evaluated_candidate": {
+    "build_id": "0b431be605b90e4dbe41d4f4678a4e185722776984c8f8a342c28fc3cce99a14",
+    "commit": "2dcd14cf3ed7e4e224208ea02920fc90b0f69a5c",
+    "revision_id": "8756bd3ac916a81fec898def7a6b0287c74fd0c422174628165d997d3f919ac6",
+    "source_hash": "822811f4c9664771c56f9d52d120cd9ed1dcd83b9de3f76c5d1b10e892ed5f1c"
+  },
+  "development_comparison": {
+    "commit_sha": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+    "common_opponent_delta": -0.026785714285714284,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 56,
+    "per_map": {
+      "ambush": {
+        "candidate": 0.25,
+        "incumbent": 0.375,
+        "pairs": 4
+      },
+      "collision": {
+        "candidate": 0.75,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "contest": {
+        "candidate": 0.375,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "corners": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "eight": {
+        "candidate": 0.75,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "elkring": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "expanse": {
+        "candidate": 0.75,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "fragment": {
+        "candidate": 1.0,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "interlock": {
+        "candidate": 1.0,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "lanes": {
+        "candidate": 0.625,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "pilgrimage": {
+        "candidate": 0.75,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "rushbait-v2": {
+        "candidate": 0.625,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "stampede": {
+        "candidate": 1.0,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "swirl": {
+        "candidate": 0.5,
+        "incumbent": 0.625,
+        "pairs": 4
+      }
+    },
+    "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+    "unknown_reliability": []
+  },
+  "representative_development_failures": [
+    {
+      "final_metrics": {
+        "bag_loss": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 53
+          }
+        },
+        "champion_damage_done": {
+          "available": true,
+          "value": {
+            "A": 0.0,
+            "B": 0.0
+          }
+        },
+        "champion_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 0.0,
+            "B": 0.0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 5,
+            "B": 4
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 548,
+            "B": 1062
+          }
+        },
+        "fuel_suspensions_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 1
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 1830,
+            "B": 2990
+          }
+        },
+        "monster_damage_done": {
+          "available": true,
+          "value": {
+            "A": 36744.0,
+            "B": 53488.0
+          }
+        },
+        "monster_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 22070.0,
+            "B": 21618.0
+          }
+        },
+        "observed_engine_seed": {
+          "available": true,
+          "value": "4941643904495260023"
+        },
+        "round": {
+          "available": true,
+          "value": 726
+        },
+        "sale_refunds": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "spent_gold": {
+          "available": true,
+          "value": {
+            "A": 1470,
+            "B": 2700
+          }
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 548,
+            "B": 1009
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 360,
+            "B": 290
+          }
+        }
+      },
+      "map": "ambush",
+      "match_id": "7cc676c2623db79add9852fddcaa18f6ca1ba87987a40bd981c849f519820dc9",
+      "round": 726,
+      "side": "A",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bag_loss": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 106
+          }
+        },
+        "champion_damage_done": {
+          "available": true,
+          "value": {
+            "A": 2220.0,
+            "B": 3503.0
+          }
+        },
+        "champion_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 3503.0,
+            "B": 2220.0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 4,
+            "B": 11
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 3,
+            "B": 3
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1080,
+            "B": 654
+          }
+        },
+        "fuel_suspensions_by_side": {
+          "available": true,
+          "value": {
+            "A": 1,
+            "B": 0
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 3030,
+            "B": 2237
+          }
+        },
+        "monster_damage_done": {
+          "available": true,
+          "value": {
+            "A": 55690.5,
+            "B": 36301.5
+          }
+        },
+        "monster_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 18878.0,
+            "B": 30670.0
+          }
+        },
+        "observed_engine_seed": {
+          "available": true,
+          "value": "4941643904495260023"
+        },
+        "round": {
+          "available": true,
+          "value": 858
+        },
+        "sale_refunds": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "spent_gold": {
+          "available": true,
+          "value": {
+            "A": 2670,
+            "B": 1780
+          }
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 1080,
+            "B": 548
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 360,
+            "B": 457
+          }
+        }
+      },
+      "map": "ambush",
+      "match_id": "a6ea1f7148f65a156223d2e1d4d5b5e06db0bc628c51b5dadc724d32ca1ce246",
+      "round": 858,
+      "side": "B",
+      "trace": null
+    },
+    {
+      "final_metrics": {
+        "bag_loss": {
+          "available": true,
+          "value": {
+            "A": 28,
+            "B": 0
+          }
+        },
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 26
+          }
+        },
+        "champion_damage_done": {
+          "available": true,
+          "value": {
+            "A": 0.0,
+            "B": 0.0
+          }
+        },
+        "champion_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 0.0,
+            "B": 0.0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 8,
+            "B": 9
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 966,
+            "B": 1034
+          }
+        },
+        "fuel_suspensions_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 3043,
+            "B": 3640
+          }
+        },
+        "monster_damage_done": {
+          "available": true,
+          "value": {
+            "A": 61013.0,
+            "B": 59054.0
+          }
+        },
+        "monster_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 32510.0,
+            "B": 35330.0
+          }
+        },
+        "observed_engine_seed": {
+          "available": true,
+          "value": "4941643904495260023"
+        },
+        "round": {
+          "available": true,
+          "value": 1069
+        },
+        "sale_refunds": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "spent_gold": {
+          "available": true,
+          "value": {
+            "A": 2750,
+            "B": 2640
+          }
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 938,
+            "B": 1008
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 293,
+            "B": 1000
+          }
+        }
+      },
+      "map": "ambush",
+      "match_id": "a4cad44b8c5e21ae70035465a95a8c1b8c505b0d6f4a24ed00f41bf0221241bc",
+      "round": 1069,
+      "side": "A",
+      "trace": null
+    }
+  ],
+  "documentation_sha256": {
+    "AGENTS.md": "6226fdf660d0dd625a03d59cc918d53936c02897db94eb318a3a79f1c4c3b409",
+    "BOT_REFERENCE.md": "fae7c29ab87c77561b4a9b249b24e063e55a44a72e665c5ba4ba1882e2f61c61",
+    "PLAYBOOKS.md": "2eee6a72d7022322a303b845cafb67dbdec2774d8b31bfa4f808efc43552fe77",
+    "RESEARCH.md": "b94d8d01d97c5aef7753f33b0d29ecb7b63c7603148b331fd458fefcebbd6620",
+    "docs/rules/organizer-agents.md": "0df4367c8d37d86b55abafeb088ba3026493ae129afdae56c65466d799364edd",
+    "docs/rules/verified.md": "43f2ad2681fe3c563cda7b4181f53817d7002f4b6638218960d9d70a8ca8dd18",
+    "skills/battlecode-strategy/SKILL.md": "8ad82743e7038f270c3783621a7f403a75b4aeeed95c185769e343e408010bda",
+    "sources/BotAPICpp.md": "b3f00c5caf707b284910a74083d3ecc519431216fd31409be876dc0e3a769213",
+    "sources/BotAPIPython.live-20261017.md": "e8738c065a85c8e52e5b864a9710457f2939d91ddde8ad60a53f355e4a8539a8",
+    "sources/BotAPIPython.md": "3013fde86080e89ebf109357d4b8ca913babcb4592be542d92df0fadd542772f",
+    "sources/EngineErrors.md": "51a505e5e7868525608b5665fb27b199f4151b7250cda33d5c14d0ae7d41a8b5",
+    "sources/GameRules.md": "1c7fcf111d95b4734070f8f676cd50a48154feb0673de73a31c79845afa34732"
+  },
+  "sdk_sha256": "ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264",
+  "opponent_manifest": {
+    "count": 6,
+    "manifest": "/srv/battlecode/public/strategy/task-59a846e1bfeb476f999d44d2266677a1/manifest.json",
+    "sha256": "dad2898aed806d27ca4042f0b837b380924986d4b12e73b21fa3c5d4b3fbdf64"
+  },
+  "hypothesis": "Predicting visible awake-camp volleys and choosing lower-exposure escape steps through completed spawn recovery increases matched development win rate; unchanged or lower win rate falsifies this prediction.",
+  "expected_diagnostics": [
+    "fewer champion deaths",
+    "more collected/submitted gems"
+  ],
+  "limitations": [
+    "Latest loss traces evaluate source 822811f4, not this edit base.",
+    "Final statistics do not prove retreat timing or an unsafe chosen tile.",
+    "No comparative matches run by worker."
+  ],
+  "source_files_at_check_start": {
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/bot.cpp": "e0ffb57e1360092d0c6cf3ae69c36343281271580bc85cfa32fe00d458f43194",
+    "bots/alpha/src/bot.h": "366fb1bfa19ab21c1059a5f478b646ab911b5cda545b01978d4fe545fd05a873",
+    "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/alpha/src/recovery.h": "8114023e60067de0cb4e053da7d4fc58002f7eb0198227c46b4fb7ed3c372e36"
+  },
+  "source_review": {
+    "changed_from_edit_base": [
+      "bots/alpha/src/bot.cpp",
+      "bots/alpha/src/bot.h",
+      "bots/alpha/src/recovery.h"
+    ],
+    "unchanged_from_edit_base": [
+      "bots/alpha/src/altar_control.h",
+      "bots/alpha/src/camp_rotation.h",
+      "bots/alpha/src/draft.cpp",
+      "bots/alpha/src/draft.h",
+      "bots/alpha/src/main.cpp",
+      "bots/alpha/src/random.h"
+    ],
+    "checks": "HEAD/branch match entry; all source file hashes unchanged after bot-check start; git diff --check exit 0."
+  },
+  "policy_parameters": {
+    "retreat_health_fraction": 0.35,
+    "predictive_scan_health_fraction": 0.7,
+    "reserve_volleys": 2.0,
+    "threat_limit": 32,
+    "scan_fuel_reserve": 45000,
+    "navigation_fuel_reserve": 28000,
+    "action_fuel_reserve": 18000
+  },
+  "rejected_alternatives": [
+    "Repeat group-first routing: latest matched development delta negative.",
+    "Repeat isolated bank, spawn healing, item or draft adjustment: prior negative findings retained.",
+    "Copy frozen opponent all-camps danger: old SDK limitation no longer applies; use current awake state."
+  ],
+  "trusted_check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792395895.8878329,
+    "matches": [
+      "2c31e9776c4aa50929869b13b230c7aef70e0483af3d0605e7e58dec4e250330",
+      "2acf67f0b067e512deda18a404881b574f270339cc2d145f2eef8cccf5b9c84b"
+    ],
+    "report_path": ".agent/check-task-59a846e1bfeb476f999d44d2266677a1.json",
+    "report_reference": "check:task-59a846e1bfeb476f999d44d2266677a1:07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+    "source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+    "started": 1792395677.3785193,
+    "state": "PASSED",
+    "task_id": "task-59a846e1bfeb476f999d44d2266677a1"
+  },
+  "git_diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0
+  }
+}

@@ -1,105 +1,105 @@
-# Current experiment: task-844841b0ef694b819a6ab2fcf1a89387
+# Current experiment: task-59a846e1bfeb476f999d44d2266677a1
 
 ## Identity and status
-- Alpha, bot/alpha; input HEAD cf1c7574dc04a9bb94004b1424ce470f8e243eae.
-  Edit commit 5f73d0787014e3f712d0eb6234f088fee489b4d8; base source
+- Alpha, bot/alpha. Input HEAD 2dcd14cf3ed7e4e224208ea02920fc90b0f69a5c;
+  edit commit 5f73d0787014e3f712d0eb6234f088fee489b4d8, base source
   ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f.
-  All eight starting files byte-matched edit commit. Initial HEAD differences
-  were preparation; no incomplete work recovered. Latest candidate evaluated;
-  pending continuous self-play is separate. Accepted c0cebd720fcd55e2bbb51d57dd2c398889d4071e
-  remains protected in Git. Previous NOTES remain at input HEAD.
-- Engine/SDK 2.1.6; historical-panels-v1; lock
-  00c70d6c0d9a4bb9525fb53cd9d4db56f12270b38b08431e9d4803a70a9ea668.
-  Installed header matches 90f4242686f22305b28d76d4fa2297187931b3c974f96faf324199e93979203d.
-  Routine unchanged-document review: compact reference, playbooks B/C/D/E/F,
-  evidence ledgers and relevant group/visibility/path API/SDK. Organizer page is
-  a download hub; production parity and complete event-policy review remain uncertified.
+  All eight starting files byte-matched edit_commit. HEAD differences were trusted
+  preparation, not unfinished work. Latest candidate evaluated, not awaiting it.
+  Accepted champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e remains protected in Git.
+- Engine/SDK 2.2.5; lock 0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d;
+  suite published-17-release-225-v1. SDK header verified ee131e29...b72e264.
+- Changed-document review: complete handbook, C++ export and pinned header;
+  BOT_REFERENCE, playbooks A/B/C/D/F/G, RESEARCH, organizer and verification ledger.
+  Material changes: camp awake/asleep queries now exist in the installed header;
+  ward::owner is documented but absent, and is not used. Release mode skips
+  debug_block bodies. Defaults remain 1000 tribute, 2000 rounds, 100k C++ fuel,
+  1024/8 memory bytes; tie order tribute/lifetime gold/kills/absolute B.
+  Organizer page is a download hub; no full policy/production parity certification.
+- Previous NOTES archived as task-844841b0ef694b819a6ab2fcf1a89387-NOTES.md.
 
 ## One hypothesis
-Selecting a camp group by reachable travel and expected work per reward BEFORE
-camp combat, and restricting clearing to that group, increases matched development
-win rate over this edit base. Unchanged or lower win rate falsifies it. Lower camp
-damage per collected gem, higher collection/tribute and paired-win finish rounds
-are mechanism diagnostics. This is an unmeasured source/rules deduction, not a
-traced explanation of any named loss.
+Predicting visible awake-camp volleys and choosing lower-exposure escape steps
+through completed spawn recovery increases matched development win rate over the
+edit base. Unchanged or lower win rate falsifies this prediction. Fewer deaths
+and higher collected/submitted gems are mechanism diagnostics. This is a source/
+rules deduction, not a traced explanation of any match's retreat timing.
 
-## Evidence and decision
-- Evaluation 85a3d036a4d7c0de454b6974fcf8a653fa76bff1da8f109d332619a086fe9d20
-  evaluates cf1c7574 / source 9df96ffb3b9509b40f5a93ae59c9b7cbd1b48dde6e8f8580a1f3f29b0c021dd9,
-  NOT today's edit base: INCONCLUSIVE, 43W/5L, zero faults/missing/unknown.
-  Matched edit-base delta +0.020833 across 24 side-paired cases; champion delta
-  +0.770833 is a separate comparison. Latest-source corners and elkring each
-  won 8/8 panel games; preserve the existing combat/composition policy.
-- Expanse B loss 2f5f185824799a6aaadad90c6b74230e710b56184abca3ab7cc33585b3b1c7a4:
-  round 493; collection/tribute 952/928 vs 1008/1008; no deaths, kills, champion
-  damage or faults. Camp damage 41610 vs 27600. Opponent revision 54338dc8,
-  gamma 1b34f42a / source 3ce565f611a1dbd1c59f89c35c00bdb99cba8343eff243b8370017fbe64b1565
-  from the evaluation manifest. Complete final saved under this task ID.
-- Collision A loss bd4e101feaaf5d97c12a8637a5c8ef36cd9eaa9ec8ee1bf4c1f57bf6ea50a398:
-  round 718, collection/tribute 592/490 vs 1004/1004, deaths 4/2, kills 2/4,
-  faults [0,0]. Opponent match revision unknown from supplied summary/final.
-  Complete final saved. Do not assume every loss is a farming-only race.
-- Manifest SHA256 22e14f787aee81812226f343e1d462dde4c4c3668f245de95098e8c21be7ae8f;
-  all six frozen file sets hash-verified. Inspected beta 9f7ae1c8 and gamma
-  63d05e37, plus expanse opponent gamma 1b34f42a. They select groups before
-  clearing, use remaining visible HP/design estimates and committed routes;
-  gamma also prices reward/work. Their melee drafts, shopping, collector
-  deference and selective PvP differ from ours and were not copied.
-- Previous route-only candidate still attacked any in-range camp BEFORE choosing
-  a route. This can preempt cheap work and explains why coupling selection and
-  combat is a distinct test despite its small matched gain. Finals alone do not
-  identify actual attacked groups or prove that this mechanism caused a loss.
-- Prior spawn-heal-only, banking/batching/arrival, draft/stat, resupply, broad AoE,
-  focus-fire, travel-dash and global/local deference trials remain negative/deferred.
-  No repeated isolated fix was reapplied. Reused the prior measured routing
-  implementation, with explicit group ownership of this turn's combat.
+## Evidence and choice
+- Latest evaluation 710f58a196dd1fc67d5e820bbd1947dfb56b16ca153e6dc159005df7db377ab5
+  evaluates 2dcd14cf / source 822811f4...892ed5f1c, NOT today's edit base.
+  Development 82W/30L versus edit base 85W/27L; matched delta -0.0267857,
+  56 side-paired cases, no faults/missing/unknown. Group-first route planning
+  regressed overall and is not reapplied. Protected champion comparison is separate.
+- Ambush A loss 7cc676c2623db79add9852fddcaa18f6ca1ba87987a40bd981c849f519820dc9:
+  source 822811f4, round 726, tribute/collection 548 vs 1009/1062, deaths 5 vs 4,
+  zero PvP damage/kills/bag loss. Own camp damage taken 22070; no bot faults.
+  Vesper died twice, Ryth once, Willow twice. This establishes camp mortality,
+  not the position or health of any retreat. Saved complete summary under task ID.
+  Opponent strategy matches the frozen melee farming roster; exact match opponent
+  revision is unknown in summary, so no source version is inferred from roster.
+- Ambush B loss a6ea1f7148f65a156223d2e1d4d5b5e06db0bc628c51b5dadc724d32ca1ce246:
+  same evaluated source, round 858, collection/tribute 654/548 vs 1080/1080,
+  deaths 11 vs 4, camp damage taken 30670, faults zero (supplied task metrics).
+- Contrasting development coverage: this edit base wins elkring 8/8 and expanse
+  8/8, but ambush 3/8. Latest experiment wins elkring 8/8, ambush 2/8.
+  These map aggregates do not reconstruct individual turn decisions.
+- Frozen manifest dad2898a...fdf64: verified all six source file sets. Inspected
+  beta d2d57274 / 7daa9117 and gamma 1b34f42a / 3ce565f6. They use melee-heavy
+  farming, selective PvP and safe recovery, with farming passives and group costs.
+  Beta's old source explicitly lacked wake-state queries; its conservative
+  all-camps danger test is not copied now that installed SDK exposes awake state.
+- Base retreats at 35% health toward spawn without pricing exposure of a step.
+  Repeated camp damage can cancel recall; staying on spawn is required to heal.
+  Prior spawn-heal-only, spawn-directed/threat-gated/retry recall, items/draft,
+  resupply, banking/batching, AoE, focus-fire, travel-dash and camp route trials
+  remain negative/deferred. New rationale: a bounded awake-volley model and
+  exposure-first escape are coupled to completed recovery; not just another
+  spawn-heal guard or an isolated threshold adjustment.
 
 ## Candidate policy
-- camp_rotation.h returns goals plus the selected group's immutable spawn mask.
-  Rank travel/clearing/capture/tribute time per gems + 0.12 * gold. Use one native
-  forward distance field and at most eight shortlisted groups, sixteen members
-  each. Force the previous group into the shortlist for fresh remaining-work
-  evaluation; multiply its score by 0.90. Hold current cleared-group occupancy.
-- Group state requires current personal spawn visibility. Hidden member health
-  uses full design HP as an uncertain estimate; no hidden live state or allied
-  vision. Existing observed cooldown expiry is retained. Reward observations are
-  usable only in their observation round. Remove known movement blockers.
-- bot.cpp plans BEFORE attacking camps. Filter fresh camp handles by selected
-  immutable spawn identity for basics, spell aim points and reset follow-ups.
-  After movement, rebuild combat handles even on False/reveal, and mark actual
-  walking to disallow exclusive casts. Do not walk after a successful cast.
-  Incidental splash can still hit other groups; no new splash scoring.
-- Start richer routing above 65000 fuel; stop scans at 45000. If no selected route
-  or insufficient fuel, retain unfocused base combat and nearest eligible spawns.
-  Combat reserve stays 18000. These reserves are not measured headroom.
-- Draft/stat RNG, all play_turn priorities, champion combat scoring, shopping,
-  retreat, banking, locks, four-byte shared-round protocol and official yield
-  remain unchanged. No new shared bytes or fuel overrides.
+- recovery.h contains one-turn bounded observations and pure exposure/choice
+  contracts. bot.h owns one private recovering flag; cleared on death/full recovery.
+- Healthy >=70% turns skip scans. Otherwise inspect at most 32 visible damaging
+  awake camps/enemies, stop at 45k fuel. Enemy range adds one base movement step;
+  camps use actual design range and current strength. Sleeping camps are omitted.
+  No hidden live state, allied vision, cross-turn enemy handles or extra shared bytes.
+- Keep 35% ordinary retreat; below 70%, also recover when health <= two observed
+  raw basic volleys. This estimate ignores mitigation/shields/target selection and
+  future spells/hidden units. Conservative early retreats can sacrifice farming.
+- During recovery use a ready walking-compatible self shield when exposed, without
+  overwriting an active shield. At a quiet complete observation, recall immediately.
+  Otherwise compute one native home field and compare <=9 legal ordinary choices:
+  minimize raw damage, then weighted depth inside threat ranges, then home distance.
+  A reachable spawn tile wins because turn-end healing precedes the next camp phase.
+- Only move with >=28k fuel. Refresh observations after any move attempt, including
+  False/reveal, before optional recall. Partial scans never certify a quiet tile;
+  below scan reserve yield after movement and retry fresh next turn. No fuel override.
+  Maintain recovery to spawn and stay through turn end if still injured.
+- Draft/stat RNG, farming/rotation/capture, ordinary fight, banking/locks, four-byte
+  shared-round protocol, channel preservation and official yield otherwise remain
+  edit-base-identical. Accepted source remains outside this transaction.
 
-## Checks, risks and next action
-- python3 experiments/alpha/check_group_first.py PASSED, exit 0; report
-  experiments/alpha/task-844841b0ef694b819a6ab2fcf1a89387-source-check.json.
-  Checks target isolation, precombat planning, fresh postmove observations, exact
-  unchanged combat policy apart from the filter, and unchanged other systems.
-  These are source invariants, not engine branch coverage.
-- Seven route-cost static_assert contracts and the existing cooldown contracts
-  compiled in the trusted build. Includes cheap detour versus nearby wolf and
-  finishing a heavily damaged committed group. Not full engine scenarios.
+## Checks, uncertainty and next step
+- Embedded constexpr regression contracts cover summed overlapping volleys,
+  out-of-range safety, escaping flat exposure despite a longer home path,
+  exposure dominating home distance, quiet distance tie-breaks and recovery gates.
+  These are pure policy cases, not engine scenario or branch coverage.
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json PASSED,
-  exit 0. Checked source 822811f4c9664771c56f9d52d120cd9ed1dcd83b9de3f76c5d1b10e892ed5f1c.
-  Report .agent/check-task-844841b0ef694b819a6ab2fcf1a89387.json inspected locally
-  and through exact-source check-report. Smoke IDs:
-  df41f9af3178f8cceaf593deb89db60e3bce75e08d01223df8f75e0fdf3db27b,
-  8c17c88aa67a44ca5e2c8e614c5c8183f7382a795f31010f90f746b0f5d60dad.
-  Summary exposes no detailed runtime/fuel diagnostics; IDs alone do not establish
-  full-game completion, group-selection branch coverage or competitive strength.
-- git diff --check PASSED, exit 0. Bot sources were unchanged after check start;
-  this task's decision JSON records their file hashes and the checked identity.
-- Risks: spending planning fuel before every camp fight; ignoring dangerous nearby
-  camps; imperfect basic-only clear estimates; duplicated team routes/captures;
-  unseen obstacles and shortlist omissions; choosing a different group can abandon
-  damaged work despite commitment. No claim of improvement before evaluation.
-- READY_FOR_EVAL. Supervisor compares this exact checked source with edit base and
-  protected champion across maps and both sides. Inspect group choices/fuel if it
-  regresses before changing score weights. No agents, tournament evaluation,
-  commit, push, publication, official submission or promotion performed.
+  exit 0; source 07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2.
+  Local report inspected: .agent/check-task-59a846e1bfeb476f999d44d2266677a1.json.
+  Smoke IDs 2c31e9776c4aa50929869b13b230c7aef70e0483af3d0605e7e58dec4e250330
+  and 2acf67f0b067e512deda18a404881b574f270339cc2d145f2eef8cccf5b9c84b.
+  Summary alone does not establish full-game completion, recovery branch coverage
+  or normal-turn fuel headroom. Embedded contracts compiled in the trusted build.
+- git diff --check PASSED, exit 0. Source hashes unchanged after trusted check.
+  Decision JSON records exact identities, parameters, document/opponent hashes,
+  supplied development evidence and source file hashes. READY_FOR_EVAL.
+- Risks: conservative danger can abandon finishable camps/captures; hidden threats
+  and enemy spells are unmodeled; threat caps/fuel can force long walks; local
+  exposure minima can delay escape; a freshly awakened first volley can precede
+  the next turn; linked deaths are not coordinated; normal-turn headroom unmeasured.
+- Supervisor should compare the exact checked candidate with edit base and protected
+  champion across maps/both sides. If win rate is unchanged/lower, reject; inspect
+  deaths, collection/tribute and recovery travel before any threshold tuning.
+  No agents, tournament invocation, publication, commit/push or official submission.
