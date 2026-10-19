@@ -74,6 +74,8 @@ examples at their existing hourly improvement opportunity. The exact submitted
 source is included in their frozen public-source packet. They can request
 bounded `external-slice` diagnostics. Sharing applies only to this owner-approved
 submission, never private worker notes/credentials or unrelated imports.
+Read `final.json` first; `external-slice --file raw-statistics.json --offset N`
+provides hash-verified slices of retained original timelines/events on demand.
 Reserved holdout traces remain unavailable; outside outcomes never enter local
 promotion scores and imports do not trigger extra model jobs.
 

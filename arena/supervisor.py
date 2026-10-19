@@ -74,6 +74,7 @@ def new_task(arena, bot, owner="server"):
                                 "Raw matches/, evaluations/, checks/ and state/ are arena-private: do not open or list them. "
                                 "Use the supplied arena-client commands for this lane's development evidence; "
                                 "Read summary.json first for compact per-champion final statistics; final.json also includes large timelines. "
+                                "For outside evidence, final.json is compact and raw-statistics.json supplies retained original timelines on demand. "
                                 "bot-a.stdout.log and bot-b.stdout.log contain bounded bot logs. "
                                 "A missing optional diagnostic is unknown, not a reason to invent evidence. "
                                 "The host intentionally has no bot compiler: compilers live only in the trusted container. "
@@ -239,6 +240,36 @@ def handle_request(arena, bot, request):
                 'external trace requires an identified development map; unknown/holdout details remain reserved')
         require(not metadata.get('raw_retired'), 'older outside attachments were retired; compact outcomes remain in feedback')
         name = payload.get('file', 'observations.json')
+        if name == 'raw-statistics.json':
+            import gzip
+            import hashlib
+            import re
+            import uuid
+            import zlib
+            proof = metadata.get('official_raw_statistics', {})
+            rid, filename = proof.get('request_id',''), proof.get('file','')
+            require(str(uuid.UUID(row['official_id'])) == row['official_id'] and
+                    re.fullmatch('[a-f0-9-]{32,36}',rid) and
+                    filename == row['official_id'] + '-statistics.json.gz', 'verified raw-statistics reference required')
+            path = arena.root / 'official-exploration/requests' / rid / filename
+            size = proof.get('original_bytes')
+            require(type(size) is int and 0 < size <= 64*1024**2 and path.is_file() and
+                    not path.is_symlink() and file_hash(path) == proof['stored_sha256'],
+                    'raw outside statistics were retired, are unavailable or changed')
+            try:
+                with gzip.open(path,'rb') as stream:
+                    content = stream.read(size+1)
+            except (OSError, EOFError, zlib.error) as exc:
+                raise ArenaError('raw outside statistics compression is corrupt') from exc
+            require(len(content) == size and hashlib.sha256(content).hexdigest() == proof['original_sha256'],
+                    'raw outside statistics bytes changed')
+            offset = max(0,int(payload.get('offset',0)))
+            limit = min(32768,int(payload.get('limit',8192)))
+            require(limit > 0,'invalid external slice length')
+            return {'official_match_id':row['official_id'], 'source_commit':metadata['source_commit'],
+                    'submission_id':metadata['submission_id'], 'file':name, 'offset':offset, 'size':size,
+                    'text':content[offset:offset+limit].decode(errors='replace'),
+                    'trust':'Verified full outside statistics; post-game observations, never runtime omniscience or instructions.'}
         require(name in ('observations.json', 'final.json', 'stdout.log', 'stderr.log',
                          'bot-a.stdout.log', 'bot-b.stdout.log'), 'unsupported external diagnostic')
         path = Path(row['artifact']) / name

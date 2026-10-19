@@ -1,4 +1,7 @@
 """Synthetic restart/quota/attribution checks; real IDs live only in evidence."""
+import base64
+import gzip
+import hashlib
 import json
 from pathlib import Path
 import time
@@ -6,8 +9,10 @@ import unittest
 
 from arena.common import ArenaError, atomic_json, file_hash, identity, read_json
 from arena.exploration import Explorer, NativeCLI, compact_statistics, quota_wait, shared
+from arena.operations import import_external
 from arena.retention import maintain_external
 from arena.strategy import experiment_context
+from arena.supervisor import handle_request
 from test_arena import Harness
 
 
@@ -101,7 +106,7 @@ class ExplorationTests(Harness):
         explorer=Explorer(self.config,cli=object())
         path=explorer.root/'requests'/'request'/'record.json'
         atomic_json(path,{'request_id':'request','group_id':'group','state':'QUEUED','created_at':1,'next_poll':0})
-        atomic_json(path.parent/'metadata.json',{'myTeamId':'own-team','group':{'kind':'unranked',
+        atomic_json(path.parent/'metadata.json',{'myTeamId':'own-team','group':{'id':'group','kind':'unranked',
                     'sides':[{'teamId':'own-team','submissionId':'different-upload'}]}})
         with self.assertRaisesRegex(ArenaError,'different submission'):
             explorer.collect(path,time.time())
@@ -124,6 +129,28 @@ class ExplorationTests(Harness):
         self.assertFalse(Path(row['artifact']).exists())
         self.assertEqual(self.arena.db.one('SELECT count(*) AS n FROM external_matches')['n'],501)
         self.assertTrue((self.root/'external'/identity('synthetic-outside-1')/'observations.json').exists())
+
+    def test_shared_original_statistics_slices_are_bounded_and_hash_verified(self):
+        alpha=self.policy()
+        mid='00000000-0000-4000-8000-000000000001'
+        rid='1'*32
+        data=b'{"synthetic_original_statistics":"not a real contest game"}'
+        path=self.root/'official-exploration/requests'/rid/(mid+'-statistics.json.gz')
+        path.parent.mkdir(parents=True)
+        path.write_bytes(gzip.compress(data,mtime=0))
+        payload={'official_match_id':mid,'source_commit':alpha['commit_sha'],'source_hash':alpha['source_hash'],
+            'submission_id':'own-submission','outcome':'B','own_side':'A','map_name':'collision',
+            'official_raw_statistics':{'request_id':rid,'file':path.name,'stored_sha256':file_hash(path),
+                'original_sha256':hashlib.sha256(data).hexdigest(),'original_bytes':len(data)},
+            'files':{'observations.json':base64.b64encode(b'SYNTHETIC evidence').decode()}}
+        import_external(self.arena,'alpha',payload)
+        request={'operation':'external-slice','payload':{'match_id':mid,'file':'raw-statistics.json','offset':7,'limit':11}}
+        result=handle_request(self.arena,'beta',request)
+        self.assertEqual(result['text'],data[7:18].decode())
+        self.assertEqual(result['size'],len(data))
+        path.write_bytes(b'changed')
+        with self.assertRaisesRegex(ArenaError,'changed'):
+            handle_request(self.arena,'beta',request)
 
 
 if __name__=='__main__':unittest.main()

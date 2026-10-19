@@ -262,7 +262,8 @@ class Explorer:
                 return
             data = read_json(saved)
             group = data['group']
-            require(data['myTeamId'] == self.policy['team_id'] and group['kind'] == 'unranked',
+            require(data['myTeamId'] == self.policy['team_id'] and group['kind'] == 'unranked' and
+                    group['id'] == record['group_id'],
                     'official group identity/type changed')
             own = next(s for s in group['sides'] if s['teamId'] == self.policy['team_id'])
             require(own['submissionId'] == record.get('submission_id', self.policy['submission_id']),
@@ -319,6 +320,9 @@ class Explorer:
         compact = compact_statistics(stats)
         require(compact['match']['outcome'] == 'team' + winners[0]['side'].upper(),
                 'official metadata and statistics disagree')
+        require(match['rounds'] == stats['match']['roundsStarted'] and all(
+                compact['metrics']['submitted_gems']['value'][side['side'].upper()] == side['score']
+                for side in match['sides']), 'official round/gem totals disagree with statistics')
         maps = read_json(self.config['map_manifest'])['maps']
         canonical_map = next((m['name'] for m in maps if m['sha256'] == stats['match']['mapHash']), None)
         require(canonical_map, 'official map bytes are absent from the frozen pool; retain and review')
@@ -345,6 +349,10 @@ class Explorer:
                 'opponent_team_id', 'opponent_rank_at_request', 'own_bot_faults')},
                 'official_group_id':record['group_id'],
                 'source_bot_id':record['bot_id'],
+                'official_raw_statistics':{'request_id':record['request_id'],
+                    'file':packed.name, 'stored_sha256':file_hash(packed),
+                    'original_sha256':hashlib.sha256(gzip.decompress(packed.read_bytes())).hexdigest(),
+                    'original_bytes':len(gzip.decompress(packed.read_bytes()))},
                 'files':{name:base64.b64encode(value).decode() for name,value in files.items()}}
 
     def prune(self):

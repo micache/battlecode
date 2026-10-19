@@ -57,6 +57,8 @@ def experiment_context(arena, bot):
                 ('observations.json', 'final.json', 'stdout.log', 'stderr.log', 'bot-a.stdout.log', 'bot-b.stdout.log')
                 and metadata.get('map_name') in arena.config['evaluation']['development_maps'] and
                 not metadata.get('raw_retired'))
+            if observation['available_diagnostics'] and metadata.get('official_raw_statistics'):
+                observation['available_diagnostics'].append('raw-statistics.json')
             candidates.append(observation)
     # A recent holdout/unknown-map outcome must not crowd readable loss evidence
     # out of the small handoff. This changes neither access rules nor scoring.
