@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+from unittest.mock import patch
 
 from test_arena import Harness
 from arena.common import ArenaError, atomic_json, bounded_process, read_json
@@ -12,6 +13,25 @@ from arena.supervisor import handle_request
 
 
 class OperationsTests(Harness):
+    def test_disk_error_cannot_leave_an_orphan_running_beside_new_games(self):
+        self.establish()
+        starter = self.arena.build(self.arena.db.get('starter_revision'))
+        job = self.arena.queue_match(starter, starter, self.arena.freeze_maps()['collision'], repetition='disk-error')
+        self.arena.db.put('paused',True)
+        with patch('arena.service.seal_artifacts',side_effect=OSError(28,'No space left on device')):
+            with self.assertRaises(OSError):
+                self.arena.run_one_match(job)
+        self.assertEqual(self.arena.db.one('SELECT state FROM match_jobs WHERE id=?',(job,))['state'],'RUNNING')
+        with self.assertRaisesRegex(ArenaError,'needs recovery'):
+            self.arena.run_one_match()
+        self.arena.step()
+        row = self.arena.db.one('SELECT * FROM match_jobs WHERE id=?',(job,))
+        self.assertEqual(row['state'],'QUEUED')
+        self.assertEqual(row['attempt_count'],1)
+        self.assertFalse(json.loads(row['result'])['completed'])
+        self.assertIsNone(json.loads(row['result'])['winner'])
+        self.assertTrue((Path(row['artifact'])/'spec.json').exists())
+
     def test_bot_check_runs_its_two_games_before_older_evaluation_backlog(self):
         import base64
         from arena.supervisor import check_source, new_task

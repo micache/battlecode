@@ -177,6 +177,9 @@ def check_source(arena, bot, payload):
     report = {"task_id": task["id"], "bot_id": bot, "source_hash": source_hash,
               "state": "FAILED", "exit_code": 1, "matches": [], "started": started}
     try:
+        if arena.config['limits'].get('rolling_history', False):
+            from .retention import maintain
+            maintain(arena)
         candidate = arena.adapter().prepare_bot(snapshot, task["id"])
         starter = arena.build(arena.db.get("starter_revision"))
         map_info = arena.freeze_maps()[arena.config["evaluation"]["screen_maps"][0]]

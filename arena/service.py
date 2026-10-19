@@ -86,6 +86,8 @@ class Arena:
     def run_one_match(self, job_id=None):
         if self.db.get("adapter_paused", False):
             return False
+        require(not self.db.one("SELECT id FROM match_jobs WHERE state='RUNNING'"),
+                'unfinished match attempt needs recovery before another match can start')
         job = (self.db.one("SELECT * FROM match_jobs WHERE state='QUEUED' AND id=?", (job_id,)) if job_id else
                self.db.one("SELECT j.* FROM match_jobs j LEFT JOIN training_cases t ON t.job_id=j.id "
                            "WHERE j.state='QUEUED' AND (t.job_id IS NULL OR ?) "
@@ -386,6 +388,14 @@ class Arena:
 
     def step(self):
         from .supervisor import consume_messages, dispatch_tasks
+        # Engine calls are synchronous in this sole writer. A RUNNING row at a
+        # new tick therefore survived an exception, not a live parallel game.
+        # Free rolling history first so ENOSPC does not strand its journal.
+        if self.db.one("SELECT id FROM match_jobs WHERE state='RUNNING'"):
+            if self.config['limits'].get('rolling_history', False):
+                from .retention import maintain
+                maintain(self)
+            self.recover()
         self.consume_control()
         consume_messages(self)
         self.db.put("heartbeat", time.time())
