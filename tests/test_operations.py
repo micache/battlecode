@@ -12,6 +12,24 @@ from arena.supervisor import handle_request
 
 
 class OperationsTests(Harness):
+    def test_bot_check_runs_its_two_games_before_older_evaluation_backlog(self):
+        import base64
+        from arena.supervisor import check_source, new_task
+        self.establish()
+        starter = self.arena.build(self.arena.db.get('starter_revision'))
+        map_info = self.arena.freeze_maps()['collision']
+        older = [self.arena.queue_match(starter, starter, map_info, repetition='older-'+str(i))
+                 for i in range(5)]
+        self.engine.calls.clear()
+        task = new_task(self.arena,'alpha')
+        report = check_source(self.arena,'alpha', {'task_id':task['task_id'],
+            'source':{'main.cpp':base64.b64encode(b'synthetic priority candidate').decode()}})
+        self.assertEqual(report['state'],'PASSED')
+        self.assertEqual(len(self.engine.calls),2)
+        self.assertEqual({r['job_id'] for r in self.engine.calls},set(report['matches']))
+        self.assertTrue(all(self.arena.db.one('SELECT state FROM match_jobs WHERE id=?',(job,))['state']=='QUEUED'
+                            for job in older))
+
     def smoke_fixture(self, bot='alpha', map_name='collision'):
         import base64
         from arena.supervisor import check_source, new_task

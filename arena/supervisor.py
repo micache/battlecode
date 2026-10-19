@@ -188,7 +188,13 @@ def check_source(arena, bot, payload):
                   for job in report["matches"]):
             require(not arena.db.get("adapter_paused", False), "engine adapter paused")
             require(time.time() - started < 1000, "smoke check wall budget reached")
-            arena.run_one_match()
+            # A synchronous bot-check must not drain the entire older evaluation
+            # backlog before its own two smoke games (or starve control/status).
+            job = next(job for job in report['matches'] if
+                       arena.db.one('SELECT state FROM match_jobs WHERE id=?', (job,))['state'] == 'QUEUED')
+            arena.run_one_match(job)
+            arena.consume_control()
+            arena.export_status()
         results = [json.loads(arena.db.one("SELECT result FROM match_jobs WHERE id=?", (job,))["result"])
                    for job in report["matches"]]
         if all(r["state"] == "COMPLETED" and r.get("bot_faults") == 0 for r in results):
