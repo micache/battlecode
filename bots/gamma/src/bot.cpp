@@ -1,6 +1,6 @@
 #include <cambc.h>
 #include "bot.h"
-#include "farm_plan.h"
+#include "farm_value.h"
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -16,8 +16,6 @@ constexpr float HEALED_HEALTH = 0.98f;
 constexpr unsigned SHOP_RECALL_GOLD = 300;
 constexpr std::uint64_t PLAN_FUEL = 30000;
 constexpr std::uint64_t ACTION_FUEL = 10000;
-constexpr std::uint64_t FARM_SCAN_FUEL = 55000;
-constexpr std::size_t MAX_FARM_CHECKS = 12;
 constexpr std::uint64_t LOCK_FUEL = 18000;
 constexpr int LOCK_RANGE = 2; // Pinned SDK consumable_type contract.
 
@@ -213,15 +211,23 @@ void Bot::buy_items() {
 void Bot::farm_camps() {
     auto& me = cambc::self();
     if (farms.empty()) {
+        // All positive bags bank immediately. Cache the missing return leg once
+        // from public terrain, ignoring uncertain future units/locks. Roots are
+        // free altar approaches, never the impassable altar tiles themselves.
+        const auto terrain = cambc::map::walls() | cambc::map::holes()
+            | cambc::map::altars() | cambc::map::spawn_region(team::enemy);
+        cambc::bitboard altar_approaches;
+        for (auto altar : cambc::map::altars().positions())
+            altar_approaches |= around(altar, cambc::constants::submit_gems_range);
+        altar_approaches &= ~terrain;
+        cambc::distance_field delivery;
+        cambc::bitboard reached;
+        delivery.compute(terrain, altar_approaches, reached);
         for (const auto& group : cambc::map::camp_groups()) {
-            vec2 center{};
-            float hp = 0;
-            for (const auto& c : group.camps()) {
-                center += c.spawn_position();
-                hp += c.base_stats().base_health;
-            }
-            center /= static_cast<int>(group.camps().size());
-            farms.push_back({group, group.spawn_tiles(), 0, center, hp});
+            const auto spawns = group.spawn_tiles();
+            unsigned steps = cambc::distance_field::unreachable;
+            for (auto p : spawns.positions()) steps = std::min(steps, unsigned(delivery.get(p)));
+            farms.push_back({group, spawns, 0, steps});
         }
     }
     const unsigned now = cambc::round_number();
@@ -238,7 +244,7 @@ void Bot::farm_camps() {
             return;
         }
     }
-    const auto local_fallback = [&]() {
+    if (cambc::fuel_remaining() < PLAN_FUEL) {
         // Cheap legal fallback; no search or hidden state reads.
         unsigned inspected = 0;
         for (const auto& c : cambc::vision::camps()) {
@@ -247,33 +253,16 @@ void Bot::farm_camps() {
                 && distance(me.position(), c.position()) <= me.attack_range()
                 && fight(c, false, c.strength() > 0)) return;
         }
-    };
-    if (cambc::fuel_remaining() < FARM_SCAN_FUEL) { local_fallback(); return; }
-    // Rank cached design estimates before spending fuel on live group state,
-    // approach masks and distance lookups. No hidden live state enters the rank.
-    const auto position = me.position();
-    const auto attack_range = me.attack_range();
-    const auto damage = std::max(1.0f, me.strength() * 1.12f);
-    std::vector<float> ranks;
-    ranks.reserve(farms.size());
-    for (const auto& f : farms) {
-        const auto value = std::max(1.0f, float(f.group.gem_value()) + 0.12f * f.group.gold_value());
-        const auto travel_estimate = std::max(0, distance(position, f.center) - attack_range);
-        ranks.push_back(now < f.respawn_observed_until ? std::numeric_limits<float>::max()
-            : (travel_estimate + f.initial_health / damage + cambc::constants::capture_time + 1) / value);
+        return;
     }
-    const auto order = farm_plan::candidates(ranks, target_group, farm_probe++, MAX_FARM_CHECKS);
     const auto blocked = blocked_tiles();
     cambc::distance_field travel;
     cambc::bitboard visited;
     travel.compute(blocked, around(me.position(), 0), visited);
-    if (cambc::fuel_remaining() < FARM_SCAN_FUEL) { local_fallback(); return; }
     int selected = -1;
     float best_score = std::numeric_limits<float>::max();
-    for (const auto i : order) {
-        // A single group evaluation plus move/combat can cost more than 30k.
-        // Do not consume the action budget just to inspect another candidate.
-        if (cambc::fuel_remaining() < FARM_SCAN_FUEL) break;
+    for (std::size_t i = 0; i < farms.size(); ++i) {
+        if (cambc::fuel_remaining() < PLAN_FUEL) break;
         auto& f = farms[i];
         const bool seen = !(f.spawns & visible).is_empty();
         bool reward = false;
@@ -309,10 +298,17 @@ void Bot::farm_camps() {
         unsigned dist = cambc::distance_field::unreachable;
         for (auto p : goals.positions()) dist = std::min(dist, unsigned(travel.get(p)));
         if (dist == cambc::distance_field::unreachable) continue;
-        const float value = float(f.group.gem_value()) + 0.12f * f.group.gold_value();
-        // Reward / (travel + clearing + capture). Resets improve clear estimates.
-        const float cost = dist + hp / damage + cambc::constants::capture_time + 1;
-        float score = cost / std::max(1.0f, value);
+        const auto gems = f.group.gem_value();
+        if (gems && f.delivery_steps == cambc::distance_field::unreachable) continue;
+        // Value a completed cycle, not just acquisition. Full group gems estimate
+        // the channel; allies may split the reward. Current blockers and hostile
+        // locks remain the banker's concern, not hidden facts in this estimate.
+        const float cost = dist + hp / std::max(1.0f, me.strength() * 1.12f) + cambc::constants::capture_time + 1;
+        const float tribute = std::max(double(cambc::constants::submit_gem_minimum_duration),
+            cambc::constants::submit_gem_base_duration
+                + std::ceil(gems * cambc::constants::submit_gem_duration_multiplier));
+        float score = farm_value::score(cost, gems, f.group.gold_value(), f.delivery_steps,
+            static_cast<unsigned>(me.base_stats().base_move_speed), tribute);
         if (static_cast<int>(i) == target_group) score *= 0.85f; // Avoid target thrashing.
         if (score < best_score) { best_score = score; selected = static_cast<int>(i); }
     }

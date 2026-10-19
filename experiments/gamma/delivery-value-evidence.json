@@ -1,0 +1,195 @@
+{
+  "task_id": "task-ff42f1f4a5724e2a898c2cea340c1a75",
+  "edit_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+  "base_source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+  "hypothesis": "Including camp-to-altar walking and tribute duration in farm selection will increase matched development win rate and mean submitted gems without new bot faults.",
+  "falsifier": "Non-positive matched win-rate change, non-increasing mean submitted gems, or any new bot fault. Unchanged arena selection gates remain authoritative.",
+  "bottleneck": "Current score ignores mandatory delivery after every positive bag; this is a source deduction, not an observed per-turn cause of the Ambush losses.",
+  "policy": {
+    "static_distance": "One terrain-only native multi-source field from free altar approaches; cache minimum distance over each group spawn mask. Ignore future units, camps and locks explicitly.",
+    "ranking": "Existing ingress/clear/capture cost plus ceil(delivery_steps/base_move_speed) and SDK-configured tribute duration, divided by gems + 0.12*gold; existing 0.85 commitment multiplier retained.",
+    "gold_only": "No delivery or tribute penalty.",
+    "unreachable": "Exclude positive-gem groups with no static walking route to an altar approach.",
+    "channel_estimate": "Use full static group gems; actual shared collection can make this an overestimate.",
+    "fuel": "No new per-turn graph search; one initialization field, cached per-group integers, old 30k planner/10k action fallback guards retained.",
+    "scope": "Draft, combat, banking actions, channels, shop/recall, dynamic reachability and capture/respawn semantics retained."
+  },
+  "latest_evaluated_losses": [
+    {
+      "match_id": "972d1330652b465c1e49dd645cc65a95b196f995cf4a42112af46cfd61df821c",
+      "map": "ambush",
+      "side": "A",
+      "source_commit": "48b51e3390b618f392cbec1842361bb910c207d3",
+      "source_hash": "72b489b0df56d0d7dcd842db50deac20ddf82c065c3001ea9f6d0b943d6fc944",
+      "opponent_commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "opponent_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "completed": true,
+      "round": 1069,
+      "own_collected": 900,
+      "own_submitted": 794,
+      "own_deaths": 1,
+      "own_fuel_suspensions": 0,
+      "own_bot_faults": 0,
+      "artifact": "experiments/gamma/ambush-a-loss-summary.json"
+    },
+    {
+      "match_id": "0b93f219ae848f2f059e07c6cf17fc3d8f811d32a10c9c6dc4b4ee9b1be725e7",
+      "map": "ambush",
+      "side": "B",
+      "source_commit": "48b51e3390b618f392cbec1842361bb910c207d3",
+      "source_hash": "72b489b0df56d0d7dcd842db50deac20ddf82c065c3001ea9f6d0b943d6fc944",
+      "opponent_commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "opponent_source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "completed": true,
+      "round": 1091,
+      "own_collected": 688,
+      "own_submitted": 582,
+      "own_deaths": 2,
+      "own_fuel_suspensions": 0,
+      "own_bot_faults": 0,
+      "artifact": "experiments/gamma/ambush-loss-summary.json"
+    }
+  ],
+  "attribution": "These losses evaluated 72b489b0, not the restored ff511c52 edit base or this candidate. Low collection without faults/suspensions/PvP motivates economy work but does not prove the omitted delivery term caused defeat.",
+  "frozen_manifest": {
+    "path": "/srv/battlecode/public/strategy/task-ff42f1f4a5724e2a898c2cea340c1a75/manifest.json",
+    "sha256": "83314e70bb54166827c7c20206f7e086db33bc0095567d179d3d7a2a8dcafa8b",
+    "all_six_file_sets_verified": true
+  },
+  "opponent_source_audit": [
+    {
+      "bot": "alpha",
+      "commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "source_hash": "87b9be4549dd0ee3a3038907bcfb86b79cfb2d33f344f8749d9532a8e6382e01",
+      "policy": "Random stat Power build and random draft; bounded reset/damage ranking, enemy-first combat, union-of-spawns farming, bank any bag. No explicit delivery term. This is the supplied opponent for both Ambush losses."
+    },
+    {
+      "bot": "beta",
+      "commit": "7cab9b0f6b948b0ea0b3b284425a3501c564d16b",
+      "source_hash": "fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa",
+      "policy": "Varg/Tavi/Ryth opening; recovery latch, shield/dash/route locks, bounded 12-group geometry shortlist and separate economy penalty. Keep gamma policies, use no copied private state."
+    },
+    {
+      "bot": "alpha",
+      "commit": "82a14a04f0e6b68aac8a7e879d305b1a886b857c",
+      "source_hash": "6e362fd7cce836975fa615bc8b936109235fd320def63703761366586efabc25",
+      "policy": "Timestamped private camp respawn observations including return-at-arrival eligibility; this is a distinct possible future rotation experiment."
+    }
+  ],
+  "rejected_alternatives": [
+    "Do not repeat rejected broad target-aware combat, camp claims, threat-aware banking, protected transit or Ryth swap without changed evidence.",
+    "Do not bundle the latest bounded farming shortlist or unselected capture-entry change.",
+    "Bank batching changes risk and reward cadence; test the missing delivery cost under the existing bank-any-bag policy first."
+  ],
+  "risks": [
+    "Static minimum delivery distance ignores current occupancy and can underestimate large-group collection position.",
+    "Full reward channel estimate overpenalizes shared captures.",
+    "Delivery penalty can encourage gold-only camps or excessive competition near altars.",
+    "First farm initialization adds one native field computation; normal fuel checks remain necessary."
+  ],
+  "rules_references": [
+    ".agent/knowledge/PLAYBOOKS.md sections B/C/F/G",
+    ".agent/knowledge/BOT_REFERENCE.md sections 4/6/7",
+    ".agent/knowledge/sources/GameRules.md tribute at an altar",
+    ".agent/knowledge/sources/BotAPICpp.md distance_field::compute and camp_group static reward APIs"
+  ],
+  "sdk_sha256": "ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264",
+  "rules_limits": "Unchanged-doc routine iteration. Organizer hub/production parity limitations retained; no fresh official-policy certification.",
+  "contrasting_wins": [
+    {
+      "match_id": "b3aa880626abca8891d73ef13ba21c1b73fbc172c36b0cf282e696fe61605bd0",
+      "side": "A",
+      "map": "collision",
+      "source_hash": "72b489b0df56d0d7dcd842db50deac20ddf82c065c3001ea9f6d0b943d6fc944",
+      "opponent_revision": null,
+      "completed": true,
+      "winner": "A",
+      "submitted_gems": {
+        "A": 1064,
+        "B": 66
+      },
+      "artifact": "experiments/gamma/bounded-farming-smoke.json",
+      "limit": "Same evaluated source as Ambush losses; smoke opponent version unknown, different map/opponent is not a controlled performance comparison."
+    },
+    {
+      "match_id": "bdd68fd8d1cad775286897bff1b50ec57cb5fcad54ceaac5e4cd0dea13b412e9",
+      "side": "B",
+      "map": "collision",
+      "source_hash": "72b489b0df56d0d7dcd842db50deac20ddf82c065c3001ea9f6d0b943d6fc944",
+      "opponent_revision": null,
+      "completed": true,
+      "winner": "B",
+      "submitted_gems": {
+        "A": 198,
+        "B": 1066
+      },
+      "artifact": "experiments/gamma/bounded-farming-smoke.json",
+      "limit": "Same evaluated source as Ambush losses; smoke opponent version unknown, different map/opponent is not a controlled performance comparison."
+    }
+  ],
+  "trusted_check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792435775.8598075,
+    "matches": [
+      "8c933552dbda470f3acc099634d0e1dc19c55d65647d13a5cbdb2c417d6b401c",
+      "3b923d621996e08b9bee8cbc05f39d5b1558e81cda84936673ea0ab73496940f"
+    ],
+    "report_path": ".agent/check-task-ff42f1f4a5724e2a898c2cea340c1a75.json",
+    "report_reference": "check:task-ff42f1f4a5724e2a898c2cea340c1a75:846588e44611949d792d1181a38d6ce557b233cd93442f44831431bf9c3da154",
+    "source_hash": "846588e44611949d792d1181a38d6ce557b233cd93442f44831431bf9c3da154",
+    "started": 1792435741.8340511,
+    "state": "PASSED",
+    "task_id": "task-ff42f1f4a5724e2a898c2cea340c1a75"
+  },
+  "source_audit": {
+    "actual_changes_vs_edit_commit": [
+      "bots/gamma/src/bot.cpp",
+      "bots/gamma/src/bot.h",
+      "bots/gamma/src/farm_value.h"
+    ],
+    "final_file_sha256": {
+      "bots/gamma/src/bot.cpp": "8647bf03cb70b9d9b7512a70ddd3aeab2620687d85b94d0d990e5f131fc89e65",
+      "bots/gamma/src/bot.h": "0acdb623be354bc204d9a7a85b084843b2e2489214d5782b924918970e9c231c",
+      "bots/gamma/src/draft.cpp": "bfac1b1879665b73b2bcb33ff3567641d73e40afd760d08d0498f53ddfa375b3",
+      "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+      "bots/gamma/src/farm_value.h": "af0fe33d2360c4a9fe3e503a6b574fb1072c263f2454753ac157102e8f6095c0",
+      "bots/gamma/src/main.cpp": "786c1365f90c1eb409b163f584c97a4f596191c946d4bd2b2eb4d0682c9f751c",
+      "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+    },
+    "unchanged_source_since_trusted_build": true,
+    "new_live_state_reads": false,
+    "new_shared_memory": false,
+    "new_per_turn_fields": false,
+    "regressions": "Compile-time assertions in actual farm_value score: delivery reverses equal-reward choices, rich far group remains competitive, zero-gem camps pay no bank cost, walking rounds ceil at speed 2, invalid zero-speed design denominator bounded at 1."
+  },
+  "smoke_summary": [
+    {
+      "match_id": "8c933552dbda470f3acc099634d0e1dc19c55d65647d13a5cbdb2c417d6b401c",
+      "side": "A",
+      "map": "collision",
+      "winner": "A",
+      "completed": true,
+      "submitted_gems": {
+        "A": 1010,
+        "B": 44
+      },
+      "faults": 0,
+      "fuel_suspensions": 0
+    },
+    {
+      "match_id": "3b923d621996e08b9bee8cbc05f39d5b1558e81cda84936673ea0ab73496940f",
+      "side": "B",
+      "map": "collision",
+      "winner": "B",
+      "completed": true,
+      "submitted_gems": {
+        "A": 44,
+        "B": 1008
+      },
+      "faults": 0,
+      "fuel_suspensions": 0
+    }
+  ],
+  "smoke_limit": "Completed exact-source validity games only, opponent revisions unknown. No matched improvement measured."
+}

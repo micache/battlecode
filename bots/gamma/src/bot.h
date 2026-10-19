@@ -8,12 +8,10 @@ class Bot {
         cambc::map::camp_group group;
         cambc::bitboard spawns;
         unsigned respawn_observed_until = 0;
-        cambc::vec2 center;
-        float initial_health = 0;
+        unsigned delivery_steps = cambc::distance_field::unreachable;
     };
     std::vector<Farm> farms;
     int target_group = -1;
-    std::size_t farm_probe = 0;
     void buy_items();
     void farm_camps();
 public:
