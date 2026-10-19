@@ -1,8 +1,8 @@
 #include <cambc.h>
 #include "bot.h"
+#include "farm_plan.h"
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 #include <limits>
 #include <optional>
 #include <type_traits>
@@ -16,6 +16,8 @@ constexpr float HEALED_HEALTH = 0.98f;
 constexpr unsigned SHOP_RECALL_GOLD = 300;
 constexpr std::uint64_t PLAN_FUEL = 30000;
 constexpr std::uint64_t ACTION_FUEL = 10000;
+constexpr std::uint64_t FARM_SCAN_FUEL = 55000;
+constexpr std::size_t MAX_FARM_CHECKS = 12;
 constexpr std::uint64_t LOCK_FUEL = 18000;
 constexpr int LOCK_RANGE = 2; // Pinned SDK consumable_type contract.
 
@@ -85,19 +87,9 @@ bool live(const Target& t) {
     return cambc::self().is_alive() && t.is_visible() && t.health() > 0;
 }
 template<class Target>
-bool fight(const Target& target, bool walked, bool dangerous, bool* excluded_walk = nullptr) {
+bool fight(const Target& target, bool walked, bool dangerous) {
     auto& me = cambc::self();
     if (!live(target)) return false;
-    // can_move() is only an allowance flag. Remember successful casts which
-    // forbid walking even if the allowance still appears available afterward.
-    auto cast = [&](const auto& ability, const auto&... args) {
-        if (!ability.use(args...)) return false;
-        if (excluded_walk)
-            *excluded_walk |= std::visit([](const auto& info) {
-                return info.exclusive_with_movement;
-            }, *ability.info());
-        return true;
-    };
     bool acted = false;
     if (me.can_attack() && !me.restrictions().contains(cambc::buff_restrictions::attack)
         && distance(me.position(), target.position()) <= me.attack_range()) {
@@ -112,13 +104,13 @@ bool fight(const Target& target, bool walked, bool dangerous, bool* excluded_wal
     if (dangerous && distance(me.position(), target.position()) <= 3
         && me.health() < me.max_health() * 0.75f && !me.buffs().has_shield()) {
         for (const auto& a : abilities)
-            if (a.is_shield() && a.can_target_self() && a.is_ready() && cast(a)) return true;
+            if (a.is_shield() && a.can_target_self() && a.is_ready() && a.use()) return true;
     }
     for (const auto& a : abilities) {
         if (!a.is_attack_reset() || !a.can_target_self() || !a.is_ready()
             || me.can_attack() || me.restrictions().contains(cambc::buff_restrictions::attack)
             || distance(me.position(), target.position()) > me.attack_range()) continue;
-        if (cast(a)) {
+        if (a.use()) {
             if (live(target) && me.can_attack()
                 && !me.restrictions().contains(cambc::buff_restrictions::attack)
                 && distance(me.position(), target.position()) <= me.attack_range()) me.attack(target);
@@ -131,14 +123,14 @@ bool fight(const Target& target, bool walked, bool dangerous, bool* excluded_wal
         if (walked && exclusive) continue;
         if (!live(target) || !a.valid_tiles().is_set(target.position())) continue;
         if (a.can_target_ground()) {
-            if (cast(a, target.position())) return true;
+            if (a.use(target.position())) return true;
         } else {
             if constexpr (std::is_same_v<Target, cambc::camp>) {
                 if (!a.can_target_camps()) continue;
             } else {
                 if (!a.can_target_enemies()) continue;
             }
-            if (cast(a, target)) return true;
+            if (a.use(target)) return true;
         }
     }
     return acted;
@@ -221,8 +213,16 @@ void Bot::buy_items() {
 void Bot::farm_camps() {
     auto& me = cambc::self();
     if (farms.empty()) {
-        for (const auto& group : cambc::map::camp_groups())
-            farms.push_back({group, group.spawn_tiles(), 0});
+        for (const auto& group : cambc::map::camp_groups()) {
+            vec2 center{};
+            float hp = 0;
+            for (const auto& c : group.camps()) {
+                center += c.spawn_position();
+                hp += c.base_stats().base_health;
+            }
+            center /= static_cast<int>(group.camps().size());
+            farms.push_back({group, group.spawn_tiles(), 0, center, hp});
+        }
     }
     const unsigned now = cambc::round_number();
     const auto visible = cambc::vision::visible_tiles();
@@ -238,7 +238,7 @@ void Bot::farm_camps() {
             return;
         }
     }
-    if (cambc::fuel_remaining() < PLAN_FUEL) {
+    const auto local_fallback = [&]() {
         // Cheap legal fallback; no search or hidden state reads.
         unsigned inspected = 0;
         for (const auto& c : cambc::vision::camps()) {
@@ -247,16 +247,33 @@ void Bot::farm_camps() {
                 && distance(me.position(), c.position()) <= me.attack_range()
                 && fight(c, false, c.strength() > 0)) return;
         }
-        return;
+    };
+    if (cambc::fuel_remaining() < FARM_SCAN_FUEL) { local_fallback(); return; }
+    // Rank cached design estimates before spending fuel on live group state,
+    // approach masks and distance lookups. No hidden live state enters the rank.
+    const auto position = me.position();
+    const auto attack_range = me.attack_range();
+    const auto damage = std::max(1.0f, me.strength() * 1.12f);
+    std::vector<float> ranks;
+    ranks.reserve(farms.size());
+    for (const auto& f : farms) {
+        const auto value = std::max(1.0f, float(f.group.gem_value()) + 0.12f * f.group.gold_value());
+        const auto travel_estimate = std::max(0, distance(position, f.center) - attack_range);
+        ranks.push_back(now < f.respawn_observed_until ? std::numeric_limits<float>::max()
+            : (travel_estimate + f.initial_health / damage + cambc::constants::capture_time + 1) / value);
     }
+    const auto order = farm_plan::candidates(ranks, target_group, farm_probe++, MAX_FARM_CHECKS);
     const auto blocked = blocked_tiles();
     cambc::distance_field travel;
     cambc::bitboard visited;
     travel.compute(blocked, around(me.position(), 0), visited);
+    if (cambc::fuel_remaining() < FARM_SCAN_FUEL) { local_fallback(); return; }
     int selected = -1;
     float best_score = std::numeric_limits<float>::max();
-    for (std::size_t i = 0; i < farms.size(); ++i) {
-        if (cambc::fuel_remaining() < PLAN_FUEL) break;
+    for (const auto i : order) {
+        // A single group evaluation plus move/combat can cost more than 30k.
+        // Do not consume the action budget just to inspect another candidate.
+        if (cambc::fuel_remaining() < FARM_SCAN_FUEL) break;
         auto& f = farms[i];
         const bool seen = !(f.spawns & visible).is_empty();
         bool reward = false;
@@ -294,7 +311,7 @@ void Bot::farm_camps() {
         if (dist == cambc::distance_field::unreachable) continue;
         const float value = float(f.group.gem_value()) + 0.12f * f.group.gold_value();
         // Reward / (travel + clearing + capture). Resets improve clear estimates.
-        const float cost = dist + hp / std::max(1.0f, me.strength() * 1.12f) + cambc::constants::capture_time + 1;
+        const float cost = dist + hp / damage + cambc::constants::capture_time + 1;
         float score = cost / std::max(1.0f, value);
         if (static_cast<int>(i) == target_group) score *= 0.85f; // Avoid target thrashing.
         if (score < best_score) { best_score = score; selected = static_cast<int>(i); }
@@ -309,7 +326,6 @@ void Bot::farm_camps() {
         return;
     }
     auto& f = farms[selected];
-    bool excluded_walk = false;
     auto act_on_group = [&](bool walked) {
         std::optional<cambc::camp> target;
         float best = std::numeric_limits<float>::max();
@@ -320,37 +336,12 @@ void Bot::farm_camps() {
             const float score = (d > me.attack_range() ? 100000.0f : 0.0f) + c.health();
             if (score < best) { best = score; target = c; }
         }
-        return target && fight(*target, walked, target->strength() > 0, &excluded_walk);
+        return target && fight(*target, walked, target->strength() > 0);
     };
     const bool acted = act_on_group(false);
-    if (!me.is_alive()) return;
-    if (acted) {
-        // Enter capture immediately after the last kill when a legal local move
-        // remains. No second combat, global path search or inferred group death.
-        if (excluded_walk || !me.can_move()
-            || me.restrictions().contains(cambc::buff_restrictions::move)
-            || cambc::fuel_remaining() < PLAN_FUEL || f.spawns.is_set(me.position())) return;
-        const auto fresh_visible = cambc::vision::visible_tiles();
-        if ((f.spawns & fresh_visible).is_empty()
-            || !std::holds_alternative<cambc::map::camp_group_reward_available>(f.group.state())) return;
-        // Another collector does not need help; never split its reward for no
-        // capture-time benefit. Read occupancy again after combat/retaliation.
-        if (!(f.spawns & cambc::vision::champion_tiles(team::ally)).is_empty()) return;
-        const auto blocked = blocked_tiles();
-        const auto local = blocked.reachable_tiles(me.position(), me.base_stats().base_move_speed);
-        const auto entries = f.spawns & fresh_visible & local & ~blocked;
-        for (auto entry : entries.positions()) {
-            if (me.move_absolute(entry)) {
-                lock_nearby_altar();
-                if (capture_entries_logged < 3) {
-                    ++capture_entries_logged;
-                    std::cout << "capture follow-through round " << cambc::round_number() << '\n';
-                }
-            }
-            return; // One attempt; False reveals an obstruction for next turn.
-        }
-        return;
-    }
+    // can_move() alone need not encode a just-cast spell's walk exclusion.
+    // Replan capture next turn after combat, including a last-monster kill.
+    if (!me.is_alive() || acted) return;
     const auto fresh_visible = cambc::vision::visible_tiles();
     cambc::bitboard goals;
     const bool seen = !(f.spawns & fresh_visible).is_empty();

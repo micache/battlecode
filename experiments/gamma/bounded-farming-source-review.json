@@ -1,0 +1,19 @@
+{
+  "kind": "Manual source isolation and safety audit, not an engine simulation",
+  "base_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+  "checked_source_hash": "72b489b0df56d0d7dcd842db50deac20ddf82c065c3001ea9f6d0b943d6fc944",
+  "checks": {
+    "unchanged_draft.cpp": true,
+    "unchanged_draft.h": true,
+    "unchanged_main.cpp": true,
+    "unchanged_random.h": true,
+    "unchanged_locks": true,
+    "unchanged_navigation_combat_banking": true,
+    "unchanged_shopping": true,
+    "unchanged_turn_priorities": true,
+    "bounded_scan": true,
+    "fuel_reserve": true,
+    "diff_check": true
+  },
+  "passed": true
+}
