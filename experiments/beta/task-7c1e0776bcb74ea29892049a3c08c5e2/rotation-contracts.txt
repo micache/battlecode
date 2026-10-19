@@ -1,0 +1,1 @@
+PASS: eligibility precedes shortlist; capture overrides cached deferral; observations require visibility; scan and vacate bounds retained; five unsafe mutations rejected. Source contracts only.

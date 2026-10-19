@@ -1,10 +1,8 @@
 #include <cambc.h>
 #include "bot.h"
-#include "economy_policy.h"
 #include <algorithm>
 #include <array>
 #include <limits>
-#include <numeric>
 #include <optional>
 #include <type_traits>
 #include <variant>
@@ -285,35 +283,37 @@ void Bot::farm_camps() {
     bool reward = false;
     const auto position = me.position();
     const auto strength = std::max(1.0f, me.strength());
-    // Count equipment at purchase value, not stat points (Power has an extra
-    // stat point). Tavi spends in the field, so cash alone misses his progress.
-    // Only our four purchased equipment lines are relevant; no host cost scan.
-    using I = cambc::item_type;
-    const auto items = me.item_count();
-    std::uint64_t capital = me.gold_count();
-    const auto shard_cost = I::jungle_shard_of_strength.cost();
-    const auto emblem_cost = shard_cost * I::jungle_shard_of_strength.combine_count();
-    for (auto shard : {I::jungle_shard_of_strength, I::monster_shard_of_strength,
-                      I::durability_shard_of_health, I::power_shard_of_strength})
-        capital += std::uint64_t(items[shard]) * shard_cost;
-    for (auto emblem : {I::jungle_emblem_of_strength, I::monster_emblem_of_strength,
-                       I::durability_emblem_of_health, I::power_emblem_of_strength})
-        capital += std::uint64_t(items[emblem]) * emblem_cost;
-    const auto economy_penalty = [&](const Group& group) {
-        return economy_policy::opportunity_penalty(group.group.gem_value(), capital);
-    };
-    // Rank with cached geometry before making expensive visibility/state calls.
-    // Include our committed group first so an ongoing capture is always checked.
-    std::vector<std::size_t> order(groups.size());
-    std::iota(order.begin(), order.end(), 0);
+    // Defer known downtime BEFORE the bounded shortlist, so it cannot hide all
+    // productive groups behind nearby respawns or repeatedly failed routes.
+    std::vector<std::size_t> order;
+    order.reserve(groups.size());
+    int occupied_cooldown = -1;
+    for (std::size_t i = 0; i < groups.size(); ++i) {
+        auto& g = groups[i];
+        if (g.spawns.is_set(position)) {
+            // Our tile is visible. Capture ownership outranks any cached retry
+            // or cooldown, even if this was not the committed target.
+            const auto state = g.group.state();
+            if (std::holds_alternative<cambc::map::camp_group_reward_available>(state)) {
+                g.cooldown.clear();
+                target_group = static_cast<int>(i);
+                return;
+            }
+            if (const auto* respawn = std::get_if<cambc::map::camp_group_respawning>(&state)) {
+                g.cooldown.record(round, respawn->timer);
+                occupied_cooldown = static_cast<int>(i);
+            } else g.cooldown.clear();
+        }
+        if (camp_rotation::eligible(round, g.retry_round, g.cooldown)) order.push_back(i);
+    }
+    // Include an eligible committed group first; keep existing ranking intact.
     const auto checked = std::min(max_group_checks, order.size());
     std::partial_sort(order.begin(), order.begin() + checked, order.end(), [&](auto a, auto b) {
         if (static_cast<int>(a) == target_group) return static_cast<int>(b) != target_group;
         if (static_cast<int>(b) == target_group) return false;
         const auto rank = [&](auto i) {
             return distance(position, groups[i].center) * 3.0f
-                + groups[i].initial_health / strength * 0.35f
-                + economy_penalty(groups[i]);
+                + groups[i].initial_health / strength * 0.35f;
         };
         const auto ra = rank(a), rb = rank(b);
         return ra != rb ? ra < rb : a < b;
@@ -323,12 +323,15 @@ void Bot::farm_camps() {
         if (n > 0 && cambc::fuel_remaining() < scan_reserve) break;
         const auto i = order[n];
         auto& g = groups[i];
-        if (round < g.retry_round) continue;
         const bool seen = !(g.spawns & visible).is_empty();
         bool available = false;
         if (seen) {
             const auto state = g.group.state();
-            if (std::holds_alternative<cambc::map::camp_group_respawning>(state)) continue;
+            if (const auto* respawn = std::get_if<cambc::map::camp_group_respawning>(&state)) {
+                g.cooldown.record(round, respawn->timer);
+                continue;
+            }
+            g.cooldown.clear();
             available = std::holds_alternative<cambc::map::camp_group_reward_available>(state);
         }
         if (available && g.spawns.is_set(me.position())) return; // Keep capture timer intact.
@@ -342,14 +345,20 @@ void Bot::farm_camps() {
         // Travel and expected clearing work, with a strong preference for free rewards.
         float score = distance(position, g.center) * 3.0f
             + (available ? -40.0f : hp / strength * 0.35f)
-            - std::min(40.0f, g.group.gem_value() * 0.15f)
-            + economy_penalty(g);
+            - std::min(40.0f, g.group.gem_value() * 0.15f);
         if (static_cast<int>(i) == target_group) score -= 12; // Avoid route oscillation.
         if (!available && !(around(g.center, 2) & allies).is_empty()
             && !around(g.center, 2).is_set(me.position())) score += 8;
         if (score < best_score) { best_score = score; chosen = i; reward = available; }
     }
-    if (chosen < 0) return;
+    if (chosen < 0) {
+        target_group = -1;
+        // Gold-only collection does not trigger bank(). If no new work was
+        // selected, leave the claimed region so its respawn can eventually run.
+        if (occupied_cooldown >= 0 && cambc::fuel_remaining() >= planning_reserve)
+            move_to(around(position, 1) & ~groups[occupied_cooldown].spawns);
+        return;
+    }
     target_group = chosen;
     auto& g = groups[chosen];
     if (!reward) {

@@ -1,0 +1,1 @@
+PASS: channel/spawn/capture preservation, dead shopping, observation guards, free roots, bounded retries, movement exclusions and reset guards; seven unsafe mutations rejected. Source contracts only, no runtime/fuel claim.

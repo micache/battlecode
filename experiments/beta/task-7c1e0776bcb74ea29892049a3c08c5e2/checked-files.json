@@ -1,0 +1,9 @@
+{
+  "bots/beta/src/bot.cpp": "082b20688d3635845b1b750281ef30ac56918c0d6b64d2a12ace64e273c5ee15",
+  "bots/beta/src/bot.h": "f390b5071344199a56d7eb1b381a5f9d7d8a3bb455617f0595a29370c9c141d6",
+  "bots/beta/src/camp_rotation.h": "7678ec2ae16b9319156ffd8fed99de925fa135293c32fc3425a584565b2f7ae6",
+  "bots/beta/src/draft.cpp": "a514e8514609f8420af35293c2023e75c4057c14d61b8bd23e03c09ed3f476a9",
+  "bots/beta/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+  "bots/beta/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+  "bots/beta/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+}

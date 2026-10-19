@@ -1,0 +1,361 @@
+{
+  "task_id": "task-7c1e0776bcb74ea29892049a3c08c5e2",
+  "base_source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+  "edit_commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+  "input_revision": "7cab9b0f6b948b0ea0b3b284425a3501c564d16b",
+  "engine_version": "2.2.5",
+  "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+  "evaluation_suite": "published-17-release-225-v1",
+  "documentation_changed": false,
+  "gameplay_review_required": false,
+  "latest_candidate": {
+    "build_id": "ae6f583052d796deea9139c91383af8762ecd7357ebd400969da051c9b401906",
+    "commit": "7cab9b0f6b948b0ea0b3b284425a3501c564d16b",
+    "revision_id": "054bc3462f9efd4daade4987117fa944cf9019a12cc901a7a05b53e538d7f2fa",
+    "source_hash": "fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa"
+  },
+  "latest_development_comparison": {
+    "commit_sha": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+    "common_opponent_delta": 0.044642857142857144,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 56,
+    "per_map": {
+      "ambush": {
+        "candidate": 0.75,
+        "incumbent": 0.5,
+        "pairs": 4
+      },
+      "collision": {
+        "candidate": 0.875,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "contest": {
+        "candidate": 0.625,
+        "incumbent": 0.5,
+        "pairs": 4
+      },
+      "corners": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "eight": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "elkring": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "expanse": {
+        "candidate": 1.0,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "fragment": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "interlock": {
+        "candidate": 0.75,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "lanes": {
+        "candidate": 0.875,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "pilgrimage": {
+        "candidate": 0.75,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "rushbait-v2": {
+        "candidate": 1.0,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "stampede": {
+        "candidate": 0.75,
+        "incumbent": 0.75,
+        "pairs": 4
+      },
+      "swirl": {
+        "candidate": 1.0,
+        "incumbent": 0.875,
+        "pairs": 4
+      }
+    },
+    "source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+    "unknown_reliability": []
+  },
+  "base_self_play": {
+    "interpretation": "Self-play only; separate from promotion scores. Wins/losses deduplicate identical inputs within this window; repeat_matches counts additional executions, not independent evidence. Sources, opponent commits, sides and engine identities remain explicit; no holdout traces. Fault counts describe the match, not necessarily the owning side. Replays/statistics remain canonical.",
+    "omitted_source_groups": 0,
+    "source_groups": [
+      {
+        "by_map_side": {
+          "ambush/A": [
+            0,
+            1
+          ],
+          "ambush/B": [
+            0,
+            1
+          ],
+          "collision/A": [
+            2,
+            0
+          ],
+          "collision/B": [
+            2,
+            0
+          ],
+          "contest/A": [
+            0,
+            2
+          ],
+          "contest/B": [
+            1,
+            1
+          ],
+          "corners/A": [
+            1,
+            1
+          ],
+          "corners/B": [
+            1,
+            1
+          ],
+          "eight/A": [
+            1,
+            1
+          ],
+          "eight/B": [
+            2,
+            0
+          ],
+          "elkring/A": [
+            1,
+            1
+          ],
+          "elkring/B": [
+            1,
+            1
+          ],
+          "expanse/A": [
+            0,
+            2
+          ],
+          "expanse/B": [
+            1,
+            1
+          ],
+          "fragment/A": [
+            2,
+            0
+          ],
+          "fragment/B": [
+            0,
+            2
+          ],
+          "interlock/A": [
+            0,
+            2
+          ],
+          "interlock/B": [
+            2,
+            0
+          ],
+          "lanes/A": [
+            2,
+            0
+          ],
+          "lanes/B": [
+            2,
+            0
+          ]
+        },
+        "by_opponent": {
+          "822811f4c9664771c56f9d52d120cd9ed1dcd83b9de3f76c5d1b10e892ed5f1c": {
+            "commit": "2dcd14cf3ed7e4e224208ea02920fc90b0f69a5c",
+            "losses": 7,
+            "wins": 11
+          },
+          "85c39989f37666a2b352a143f278998a98770cc7a97b057dbd9daf5f1e4fc42a": {
+            "commit": "7ed7e6a36e1795158656ed80c06d72b337f2192d",
+            "losses": 10,
+            "wins": 10
+          }
+        },
+        "commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+        "completed_matches": 38,
+        "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+        "examples": [
+          {
+            "map": "interlock",
+            "match_id": "ce4f287e6385fe4f1c6ac066a3bb30ca24c5fa9360016020e278455521223242",
+            "opponent_commit": "7ed7e6a36e1795158656ed80c06d72b337f2192d",
+            "side": "A"
+          },
+          {
+            "map": "interlock",
+            "match_id": "8756f9057466656264019386de47587dc79bf3447d339c15c0ab39a44eeb21e8",
+            "opponent_commit": "2dcd14cf3ed7e4e224208ea02920fc90b0f69a5c",
+            "side": "A"
+          },
+          {
+            "map": "fragment",
+            "match_id": "4413ca209096b67a12254a655846523d99faed73fba56333c3cd7b3a6f419bd9",
+            "opponent_commit": "7ed7e6a36e1795158656ed80c06d72b337f2192d",
+            "side": "B"
+          }
+        ],
+        "fault_matches": 0,
+        "losses": 17,
+        "metrics": {
+          "bag_loss": {
+            "mean": 29.63157894736842,
+            "observations": 38
+          },
+          "bot_faults_by_side": {
+            "mean": 0.0,
+            "observations": 38
+          },
+          "carried_gems": {
+            "mean": 36.63157894736842,
+            "observations": 38
+          },
+          "champion_damage_done": {
+            "mean": 5721.694687893516,
+            "observations": 38
+          },
+          "champion_damage_taken": {
+            "mean": 11727.098634519076,
+            "observations": 38
+          },
+          "champion_deaths": {
+            "mean": 4.5,
+            "observations": 38
+          },
+          "champion_kills": {
+            "mean": 2.1578947368421053,
+            "observations": 38
+          },
+          "collected_gems": {
+            "mean": 884.8157894736842,
+            "observations": 38
+          },
+          "fuel_suspensions_by_side": {
+            "mean": 0.0,
+            "observations": 38
+          },
+          "lifetime_earned_gold": {
+            "mean": 4439.078947368421,
+            "observations": 38
+          },
+          "monster_damage_done": {
+            "mean": 71812.83685724359,
+            "observations": 38
+          },
+          "monster_damage_taken": {
+            "mean": 10685.310454468978,
+            "observations": 38
+          },
+          "round": {
+            "mean": 776.7368421052631,
+            "observations": 38
+          },
+          "sale_refunds": {
+            "mean": 0.0,
+            "observations": 38
+          },
+          "spent_gold": {
+            "mean": 3831.0526315789475,
+            "observations": 38
+          },
+          "submitted_gems": {
+            "mean": 818.5526315789474,
+            "observations": 38
+          },
+          "unspent_gold": {
+            "mean": 608.0263157894736,
+            "observations": 38
+          }
+        },
+        "noncompleted": 0,
+        "pending_matches": 0,
+        "repeat_matches": 0,
+        "repeat_outcome_disagreements": 0,
+        "source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+        "unique_input_cells": 38,
+        "unknown_reliability": 0,
+        "wins": 21
+      }
+    ],
+    "window_limit_reached": false
+  },
+  "last_task_state": [
+    {
+      "id": "task-a1b6ecd47a594170978ab675dab36d4a",
+      "state": "PUBLISHED",
+      "published_commit": "7cab9b0f6b948b0ea0b3b284425a3501c564d16b",
+      "worker_result": {
+        "hypothesis": "Penalizing gold-only camps after 300 gold of cash/equipment will improve matched wins and submitted gems. No gain or increased deaths, faults or fuel suspension falsifies this hypothesis.",
+        "next_action": "Supervisor evaluates checked source fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa against the edit base on matched development maps, sides and opponents.",
+        "outcome": "READY_FOR_EVAL"
+      }
+    },
+    {
+      "id": "task-6be48cfa8a864eaca2308324b0f4cd53",
+      "state": "PUBLISHED",
+      "published_commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+      "worker_result": {
+        "hypothesis": "Appending guarded, route-directed two-tile dashes after walking will improve submitted gems and matched wins. No win gain, lower submissions, or increased deaths, faults or fuel suspension falsifies this unmeasured hypothesis.",
+        "next_action": "Supervisor evaluates the exact checked candidate against the edit base on matched maps, both sides and frozen opponents, prioritizing wins and submitted gems.",
+        "outcome": "READY_FOR_EVAL"
+      }
+    }
+  ],
+  "matches": [
+    {
+      "match_id": "ce4f287e6385fe4f1c6ac066a3bb30ca24c5fa9360016020e278455521223242",
+      "map": "interlock",
+      "side": "A",
+      "own_commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+      "own_source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+      "opponent_commit": "7ed7e6a36e1795158656ed80c06d72b337f2192d",
+      "summary": "interlock-a-summary.json"
+    },
+    {
+      "match_id": "4413ca209096b67a12254a655846523d99faed73fba56333c3cd7b3a6f419bd9",
+      "map": "fragment",
+      "side": "B",
+      "own_commit": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+      "own_source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+      "opponent_commit": "7ed7e6a36e1795158656ed80c06d72b337f2192d",
+      "summary": "fragment-b-summary.json"
+    }
+  ],
+  "contrast": "Same-source self-play collision/A and collision/B each 2W/0L; individual win match IDs not supplied. No temporal mechanism inferred from aggregate/final statistics.",
+  "frozen_opponents": [
+    {
+      "bot": "alpha",
+      "commit": "046f1c3a41fe746c65c0982d06062623200fa931",
+      "source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+      "inspected": "camp_rotation.h: timestamped cooldown lower bound and bounded observation scan"
+    },
+    {
+      "bot": "gamma",
+      "commit": "63d05e37a937fa2bfebf3de613af2ee3113b21a8",
+      "source_hash": "a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec",
+      "inspected": "draft.cpp and bot.cpp: melee-first, value/time, observed cooldowns, capture occupancy, 300-gold recall, each-bag banking, no monolith solo"
+    }
+  ]
+}
