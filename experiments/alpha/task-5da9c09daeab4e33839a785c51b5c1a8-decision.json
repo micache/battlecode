@@ -1,0 +1,562 @@
+{
+  "task_id": "task-5da9c09daeab4e33839a785c51b5c1a8",
+  "bot_id": "alpha",
+  "base_source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+  "hypothesis": "Using teleport crystals only for quiet, personally visible terrain shortcuts that save at least channel duration plus three walking turns increases matched development win rate over the edit base; unchanged or lower win rate falsifies the prediction.",
+  "basis": "Unmeasured rules/source deduction: crystal range 3 ignores intervening terrain, costs 10 gold and channels for SDK tp_crystal_time (handbook 3). Current objective navigation only walks; successful prior recovery reduces mortality but leaves throughput losses.",
+  "expected": "Earlier objective arrival/tribute on terrain detours; collection/submission and paired win completion rounds are diagnostics, not strength criteria.",
+  "risk": "Crystal gold delays stats; targets/occupancy change during channel, dynamic blockers inflate route savings; conservative visibility/threat rules may prevent all uses; channel death or new stuns remain possible.",
+  "falsifier": "Matched development win rate unchanged or lower; no comparative result exists for this candidate.",
+  "rejected": [
+    "Repeated failed draft/items/capture/banking/route ranking packages",
+    "Travel dashes only remove two path steps; crystals cross terrain and require a larger saving rather than copying that negative trial",
+    "New shared coordination protocol without duplicate-work traces"
+  ],
+  "prior_work": {
+    "task_id": "task-758e6444ffb84b50a1ea0f0b0f2bd206",
+    "checkpoint_patch_empty": true,
+    "final_missing": true,
+    "notes_same_as_base": true,
+    "recovery": "No edits to recover; original checkpoint/notes retained in their exact supplied paths; latest published candidate evaluated."
+  },
+  "rules_review": "Routine unchanged docs; compact reference, playbooks B/C/D/F/G, RESEARCH/organizer limits and targeted teleport/channel/movement API+installed header consulted.",
+  "opponent_manifest": {
+    "count": 5,
+    "manifest": "/srv/battlecode/public/strategy/task-5da9c09daeab4e33839a785c51b5c1a8/manifest.json",
+    "sha256": "ffc1de857d326e21fab7a984945f035eb57d62799c62e83de25e25b5e4ea2f62"
+  },
+  "opponent_inspection": "Verified all manifest files. Gamma ecbc8203: melee farming roster, camp value/cost ranking, capture deference, passive emblems, locks; beta 50a0d7d5: legal free approach routing, retries, bounded two-step terrain-respecting dashes, lock support. Neither inspected route source uses teleport crystals. This is source evidence, not a runtime trace.",
+  "evidence": {
+    "evaluation_id": "130f31b3b08bd47cacbc735c483b463c53bee38b57854575fd15200b2e06cf44",
+    "candidate": {
+      "build_id": "1b828f2708614aea0c91c23b66509bb271ae02534d4ece9a49ae3be1a654341a",
+      "commit": "046f1c3a41fe746c65c0982d06062623200fa931",
+      "revision_id": "47ad41aa7d7c953f658e5812278132cff64af9c08efa487687e7f91a6d4cbd31",
+      "source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2"
+    },
+    "development_comparison": {
+      "commit_sha": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+      "common_opponent_delta": 0.05357142857142857,
+      "fault_matches": [],
+      "missing": [],
+      "paired_cases": 56,
+      "per_map": {
+        "ambush": {
+          "candidate": 0.5,
+          "incumbent": 0.375,
+          "pairs": 4
+        },
+        "collision": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "contest": {
+          "candidate": 0.875,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "eight": {
+          "candidate": 0.75,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 1.0,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.75,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "fragment": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 0.625,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 0.625,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "pilgrimage": {
+          "candidate": 1.0,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "rushbait-v2": {
+          "candidate": 0.625,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "stampede": {
+          "candidate": 1.0,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "swirl": {
+          "candidate": 0.75,
+          "incumbent": 0.625,
+          "pairs": 4
+        }
+      },
+      "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+      "unknown_reliability": []
+    },
+    "losses": [
+      {
+        "match_id": "d4c63b042b47f5bf760a2097114f5c8d29b303b2097e3294b91a3e7e97ae6424",
+        "map": "ambush",
+        "side": "A",
+        "round": 882,
+        "final_metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 240
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 72,
+              "B": 72
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 2958.0,
+              "B": 180.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 180.0,
+              "B": 2958.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 1,
+              "B": 4
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 3,
+              "B": 1
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 918,
+              "B": 1326
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 1
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 4664,
+              "B": 4000
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 78810.0,
+              "B": 65923.5
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 24220.0,
+              "B": 25796.0
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "4941643904495260023"
+          },
+          "round": {
+            "available": true,
+            "value": 882
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 3820,
+              "B": 3630
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 846,
+              "B": 1014
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 844,
+              "B": 370
+            }
+          }
+        }
+      },
+      {
+        "match_id": "6ef846d2082efb5b6cfaeb8f99b8e909e40f32458463c46a19181909e2a6943c",
+        "map": "ambush",
+        "side": "B",
+        "round": 966,
+        "final_metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 120,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 60,
+              "B": 120
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 3220.0,
+              "B": 7563.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 7563.0,
+              "B": 3220.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 8,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 5
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1200,
+              "B": 870
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 3340,
+              "B": 4991
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 55025.5,
+              "B": 78123.0
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 21354.0,
+              "B": 25060.0
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "4941643904495260023"
+          },
+          "round": {
+            "available": true,
+            "value": 966
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 3090,
+              "B": 4100
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1020,
+              "B": 750
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 250,
+              "B": 891
+            }
+          }
+        }
+      },
+      {
+        "match_id": "be46adde383a484cfefe8f1cdef15d8cfd8a2d0899f65b00623f2c836f070dce",
+        "map": "ambush",
+        "side": "A",
+        "round": 846,
+        "final_metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 1210.0,
+              "B": 655.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 655.0,
+              "B": 1210.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 890,
+              "B": 1042
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 3730,
+              "B": 4645
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 67979.0,
+              "B": 75444.0
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 24680.0,
+              "B": 15985.399907112122
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "4941643904495260023"
+          },
+          "round": {
+            "available": true,
+            "value": 846
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 2980,
+              "B": 3450
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 890,
+              "B": 1042
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 750,
+              "B": 1195
+            }
+          }
+        }
+      }
+    ],
+    "contrasting_coverage": "Current source elkring/fragment/pilgrimage/stampede 8/8 development wins; aggregate coverage only, no trace causality."
+  },
+  "initial_source_files": {
+    "bot.cpp": "e0ffb57e1360092d0c6cf3ae69c36343281271580bc85cfa32fe00d458f43194",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bot.h": "366fb1bfa19ab21c1059a5f478b646ab911b5cda545b01978d4fe545fd05a873",
+    "camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "recovery.h": "8114023e60067de0cb4e053da7d4fc58002f7eb0198227c46b4fb7ed3c372e36",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0"
+  },
+  "policy": {
+    "integration": "Only ordinary existing farming/banking routes, before walking. Recovery route stays base-identical. One use attempt ends navigation, including False/reveal; returns false to prevent caller postwalk combat. Channel guards yield until completion.",
+    "purchase": "After lock at spawn/while dead and before ordinary random-stat shopping, buy up to one SDK tp_crystal for 10 gold.",
+    "gates": "Personally visible free landing within radius 3, finite origin/destination route field, not terrain-reachable within 3 steps, >= SDK channel duration + 3 walking-turn saving; no visible damaging camp in range of either endpoint; no visible enemy in max(4,attack range)+channel*base_speed of either endpoint.",
+    "bounded": "45000 fuel entry, 28000 scan/action reserve, <=32 camps, <=6 enemies and <=49 landing tiles. Native existing route field reused; no full new field, recursion, shared memory or cross-turn enemy records.",
+    "unchanged": "Draft/RNG, combat action selection, camp cooldown observer, banking priority/locks, recovery and 4-byte shared-round layout."
+  },
+  "candidate_source_files": {
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bot.cpp": "020ea753fc6487a39876dd9292b90a24e349261d2a6d3bfeb9df818decf1af29",
+    "bot.h": "366fb1bfa19ab21c1059a5f478b646ab911b5cda545b01978d4fe545fd05a873",
+    "camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "recovery.h": "8114023e60067de0cb4e053da7d4fc58002f7eb0198227c46b4fb7ed3c372e36",
+    "route_teleport.h": "a4fcdc340a1702969a24b34e537115184f7426f7de5f7ccaeb7f8724ba9d6fb0"
+  },
+  "check": {
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+    "status": "PASSED",
+    "exit_code": 0,
+    "report": {
+      "bot_id": "alpha",
+      "exit_code": 0,
+      "finished": 1792402813.5946817,
+      "matches": [
+        "0c51a0b62e6dcc56ab94c8769772f087a8d8a67a3f90d05b5a614ba1ac6514f5",
+        "4a89bd45ef704afe56bbb9d43a9c2c1e03d835cd6a58c6152dbf3fe4b407342f"
+      ],
+      "report_path": ".agent/check-task-5da9c09daeab4e33839a785c51b5c1a8.json",
+      "report_reference": "check:task-5da9c09daeab4e33839a785c51b5c1a8:0ef30884a3076a9a2750ff5d808e8c8bfa3d2e4851f5706df1b97ef6f1224fd6",
+      "source_hash": "0ef30884a3076a9a2750ff5d808e8c8bfa3d2e4851f5706df1b97ef6f1224fd6",
+      "started": 1792402756.3770316,
+      "state": "PASSED",
+      "task_id": "task-5da9c09daeab4e33839a785c51b5c1a8"
+    },
+    "source_files_unchanged_after_check": true
+  },
+  "diff_check": {
+    "command": "git diff --check",
+    "status": "PASSED",
+    "exit_code": 0
+  }
+}

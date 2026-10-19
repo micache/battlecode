@@ -4,6 +4,7 @@
 #include "altar_control.h"
 #include "camp_rotation.h"
 #include "recovery.h"
+#include "route_teleport.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -47,7 +48,8 @@ bool move_towards_closest(cambc::bitboard goals) {
     goals &= ~blocked | cambc::vision::camp_tiles();
     if (goals.is_empty())
         return false;
-    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0])) {
+    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0])
+        && !route_teleport::ready()) {
         const bool moved = me.move_towards(goals.positions()[0]);
         if (moved) altar_control::place_lock();
         return moved;
@@ -58,6 +60,10 @@ bool move_towards_closest(cambc::bitboard goals) {
     cambc::distance_field field;
     cambc::bitboard visited;
     field.compute_to(path_walls, goals, tiles_around(me.position(), 0), visited);
+
+    // A successful channel or a False/reveal ends this navigation phase. False
+    // is deliberately not reported as movement: farming must not attack next.
+    if (route_teleport::try_shortcut(field, blocked)) return false;
 
     // Choose a reachable step with a smaller distance to the goal.
     auto step = me.position();
@@ -324,6 +330,7 @@ void Bot::play_turn() {
     if (!me.is_alive()) {
         recovering = false;
         altar_control::buy_lock();
+        route_teleport::buy_crystal();
         return;
     }
 
@@ -337,6 +344,7 @@ void Bot::play_turn() {
     if (at_spawn) {
         // Ten gold buys persistent denial; remaining gold follows the base build.
         altar_control::buy_lock();
+        route_teleport::buy_crystal();
         buy_items();
     }
 
