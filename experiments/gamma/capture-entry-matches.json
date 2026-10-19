@@ -1,0 +1,118 @@
+[
+  {
+    "match_id": "46169b0b3c07969ecdaaf079e30dc16aa4d64b59d28ae87ae0549d0709cbe3ec",
+    "map": "ambush",
+    "candidate_side": "A",
+    "candidate_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+    "candidate_source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+    "opponent_revision": null,
+    "provenance": "Recovered prior task artifact; not a new match or independent repeat.",
+    "metrics": {
+      "submitted_gems": {
+        "A": 960,
+        "B": 1010
+      },
+      "collected_gems": {
+        "A": 1066,
+        "B": 1010
+      },
+      "champion_deaths": {
+        "A": 8,
+        "B": 8
+      },
+      "bot_faults_by_side": {
+        "A": 0,
+        "B": 0
+      },
+      "fuel_suspensions_by_side": {
+        "A": 1,
+        "B": 2
+      },
+      "round": 935
+    }
+  },
+  {
+    "match_id": "350aedb52aadcef0e0769f398a80fd46aaa1efb8c137de550ed8a34b8a13ee66",
+    "map": "collision",
+    "candidate_side": "A",
+    "candidate_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+    "candidate_source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+    "opponent_revision": null,
+    "provenance": "Recovered prior task artifact; not a new match or independent repeat.",
+    "metrics": {
+      "submitted_gems": {
+        "A": 246,
+        "B": 1002
+      },
+      "collected_gems": {
+        "A": 520,
+        "B": 1002
+      },
+      "champion_deaths": {
+        "A": 5,
+        "B": 0
+      },
+      "bot_faults_by_side": {
+        "A": 0,
+        "B": 0
+      },
+      "fuel_suspensions_by_side": {
+        "A": 0,
+        "B": 0
+      },
+      "round": 570
+    }
+  },
+  {
+    "match_id": "0ea01ad4115fdd2003d52290dedf198f8e9730e52333b063b15c64edee41e86e",
+    "map": "collision",
+    "candidate_side": "B",
+    "candidate_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+    "candidate_source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+    "opponent_commit": "61d59667cf33c7c552390485c5bee5c1119d73ba",
+    "opponent_source_hash": "e05d7dfc0b99af0c3e7f7154858e09ce04eb23d472db8ed1ae5ec08b1c1078bf",
+    "provenance": "Recovered prior task artifact; not a new match or independent repeat.",
+    "round": 595,
+    "completed": true,
+    "candidate_submitted_gems": 238,
+    "opponent_submitted_gems": 1018,
+    "candidate_deaths": 9,
+    "candidate_faults": 0,
+    "candidate_fuel_suspensions": 0,
+    "summary_final_sha256": "cfb955fb8711830d4e52008ede280a712d853f703753d02431c9eabad61254a8"
+  },
+  {
+    "match_id": "41c22e31989d7f3134bb2f4da0afdcc16f151d72d994fd90a6b1f14dff082ff0",
+    "map": "collision",
+    "candidate_side": "A",
+    "candidate_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+    "candidate_source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+    "opponent_revision": null,
+    "provenance": "Recovered prior task artifact; not a new match or independent repeat.",
+    "metrics": {
+      "submitted_gems": {
+        "A": 1028,
+        "B": 66
+      },
+      "collected_gems": {
+        "A": 1086,
+        "B": 264
+      },
+      "champion_deaths": {
+        "A": 1,
+        "B": 12
+      },
+      "bot_faults_by_side": {
+        "A": 0,
+        "B": 0
+      },
+      "fuel_suspensions_by_side": {
+        "A": 0,
+        "B": 0
+      },
+      "round": 716
+    },
+    "state": "COMPLETED",
+    "final_sha256": "8d81cc712dc6e13fd061f21bde74050d1e2fc265273ca01697d647ca2a42bbbb"
+  }
+]

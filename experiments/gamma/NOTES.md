@@ -1,97 +1,95 @@
 # Gamma operational notes
 
-## task-cf1855961cf741329d7612ce37c0e3cb — opportunistic altar control
+## task-d0408f5c94104b45803559ea6f03050a — recover immediate capture entry
 
-- Exploration; one candidate. Branch bot/gamma, HEAD/input
-  66c7cc5c5ad6cc9a583ad9a79d0c04514bc6db83. Actual edit commit
-  63d05e37a937fa2bfebf3de613af2ee3113b21a8, source
-  a4d664c874cc2e1e56e59dfbb08e7904b8652d305cc881b74661b00baf4264ec.
-  All six initial source files matched trusted edit hashes and that commit.
-  Prepared draft.cpp difference from HEAD is intentional base restoration.
-  Latest candidate evaluation completed; no pending candidate blocks this task.
-  Protected champion remains 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d.
-  Previous notes: archive/task-be62cdde8f4f40b1b40c40728bf66a78.md.
-- Hypothesis: opportunistic ten-gold altar locks on existing routes increase
-  matched development win rate versus a4d664c8, without new bot faults.
-  Non-increasing matched win rate or a new fault falsifies it. Tribute margin,
-  enemy delays and item timing explain results; they do not replace wins.
-  Mechanism is an UNMEASURED rules/source deduction, not proven by finals.
+- One refinement candidate. Branch bot/gamma, HEAD/input/edit commit
+  ecbc8203fd2ef0696ef7784c8b39528bb182ad7b, base source
+  ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671.
+  Initial worktree clean, trusted entry verified, six source files at edit base.
+  Protected accepted champion: 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d.
+- Prior task-9c55d0328faf44f1945faa1770eac277 was PAUSED, never published or
+  evaluated. History attributes incomplete check to old evaluation backlog then
+  ENOSPC, not bot failure; infrastructure fix c332df20361a5ad40834622baf2e54ce51f43d33.
+  Exact-source prior check-report lookup returned unknown check, exit1. Original
+  source, notes and supervisor checkpoint remain in that owner attempt. Inspected
+  the patch before recovering it unchanged; no pending evaluation to poll.
+  Both prior notes retained in archive/task-9c55d0328faf44f1945faa1770eac277.md
+  and archive/task-cf1855961cf741329d7612ce37c0e3cb.md.
+- Hypothesis: legal same-turn local capture entry after a final monster kill
+  increases matched development win rate AND mean submitted gems versus ff511c52,
+  without new bot faults. Non-increasing either metric or any new fault rejects
+  it. Mechanism is an UNMEASURED rules/source deduction; no causal loss trace.
 
-## Current strategy and change
+## Strategy and recovered change
 
-- Retain Varg/Vendetta/Marcella/Ryth/Tavi draft order and unique fallback roster.
-  Group-value/travel/clear/capture scoring, bank any positive bag, hostile-lock
-  attacks, 35% retreat, 98% spawn healing and 300-gold empty-bag recall retained.
-  Jungle Strength, Monster Strength, one Durability Health, then Power Strength.
-- Buy one altar lock before shards whenever SDK can_buy permits, including dead
-  shop turns. Cost 10 gold, carry limit one; Tavi cannot buy consumables remotely.
-- On active non-stunned turns and after successful ordinary movement, use an
-  owned lock on the first visible unlocked altar within Chebyshev distance two.
-  No detour or combat pursuit. Never replace a visible lock of either team.
-  Skip own recall/tribute/teleport, consumable restrictions and fuel below 18000.
-  One use attempt per observation phase, including a False obstruction reveal.
-  Placement after movement happens before arrival tribute begins.
-- Only bot.cpp differs from actual edit base. No draft/combat/macro-policy bundle,
-  no new search, shared memory, logging or fuel settings. Main yield unchanged.
-- Reason: existing bank-any-bag travel repeatedly passes altars. Friendly locks
-  allow our tribute, cancel opposing tribute and force three enemy basic hits.
-  Denial may improve the objective race for ten gold without a travel tax.
+- Keep Varg/Vendetta/Marcella/Ryth/Tavi draft; group value/travel/clear/capture
+  scoring; bank every positive bag; hostile-lock attacks; 35% retreat, 98% spawn
+  healing, 300-gold safe empty-bag recall. Jungle Strength, Monster Strength,
+  one Durability Health, then Power Strength. Ten-gold route locks retained.
+- Current base returns after every successful fight, including a final melee
+  basic/reset kill with walking remaining. Capture starts only when a spawn is
+  occupied at a capture phase; earlier entry can save one round each rotation.
+- Track successful casts' movement exclusion in all four existing cast paths.
+  Failure does not mark exclusion. After pre-movement farming combat, require
+  alive self, remaining movement, no exclusive cast/movement restriction,
+  >=30000 fuel, fresh visible reward state, and no ally already collecting.
+- Intersect spawns with fresh vision, fresh occupancy and SDK locally reachable
+  tiles. One ordinary move attempt, no new global search or second combat.
+  Skip when already on the spawn region. False reveals an obstruction and ends
+  this optional follow-through. Successful arrival may place an existing lock.
+- Log at most three capture entries per private body instance. No shared-memory,
+  fuel, draft, navigation, bank, recovery, item or combat-priority policy change.
+  Source is identical to prior candidate c44b1194fe72c682d2f70e3f9ed206a518040fe909f18952a83718b03543b4a2.
 
-## Evidence and retained negative findings
+## Evidence and limits
 
-- Evaluation 054b1a16de90845c74e6ef02fa0551d50756cb27d45dd8f2f411f8fba398639f
-  tested Ryth draft source c11c50fe59ace9c2050647d63b45032ba2ae34e2aad85c66e3751723e7f7604c,
-  not today's restored source. Full result 102W/34L, no faults; matched
-  development-base delta -0.0178571 across 56 side pairs. No promotion inferred.
-- Collision A loss 20c460d7eef1f20b2d00d3fe8fab32ad7ce14aef34c68f2586ccbc6a0a102832,
-  c11c50fe source: 112 vs 1012 tribute, round556, nine deaths, 242 bag loss,
-  no faults/suspensions. Opponent revision UNKNOWN in summary. This does not
-  establish why deaths occurred, or show that a lock would have saved the game.
-- Contrasting Collision A smoke win 294d09269af4ece82722c1fac0dd7d9695d21dc59221f1e70899da1160583e33,
-  same c11c50fe source/mapHash ebfcace1: 1078 vs 286, round712. Opponent revision
-  UNKNOWN; not a controlled comparison with that loss. Saved ryth-draft-smoke.json.
-- Exact-base Lanes B loss 12d552bb0d46f68fdffff706151e6602abc99a039e749826dfe0509f346823b2:
-  902 vs 1008 tribute, round519, no faults. Beta d2d57274/e8aa98b8 identity comes
-  from prior brief; summary alone lacks revision. Close score supports exploring
-  denial value, not a causal lock claim. Saved ryth-draft-summaries.json.
-- Current frozen manifest SHA256 079ed02010a32e2d995690fae536fc83cec46c5eb5411e19aea50d6a6b3748e1;
-  all six source file sets verified. Alpha 046f1c3a/47ad41aa and beta
-  50a0d7d5/675607ad buy locks before items and place along normal routes.
-  Import only this independent consumable policy into gamma's frequent bank
-  routes; retain gamma composition, route scoring, recovery and build.
-  Alpha uses random draft/Power stat and bounded combat; beta uses Varg/Tavi/Ryth
-  and reset/AoE farming with survival items, recovery latch and newer dash.
-- Target-aware combat, camp claims and threat-aware banking previously regressed.
-  Latest Ryth draft also regressed against this edit base. Do not repeat these
-  without changed evidence. No shield/dash or Cassi/Issac policy bundled here.
-- Detailed decision, falsifier and attribution: altar-control-evidence.json.
-  Source isolation and guard review: altar-control-source-review.json.
+- Exact-base evaluation 1a898e7cd33630cb6034475a6a8f7beeb234f47dc7186fac6fa80e94110e76f2:
+  114W/22L, zero faults, INCONCLUSIVE. Matched development-base delta +0.0892857
+  over 56 paired cases is separate from protected champion comparison.
+- Ambush A loss 46169b0b3c07969ecdaaf079e30dc16aa4d64b59d28ae87ae0549d0709cbe3ec:
+  exact ff511c52, 960 vs1010 tribute, round935, eight deaths, one own suspension.
+  Collision A loss 350aedb52aadcef0e0769f398a80fd46aaa1efb8c137de550ed8a34b8a13ee66:
+  same source, 246 vs1002 tribute, round570, five deaths, zero suspensions.
+  Both zero faults. Opponent revisions unknown in summaries. These finals do
+  not prove that capture delay caused either loss. Compact recovered artifacts:
+  capture-entry-matches.json, including contrasting exact-base Collision A smoke
+  win 41c22e31 (1028 vs66, round716, zero faults/suspensions).
+- Current frozen manifest SHA256 22a5e65a680916adbc2a1222a5f3372d2f824fe9bb263cfd618c8ec57d917975;
+  verified all six file sets. Beta 7cab9b0f/fd5e2554 uses Varg/Tavi/Ryth, recovery,
+  shields/dashes, survival items, route locks and a post-bootstrap gold penalty;
+  its farming also returns after combat. Alpha 82a14a04/6e362fd7 uses random
+  draft/Power stats, bounded combat, timed respawn rotation and altar preference.
+  No macro cloning: capture follow-through remains an independent rules deduction.
+- Prior target-aware combat, camp claims, threat-aware banking, protected transit
+  and Ryth-for-Marcella draft were not selected into this base. Negative findings
+  retained in archives; no repetition bundled into recovery.
+- Routine unchanged-doc iteration: consulted BOT_REFERENCE, playbooks B/C/D/F/G,
+  RESEARCH/organizer ledger, capture phase/action order, C++ movement/group-state
+  export and installed SDK. Header SHA256 ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264
+  verified. Engine2.2.5/lock0cabb3c7; suite published-17-release-225-v1. Organizer
+  download hub is not complete policy review; official production parity unknown.
+  External observations concern another source/opponents and are not used as tests.
 
-## Runtime review, checks and next action
+## Checks and next action
 
-- Engine CLI 2.2.5, lock 0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d,
-  suite published-17-release-225-v1. Routine unchanged-doc iteration, matching
-  installed cambc-225 C++ header. Consulted consumable use/count, can_buy and
-  placement range contracts plus BOT_REFERENCE, playbooks B/C/E/G and ledger.
-  No unrelated Python binding or entire unchanged SDK reread.
-- Organizer page is a download hub; additional policy/production parity remains
-  uncertified. No SDK, map, opponent, threshold or accepted snapshot changed.
-- git diff --check and manual source-isolation audit passed.
+- python3 experiments/gamma/check_capture_entry.py: PASSED, exit0, report
+  capture-entry-source-check.json. Nine source safety/isolation invariants only,
+  not an engine simulation or competitive result. git diff --check PASSED, exit0.
 - bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json: PASSED,
-  exit 0, candidate source ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671.
-  Report .agent/check-task-cf1855961cf741329d7612ce37c0e3cb.json; exact-source
-  check-report agrees. No bot source edited after validation launch.
-- Risk: reserving ten gold may delay an emblem, a lock may protect an unused
-  altar, and ranged enemies may clear cheaply. No measured improvement claimed.
-- Next: supervisor evaluates checked exact source against a4d664c8 on matched
-  maps/sides/opponents; compare wins, tribute margin, deaths, item timing, faults
-  and enemy tribute delays where telemetry permits. Apply unchanged gates.
-- Smoke summaries saved in altar-control-smoke.json. Both are completed Collision
-  games (mapHash ebfcace1), engine build d7e29ae3. Opponent revisions UNKNOWN.
-  A 41c22e31989d7f3134bb2f4da0afdcc16f151d72d994fd90a6b1f14dff082ff0:
-  1028 vs 66 tribute, round716. B
-  61cbb3926bef91c14be2d24b142890fc2e512019855495d858e62cd639e6cb2e:
-  1002 vs 198, round826. Both sides have zero faults and fuel suspensions.
-  Gamma bought four locks and retained three at final state in each game;
-  inventory alone is not a trace of enemy tribute cancellation.
-  These are validity checks, not a matched improvement comparison.
+  exit0, exact candidate c44b1194fe72c682d2f70e3f9ed206a518040fe909f18952a83718b03543b4a2.
+  Report .agent/check-task-d0408f5c94104b45803559ea6f03050a.json.
+  No source edited after validation launch. Smoke details: capture-entry-smoke.json.
+- Both completed Collision smoke games (mapHash ebfcace1, build d7e29ae3) have
+  zero faults/suspensions on both sides. A e9c9af0c: 1100 vs110 tribute, round715;
+  B 240888b0: 1052 vs328, round865. Opponent revisions unknown in summaries.
+  Own logs contain eight/nine successful follow-through markers, no bot errors,
+  and sampled minimum fuel 11339/12031. Capped logs demonstrate execution, not
+  a controlled one-round timing gain. Smoke wins are validity, not improvement.
+- Risks: earlier occupancy can expose a farmer or change contest timing; allies
+  outside local vision may also collect. Fuel guard/local-only work bounds cost,
+  but smoke must check errors and actual headroom. One saved round may not win.
+- Next: supervisor evaluates the checked exact source against ff511c52 on
+  matched maps/sides/opponents under unchanged gates; compare
+  wins, tribute, deaths, faults and fuel suspensions. Logs should confirm the
+  follow-through executes; a controlled trace should verify capture phase timing.
+  If no gain, investigate recovery/route exposure before changing combat again.

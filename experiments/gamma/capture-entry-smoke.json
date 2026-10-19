@@ -1,0 +1,359 @@
+[
+  {
+    "match_id": "e9c9af0ceb8058d0dc36ec89b179be650e12ac54e73cab14b6d494481a7bf224",
+    "candidate_side": "A",
+    "candidate_source_hash": "c44b1194fe72c682d2f70e3f9ed206a518040fe909f18952a83718b03543b4a2",
+    "opponent_revision": null,
+    "map": "collision",
+    "match": {
+      "engineBuildHash": "d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5",
+      "engineVersion": "0.0.3",
+      "finalInput": 9407,
+      "finalRoundPartial": true,
+      "finalSubstep": 42,
+      "height": 41,
+      "mapHash": "ebfcace19ebb3bca84d63856c5cb56285042057d751ff41dc011d8a2c8c085dc",
+      "metricSemanticsVersion": 1,
+      "outcome": "teamA",
+      "roundsCompleted": 714,
+      "roundsStarted": 715,
+      "seed": "14621398811092091047",
+      "width": 41
+    },
+    "normalized": {
+      "bot_faults": 0,
+      "completed": true,
+      "detail": null,
+      "fuel_suspensions": 0,
+      "metrics": {
+        "bag_loss": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 154
+          }
+        },
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 58,
+            "B": 44
+          }
+        },
+        "champion_damage_done": {
+          "available": true,
+          "value": {
+            "A": 2800.0,
+            "B": 2212.199981689453
+          }
+        },
+        "champion_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 2212.199981689453,
+            "B": 2800.0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 15
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 5,
+            "B": 0
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 1158,
+            "B": 308
+          }
+        },
+        "fuel_suspensions_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 4740,
+            "B": 1575
+          }
+        },
+        "monster_damage_done": {
+          "available": true,
+          "value": {
+            "A": 66585.0,
+            "B": 26045.0
+          }
+        },
+        "monster_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 19969.19988632202,
+            "B": 8210.0
+          }
+        },
+        "observed_engine_seed": {
+          "available": true,
+          "value": "14621398811092091047"
+        },
+        "round": {
+          "available": true,
+          "value": 715
+        },
+        "sale_refunds": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "spent_gold": {
+          "available": true,
+          "value": {
+            "A": 3550,
+            "B": 1410
+          }
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 1100,
+            "B": 110
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 1190,
+            "B": 165
+          }
+        }
+      },
+      "protocol_version": 1,
+      "state": "COMPLETED",
+      "terminal_reason": null,
+      "winner": "A"
+    },
+    "final_sha256": "c1a2e35173f88e80e5bd4345bab7630a4f8bbfe194fe7f38bb0643dcc44b7172",
+    "own_log": {
+      "file": "bot-a.stdout.log",
+      "size": 19601,
+      "slice_offsets": [
+        0,
+        8192,
+        16384
+      ],
+      "capture_entries": [
+        "capture follow-through round 106",
+        "capture follow-through round 188",
+        "capture follow-through round 190",
+        "capture follow-through round 227",
+        "capture follow-through round 303",
+        "capture follow-through round 339",
+        "capture follow-through round 463",
+        "capture follow-through round 692"
+      ],
+      "minimum_logged_fuel": 11339,
+      "errors": [],
+      "suspensions": [],
+      "evidence_limit": "Combined bounded stdout slices; logs do not identify exact kill or capture phase."
+    }
+  },
+  {
+    "match_id": "240888b079b0c35cfe9629504245a6dedbd5052e02296960e37bf9fb114b713e",
+    "candidate_side": "B",
+    "candidate_source_hash": "c44b1194fe72c682d2f70e3f9ed206a518040fe909f18952a83718b03543b4a2",
+    "opponent_revision": null,
+    "map": "collision",
+    "match": {
+      "engineBuildHash": "d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5",
+      "engineVersion": "0.0.3",
+      "finalInput": 10047,
+      "finalRoundPartial": true,
+      "finalSubstep": 7,
+      "height": 41,
+      "mapHash": "ebfcace19ebb3bca84d63856c5cb56285042057d751ff41dc011d8a2c8c085dc",
+      "metricSemanticsVersion": 1,
+      "outcome": "teamB",
+      "roundsCompleted": 864,
+      "roundsStarted": 865,
+      "seed": "14621398811092091047",
+      "width": 41
+    },
+    "normalized": {
+      "bot_faults": 0,
+      "completed": true,
+      "detail": null,
+      "fuel_suspensions": 0,
+      "metrics": {
+        "bag_loss": {
+          "available": true,
+          "value": {
+            "A": 154,
+            "B": 108
+          }
+        },
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "carried_gems": {
+          "available": true,
+          "value": {
+            "A": 22,
+            "B": 36
+          }
+        },
+        "champion_damage_done": {
+          "available": true,
+          "value": {
+            "A": 5165.0,
+            "B": 12300.0
+          }
+        },
+        "champion_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 12300.0,
+            "B": 5165.0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 15,
+            "B": 2
+          }
+        },
+        "champion_kills": {
+          "available": true,
+          "value": {
+            "A": 1,
+            "B": 9
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 504,
+            "B": 1196
+          }
+        },
+        "fuel_suspensions_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "lifetime_earned_gold": {
+          "available": true,
+          "value": {
+            "A": 2125,
+            "B": 5070
+          }
+        },
+        "monster_damage_done": {
+          "available": true,
+          "value": {
+            "A": 33001.0,
+            "B": 68303.0
+          }
+        },
+        "monster_damage_taken": {
+          "available": true,
+          "value": {
+            "A": 11895.0,
+            "B": 25389.9998254776
+          }
+        },
+        "observed_engine_seed": {
+          "available": true,
+          "value": "14621398811092091047"
+        },
+        "round": {
+          "available": true,
+          "value": 865
+        },
+        "sale_refunds": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "spent_gold": {
+          "available": true,
+          "value": {
+            "A": 1860,
+            "B": 4390
+          }
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 328,
+            "B": 1052
+          }
+        },
+        "unspent_gold": {
+          "available": true,
+          "value": {
+            "A": 265,
+            "B": 680
+          }
+        }
+      },
+      "protocol_version": 1,
+      "state": "COMPLETED",
+      "terminal_reason": null,
+      "winner": "B"
+    },
+    "final_sha256": "b6b77ca5be09a75578c4eed5d88676a66a30cfae46684dc069b829bf9e1d8b27",
+    "own_log": {
+      "file": "bot-b.stdout.log",
+      "size": 20133,
+      "slice_offsets": [
+        0,
+        8192,
+        16384
+      ],
+      "capture_entries": [
+        "capture follow-through round 236",
+        "capture follow-through round 297",
+        "capture follow-through round 319",
+        "capture follow-through round 366",
+        "capture follow-through round 421",
+        "capture follow-through round 463",
+        "capture follow-through round 512",
+        "capture follow-through round 531",
+        "capture follow-through round 622"
+      ],
+      "minimum_logged_fuel": 12031,
+      "errors": [],
+      "suspensions": [],
+      "evidence_limit": "Combined bounded stdout slices; logs do not identify exact kill or capture phase."
+    }
+  }
+]

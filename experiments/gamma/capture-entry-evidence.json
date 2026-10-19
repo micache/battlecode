@@ -1,0 +1,73 @@
+{
+  "task_id": "task-d0408f5c94104b45803559ea6f03050a",
+  "base_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+  "base_source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+  "hypothesis": "Same-turn local capture entry after a legal final monster kill increases matched development win rate and mean submitted gems versus the edit base, without new bot faults.",
+  "falsifier": "Non-increasing matched win rate or submitted-gem mean, or any new bot fault, rejects the hypothesis. Smoke validity does not test strength.",
+  "mechanism_status": "Unmeasured rules/source deduction. Final statistics do not expose final-kill-to-capture delay.",
+  "bottleneck": "farm_camps ends after any successful fight, even a final basic/reset kill with walking still legal, delaying capture occupancy by one owner turn.",
+  "policy": "Track successful exclusive casts; after pre-movement combat, require fresh visible reward state, no existing allied collector, live movement allowance, no movement restriction, at least 30000 fuel, and a visible free locally reachable spawn tile. Attempt one move, then return. No new path search or combat.",
+  "expected_observation": "Capped capture follow-through logs prove the new route executes; a controlled trace should show occupancy on the final-kill turn and capture starting at the next phase, one round earlier when uncontested. Matched wins and tribute test strategic value.",
+  "risks": [
+    "Earlier occupancy can expose the farmer to enemy combat before the next turn.",
+    "An ally acting later may also collect; local vision cannot coordinate hidden allies.",
+    "Changed timing can alter routes and contests; one round saved is not guaranteed to improve wins.",
+    "Extra observation work costs fuel; local-only movement and a 30000 reserve bound optional work."
+  ],
+  "negative_findings": "Prior target-aware combat, camp claims, threat-aware banking, Ryth replacing Marcella, and protected travel were not selected into this base. No ranking, draft, build, recovery or banking changes bundled.",
+  "evaluation": {
+    "id": "1a898e7cd33630cb6034475a6a8f7beeb234f47dc7186fac6fa80e94110e76f2",
+    "decision": "INCONCLUSIVE",
+    "wins": 114,
+    "losses": 22,
+    "faults": 0,
+    "development_base_delta": 0.08928571428571429,
+    "side_paired_cases": 56
+  },
+  "frozen_opponents": {
+    "manifest": "/srv/battlecode/public/strategy/task-d0408f5c94104b45803559ea6f03050a/manifest.json",
+    "sha256": "22a5e65a680916adbc2a1222a5f3372d2f824fe9bb263cfd618c8ec57d917975",
+    "all_file_hashes_verified": true,
+    "beta_7cab9b0f": "Varg/Tavi/Ryth, survival items, field-shopping, shields, dashes, recovery latch, route locks, gold-only penalty after 300 capital. Farming returns after combat. Do not import macro policy into this isolated capture candidate.",
+    "alpha_82a14a04": "Random draft/Power stat, bounded combat, timestamped respawn rotation and free-altar banking preference. Retain gamma composition and routing; new follow-through is a rules deduction."
+  },
+  "evidence_limits": "Organizer Agents.md is a download hub. Unchanged pinned documents and C++ SDK consulted on demand. Official observations concern another source and unknown opponent versions; not used as controlled evidence.",
+  "candidate_source_hash": "c44b1194fe72c682d2f70e3f9ed206a518040fe909f18952a83718b03543b4a2",
+  "candidate_hash_basis": "Trusted bot-check PASSED exit0 and verified c44b1194fe72c682d2f70e3f9ed206a518040fe909f18952a83718b03543b4a2; no source edits after launch.",
+  "recovery": {
+    "prior_task_id": "task-9c55d0328faf44f1945faa1770eac277",
+    "history": "PAUSED: synchronous check drained older backlog, then ENOSPC; infrastructure fixed in c332df20361a5ad40834622baf2e54ce51f43d33",
+    "check_report_lookup": "unknown check for this task/source; exit 1; no prior report exists",
+    "policy": "Recovered reviewed source unchanged. Prior attempt and supervisor checkpoint preserve original work. This is the same untested hypothesis, not a new policy bundle."
+  },
+  "validation": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792424364.010502,
+    "matches": [
+      "e9c9af0ceb8058d0dc36ec89b179be650e12ac54e73cab14b6d494481a7bf224",
+      "240888b079b0c35cfe9629504245a6dedbd5052e02296960e37bf9fb114b713e"
+    ],
+    "report_path": ".agent/check-task-d0408f5c94104b45803559ea6f03050a.json",
+    "report_reference": "check:task-d0408f5c94104b45803559ea6f03050a:c44b1194fe72c682d2f70e3f9ed206a518040fe909f18952a83718b03543b4a2",
+    "source_hash": "c44b1194fe72c682d2f70e3f9ed206a518040fe909f18952a83718b03543b4a2",
+    "started": 1792424331.6600068,
+    "state": "PASSED",
+    "task_id": "task-d0408f5c94104b45803559ea6f03050a"
+  },
+  "smoke": {
+    "artifact": "experiments/gamma/capture-entry-smoke.json",
+    "completed": 2,
+    "faults": 0,
+    "fuel_suspensions": 0,
+    "own_capture_entry_markers": [
+      8,
+      9
+    ],
+    "sampled_minimum_fuel": [
+      11339,
+      12031
+    ],
+    "strength_claim": "None. Not a matched comparison; opponent revisions unknown."
+  }
+}

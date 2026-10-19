@@ -1,0 +1,16 @@
+{
+  "kind": "source safety invariants, not runtime or performance evidence",
+  "source_sha256": "8c16aaa52b6d847f489bac5631b557f1c6f5d1516cd6256ec5c2772ccff1ae34",
+  "checks": {
+    "cast_failure_does_not_record_exclusion": true,
+    "all_four_spell_paths_record_successful_exclusive_casts": true,
+    "fresh_movement_allowance_restrictions_and_fuel_guard": true,
+    "visible_authoritative_reward_state_before_entry": true,
+    "collector_and_fresh_occupancy_guards": true,
+    "local_only_one_attempt_no_search_or_followup_combat": true,
+    "bounded_private_logging": true,
+    "shop_defense_banking_recovery_and_noncombat_movement_unchanged": true,
+    "draft_main_and_yield_unchanged": true
+  },
+  "passed": true
+}

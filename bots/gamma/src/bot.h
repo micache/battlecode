@@ -11,6 +11,7 @@ class Bot {
     };
     std::vector<Farm> farms;
     int target_group = -1;
+    unsigned capture_entries_logged = 0; // Private, capped diagnostics per body.
     void buy_items();
     void farm_camps();
 public:

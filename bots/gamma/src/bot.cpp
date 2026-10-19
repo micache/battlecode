@@ -2,6 +2,7 @@
 #include "bot.h"
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <limits>
 #include <optional>
 #include <type_traits>
@@ -84,9 +85,19 @@ bool live(const Target& t) {
     return cambc::self().is_alive() && t.is_visible() && t.health() > 0;
 }
 template<class Target>
-bool fight(const Target& target, bool walked, bool dangerous) {
+bool fight(const Target& target, bool walked, bool dangerous, bool* excluded_walk = nullptr) {
     auto& me = cambc::self();
     if (!live(target)) return false;
+    // can_move() is only an allowance flag. Remember successful casts which
+    // forbid walking even if the allowance still appears available afterward.
+    auto cast = [&](const auto& ability, const auto&... args) {
+        if (!ability.use(args...)) return false;
+        if (excluded_walk)
+            *excluded_walk |= std::visit([](const auto& info) {
+                return info.exclusive_with_movement;
+            }, *ability.info());
+        return true;
+    };
     bool acted = false;
     if (me.can_attack() && !me.restrictions().contains(cambc::buff_restrictions::attack)
         && distance(me.position(), target.position()) <= me.attack_range()) {
@@ -101,13 +112,13 @@ bool fight(const Target& target, bool walked, bool dangerous) {
     if (dangerous && distance(me.position(), target.position()) <= 3
         && me.health() < me.max_health() * 0.75f && !me.buffs().has_shield()) {
         for (const auto& a : abilities)
-            if (a.is_shield() && a.can_target_self() && a.is_ready() && a.use()) return true;
+            if (a.is_shield() && a.can_target_self() && a.is_ready() && cast(a)) return true;
     }
     for (const auto& a : abilities) {
         if (!a.is_attack_reset() || !a.can_target_self() || !a.is_ready()
             || me.can_attack() || me.restrictions().contains(cambc::buff_restrictions::attack)
             || distance(me.position(), target.position()) > me.attack_range()) continue;
-        if (a.use()) {
+        if (cast(a)) {
             if (live(target) && me.can_attack()
                 && !me.restrictions().contains(cambc::buff_restrictions::attack)
                 && distance(me.position(), target.position()) <= me.attack_range()) me.attack(target);
@@ -120,14 +131,14 @@ bool fight(const Target& target, bool walked, bool dangerous) {
         if (walked && exclusive) continue;
         if (!live(target) || !a.valid_tiles().is_set(target.position())) continue;
         if (a.can_target_ground()) {
-            if (a.use(target.position())) return true;
+            if (cast(a, target.position())) return true;
         } else {
             if constexpr (std::is_same_v<Target, cambc::camp>) {
                 if (!a.can_target_camps()) continue;
             } else {
                 if (!a.can_target_enemies()) continue;
             }
-            if (a.use(target)) return true;
+            if (cast(a, target)) return true;
         }
     }
     return acted;
@@ -298,6 +309,7 @@ void Bot::farm_camps() {
         return;
     }
     auto& f = farms[selected];
+    bool excluded_walk = false;
     auto act_on_group = [&](bool walked) {
         std::optional<cambc::camp> target;
         float best = std::numeric_limits<float>::max();
@@ -308,12 +320,37 @@ void Bot::farm_camps() {
             const float score = (d > me.attack_range() ? 100000.0f : 0.0f) + c.health();
             if (score < best) { best = score; target = c; }
         }
-        return target && fight(*target, walked, target->strength() > 0);
+        return target && fight(*target, walked, target->strength() > 0, &excluded_walk);
     };
     const bool acted = act_on_group(false);
-    // can_move() alone need not encode a just-cast spell's walk exclusion.
-    // Replan capture next turn after combat, including a last-monster kill.
-    if (!me.is_alive() || acted) return;
+    if (!me.is_alive()) return;
+    if (acted) {
+        // Enter capture immediately after the last kill when a legal local move
+        // remains. No second combat, global path search or inferred group death.
+        if (excluded_walk || !me.can_move()
+            || me.restrictions().contains(cambc::buff_restrictions::move)
+            || cambc::fuel_remaining() < PLAN_FUEL || f.spawns.is_set(me.position())) return;
+        const auto fresh_visible = cambc::vision::visible_tiles();
+        if ((f.spawns & fresh_visible).is_empty()
+            || !std::holds_alternative<cambc::map::camp_group_reward_available>(f.group.state())) return;
+        // Another collector does not need help; never split its reward for no
+        // capture-time benefit. Read occupancy again after combat/retaliation.
+        if (!(f.spawns & cambc::vision::champion_tiles(team::ally)).is_empty()) return;
+        const auto blocked = blocked_tiles();
+        const auto local = blocked.reachable_tiles(me.position(), me.base_stats().base_move_speed);
+        const auto entries = f.spawns & fresh_visible & local & ~blocked;
+        for (auto entry : entries.positions()) {
+            if (me.move_absolute(entry)) {
+                lock_nearby_altar();
+                if (capture_entries_logged < 3) {
+                    ++capture_entries_logged;
+                    std::cout << "capture follow-through round " << cambc::round_number() << '\n';
+                }
+            }
+            return; // One attempt; False reveals an obstruction for next turn.
+        }
+        return;
+    }
     const auto fresh_visible = cambc::vision::visible_tiles();
     cambc::bitboard goals;
     const bool seen = !(f.spawns & fresh_visible).is_empty();
