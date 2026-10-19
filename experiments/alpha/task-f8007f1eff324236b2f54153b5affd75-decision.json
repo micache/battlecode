@@ -1,0 +1,532 @@
+{
+  "task_id": "task-f8007f1eff324236b2f54153b5affd75",
+  "bot_id": "alpha",
+  "base_source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+  "edit_commit": "046f1c3a41fe746c65c0982d06062623200fa931",
+  "input_revision": "13f9acc517f0c9728fe2ad6f9dda30cbfc446e92",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "identity_check": "All nine starting source files byte-match edit_commit; branch/HEAD match trusted entry. Latest trial evaluated; no pending candidate. Earlier empty quota checkpoint already audited in retained notes.",
+  "hypothesis": "Completing one Jungle emblem in the unchanged chosen stat, and applying its camp mitigation to recovery estimates, increases matched development win rate over the edit base. Unchanged or lower win rate falsifies the prediction.",
+  "basis": "Unmeasured rules/source deduction: the first emblem exchanges one Power growth point for 30% less camp damage. Longer healthy farming sorties can improve objective throughput even without reducing deaths. Final statistics do not identify recovery turns or establish causality.",
+  "policy": {
+    "shopping": "At the existing spawn-only shop, finish one Jungle emblem in the existing randomly selected stat, using SDK cost/combine metadata and bounded purchases. Reobserve completion before buying remaining Power shards. No extra shopping location, recall, stat or draft changes.",
+    "recovery": "Only completed Jungle emblems activate the 0.70 camp-strength factor. Champion threat damage remains unchanged. Existing 35% floor, 70% scan threshold, two-volley reserve, caps, fuel reserves, visibility, channels and escape policy remain."
+  },
+  "expected_observable": "Higher matched development win rate; collection/tribute, camp damage taken and recovery travel/turns where available diagnose mechanism.",
+  "risk": "Loses one selected-stat growth point relative to the first Power emblem; benefit is small on harmless cluster routes. Changed timing and less conservative camp estimates may worsen hidden-threat encounters. Branch coverage and headroom are unmeasured.",
+  "negative_findings": "Latest gem-priority trial regressed by 4/112 development games. Earlier broad fixed-draft/Jungle+Monster/capture rewrite ce955542 was inconclusive and not selected. This trial preserves random draft/stat, uses only one family, and couples known protection to the current recovery model. Prior route, dash, teleport, shopping recall, capture, banking, focus-fire and AoE trials are not reapplied.",
+  "evaluation_context": {
+    "evaluation_id": "adeab4d2a89aee3c3a74ae11aa3b5a4862ed2c59d47a47cab8bfa795d5e45c27",
+    "candidate": {
+      "build_id": "5b7ab5033dfdea5ee5587a7ca8283577342b6a78f5a0e6b3366a8b074f220fa5",
+      "commit": "13f9acc517f0c9728fe2ad6f9dda30cbfc446e92",
+      "revision_id": "36def82b69275495a96db3a182f93c78888f55f12f221d7c0f671b273306d1d1",
+      "source_hash": "f9b70535ec37a82250e8507a7ffaff7df204a2bc51ccee064a75c08e2421d657"
+    },
+    "development_comparison": {
+      "commit_sha": "046f1c3a41fe746c65c0982d06062623200fa931",
+      "common_opponent_delta": -0.03571428571428571,
+      "fault_matches": [],
+      "missing": [],
+      "paired_cases": 56,
+      "per_map": {
+        "ambush": {
+          "candidate": 0.625,
+          "incumbent": 0.5,
+          "pairs": 4
+        },
+        "collision": {
+          "candidate": 0.75,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "contest": {
+          "candidate": 0.375,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "corners": {
+          "candidate": 0.75,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "eight": {
+          "candidate": 0.75,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "elkring": {
+          "candidate": 0.75,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "expanse": {
+          "candidate": 0.75,
+          "incumbent": 0.75,
+          "pairs": 4
+        },
+        "fragment": {
+          "candidate": 1.0,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "interlock": {
+          "candidate": 0.875,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "lanes": {
+          "candidate": 0.375,
+          "incumbent": 0.625,
+          "pairs": 4
+        },
+        "pilgrimage": {
+          "candidate": 0.875,
+          "incumbent": 0.875,
+          "pairs": 4
+        },
+        "rushbait-v2": {
+          "candidate": 0.5,
+          "incumbent": 0.5,
+          "pairs": 4
+        },
+        "stampede": {
+          "candidate": 1.0,
+          "incumbent": 1.0,
+          "pairs": 4
+        },
+        "swirl": {
+          "candidate": 0.625,
+          "incumbent": 0.75,
+          "pairs": 4
+        }
+      },
+      "source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+      "unknown_reliability": []
+    },
+    "representative_development_losses": [
+      {
+        "final_metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 1695.0,
+              "B": 0.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 0.0,
+              "B": 1695.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 5
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 2,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 890,
+              "B": 1052
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 2
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 3635,
+              "B": 2740
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 62384.0,
+              "B": 50135.0
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 23440.0,
+              "B": 25555.199897766113
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "4941643904495260023"
+          },
+          "round": {
+            "available": true,
+            "value": 803
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 3330,
+              "B": 2380
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 890,
+              "B": 1052
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 305,
+              "B": 360
+            }
+          }
+        },
+        "map": "ambush",
+        "match_id": "b678a0b0c7fa35a58eaed4066faa25400bcdc71bd293f946953f29ea3544fecf",
+        "round": 803,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 106,
+              "B": 0
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 1250.0,
+              "B": 1480.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 1480.0,
+              "B": 1250.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 1,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1186,
+              "B": 678
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 3,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 3270,
+              "B": 3068
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 59475.0,
+              "B": 55291.0
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 21993.599899291992,
+              "B": 26120.0
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "4941643904495260023"
+          },
+          "round": {
+            "available": true,
+            "value": 805
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 2920,
+              "B": 2910
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1080,
+              "B": 678
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 350,
+              "B": 158
+            }
+          }
+        },
+        "map": "ambush",
+        "match_id": "66d59bb2455cbad8c2b8755bc5c59e311d0fd439a1f88ef02a9537ec2a1a493a",
+        "round": 805,
+        "side": "B",
+        "trace": null
+      }
+    ],
+    "contrast": "Latest evaluated source f9b70535: fragment and stampede each 8/8 development wins. These aggregates do not establish turn-level behavior."
+  },
+  "retrieved_match_evidence": {
+    "match_id": "901380a8f39a4070a5cd454c3cae95943a82c69a7ac90d3523fe259e34c47883",
+    "side": "A",
+    "map": "ambush",
+    "provenance": "Supplied feedback representative failure; latest feedback candidate f9b70535. Retrieved summary has no source commit field, so exact match source is not independently verified.",
+    "summary_path": "experiments/alpha/task-f8007f1eff324236b2f54153b5affd75-ambush-summary.json",
+    "claim": "Completed B win at round 836; A 962 tribute vs B 1090; A camp damage taken 24720, deaths 1, faults/fuel suspensions 0. These are final totals, not a recovery trace."
+  },
+  "frozen_opponents": {
+    "manifest": {
+      "count": 6,
+      "manifest": "/srv/battlecode/public/strategy/task-f8007f1eff324236b2f54153b5affd75/manifest.json",
+      "sha256": "82e283d5a1b3366c2a8718a2240b39d9c9a1314bc2db29e1f58c708f4488e7bf"
+    },
+    "all_file_hashes_verified": true,
+    "inspected": [
+      "gamma ecbc8203 / ff511c52: Jungle/Monster Strength, Health Durability, then Power; melee draft, cost/value farm routes, selective PvP, gold resupply.",
+      "beta 7cab9b0f / fd5e2554: same farm-passive core, group commitment, banking before combat."
+    ],
+    "transfer": "Use the single non-stacking Jungle protection in our existing stat line; do not clone their composition, route or shopping-recall policy."
+  },
+  "documentation": "Unchanged routine review: compact reference, relevant C/D/F playbooks, RESEARCH, organizer limits, item/channel/camp rules, C++ item_count and purchase declarations, matching installed SDK hash ee131e29...b72e264. Organizer page is a download hub; no full-policy or production-parity claim.",
+  "history_hypotheses_reviewed": [
+    {
+      "id": "task-9d1d883be978493496b41980e19b63d4",
+      "state": "PUBLISHED",
+      "published_commit": "7f6637f1ef75c76db72aa244f80342016439ae06",
+      "hypothesis": "Using a remaining legal move to occupy a freshly cleared camp group increases matched development win rate over the edit base. Unchanged or lower win rate falsifies this unmeasured prediction."
+    },
+    {
+      "id": "task-0648f2bdbcf046cfb9be1812a8247adb",
+      "state": "PUBLISHED",
+      "published_commit": "82a14a04f0e6b68aac8a7e879d305b1a886b857c",
+      "hypothesis": "Arrival-aware cooldown eligibility increases matched development win rate over the edit base. Unchanged or lower win rate falsifies this unmeasured prediction."
+    },
+    {
+      "id": "task-cf106a770c3345388063fa3eee68243f",
+      "state": "PUBLISHED",
+      "published_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+      "hypothesis": "Remembering personally observed camp respawn deadlines will increase matched development win rate over the edit base. Unchanged or lower win rate falsifies this unmeasured hypothesis."
+    },
+    {
+      "id": "task-a0e8129eb70343e8a3e378cc10c964be",
+      "state": "PUBLISHED",
+      "published_commit": "890937102cebe2aa3035945edbdb14966078eb56",
+      "hypothesis": "Prioritizing nearby cleared camps with local collector deference will increase matched development win rate over the edit base. Unchanged or lower win rate falsifies this prediction."
+    },
+    {
+      "id": "task-ce64d208150c47a39aaaad25caf3695a",
+      "state": "PUBLISHED",
+      "published_commit": "0b61a3d4f68afab876f551d852202c983703aa28",
+      "hypothesis": "Legal field/death shopping and quiet empty-bag resupply at 300 gold will reduce paired-win completion rounds without lowering matched win rate. Unchanged/increased rounds or lower win rate falsifies this hypothesis."
+    },
+    {
+      "id": "task-a625d4c1125a40d08a86a8eb89ddb56a",
+      "state": "PUBLISHED",
+      "published_commit": "2e82fe1839be5b90390f1c625c0f1f2ec8df7cb5",
+      "hypothesis": "Opportunistic altar locks, friendly-lock-aware banking and hostile-lock recovery will increase matched development win rate over the edit base. Unchanged or lower win rate falsifies this prediction."
+    },
+    {
+      "id": "task-fad21318699145cb8c6edbeb317401fa",
+      "state": "PUBLISHED",
+      "published_commit": "5cb8beb08a34cffcb4220edc1cf8eed6068c51d2",
+      "hypothesis": "Focusing champion basics and reset follow-ups on the lowest-health legal visible enemy, breaking health ties by carried gems, will increase matched development win rate. Unchanged or lower win rate falsifies this hypothesis."
+    },
+    {
+      "id": "task-b61dfbca8f5349ac832abc6a600f85ab",
+      "state": "PUBLISHED",
+      "published_commit": "8a8819e101d7d70ff99cf010662456b4184e846c",
+      "hypothesis": "Using ready, walk-compatible dashes to cut at least two steps from existing objective routes will reduce paired-win completion rounds without reducing matched win rate. Unchanged/increased rounds or a win-rate regression falsifies this hypothesis."
+    },
+    {
+      "id": "task-d71c11f9549c4960bf74ec303723f6a8",
+      "state": "PUBLISHED",
+      "published_commit": "b05df0c086ce758e54c5b153509355f4864f7783",
+      "hypothesis": "Area- and finish-aware ability scoring will reduce completion rounds on matched development cases won by both versions without lowering win rate. Unchanged/increased rounds or a win-rate regression falsifies this hypothesis."
+    },
+    {
+      "id": "task-4a36c64286504efea17aa49a4a94b17f",
+      "state": "PUBLISHED",
+      "published_commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "hypothesis": "Using independent combat allowances, attack resets and useful defensive casts will increase matched development win rate over the edit base; unchanged or lower win rate falsifies this hypothesis."
+    },
+    {
+      "id": "task-4133354c587642a699e191721aab2290",
+      "state": "PUBLISHED",
+      "published_commit": "ce9555420d862badc57ae3a90aaaa3f8e3556882",
+      "hypothesis": "Fixed farming composition, legal ability sequencing and capture-aware routing will increase matched development win rate over the edit base; unchanged or lower win rate falsifies this hypothesis."
+    },
+    {
+      "id": "task-2cc2849656a34761861827c63e161a62",
+      "state": "PUBLISHED",
+      "published_commit": "6a57e28391e9cb003ce0b20c09e7f3a46ca19153",
+      "hypothesis": "Moving toward allied spawn before low-health recall when a visible damaging unit has us in basic-attack range will reduce mean champion deaths versus accepted source on matched development cases. Unchanged or increased deaths falsifies this prediction."
+    },
+    {
+      "id": "task-16ae09faf2f3493c96020478c07abf26",
+      "state": "PUBLISHED",
+      "published_commit": "a44593ce5cdc7b25e78ede877054adddbf57af6c",
+      "hypothesis": "Batching altar travel until 40 carried gems, while preserving adjacent tribute and potentially winning trips, will increase mean submitted gems versus accepted source. Unchanged or decreased submission falsifies this prediction."
+    },
+    {
+      "id": "task-33024ab941b8430ebfe7042ed223ad18",
+      "state": "PUBLISHED",
+      "published_commit": "2922097615b8a32c91fbd02096fab41896c7623c",
+      "hypothesis": "Moving toward allied spawn before retrying an interrupted low-health recall will reduce mean champion deaths versus accepted source on matched development cases. Unchanged or increased deaths falsifies this prediction."
+    },
+    {
+      "id": "task-1d40090f953b4001923fb46ca3b542b8",
+      "state": "PUBLISHED",
+      "published_commit": "bf616d85ce50cbb69c611788b2fc1660dbd465a2",
+      "hypothesis": "Moving toward allied spawn before low-health recall will reduce mean champion deaths versus accepted source on matched development cases. Unchanged or increased deaths falsifies this prediction."
+    },
+    {
+      "id": "task-7face2cca5374822a1dbfc83b5155bca",
+      "state": "PUBLISHED",
+      "published_commit": "8591c7594ad9fe756ce06c24a4f05aac146396e7",
+      "hypothesis": "Casting a ready direct-damage spell when the SDK predicts a lethal hit on a visible enemy in range will increase mean champion kills versus accepted source on matched development cases. Unchanged or decreased kills falsifies this prediction."
+    }
+  ],
+  "trusted_check": {
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+    "exit_code": 0,
+    "bot_id": "alpha",
+    "finished": 1792430475.086047,
+    "matches": [
+      "573cdb2f52dcd4cd7307a3ede4d4bfd0e027d570b8ab85db30e468d9888a2dd4",
+      "eee2e5c8ea813bbcb5cc373a23eee492f6b460e26b963281e561cc5046a1dcae"
+    ],
+    "report_path": ".agent/check-task-f8007f1eff324236b2f54153b5affd75.json",
+    "report_reference": "check:task-f8007f1eff324236b2f54153b5affd75:1d7d75b300bf28176744437a80f6bcbc83da195b43a631ddad66a1bbf4fbd39a",
+    "source_hash": "1d7d75b300bf28176744437a80f6bcbc83da195b43a631ddad66a1bbf4fbd39a",
+    "started": 1792430440.7704775,
+    "state": "PASSED",
+    "task_id": "task-f8007f1eff324236b2f54153b5affd75",
+    "limits": "Trusted report establishes compilation/smoke success, not full-game completion, purchase/recovery branch coverage, fuel headroom or competitive strength."
+  },
+  "final_source_file_sha256": {
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/bot.cpp": "a07769d5e063bc88b6c0ca903e422daf5437aa4197f86662aac71eb647bcc7ab",
+    "bots/alpha/src/bot.h": "888cf7f8ca819242d43dfc0069f5a59332036ed79b92195de4228fa80da1d12f",
+    "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/farming_equipment.h": "e290867d5db826104bbddf95d07b80d501b1de12faff96e7ed4ea78d84b619c7",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/alpha/src/recovery.h": "09a1b8a88dc4b37713bf2be3356269f1c107ed94f3ba0f7adfe357d6a5296426"
+  },
+  "tests": [
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": ".agent/check-task-f8007f1eff324236b2f54153b5affd75.json"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": null
+    }
+  ]
+}

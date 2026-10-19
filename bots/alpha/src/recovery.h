@@ -1,5 +1,6 @@
 #pragma once
 #include <cambc.h>
+#include "farming_equipment.h"
 #include <array>
 #include <algorithm>
 #include <cstdint>
@@ -25,8 +26,9 @@ struct exposure {
     float depth = 0;
 };
 
-// Raw visible basic damage is a conservative estimate, not a combat simulator:
-// it ignores mitigation, target selection, future spells and hidden attackers.
+// Visible basic damage is an estimate, not a combat simulator: apply our known
+// Jungle protection to camps, but ignore other mitigation, target selection,
+// future spells and hidden attackers. Enemy champion damage remains unscaled.
 struct observation {
     std::array<threat, threat_limit> threats{};
     unsigned count = 0;
@@ -76,6 +78,13 @@ static_assert([] {
         && needs_recovery(200, 700, 0) && !needs_recovery(400, 700, 0);
 }());
 
+// A completed camp-defense passive can extend a safe sortie, but does not
+// override the ordinary low-health retreat floor or protect against champions.
+static_assert(needs_recovery(200, 500, farming_equipment::camp_volley(120, false)));
+static_assert(!needs_recovery(200, 500, farming_equipment::camp_volley(120, true)));
+static_assert(needs_recovery(170, 500, farming_equipment::camp_volley(120, true)));
+static_assert(needs_recovery(200, 500, 120)); // unscaled enemy volley
+
 inline observation observe() {
     observation result;
     if (cambc::fuel_remaining() < scan_reserve) {
@@ -93,13 +102,14 @@ inline observation observe() {
         result.threats[result.count++] = {enemy.position(),
             enemy.attack_range() + enemy.base_stats().base_move_speed, enemy.strength()};
     }
+    const bool jungle = farming_equipment::has_jungle(cambc::self().item_count());
     for (const auto& camp : cambc::vision::camps()) {
         if (result.count == threat_limit || cambc::fuel_remaining() < scan_reserve) {
             result.complete = false;
             return result;
         }
         if (!camp.is_visible() || camp.health() <= 0 || !camp.is_awake()) continue;
-        const auto damage = camp.strength();
+        const auto damage = farming_equipment::camp_volley(camp.strength(), jungle);
         if (damage > 0)
             result.threats[result.count++] = {camp.position(), camp.attack_range(), damage};
     }

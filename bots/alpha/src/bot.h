@@ -1,11 +1,11 @@
 #pragma once
 
-// Per-champion state survives between turns. Pick one stat and keep buying it.
+// Per-champion state survives between turns. Keep the chosen stat across builds.
 class Bot {
     int chosen_stat = -1;
     bool recovering = false;
 
-    // Spend only on power shards of the randomly chosen stat.
+    // One Jungle emblem, then Power shards of the randomly chosen stat.
     void buy_items();
     bool recover();
 

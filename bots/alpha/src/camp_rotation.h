@@ -54,18 +54,13 @@ struct tracked_group {
 class rotation {
     std::vector<tracked_group> groups;
     std::size_t cursor = 0;
-    cambc::bitboard gem_spawns;
 
     void initialise() {
         if (!groups.empty()) return;
-        gem_spawns.clear();
         // Cache only immutable identities/geometry; live state is never cached
         // by the SDK map object itself. No per-turn map-layout reconstruction.
-        for (const auto& group : cambc::map::camp_groups()) {
+        for (const auto& group : cambc::map::camp_groups())
             groups.push_back({group, group.spawn_tiles(), {}});
-            // Immutable group reward: mixed gold/gem groups remain gem routes.
-            if (group.gem_value() > 0) gem_spawns |= groups.back().spawns;
-        }
     }
 
 public:
@@ -99,10 +94,6 @@ public:
         for (const auto& entry : groups)
             if (!entry.cooldown.excludes(now)) result |= entry.spawns;
         return result;
-    }
-
-    cambc::bitboard gem_goals(const cambc::bitboard& eligible) const {
-        return eligible & gem_spawns;
     }
 };
 

@@ -1,97 +1,95 @@
-# Current experiment: task-a32cd5b120d14daba1589d8ca4560ff1
+# Current experiment: task-f8007f1eff324236b2f54153b5affd75
 
 ## Identity and status
-- Alpha, bot/alpha. HEAD/input c2f99412bc40526f1cf83b0ae91d64110766fbdd;
+- Alpha, bot/alpha. Input HEAD 13f9acc517f0c9728fe2ad6f9dda30cbfc446e92;
   edit commit 046f1c3a41fe746c65c0982d06062623200fa931, source
   07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2.
-  All nine starting files byte-matched the trusted edit commit. Prepared bot.cpp
-  and removed route_teleport.h differ from HEAD because the teleport trial lost
-  against this development base; those differences are not unfinished edits.
-  Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e remains in Git.
-- Latest candidate evaluated, no pending evaluation. Earlier task-758e6444 quota
-  checkpoint is empty, its notes match base, final absent; original paths intact.
+  All nine starting source files byte-matched edit_commit. Initial bot.cpp,
+  camp_rotation.h and removed economy_route.h differences from HEAD were trusted
+  preparation, not unfinished edits. Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e
+  stays outside this transaction. Latest candidate evaluated; no pending candidate.
+- Prior empty task-758e6444 quota checkpoint was already audited in retained notes;
+  no patch is reapplied. Previous operational notes archived as
+  task-a32cd5b120d14daba1589d8ca4560ff1-NOTES.md.
 - Engine/SDK 2.2.5, lock 0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d;
   suite published-17-release-225-v1. Documentation unchanged. Consulted compact
-  reference, playbooks C/D/F/G, RESEARCH/organizer limits and relevant C++/SDK
-  distance-field, item purchase-value, camp spawn and group-reward declarations.
-  Organizer page is a download hub; no additional policy/parity certification.
-- Previous operational notes archived as task-5da9c09daeab4e33839a785c51b5c1a8-NOTES.md.
+  reference, economy/combat/navigation playbooks, RESEARCH/organizer limits,
+  item rules and C++/SDK inventory, combine and purchase contracts. SDK hash
+  ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264 verified.
+  Organizer page is a download hub; no full-policy or production-parity claim.
 
 ## One hypothesis
-After 300 gold of cash plus equipment, preferring eligible gem-bearing camp
-groups within twelve extra path steps and applying the same filter to camp combat
-increases matched development win rate over this edit base. Unchanged or lower
-win rate falsifies this prediction. Collection/tribute and time spent on gold-only
-camp cycles are mechanism diagnostics. This is an unmeasured rules/source deduction;
-final statistics do not establish the cause of any particular lost game.
+Completing one Jungle emblem in the unchanged chosen stat, and applying its camp
+mitigation to recovery estimates, increases matched development win rate over the
+edit base. Unchanged or lower win rate falsifies this prediction. Collection,
+tribute, camp damage and recovery travel/turns (if available) diagnose mechanism.
+This is an unmeasured rules/source deduction, not a traced explanation of a loss.
 
 ## Evidence and decision
-- Latest evaluation c8ca92a9...89e6 measures c2f99412 / source 0ef30884...4fd6,
-  not today's edit base. Development 80W/32L vs base 84W/28L, matched delta
-  -0.0357143 over 56 side-paired cases; faults/missing/unknown zero. Teleport
-  trial is not reapplied. Champion comparison 94W/42L is separate.
-- Exact-base continuous self-play: 0W/5L, collection/tribute means 346/271.2,
-  earned gold 1935.2, deaths 0.6, faults/fuel suspensions zero. Three games
-  face gamma ecbc8203, two beta 61d59667; source revisions are not pooled.
-  Examples: collision B a0cad9ca...bbe93 and collision A be23d074...0a71a vs
-  gamma. Requested first summary is retired/unavailable; no turn trace inferred.
-- Later-source ambush B loss 55684e0a...04439: own collection/tribute 990/942
-  vs 1140/1034, deaths zero, PvP damage zero, round 1091, faults zero.
-  Ambush A loss c89c456b...7f06d: own collection/tribute 712/712 vs 1052/1052,
-  deaths zero, round 755, faults zero. These support throughput concerns only.
-- Contrasting exact-base development aggregate: fragment and stampede each 8/8
-  wins; collision 6/8, ambush 4/8. No per-turn causal claims from aggregates.
-- Frozen manifest 42620aaa...9eb verified, all file hashes matched. Inspected
-  gamma ecbc8203 / ff511c52 (melee farmers, passives, cost/value routing,
-  selective PvP) and beta 7cab9b0f / fd5e2554 (300-capital soft penalty for
-  gold-only groups). This beta revision is not a proven opponent in named losses.
-  Its opportunity-cost idea fits our gem objective, but its whole scorer does not
-  transfer: broad ranked/group-first route experiments previously regressed.
-- Retain negative/deferred findings for fixed draft/stats/items, recall/resupply,
-  banking/batching/arrival, capture/deference/follow-through, broad AoE, focus-fire,
-  dashes, arrival cooldown, ranked/group-first and teleport trials. This trial
-  adds a bounded gold-only preference rather than repeating those policies.
+- Latest evaluation adeab4d2...5c27 measures 13f9acc5 / source f9b70535...1d657,
+  not today's edit base. Development 80W/32L vs base 84W/28L; delta -0.0357143
+  across 56 side-paired cases. Faults/missing/unknown zero. The gem-priority trial
+  is not reapplied. Protected champion comparison 92W/44L is separate.
+- That later source lost ambush A b678a0b0...4fecf at round 803: collection/tribute
+  890/890 vs 1052/1052, own deaths zero, camp damage taken 23440, faults zero.
+  Ambush B 66d59bb2...1a493a: round 805, own collection/tribute 678/678 vs
+  1186/1080, deaths zero, camp damage taken 26120, faults zero. Final totals
+  support throughput concerns but do not count recovery turns or prove causality.
+- Contrasting latest-source development: fragment and stampede each 8/8 wins.
+  These are map aggregates, not turn traces. Distinct sources are not pooled.
+- Retrieved supplied representative ambush A loss 901380a8...47883 summary:
+  completed B win, round 836, own tribute 962 vs 1090, camp damage taken 24720,
+  deaths one, faults/fuel suspensions zero. Our Ryth alone took 8200 camp damage
+  and received 7475 healing. Feedback context names f9b70535; summary does not
+  independently expose a source revision. Saved summary/decision preserve limits.
+- Frozen manifest 82e283d5...8e7bf: all six source sets hash-verified. Inspected
+  gamma ecbc8203 / ff511c52 and beta 7cab9b0f / fd5e2554. Both buy Jungle and
+  Monster Strength before later scaling; selective PvP, group routes and melee
+  drafting differ from ours. Transfer only first Jungle protection in our stat.
+- Jungle costs the same 150 gold as Power, but trades one extra stat-growth point
+  for 30% less camp damage. This can extend healthy sorties without fewer deaths.
+  Earlier ce955542 broad draft/Jungle+Monster/capture rewrite was inconclusive
+  and not selected. New rationale isolates one family without changing draft/stat
+  and couples it to the current recovery model. It is not a reapplication of the
+  earlier roster/routing policy. Camp exposure and opponent design are evidence;
+  no controlled win improvement is claimed.
+- Retain negative/deferred banking, capture/deference/follow-through, recall/shop
+  resupply, focus-fire/AoE, draft/stat, route scoring, dash and teleport findings.
 
 ## Candidate policy
-- economy_route.h: 300 cash + actual equipment purchase-value threshold, including
-  combined Power emblems of any of the three existing stat lines. Consumable
-  spending is excluded. No new shopping, stat or draft choice.
-- camp_rotation.h caches immutable gem-bearing spawn geometry once. Mixed groups
-  stay eligible; the existing private cooldown observations filter both masks.
-  No hidden live state, new team memory, target reservation or enemy cache.
-- Before camp combat, and only with >=60k fuel, compare nearest eligible ordinary
-  spawn distance with nearest eligible gem-bearing spawn distance. Two native
-  fields use existing free/occupied-camp goal semantics. Gem field expansion is
-  capped at ordinary distance +12. Prefer gems within that bound, else run the
-  base farm/combat policy. No reachable gems means fallback, not idle exclusion.
-- Any current eligible spawn occupancy bypasses preference, preserving base
-  capture behavior even on gold-only groups. No new group state scan or commitment.
-- Selected gem policy restricts basic/reset/direct-spell aim points to those
-  group spawns. Splash can still hit adjacent gold camps. Reuse the chosen field
-  for movement, refresh occupancy before moving and live targets after arrival.
-- Fuel gates: entry 60k, second native field 40k, movement 28k; existing combat
-  reserve 18k and 16-target cap. Below reserve use base fallback or yield.
-- Recovery, PvP, banking/locks, draft/stat RNG, channel guards, four-byte
-  shared-round protocol and exception-safe official turn yield retain base policy.
+- farming_equipment.h maps the existing stat index Strength/Focus/Health to Jungle
+  shards. At the existing live spawn shop, buy only the shards needed to finish
+  one emblem, then return to the original Power line with any remaining gold.
+  Use SDK price/combine metadata, can_buy, and fresh inventory after combination.
+  At most two equipment buy calls; no recursion, new shop visit or gold loop.
+- All three Jungle emblem variants certify the same non-stacking passive; shards
+  alone do not. No private state or new shared-memory layout.
+- recovery.h scales only visible awake camps' observed Strength by 0.70 when our
+  completed emblem exists. Champion threats remain unscaled; hidden state is
+  never inspected. Still ignores shields/other mitigation, victim choice and spells.
+- Existing 35% low-health floor, 70% scan threshold, two-volley margin, 32-threat
+  cap and 45k/28k/18k fuel gates remain. Complete spawn recovery, channel guards,
+  escape routing, combat and camp rotation keep the edit-base policy.
+- Draft/stat RNG, locking, immediate banking, shopping locations and four-byte
+  shared-round protocol stay unchanged. Power's lost growth point can slow damage;
+  harmless cluster routes gain little; hidden threats and timing remain risks.
 
-## Checks, uncertainty and next step
-- Seven embedded constexpr contracts cover bootstrap boundary, exact detour
-  boundary, overlong detour, existing occupancy and unreachable routes.
+## Checks and next step
+- Eleven embedded compile-time contracts check insufficient funds, split shopping,
+  exact emblem completion, no overbuy/unsigned underflow, camp-only mitigation,
+  a recovery-gate change and preservation of the low-health floor/enemy danger.
+  These are pure invariants, not runtime branch coverage or engine simulations.
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json PASSED,
-  exit 0, source f9b70535ec37a82250e8507a7ffaff7df204a2bc51ccee064a75c08e2421d657.
-  Report .agent/check-task-a32cd5b120d14daba1589d8ca4560ff1.json; saved copy
-  experiments/alpha/task-a32cd5b120d14daba1589d8ca4560ff1-bot-check.json.
-  Smoke IDs 46b51738f873cba2824a483e8b0e8bf57be063e131183a0a3b896c262e022c7a
-  and 108a02926ee746347938d875a5a299acdd86e624d3ca221856d20ce06c39999c.
-  The wrapper summary establishes compilation/smoke success, not complete-game
-  outcomes, economic branch coverage or normal-turn fuel headroom. All final
-  source file hashes match the precheck decision snapshot; no later source edits.
-- READY_FOR_EVAL; no comparative tournament invoked.
-- git diff --check PASSED, exit 0.
-- Risks: gem groups may be harder or riskier than gold; extra fields consume
-  fuel; hidden cooldowns remain uncertain; partial gold clears away from spawn
-  may be abandoned. No measured mechanism, branch coverage or strength claim.
-- Supervisor should evaluate exact checked source against development base and
-  protected champion across maps/both sides. If win rate fails to improve, reject;
-  inspect gold-only cycles, collection, travel and fuel before changing detour.
-  No agents, comparative evaluation, publication, commit/push or official action.
+  exit 0. Checked source 1d7d75b300bf28176744437a80f6bcbc83da195b43a631ddad66a1bbf4fbd39a.
+  Report .agent/check-task-f8007f1eff324236b2f54153b5affd75.json; saved copy
+  task-f8007f1eff324236b2f54153b5affd75-bot-check.json.
+  Smoke IDs 573cdb2f52dcd4cd7307a3ede4d4bfd0e027d570b8ab85db30e468d9888a2dd4
+  and eee2e5c8ea813bbcb5cc373a23eee492f6b460e26b963281e561cc5046a1dcae.
+  Report establishes build/smoke success, not full-game completion, purchase or
+  recovery branch coverage, normal-turn fuel headroom or competitive strength.
+- git diff --check PASSED, exit 0. No source edits after the trusted check.
+  Decision JSON records final source file hashes, parameters and evidence.
+- READY_FOR_EVAL. Supervisor should compare this exact source with edit base and
+  protected champion across maps and both sides. Reject unchanged/lower matched
+  win rate; inspect collection, camp damage and recovery time before further item
+  changes. No agents, tournament evaluation, commit/push, publication or official action.
