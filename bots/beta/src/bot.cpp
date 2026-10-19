@@ -1,5 +1,6 @@
 #include <cambc.h>
 #include "bot.h"
+#include "economy_policy.h"
 #include <algorithm>
 #include <array>
 #include <limits>
@@ -284,10 +285,22 @@ void Bot::farm_camps() {
     bool reward = false;
     const auto position = me.position();
     const auto strength = std::max(1.0f, me.strength());
-    // Rank with cached geometry before making expensive visibility/state calls.
-    // Include our committed group first so an ongoing capture is always checked.
-    std::vector<std::size_t> order(groups.size());
-    std::iota(order.begin(), order.end(), 0);
+    // Finish an occupied reward before applying economic eligibility. Only our
+    // own tile is queried, so this never reads a hidden group's live state.
+    for (const auto& g : groups)
+        if (g.spawns.is_set(position)
+            && std::holds_alternative<cambc::map::camp_group_reward_available>(g.group.state())) return;
+
+    // Filter BEFORE the bounded shortlist: nearby gold camps must not hide all
+    // gem sources when we already carry an emblem's worth of unspent cash.
+    // This is reversible after shopping, with no lifetime-income estimate.
+    std::vector<std::size_t> order;
+    order.reserve(groups.size());
+    const auto cash = me.gold_count();
+    for (std::size_t i = 0; i < groups.size(); ++i)
+        if (economy_policy::eligible(groups[i].group.gem_value(), cash)) order.push_back(i);
+    // Rank with cached geometry before expensive visibility/state calls.
+    // A committed eligible group is still checked first.
     const auto checked = std::min(max_group_checks, order.size());
     std::partial_sort(order.begin(), order.begin() + checked, order.end(), [&](auto a, auto b) {
         if (static_cast<int>(a) == target_group) return static_cast<int>(b) != target_group;

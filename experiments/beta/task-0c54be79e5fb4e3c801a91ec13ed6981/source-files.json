@@ -1,0 +1,9 @@
+{
+  "bots/beta/src/bot.cpp": "c534b849b3dd6a735e0b8b1f57abedcfc1ce003953eec4cc010b2cc4be85d1f8",
+  "bots/beta/src/bot.h": "89f2099b5ab009d94534770c4b27f22aa0111484400d84098d4b16b3d90167c5",
+  "bots/beta/src/draft.cpp": "062557bd72d7477d98010116b615d9d26906ee349374f7cfbb06f93838f1808e",
+  "bots/beta/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+  "bots/beta/src/economy_policy.h": "28d6add80f308ea54e298c804054ad7571096044e6dc62a6c085c98b4b7bee69",
+  "bots/beta/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+  "bots/beta/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+}

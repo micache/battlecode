@@ -1,93 +1,93 @@
 # Operational summary
 
-## task-2906ee1a0fe0479bb6b3c6b07e6403d7 — melee-first farming draft
+## task-0c54be79e5fb4e3c801a91ec13ed6981 — cap idle-cash gold farming
 
-Hypothesis: Varg/Vendetta/Ryth/Marcella/Tavi draft order improves matched wins
-and submitted gems versus edit 50a0d7d5 / 6d66a77f. No win gain, lower
-submissions, or increased own faults/fuel suspension falsifies it. Composition
-mechanism and strategic gain remain unmeasured. Decision/evidence/check files:
-experiments/beta/task-2906ee1a0fe0479bb6b3c6b07e6403d7/.
-Previous operational summary archived through task-382a14ec.
+Hypothesis: excluding new zero-gem camp targets at 150 unspent gold before the
+12-group shortlist improves matched wins and submitted gems versus a4a26c5d /
+9f254079. No win gain, lower submissions, or increased own faults/fuel suspension
+falsifies it. Expected mechanism: fewer high-cash zero-gem farmers. Unmeasured.
+Decision, evidence, complete match summaries and check artifacts are in
+experiments/beta/task-0c54be79e5fb4e3c801a91ec13ed6981/.
+Previous summary archived through task-2906ee1a; retain its negative findings.
 
-Identity: beta / bot/beta; input HEAD 503f893df4f6df62bbfc9677ccf72e9741f406d8;
-edit 50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1 / base source
-6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2.
-All six initial source files matched trusted edit blobs and handoff hashes.
-Prepared bot.cpp/bot.h changes and deleted objective_policy.h relative to HEAD
-are intentional restoration. Only draft.cpp changes from the actual edit base.
-Prior task PUBLISHED and evaluated; no unpublished work awaiting evaluation.
-Accepted champion 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 stays in trusted Git.
-No agents, commit, push, official action or comparative tournament run.
+Identity: beta / bot/beta, HEAD/input/edit a4a26c5d8d364055f1b2e36f2bf72885c4e3da54;
+base source 9f2540790f9f048d6f404bb0f20a1e9e03180191c9c043c5322171f838253360.
+Initial Git clean; all six source files matched trusted per-file hashes.
+Prior task PUBLISHED/evaluated, no unfinished candidate. Accepted champion
+0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9 remains in trusted Git/snapshot.
 
-Evidence: evaluation 8b2b205ddc38e7f4a6dff8b179fc10cf29902df721c9c24ec95247ad5d13b2e2
-measured 503f893d / 4ba62e96 (strict gem routing), NOT edit/current candidate.
-INCONCLUSIVE/full-map-pool, 98W/38L; development 81W/31L, zero own faults.
-Matched development delta +0.00892857 on 56 side pairs. Collision regressed
-1.0 -> 0.5, swirl 0.875 -> 0.5; ambush improved 0.5 -> 1.0.
-- Collision A a7d4a4317f43be8dc5eeca9c494b0019c410561324971a512f4bc2c610b245bc:
-  round 1015, 672:1024 submitted. Own Tavi 152 collected/submitted, 4 deaths;
-  Ryth 260/260, 2 deaths. Opposing Vendetta submitted 398, 3 deaths.
-- Collision B 6931f83e8b1424b0aff48b2ecb12738c7d280159e65719328e8b87008f868676:
-  round 1089, 974:1032 submitted. Own Tavi 166 collected/22 submitted,
-  2 deaths; Ryth 584/476, no deaths. Opposing Vendetta submitted 620, 3 deaths.
-  Both summaries completed, zero faults/suspensions. Opponent revision unknown
-  in these records; do not infer identity from draft. No draft-causality trace.
-- Contrast: latest development ambush 4W/0L per side, expanse A and stampede A
-  4W/0L. Individual winning IDs unavailable in compact table. Protect these.
-- External official observations are different/older own code, unknown opponent
-  versions, and uncontrolled; no imported scores used to select this candidate.
+Base evidence: f59892af evaluation, INCONCLUSIVE/full-map-pool 105W/31L;
+development-only 87W/25L in 112 completed distinct cases, zero own fault matches.
+Matched development delta +0.0625 versus 50a0d7d5/6d66a77f. These evaluate base,
+not today's candidate. Complete summary slices are retained for:
+- Ambush A 33fdddcfbb1f9a83dc5f5d72a0f6dc8de4b6aff17b36e74be43b5e63c9e70b39:
+  round 1069, 836:1008 submitted. Ryth 1697 and Marcella 1260 earned gold;
+  each zero collected gems, spending and monster damage taken. Zero own deaths,
+  faults, suspensions and bag loss.
+- Ambush A 61cf5ad8aedbfcfb3ca2c38e5490cd469597bcb642dffab692a6699be9af43f0:
+  round 799, 144:1004 submitted. Varg 805 and Marcella 1085 earned gold;
+  each zero gems/spending. One own death, zero own faults/suspension/bag loss.
+  The match's one suspension belongs to B. Ambush opponent revisions unknown.
+- Rushbait-v2 A 037019ccc58ed90d19b7726e747478961ff70dbf9d534ae89fb236bf157ce6ea
+  vs gamma bd4078cd: round 705, 234:1034, two own deaths, 72 lost gems, zero
+  own faults/suspensions. Different failure; cash cap need not solve it.
+Contrasting aggregate base wins: collision/corners/eight/lanes 4W/0L each side,
+ambush B 4W/0L. Individual winning IDs unavailable in compact table.
+Final statistics suggest the gold loop; they do not prove exact routing turns.
+External older official observations were not used as controlled results.
 
-Frozen manifest b3f17681: inspected gamma ecbc8203 / ff511c52, revision
-bd4078cd26f091dc34cbaa80a9d40d04d7a2e53cc7ae156430d1ec212e6c6974:
-Varg/Vendetta/Marcella/Ryth/Tavi; melee walk+attack/reset, reward/time routes,
-300-gold shopping recalls, each-bag banking. Adapt early Vendetta, keep Ryth
-third and beta gameplay. Shared source is not proof of official behavior.
+Change: economy_policy.h admits any positive-gem group, and zero-gem groups
+only below 150 CURRENT cash. Filter before shortlisting; commitment cannot
+retain an excluded gold target. Equipment/lifetime gold do not count, so shopping
+reenables gold work. Current occupied cleared rewards are held before filtering,
+using live state only on self's visible spawn tile. Existing final camp score,
+12 inspections, movement/dash, roster, banking, recovery and item build remain.
+Compile-time cases cover zero cash, 149/150 boundary, high cash and mixed/gem
+rewards. No team memory protocol, extra path search or runtime logging.
 
-Current strategy: three picks Varg/Vendetta/Ryth; fourth Marcella; fifth Tavi.
-Vendetta starts with 70 Strength versus Tavi 35; melee walk/basic/reset, camp-kill
-cooldown refresh and two-step dash fit existing fight and route dash code.
-Original three-pick roster lacked any dash, so could not use that travel policy.
-Ryth keeps durable AoE third; Marcella adds stun immunity and melee reset fourth.
-Five-pick roster has same bodies as edit but scheduling/spawn order can change.
-All eleven unique fallbacks, current_draft exclusion, team_size guard and
-one-pick return retained. No new memory, search, runtime logs or champion logic.
-Jungle Strength, Monster Strength, Durability Health then Power Strength;
-independent group captures, each-bag banking, 45% recovery, full spawn healing,
-opportunistic locks, guarded route dash and bounded 12-group ranking remain.
-No live team-memory protocol.
+Frozen manifest 44885ad0 inspected gamma ecbc8203/ff511c52, revision bd4078cd:
+Varg/Vendetta/Marcella/Ryth/Tavi, melee resets, reachable value/time camps,
+0.12 gold conversion, 300-gold shopping recall. Beta's safe recall instead needs
+150 gold AND <80% health, so damage-free gold farmers hoard it. Adapt idle-capital
+constraint through target eligibility, preserving beta's routing/recall strategy.
+Shared arena source does not establish private official-opponent behavior.
 
-Risk: less ranged reach/control and field shopping; more melee exposure or
-congested approach tiles; cast spent on travel rather than reset; slower
-investment without Tavi. Current target ranking/visibility/fuel limitations
-persist. Final scores motivate composition work but do not prove its mechanism.
-Prior negatives retained: strict objective routing +0.008929 with map losses;
-recovery +0.026786; full scheduler +0.041667 with interlock regression;
-gold penalty +0.044643 with regressions; combat rewrite -0.041667; healthy
-shopping/bank detours zero gain. Isolated draft/items/shield/harvest gains
-unestablished. Old Varg-first random-draft trial is not this melee-first policy.
+Why not prior experiments: +40 penalty at 300 total capital still permits gold;
+strict gem/full-trip routing at 150 total capital changed multiple policies and
+had only +0.008929 development gain with regressions. Here cash-only eligibility
+is reversible after spending and score ordering is unchanged on the newly
+advanced melee roster. Current-source ambush losses supply fresh evidence.
+Healthy shopping and bank detours had zero gain; recovery +0.026786, full
+scheduler +0.041667 and gold penalty +0.044643 all had regressions; combat rewrite
+-0.041667. Isolated items/shield gains remain unestablished.
+
+Risks: remote/contested gems, reduced investment, existing live-Monolith/ranking
+weaknesses and unavailable first-12 targets. Tavi spends in the field and may
+continue preferring gold. Empty eligible search retains existing yield fallback;
+no guaranteed exploration/respawn-vacating. Additional local scan/filter fuel
+headroom is unmeasured. Compile/smoke success does not establish strategic gain.
 
 Engine 2.2.5; lock 0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d;
-suite published-17-release-225-v1. Docs unchanged per handoff. Consulted compact
-BOT_REFERENCE, RESEARCH, organizer record, Playbooks B/C/D/E/F/G, relevant
-handbook kits/action rules, C++ draft API and installed SDK draft contracts.
-SDK hash ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264.
+suite published-17-release-225-v1. Handoff says SDK/docs unchanged. Consulted
+compact reference, RESEARCH, organizer ledger, Playbooks B/C/E/F/G, relevant
+handbook capture/items, C++ group-value/state API and matching installed SDK.
+SDK SHA256 ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264.
 Organizer hub does not certify all event policies or production parity.
 
 Validation: `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED/0, exact source 9f2540790f9f048d6f404bb0f20a1e9e03180191c9c043c5322171f838253360.
-Report .agent/check-task-2906ee1a0fe0479bb6b3c6b07e6403d7.json, copied check.json.
-Exact-source check-report PASSED/0, saved check-report.json. No source edits
-following check. `git diff --check` PASSED/0 (diff-check.txt).
-Smoke IDs 31a7c0ea46a7b084e5007b4b3ccf4ee62c9b47790caf924441115044849dca46
-and 2016e028c24209d525ba7d3b23959bb3d5dff2050bc01a78fe34737d3960ed3e.
-Own-side stdout exports exited 0 and were empty (smoke-a.json, smoke-b.json).
-Smoke success is not proof of complete competitive games, actual dash/reset
-coverage, measured fuel headroom, zero suspensions, or strategic improvement.
-No new source-pattern regression: simple order is reviewable, legality guards
-and gameplay unchanged; trusted wrapper supplies compilation/engine smoke.
+PASSED/0 for candidate source
+6145b56e00470cc005a82f686f655f267b46545967b28fab257fdd7a58de0dc7.
+Report .agent/check-task-0c54be79e5fb4e3c801a91ec13ed6981.json, copied as
+check-report.json. Exact-source arena-client check-report also PASSED/0.
+`git diff --check` PASSED/0 (diff-check.txt). Smoke IDs:
+899a37562334be85ee1f26d33ae269b0602f9ab213dbddd36d2ec67a1cde16a3 (own A),
+9f5299b7712f8ac95c6bbc3624803a5074d69ffee07cc24c721b21455b40b5b7 (own B).
+No source edits after check. Both own-side stdout exports exited 0 and are empty
+(smoke-a.json/smoke-b.json). Smoke success is not proof of completed competitive
+games, policy coverage, zero suspensions or measured fuel headroom.
 
-Next: supervisor evaluates exact checked candidate vs 50a0d7d5 / 6d66a77f on
-matched maps, sides and frozen opponents. Prioritize wins/submitted gems; split
-results by 3/4/5 picks and inspect Vendetta contribution, deaths and bag loss.
-If it fails, inspect three-pick Vendetta route/cast use before combat changes.
-Full champion promotion gate remains mandatory.
+Next: supervisor evaluates exact checked source vs a4a26c5d/9f254079 on matched
+maps/sides/frozen opponents. Wins and submissions primary; inspect high-cash
+zero-gem farmers, protect existing collision/corners/eight/lanes and ambush B.
+Full champion promotion gate mandatory. No agents, commit, push, official action,
+comparative tournament, or waiting for evaluation performed in this invocation.

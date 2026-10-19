@@ -1,0 +1,257 @@
+{
+  "task_id": "task-0c54be79e5fb4e3c801a91ec13ed6981",
+  "edit_commit": "a4a26c5d8d364055f1b2e36f2bf72885c4e3da54",
+  "base_source_hash": "9f2540790f9f048d6f404bb0f20a1e9e03180191c9c043c5322171f838253360",
+  "feedback_id": "6092b45c322a890cb216f83df8d9faef0fc2a88fa6096ba379ce5abfd291fa6c",
+  "evaluation_id": "f59892af04692c578a08ac0eddf37254dd436bbef9eb6b506e20d0cc49e3088a",
+  "candidate": {
+    "build_id": "ba99c2e5cba3536ec620aa7f680f3c1b13639624dfe829c36580f856d69f5199",
+    "commit": "a4a26c5d8d364055f1b2e36f2bf72885c4e3da54",
+    "revision_id": "ab6acf3551bb8f9b0973721d27c7a9b349d285ef99cca22d37a7126a18584bb0",
+    "source_hash": "9f2540790f9f048d6f404bb0f20a1e9e03180191c9c043c5322171f838253360"
+  },
+  "decision": "INCONCLUSIVE",
+  "development_comparison": {
+    "commit_sha": "50a0d7d5ecbd99c70536b4c71c54e404f2daa2b1",
+    "common_opponent_delta": 0.0625,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 56,
+    "per_map": {
+      "ambush": {
+        "candidate": 0.75,
+        "incumbent": 0.5,
+        "pairs": 4
+      },
+      "collision": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 4
+      },
+      "contest": {
+        "candidate": 0.5,
+        "incumbent": 0.5,
+        "pairs": 4
+      },
+      "corners": {
+        "candidate": 1.0,
+        "incumbent": 0.75,
+        "pairs": 4
+      },
+      "eight": {
+        "candidate": 1.0,
+        "incumbent": 0.875,
+        "pairs": 4
+      },
+      "elkring": {
+        "candidate": 0.75,
+        "incumbent": 0.75,
+        "pairs": 4
+      },
+      "expanse": {
+        "candidate": 0.875,
+        "incumbent": 0.75,
+        "pairs": 4
+      },
+      "fragment": {
+        "candidate": 0.75,
+        "incumbent": 0.75,
+        "pairs": 4
+      },
+      "interlock": {
+        "candidate": 0.625,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "lanes": {
+        "candidate": 1.0,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "pilgrimage": {
+        "candidate": 0.625,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "rushbait-v2": {
+        "candidate": 0.75,
+        "incumbent": 0.625,
+        "pairs": 4
+      },
+      "stampede": {
+        "candidate": 0.625,
+        "incumbent": 0.75,
+        "pairs": 4
+      },
+      "swirl": {
+        "candidate": 0.625,
+        "incumbent": 0.875,
+        "pairs": 4
+      }
+    },
+    "source_hash": "6d66a77fa2db70675f473e34dde3c608cea2f08443a23646545ac4eb6076b6b2",
+    "unknown_reliability": []
+  },
+  "development_window": [
+    {
+      "by_map_side": {
+        "ambush/A": [
+          2,
+          2
+        ],
+        "ambush/B": [
+          4,
+          0
+        ],
+        "collision/A": [
+          4,
+          0
+        ],
+        "collision/B": [
+          4,
+          0
+        ],
+        "contest/A": [
+          1,
+          3
+        ],
+        "contest/B": [
+          3,
+          1
+        ],
+        "corners/A": [
+          4,
+          0
+        ],
+        "corners/B": [
+          4,
+          0
+        ],
+        "eight/A": [
+          4,
+          0
+        ],
+        "eight/B": [
+          4,
+          0
+        ],
+        "elkring/A": [
+          3,
+          1
+        ],
+        "elkring/B": [
+          3,
+          1
+        ],
+        "expanse/A": [
+          4,
+          0
+        ],
+        "expanse/B": [
+          3,
+          1
+        ],
+        "fragment/A": [
+          3,
+          1
+        ],
+        "fragment/B": [
+          3,
+          1
+        ],
+        "interlock/A": [
+          2,
+          2
+        ],
+        "interlock/B": [
+          3,
+          1
+        ],
+        "lanes/A": [
+          4,
+          0
+        ],
+        "lanes/B": [
+          4,
+          0
+        ],
+        "pilgrimage/A": [
+          3,
+          1
+        ],
+        "pilgrimage/B": [
+          2,
+          2
+        ],
+        "rushbait-v2/A": [
+          3,
+          1
+        ],
+        "rushbait-v2/B": [
+          3,
+          1
+        ],
+        "stampede/A": [
+          2,
+          2
+        ],
+        "stampede/B": [
+          3,
+          1
+        ],
+        "swirl/A": [
+          2,
+          2
+        ],
+        "swirl/B": [
+          3,
+          1
+        ]
+      },
+      "commit": "a4a26c5d8d364055f1b2e36f2bf72885c4e3da54",
+      "completed": 112,
+      "engine_lock_hash": "0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d",
+      "evaluation_id": "f59892af04692c578a08ac0eddf37254dd436bbef9eb6b506e20d0cc49e3088a",
+      "examples": [
+        {
+          "candidate_side": "A",
+          "evaluation_id": "f59892af04692c578a08ac0eddf37254dd436bbef9eb6b506e20d0cc49e3088a",
+          "job_id": "037019ccc58ed90d19b7726e747478961ff70dbf9d534ae89fb236bf157ce6ea",
+          "map_name": "rushbait-v2",
+          "opponent": "bd4078cd26f091dc34cbaa80a9d40d04d7a2e53cc7ae156430d1ec212e6c6974"
+        },
+        {
+          "candidate_side": "A",
+          "evaluation_id": "f59892af04692c578a08ac0eddf37254dd436bbef9eb6b506e20d0cc49e3088a",
+          "job_id": "13d4a0d9a41d066fa55e6364787a7be35c678d6138d981bdb0b0abeff902149b",
+          "map_name": "stampede",
+          "opponent": "bd4078cd26f091dc34cbaa80a9d40d04d7a2e53cc7ae156430d1ec212e6c6974"
+        },
+        {
+          "candidate_side": "B",
+          "evaluation_id": "f59892af04692c578a08ac0eddf37254dd436bbef9eb6b506e20d0cc49e3088a",
+          "job_id": "1a80190893d796b171d87c68965d1ae69dbd31d4e9333325fee4bd40bfb00f0e",
+          "map_name": "rushbait-v2",
+          "opponent": "bd4078cd26f091dc34cbaa80a9d40d04d7a2e53cc7ae156430d1ec212e6c6974"
+        }
+      ],
+      "fault_matches": 0,
+      "losses": 25,
+      "noncompleted": 0,
+      "settings_hash": "56e9c65ab7cdcff0863c078a35ab42e3d9e81e8fd815f805b1f7359053935e62",
+      "source_hash": "9f2540790f9f048d6f404bb0f20a1e9e03180191c9c043c5322171f838253360",
+      "unknown_reliability": 0,
+      "wins": 87
+    }
+  ],
+  "source_verified": true,
+  "source_file_sha256": {
+    "bot.cpp": "29ea7f6e5bf40eec5774c47f89af2e8982bb884938aa448aa0bfcee755a42d4c",
+    "bot.h": "89f2099b5ab009d94534770c4b27f22aa0111484400d84098d4b16b3d90167c5",
+    "draft.cpp": "062557bd72d7477d98010116b615d9d26906ee349374f7cfbb06f93838f1808e",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "prior_state": "PUBLISHED"
+}
