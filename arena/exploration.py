@@ -240,7 +240,7 @@ class Explorer:
                      proof.get('source_hash') == self.policy['source_hash'] and
                      proof.get('team_id') == self.policy['team_id'] and
                      -30 <= now - proof.get('observed_at', 0) <= 180)
-            self.state['waiting'] = None if ready else 'AWAITING_VERIFIED_BETA_SELECTION'
+            self.state['waiting'] = None if ready else 'AWAITING_VERIFIED_SOURCE_SELECTION'
             if not ready:
                 return
         pending = [read_json(p) for p in self.records() if read_json(p)['state'] in ('QUEUED', 'COLLECTING')]
@@ -249,6 +249,7 @@ class Explorer:
         quota = self.cli.run(['match-groups', 'quota', '--json'])
         require(quota['team']['id'] == self.policy['team_id'], 'competition team changed; stop outside play')
         self.state['quota'] = quota['quota']
+        self.state['quota_observed_at'] = now
         wait = quota_wait(quota, now)
         if wait > now:
             self.state['next_create'] = wait
@@ -283,6 +284,9 @@ class Explorer:
 
     def import_payload(self, payload):
         bot = payload.get('source_bot_id', self.policy['bot_id'])
+        if bot not in self.config['workers']:
+            require(bot=='boss' and self.policy['bot_id']=='boss','unapproved outside source routing')
+            bot=self.policy['feedback_bot_id']
         with self.db() as db:
             old = db.execute('SELECT metadata FROM external_matches WHERE official_id=?',
                              (payload['official_match_id'],)).fetchone()

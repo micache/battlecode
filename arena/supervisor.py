@@ -302,7 +302,8 @@ def handle_request(arena, bot, request):
                          "WHERE c.job_id=? AND e.bot_id=?", (job_id, bot))
         allowed += db.all('SELECT map_name FROM training_cases WHERE job_id=? AND (a_bot=? OR b_bot=?)',
                           (job_id,bot,bot))
-        require(job and (allowed or smoke_evidence(arena, bot, job)) and
+        from .boss import readable as shared_boss_evidence
+        require(job and (allowed or smoke_evidence(arena, bot, job) or shared_boss_evidence(arena,job)) and
                 json.loads(job['spec'])['map_name'] in arena.config['evaluation']['development_maps'] and
                 not any(row["map_name"] in arena.config["evaluation"]["holdout_maps"] for row in allowed),
                 "only this lane's development evidence may be exported")

@@ -10,6 +10,12 @@ def opponent_panel(arena):
     """One strong historical source per lane plus starter, frozen by the caller."""
     configured = arena.config['evaluation']['opponent_revision_ids']
     chosen = list(dict.fromkeys([arena.db.get('starter_revision')] + configured))
+    boss=arena.config.get('boss',{})
+    if boss.get('enabled'):
+        from .common import require
+        row=arena.db.one('SELECT bot_id,source_hash FROM revisions WHERE id=?',(boss['revision_id'],))
+        require(row and row['bot_id']=='boss' and row['source_hash']==boss['source_hash'],'boss reference changed')
+        chosen.append(boss['revision_id'])
     if not arena.config['evaluation'].get('historical_opponents', False):
         return chosen
     seen = {row['source_hash'] for rid in chosen if rid for row in
@@ -93,7 +99,9 @@ def experiment_context(arena, bot):
                 'interpretation':'All available last-hour outside games, compressed without extra model calls. '
                     'The named submitted source may be another arena lane or an older revision; '
                     'use these for strategic research, never attribute their scores to the current edit base.'}
+    from .boss import context as boss_context
     return {'mode': 'exploration' if explore else 'refinement', 'published_cycle': published + 1,
+            'shared_boss':boss_context(arena),
             'external_observations': external, 'external_hourly_batch':overview,
             'guidance': ('Test one materially different, source-supported policy hypothesis, not another tuning of the last idea. '
                          if explore else 'Address the largest strategic bottleneck; coupled systems may need to change together. ') +

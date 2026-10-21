@@ -386,6 +386,8 @@ class Arena:
         status['official_selection'] = selection_status(self)
         outside = self.root / 'public/official-exploration.json'
         status['official_exploration'] = read_json(outside) if outside.exists() else {'enabled':False}
+        from .boss import context as boss_context
+        status['shared_boss']=boss_context(self)
         from .training import status as training_status
         status['continuous_training'] = training_status(self)
         status['local_offload'] = {'last_completed':self.db.get('offload_last_completed'),

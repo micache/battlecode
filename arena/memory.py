@@ -193,6 +193,9 @@ def brief(task):
         if measurement.get('available'):
             lines.append(f"Development {name}: mean {measurement.get('mean')}, observations {measurement.get('observations')}.")
     strategy = task.get('strategy', {})
+    boss=feedback.get('experiment_context',{}).get('shared_boss')
+    if boss:
+        lines += ['', '## Shared team boss',json.dumps(boss,sort_keys=True)]
     if strategy:
         lines += ['', '## Shared competitive strategy task',
                   f"Phase: {strategy['phase']}. Skill: {strategy['skill']} (read completely).",

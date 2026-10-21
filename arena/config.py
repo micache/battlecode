@@ -32,11 +32,21 @@ def load(path):
             policy.get('unchanged_recheck_seconds', 10800) >= 10800, 'invalid official check cadence')
     require(config['official'].get('upload') is False and config['official'].get('activation') is False and
             type(config['official'].get('challenges')) is bool, 'uploads and activation remain disabled')
+    boss=config.get('boss',{})
+    if boss.get('enabled'):
+        require(boss.get('bot_id')=='boss' and 'boss' not in workers and
+                re.fullmatch('[a-f0-9]{64}',boss.get('revision_id','')) and
+                re.fullmatch('[a-f0-9]{40}',boss.get('source_commit','')) and
+                re.fullmatch('[a-f0-9]{64}',boss.get('source_hash','')),
+                'boss must be an immutable reference, not a model worker')
     if config['official']['challenges']:
         outside = config.get('official_exploration', {})
         require(config['engine']['version'] == '2.2.5' and outside.get('enabled') is True and
                 outside.get('owner_authorized') is True and outside.get('interface') == 'cambc-225-match-groups' and
-                outside.get('bot_id') in workers and
+                (outside.get('bot_id') in workers or
+                 (outside.get('bot_id')=='boss' and config.get('boss',{}).get('enabled') is True and
+                  all(outside.get(k)==config['boss'].get(k) for k in ('source_commit','source_hash','submission_id')) and
+                  outside.get('feedback_bot_id') in workers)) and
                 re.fullmatch('[a-f0-9]{40}', outside.get('source_commit', '')) and
                 re.fullmatch('[a-f0-9]{64}', outside.get('source_hash', '')) and
                 outside.get('interval_seconds', 0) >= 72,

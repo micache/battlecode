@@ -17,6 +17,9 @@ def freeze_opponents(arena, bot, task_id):
     from .strategy import opponent_panel
     policy = arena.config.get('official_exploration', {})
     ids = []
+    boss=arena.config.get('boss',{})
+    if boss.get('enabled'):
+        ids.append(boss['revision_id'])
     if policy.get('enabled') and policy.get('share_feedback'):
         for source in [policy, *policy.get('shared_sources', [])]:
             row = arena.db.one('SELECT id FROM revisions WHERE bot_id=? AND commit_sha=? AND source_hash=?',
@@ -35,7 +38,8 @@ def freeze_opponents(arena, bot, task_id):
         row = arena.db.one('SELECT * FROM revisions WHERE id=?', (rid,))
         if not row or row['source_hash'] in seen:
             continue
-        require(row['bot_id'] in arena.config['workers'] or row['id'] == arena.db.get('starter_revision'),
+        require(row['bot_id'] in arena.config['workers'] or row['id'] == arena.db.get('starter_revision') or
+                (boss.get('enabled') and row['id']==boss['revision_id'] and row['source_hash']==boss['source_hash']),
                 'only authorized arena sources may be shared')
         source = Path(row['snapshot']) / 'src'
         require(tree_hash(source) == row['source_hash'], 'opponent snapshot changed')
@@ -44,6 +48,7 @@ def freeze_opponents(arena, bot, task_id):
         for path in [target, *target.rglob('*')]:
             path.chmod(0o755 if path.is_dir() else 0o644)
         entries.append({'bot_id': row['bot_id'], 'revision_id': rid, 'commit': row['commit_sha'],
+                        'role':'shared-boss' if rid==boss.get('revision_id') else 'arena-opponent',
                         'source_hash': row['source_hash'], 'path': str(target),
                         'files': tree_manifest(target),
                         'interpretation': 'Frozen arena source; inspect code to infer strategy. '

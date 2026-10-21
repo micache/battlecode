@@ -65,7 +65,7 @@ class ExplorationTests(Harness):
         policy.update(submission_id=None, awaiting_submission=True, require_selection_proof=True)
         explorer = Explorer(self.config, cli=object())
         explorer.create(time.time())
-        self.assertEqual(explorer.state['waiting'], 'AWAITING_VERIFIED_BETA_SELECTION')
+        self.assertEqual(explorer.state['waiting'], 'AWAITING_VERIFIED_SOURCE_SELECTION')
         self.assertEqual(explorer.records(), [])
 
         different = {'team_id':'own-team','submission_id':'00000000-0000-4000-8000-000000000002',

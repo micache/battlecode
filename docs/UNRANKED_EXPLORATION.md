@@ -1,5 +1,31 @@
 # Outside exploration — 19 October 2026
 
+**21 October update:** the owner selected the current live team bot as a shared
+read-only boss and the new outside source. The verified initial reference is
+v17 `v4.zip`, submission `b2012bf6-f9ec-4f66-9bd6-78cbad3f573b`, source hash
+`d10ae8b4f9c10760ef6660efa6e12336d64e90b46f458330067b915d4139ee02`.
+This supersedes the beta target described historically below. Use
+`ops/configure-team-boss.py --source-envelope PATH` with services stopped,
+not the historical beta configurator. The source is committed in a local
+persistent reference repository; teammate source is not uploaded to GitHub.
+Boss has no Linux account, credentials, writable worker clone or model calls.
+
+Future full evaluations add this frozen opponent; running suites do not change.
+Continuous training includes both sides against it. Every hourly worker brief
+includes the same source packet, measured boss progress and bounded published
+hypotheses from all lanes. All three may read each other's boss development
+match diagnostics, but not holdout traces or private worker notes/transcripts.
+Retain the broader opponent pool; defeating one boss does not waive promotion
+gates or certify leaderboard strength.
+
+Outside results for the boss use the existing trusted collector and normal
+single-writer inbox, routed through alpha without attributing the boss code to
+alpha. A private exact collector payload is required for these shared imports;
+workers cannot forge cross-lane results. Prior verified outside lessons remain
+available. Fresh actual selection proofs and quota checks are still required.
+A subsequent team source change pauses outside creation until the boss/source
+mapping is reviewed; it never changes frozen local opponents mid-evaluation.
+
 Current owner update: **use prepared beta `7cab9b0f` after the owner uploads it**.
 The target is source hash `fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa`;
 the expected ZIP is `artifacts/submissions/beta-7cab9b0f.zip`. No upload or

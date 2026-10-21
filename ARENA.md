@@ -15,6 +15,14 @@ docs/UNRANKED_EXPLORATION.md for source-proof and operator-online limits.
 Latest selection: await the owner's prepared beta `7cab9b0f` upload, verify its
 actual source, then use beta. Never upload or override another team selection.
 
+21 October owner override supersedes that beta selection: use the team's
+verified current live submission for unranked exploration and preserve it as a
+read-only shared arena boss. It is a reference opponent, not a fourth account
+or model worker. Freeze its actual source/commit per evaluation. Share its source,
+development-match evidence and published worker hypotheses with alpha/beta/gamma.
+Existing in-flight suites remain unchanged; include the boss in future full
+suites and continuous development training. No automatic upload/activation.
+
 Implement the design in README.md as a small, recoverable service. Use Python, SQLite, ordinary files, Git, systemd, and the official cambc CLI. Do not build a web dashboard, distributed broker, Kubernetes stack, vector database, custom game simulator, or LLM routing service for version one.
 
 This document is a specification. `arena`, `arena-client`, and `bot-check` below are project commands you must implement. They are not commands supplied by cambc. Existing official CLI syntax is recorded in evidence/cli-help.txt.

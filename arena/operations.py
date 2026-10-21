@@ -267,7 +267,19 @@ def import_external(arena, bot, payload):
     official_id = payload["official_match_id"]
     require(isinstance(official_id, str) and 0 < len(official_id) <= 200, "official match ID required")
     require(payload.get("source_commit") and payload.get("submission_id"), "immutable own submission mapping required")
-    source = arena.db.one("SELECT id,source_hash FROM revisions WHERE bot_id=? AND commit_sha=?", (bot, payload["source_commit"]))
+    source_bot=payload.get('source_bot_id',bot)
+    if source_bot!=bot:
+        from .exploration import shared
+        require(source_bot=='boss' and shared(arena.config,payload),'unapproved shared outside source')
+        # Worker mailboxes cannot forge cross-lane boss feedback. Only the
+        # trusted native collector can create this private exact payload file.
+        import uuid
+        rid=payload.get('official_raw_statistics',{}).get('request_id','')
+        require(re.fullmatch('[a-f0-9-]{32,36}',rid),'verified outside request required')
+        mid=str(uuid.UUID(official_id));require(mid==official_id,'canonical official match ID required')
+        trusted=arena.root/'official-exploration/requests'/rid/(mid+'-import.json')
+        require(trusted.is_file() and read_json(trusted)==payload,'trusted boss collector payload required')
+    source = arena.db.one("SELECT id,source_hash FROM revisions WHERE bot_id=? AND commit_sha=?", (source_bot, payload["source_commit"]))
     require(source, "unknown source commit")
     require(not payload.get('source_hash') or payload['source_hash'] == source['source_hash'],
             'outside evidence source hash differs from immutable revision')

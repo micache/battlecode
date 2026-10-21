@@ -26,6 +26,10 @@ def roster(arena):
                 continue
             chosen[bot] = dict(row, build=arena.build(row['id']))
             break
+    boss=arena.config.get('boss',{})
+    if boss.get('enabled'):
+        row=arena.db.one('SELECT id,commit_sha,source_hash FROM revisions WHERE id=?',(boss['revision_id'],))
+        chosen['boss']=dict(row,build=arena.build(row['id']))
     return chosen
 
 
@@ -40,7 +44,8 @@ def replenish(arena):
         jobs = db.all('SELECT j.id,j.state FROM training_cases t JOIN match_jobs j ON j.id=t.job_id '
                       'WHERE t.round_id=?', (active['id'],))
         changed = (spec['engine_lock_hash'] != arena.adapter().lock_hash or
-                   spec['infrastructure_commit'] != arena.config['infrastructure_commit'])
+                   spec['infrastructure_commit'] != arena.config['infrastructure_commit'] or
+                   spec.get('boss_revision')!=arena.config.get('boss',{}).get('revision_id'))
         if changed:
             with db.transaction():
                 for job in jobs:
@@ -66,6 +71,7 @@ def replenish(arena):
     spec = {'protocol_version':1,'engine_lock_hash':arena.adapter().lock_hash,
             'infrastructure_commit':arena.config['infrastructure_commit'], 'maps':maps,
             'roster':selected, 'independent_reruns':False,
+            'boss_revision':arena.config.get('boss',{}).get('revision_id'),
             'purpose':'Continuous development self-play, never promotion or official submission evidence.'}
     with db.transaction():
         db.execute("INSERT INTO training_rounds VALUES(?,?,'RUNNING',?,NULL)",
