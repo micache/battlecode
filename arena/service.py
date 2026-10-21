@@ -62,7 +62,12 @@ class Arena:
                 row['source_hash'] == revision['source_hash'] and row['lock_hash'] == self.adapter().lock_hash,
                 'frozen evaluation build is missing or mismatched; preserve and reconcile')
         saved = json.loads(row['detail'])
-        require(file_hash(saved['artifact']) == saved['wasm_sha256'], 'frozen evaluation artifact changed')
+        try:
+            digest = file_hash(saved['artifact'])
+        except FileNotFoundError:
+            self.adapter().restore_frozen(saved)
+            digest = file_hash(saved['artifact'])
+        require(digest == saved['wasm_sha256'], 'frozen evaluation artifact changed')
         return saved
 
     def queue_match(self, a, b, map_info, repetition=None, training_round=None):
@@ -95,6 +100,13 @@ class Arena:
                            (self.config['limits'].get('continuous_matches',False),)))
         if not job:
             return False
+        # Repair lost disposable caches BEFORE consuming a match attempt/retry.
+        # This never substitutes a newly selected revision into the queued spec.
+        spec = json.loads(job['spec'])
+        for bid in {spec['a_build'], spec['b_build']}:
+            build = self.db.one('SELECT revision_id FROM builds WHERE id=?', (bid,))
+            if build:
+                self.frozen_build(bid, build['revision_id'])
         number = job["attempt_count"] + 1
         base = self.root / "matches" / job["id"]
         base.mkdir(parents=True, exist_ok=True)

@@ -261,6 +261,66 @@ class OfficialEngine:
         # cambc still receives source bot names and owns all compilation/fuel setup.
         shutil.copytree(source, Path(project) / "bots" / side / ".cambc")
 
+    def restore_frozen(self, frozen):
+        """Recreate missing disposable caches without changing a frozen binary.
+
+        New infrastructure can give the identical source build a different cache
+        ID. Recompile normally, demand BOTH original WASM hashes, then publish a
+        verified cache copy under the old ID. SQLite/suites/results stay unchanged.
+        Compiler cache logs may differ; executable bytes may not.
+        """
+        bid = frozen['build_id']
+        require(re.fullmatch('[a-f0-9]{64}', bid), 'invalid frozen build ID')
+        root = Path(self.config['root']) / 'builds'
+        target = root / bid
+        require(Path(frozen['artifact']) == target / 'output/bot.wasm' and
+                frozen['lock_hash'] == self.lock_hash and
+                tree_hash(Path(frozen['snapshot']) / 'src') == frozen['source_hash'],
+                'frozen cache recovery input mismatch')
+        journal = Path(self.config['root']) / 'build-recoveries' / (bid + '.json')
+        prior = read_json(journal) if journal.exists() else {}
+        require(prior.get('state') != 'FAILED', 'frozen cache recovery failed; inspect ' + str(journal))
+        attempt = prior.get('attempt',0) + 1 if prior.get('state') == 'PREPARING' else 1
+        require(attempt <= 2, 'interrupted frozen cache recovery needs operator review')
+        record = {'build_id':bid, 'state':'PREPARING', 'attempt':attempt, 'started':time.time(),
+                  'original_record_sha256':identity(frozen), 'expected_wasm_sha256':frozen['wasm_sha256'],
+                  'expected_side_b_wasm_sha256':frozen['side_b_wasm_sha256'],
+                  'infrastructure_commit':self.config['infrastructure_commit']}
+        atomic_json(journal, record)
+        try:
+            if target.exists():
+                require(target.is_dir() and not target.is_symlink(), 'unsafe frozen build cache')
+                # Preserve partial/damaged cache bytes; never overwrite evidence.
+                quarantine = root / ('.damaged-' + bid + '-' + str(time.time_ns()))
+                target.rename(quarantine)
+                record['preserved_partial_cache'] = str(quarantine)
+                atomic_json(journal, record)
+            rebuilt = self.prepare_bot(frozen['snapshot'], frozen['revision_id'])
+            require(rebuilt['source_hash'] == frozen['source_hash'] and
+                    rebuilt['lock_hash'] == frozen['lock_hash'] and
+                    rebuilt['wasm_sha256'] == frozen['wasm_sha256'] and
+                    rebuilt['side_b_wasm_sha256'] == frozen['side_b_wasm_sha256'],
+                    'recompiled frozen binary differs; no evaluation inputs were replaced')
+            origin = Path(rebuilt['artifact']).parent.parent
+            if origin != target:
+                stage = root / ('.restore-' + bid + '-' + str(time.time_ns()))
+                shutil.copytree(origin, stage)
+                restored = dict(rebuilt, build_id=bid, artifact=str(target / 'output/bot.wasm'),
+                                cache_project=str(target / Path(rebuilt['cache_project']).relative_to(origin)))
+                atomic_json(stage / 'build.json', restored)
+                require(file_hash(stage / 'output/bot.wasm') == frozen['wasm_sha256'] and
+                        file_hash(stage / 'output-b/bot.wasm') == frozen['side_b_wasm_sha256'],
+                        'frozen cache copy changed')
+                stage.rename(target)
+            require(file_hash(frozen['artifact']) == frozen['wasm_sha256'], 'restored frozen binary changed')
+            record.update(state='COMPLETE', finished=time.time(), rebuilt_build_id=rebuilt['build_id'],
+                          wasm_sha256=rebuilt['wasm_sha256'], side_b_wasm_sha256=rebuilt['side_b_wasm_sha256'])
+            atomic_json(journal, record)
+            return read_json(target / 'build.json')
+        except Exception as exc:
+            atomic_json(journal, dict(record, state='FAILED', finished=time.time(), detail=str(exc)[:2000]))
+            raise
+
     def run_match(self, spec, output):
         require(spec["engine_lock_hash"] == self.lock_hash, "match engine changed")
         require(file_hash(spec["map_path"]) == spec["map_hash"], "frozen map changed")

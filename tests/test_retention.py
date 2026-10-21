@@ -12,6 +12,26 @@ from arena.retention import compact_project, finish_compaction, maintain, protec
 
 
 class RetentionTests(Harness):
+    def test_build_lru_pins_future_stage_development_base(self):
+        import os
+        self.establish()
+        candidate=self.commit('alpha','future-stage candidate')
+        eid=self.arena.start_evaluation(candidate['id'])
+        root=self.root/'builds';root.mkdir(exist_ok=True)
+        frozen=identity({'future-development-base':True})
+        directory=root/frozen;directory.mkdir()
+        atomic_json(directory/'build.json',{'build_id':frozen})
+        os.utime(directory/'build.json',(1,1))
+        suite=json.loads(self.arena.db.one('SELECT suite FROM evaluations WHERE id=?',(eid,))['suite'])
+        suite['development_build']=frozen
+        self.arena.db.execute('UPDATE evaluations SET suite=? WHERE id=?',(json.dumps(suite),eid))
+        for n in range(13):
+            bid=identity({'newer-cache':n});p=root/bid;p.mkdir()
+            atomic_json(p/'build.json',{'build_id':bid});os.utime(p/'build.json',(100+n,100+n))
+        removed,_=prune_build_cache(self.arena)
+        self.assertNotIn(frozen,removed)
+        self.assertTrue((directory/'build.json').exists())
+
     def test_build_lru_keeps_newest_twelve_and_queued_immutable_inputs(self):
         import os
         root=self.root/'builds';root.mkdir()

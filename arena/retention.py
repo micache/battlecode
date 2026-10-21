@@ -189,6 +189,12 @@ def prune_build_cache(arena):
         if re.fullmatch(r'\.retired-[a-f0-9]{64}',stage.name) and stage.is_dir() and not stage.is_symlink():
             remove_redundant(stage)
     pinned = set()
+    # Future stages use the suite's frozen inputs, not only today's queued
+    # games. In particular development-base builds may not have a case yet.
+    for row in arena.db.all("SELECT suite FROM evaluations WHERE state='EVALUATING'"):
+        suite = json.loads(row['suite'])
+        pinned.update(suite.get(k) for k in ('candidate_build','incumbent_build','development_build'))
+        pinned.update(item.get('build_id') for item in suite.get('opponents', {}).values())
     rows = arena.db.all("SELECT spec FROM match_jobs WHERE state IN ('QUEUED','RUNNING') OR id IN "
                         "(SELECT c.job_id FROM evaluation_cases c JOIN evaluations e ON e.id=c.evaluation_id "
                         "WHERE e.state='EVALUATING')")
