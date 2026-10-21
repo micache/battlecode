@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 from arena.common import ArenaError, atomic_json, file_hash, identity, read_json
 from arena.exploration import (CLIThrottle, Explorer, NativeCLI, compact_statistics, quota_wait, shared,
-                               resolved_policy, save_source_proofs)
+                               resolved_policy, save_source_proofs, diagnostic_map_allowed)
 from arena.operations import import_external
 from arena.retention import maintain_external
 from arena.strategy import experiment_context
@@ -64,6 +64,21 @@ class QuotaTests(unittest.TestCase):
 
 
 class ExplorationTests(Harness):
+    def test_outside_maps_need_reviewed_hash_and_keep_reserved_variants_hidden(self):
+        self.policy()
+        manifest=Path(__file__).parent.parent/'evidence/map-pool-external-304.json'
+        self.config['official_exploration']['map_manifest']=str(manifest)
+        maps={m['name']:m for m in read_json(manifest)['maps']}
+        own={'map_name':'00collision','map_hash':maps['00collision']['sha256']}
+        self.assertTrue(diagnostic_map_allowed(self.config,own))
+        own['map_hash']='0'*64
+        self.assertFalse(diagnostic_map_allowed(self.config,own))
+        for name in ['00monolith','00packs','00rows']:
+            self.assertFalse(diagnostic_map_allowed(self.config,{'map_name':name,'map_hash':maps[name]['sha256']}))
+        self.config['official_exploration'].pop('map_manifest')
+        self.assertFalse(diagnostic_map_allowed(self.config,{'map_name':'00collision',
+                         'map_hash':maps['00collision']['sha256']}))
+
     def policy(self):
         alpha,_ = self.establish()
         self.config['official']['challenges'] = True

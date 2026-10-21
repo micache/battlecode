@@ -123,6 +123,21 @@ def shared(config, metadata):
         for source in [resolved_policy(config), *policy.get('shared_sources', [])]))
 
 
+def diagnostic_map_allowed(config, metadata):
+    """Separate reviewed outside maps from local scoring and reserved traces."""
+    name, digest = metadata.get('map_name'), metadata.get('map_hash')
+    if name in config['evaluation']['holdout_maps']:
+        return False
+    if name in config['evaluation']['development_maps']:
+        if not digest:  # Historical manually imported, identified local maps.
+            return True
+        return any(m['name']==name and m['sha256']==digest
+                   for m in read_json(config['map_manifest'])['maps'])
+    path = config.get('official_exploration', {}).get('map_manifest')
+    return bool(path and digest and any(m['name']==name and m['sha256']==digest and
+        m.get('role')=='development' for m in read_json(path)['maps']))
+
+
 def resolved_policy(config):
     """Resolve only an exact, owner-preauthorized source; never a moving latest bot."""
     policy = dict(config.get('official_exploration', {}))
@@ -389,6 +404,8 @@ class Explorer:
                 compact['metrics']['submitted_gems']['value'][side['side'].upper()] == side['score']
                 for side in match['sides']), 'official round/gem totals disagree with statistics')
         maps = read_json(self.config['map_manifest'])['maps']
+        if self.policy.get('map_manifest'):
+            maps += read_json(self.policy['map_manifest'])['maps']
         canonical_map = next((m['name'] for m in maps if m['sha256'] == stats['match']['mapHash']), None)
         require(canonical_map, 'official map bytes are absent from the frozen pool; retain and review')
         # The official raw replay and statistics stay on this server under rolling retention.
@@ -396,6 +413,7 @@ class Explorer:
             'source_commit':record['source_commit'], 'source_hash':record['source_hash'],
             'submission_id':record['submission_id'], 'own_side':own['side'].upper(),
             'outcome':winners[0]['side'].upper(), 'map_name':canonical_map, 'official_map_name':match['map'],
+            'map_hash':stats['match']['mapHash'],
             'official_patch':match['patchId'], 'opponent_version':enemy.get('version'),
             'official_engine_version':stats['match']['engineVersion'],
             'official_engine_build':stats['match']['engineBuildHash'],
@@ -416,6 +434,7 @@ class Explorer:
                 'submission_id', 'own_side', 'outcome', 'map_name', 'official_patch', 'opponent_version',
                 'opponent_team_id', 'opponent_rank_at_request', 'own_bot_faults',
                 'official_engine_version','official_engine_build')},
+                'map_hash':observation['map_hash'],
                 'official_group_id':record['group_id'],
                 'source_bot_id':record['bot_id'],
                 'official_raw_statistics':{'request_id':record['request_id'],

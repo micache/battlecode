@@ -42,6 +42,17 @@ qualification until the new CLI, SDK, settings and rules have been reconciled.
 reviewed statistics stop with services stopped; it cannot clear access denials,
 unknown creations, source mismatches or future unknown engine builds.
 
+The new published pool has 35 map files with different byte identities. Its
+separate reviewed manifest is `evidence/map-pool-external-304.json`; enabling
+it for outside diagnostics does not replace the local 17-map scoring manifest.
+New outside names resolve only by actual map hash. `00monolith`, `00packs` and
+`00rows` remain reserved; other verified outside maps can supply bounded traces
+to all three workers. Unknown hashes still stop collection. Use the review
+command's `--map-manifest /opt/battlecode/evidence/map-pool-external-304.json`
+only for its exact saved map-pool stop, with services stopped. A full local
+CLI/SDK/rules/settings/map migration is still required before claiming current
+production parity; the 17-map results remain explicitly historical to that build.
+
 Historical 19 October selection (superseded above): **use prepared beta
 `7cab9b0f` after the owner uploads it**.
 The target is source hash `fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa`;

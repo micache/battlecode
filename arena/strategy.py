@@ -45,7 +45,7 @@ def experiment_context(arena, bot):
     explore = interval > 0 and (published + 1) % interval == 0
     candidates = []
     batch, since = [], time.time() - 3600
-    from .exploration import shared
+    from .exploration import shared, diagnostic_map_allowed
     for row in arena.db.all('SELECT official_id,metadata,created FROM external_matches ORDER BY created DESC LIMIT 2000'):
         metadata = json.loads(row['metadata'])
         source = arena.db.one('SELECT id FROM revisions WHERE bot_id=? AND commit_sha=?',
@@ -59,10 +59,11 @@ def experiment_context(arena, bot):
                              for key in ('official_match_id', 'source_commit', 'submission_id', 'outcome',
                                          'own_side', 'opponent_version', 'map_name', 'official_patch',
                                          'official_engine_version', 'official_engine_build',
+                                         'map_hash',
                                          'opponent_team_id', 'opponent_rank_at_request')}
             observation['available_diagnostics'] = sorted(name for name in metadata.get('file_sha256', {}) if name in
                 ('observations.json', 'final.json', 'stdout.log', 'stderr.log', 'bot-a.stdout.log', 'bot-b.stdout.log')
-                and metadata.get('map_name') in arena.config['evaluation']['development_maps'] and
+                and diagnostic_map_allowed(arena.config, metadata) and
                 not metadata.get('raw_retired'))
             if observation['available_diagnostics'] and metadata.get('official_raw_statistics'):
                 observation['available_diagnostics'].append('raw-statistics.json')
