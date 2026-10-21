@@ -1,0 +1,55 @@
+{
+  "task_id": "task-e523e59b36b9442d9c09d5225bf2167d",
+  "base_source_hash": "ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671",
+  "edit_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+  "source_file_sha256": {
+    "bot.cpp": "1b12c40d396318730b0592a8d1aafbb8294b0a887a5530f8256d57fb80cd1171",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bot.h": "bf6ed7d94c1c4454e5f44e7703ba3767e05e0dfa5ca16c2d50ce0347c911a310",
+    "main.cpp": "786c1365f90c1eb409b163f584c97a4f596191c946d4bd2b2eb4d0682c9f751c",
+    "farm_risk.h": "f4527f03091f5fcceffb4cbf88dc5cecb69b5779a2b21f982543e7bd727f464c",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "draft.cpp": "bfac1b1879665b73b2bcb33ff3567641d73e40afd760d08d0498f53ddfa375b3"
+  },
+  "opponent_manifest": {
+    "count": 6,
+    "manifest": "/srv/battlecode/public/strategy/task-e523e59b36b9442d9c09d5225bf2167d/manifest.json",
+    "sha256": "5b3413cd81492d5ed792cc24c1deb813e82d3855993b0f2d29c5976f23424d5d"
+  },
+  "hypothesis": "Risk-aware camp selection with recovery when no feasible target remains will increase matched development win rate and mean submitted gems without new bot faults.",
+  "mechanism": "Current farming ranks reward/time without a health budget. Estimate 0.60 * summed remaining camp strength * remaining HP / (1.12 * self strength), apply completed Jungle and Durability multipliers, and reject predicted clears below the existing 35% max-health reserve. Wounded farmers with no feasible target recover instead of idling.",
+  "falsifier": "Non-positive matched win change, non-increasing mean submitted gems, or any new own fault.",
+  "evidence_limits": "Boss finals motivate survival/throughput work; they do not identify per-turn pull choices or prove causal attribution. PvP remains a separate major loss mode.",
+  "tests": [
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": ".agent/check-task-e523e59b36b9442d9c09d5225bf2167d.json"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": null
+    }
+  ],
+  "candidate_source_hash": "1d8ee4138be0bceae136f15ab642f9daf6788729b197b254f3e38c260e1d7b68",
+  "checks": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792554394.6748812,
+    "matches": [
+      "2522894603fb1bc89ebfeb2704aa5af6a7f47cebc3007a3de38d8e7c4d4b98e1",
+      "242a34de7f1421901aa64b60b2ec33795aaae53d0a444a9f75e58b17cf227927"
+    ],
+    "report_path": ".agent/check-task-e523e59b36b9442d9c09d5225bf2167d.json",
+    "report_reference": "check:task-e523e59b36b9442d9c09d5225bf2167d:1d8ee4138be0bceae136f15ab642f9daf6788729b197b254f3e38c260e1d7b68",
+    "source_hash": "1d8ee4138be0bceae136f15ab642f9daf6788729b197b254f3e38c260e1d7b68",
+    "started": 1792554335.5508819,
+    "state": "PASSED",
+    "task_id": "task-e523e59b36b9442d9c09d5225bf2167d"
+  },
+  "smoke_summary": "Both Collision games completed, winners A then B, zero faults and fuel suspensions on both sides. Scores 1010:0 at round540 and22:1002 at round557. Opponent revisions unknown; no comparative strength claim.",
+  "source_unchanged_after_check": true
+}

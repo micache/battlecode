@@ -1,101 +1,95 @@
 # Gamma operational notes
 
-## task-ff42f1f4a5724e2a898c2cea340c1a75 — delivery-aware farm value
+## task-e523e59b36b9442d9c09d5225bf2167d — risk-aware camp selection
 
-- Refinement; one candidate. Branch bot/gamma, HEAD/input
-  48b51e3390b618f392cbec1842361bb910c207d3. Actual edit commit
-  ecbc8203fd2ef0696ef7784c8b39528bb182ad7b, source
+- Refinement; one candidate. Branch bot/gamma, HEAD/input 63719c284a8377f42684ee01096d43c6fe822e94.
+  Actual edit commit ecbc8203fd2ef0696ef7784c8b39528bb182ad7b, source
   ff511c52577a0f42c5e17329423aaa100b0317ddcaf037f8b2ba59b808061671.
-  Initial six source files matched the edit commit and trusted file hashes.
-  Prepared bot.cpp/bot.h restoration and farm_plan.h deletion were intentional,
-  not unfinished work. Latest evaluated candidate is complete; nothing pending.
-  Protected champion 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d remains outside
-  this transaction. Prior notes archived under task-2ecb2c23987f429987e000036c718854.
-- Hypothesis: including camp-to-altar walking and tribute duration in farm
-  selection increases matched development win rate AND mean submitted gems,
-  without new bot faults. Non-positive win change, non-increasing mean tribute,
-  or any new fault falsifies it. Unchanged arena gates govern selection.
-- Bottleneck is a SOURCE deduction: every positive bag immediately banks, yet
-  existing group value/time scoring stops at capture. Finals do not establish
-  that missing delivery cost caused the observed losses.
+  All six source files matched trusted edit hashes. Prepared bot.cpp/bot.h
+  restoration and farm_value.h deletion are intentional, not interrupted work.
+  Latest candidate has completed evaluation; no own candidate is pending.
+  Protected champion 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d remains outside this transaction.
+- Hypothesis: risk-aware camp selection with recovery when no feasible target
+  remains increases matched development win rate AND mean submitted gems,
+  without new own faults. Non-positive win change, non-increasing mean tribute,
+  or a new own fault falsifies it. Supervisor applies unchanged arena gates.
+- Prior delivery-aware scoring regressed versus this base: latest evaluation
+  38b179a2b60a8001d87b4cae0623b89da45db45a64c8de9eb4e51d009cb5cc05,
+  candidate63719c28/source846588e4, 87W/49L overall, zero faults; matched
+  development delta -0.1339285714 across56 side pairs. Not today's edit base.
+  Previous notes archived under task-ff42f1f4a5724e2a898c2cea340c1a75.
 
-## Policy and implementation
+## Policy and code
 
-- Keep Varg/Vendetta/Marcella/Ryth/Tavi draft; Jungle Strength, Monster Strength,
-  one Durability Health, then Power Strength; all-bag banking, 35% retreat,
-  98% spawn healing, safe 300-gold recall, route locks and existing combat.
-- Once per body's farm initialization, compute a native distance field rooted
-  at terrain-free altar approach tiles. Terrain excludes walls, holes, altars
-  and enemy spawn. Cache minimum distance over each group's spawn mask.
-  Ignore future units/camps/locks explicitly: this is a static estimate, not a
-  claim about hidden or future live state. No new per-turn field/search.
-- Add ceil(cached delivery steps / base move speed) and SDK-configured tribute
-  duration to the existing ingress/clear/capture cost. Estimate the channel from
-  full static group gems; shared reward can make this conservative. Retain
-  gems + 0.12*gold value and 0.85 target commitment multiplier.
-- Gold-only groups incur no delivery/channel cost. Positive-gem groups without
-  a static walking path to any altar approach are excluded.
-- Live route reachability, visible-state checks, capture occupancy, respawn
-  observations, ally collector avoidance, fallback, channel guards and yield
-  are retained. No shared-memory changes or fuel overrides. Existing 30k plan,
-  10k action fuel guards remain. Changes versus edit base: bot.cpp, bot.h,
-  new farm_value.h. The unselected bounded shortlist/capture-entry changes
-  are not bundled.
-- Actual score helper has compile-time regressions: equal-reward ranking
-  reversal under different delivery distances, rich distant reward still
-  winning, gold-only exemption, rounded walking time and zero-speed guard.
+- Keep Varg/Vendetta/Marcella/Ryth/Tavi draft, Jungle Strength, Monster Strength,
+  one Durability Health then Power Strength, all-bag banking, route locks,
+  300-gold safe recall, 98% spawn healing, existing combat and fuel fallback.
+- farm_risk.h estimates damage =0.60*remainingHP*summedStrength/(1.12*selfStrength),
+  with 0.70 Jungle and0.90 Durability multipliers only for completed emblems.
+  These are policy estimates, not SDK predictions. No shield, spell burst,
+  tanking ally or unseen helper credit. The 0.60 exposure model is adapted
+  from the frozen boss; gamma retains its own scoring, build and draft.
+- Normal target selection rejects predicted clears crossing currentHP minus
+  35%maxHP. Committed targets receive no exemption; partially cleared targets
+  use fresh visible HP. Unknown members use static design HP/Strength only.
+  Completed rewards and harmless clusters bypass the risk rejection.
+- If no feasible target remains and wounded, move toward spawn and recall only
+  when the refreshed position is unthreatened and action allowances remain.
+  This avoids idling forever above the ordinary retreat threshold. Existing
+  capture-occupancy return, channels, low-fuel eight-camp fallback and yield stay.
+- Only bot.cpp and new farm_risk.h differ from the edit base. No shared-memory
+  change, new search, copied SDK, fuel overrides or opponent edits.
+- Actual helper has eight compile-time regressions: wolf feasible, early elk
+  rejected, geared elk feasible, wounded wolf rejected, harmless/reward exempt,
+  mitigation monotonicity and zero-strength guard.
 
-## Evidence and limits
+## Evidence and uncertainty
 
-- Latest evaluation a80b2ab17e6feb44f9081e88aaf3beac9c96e21f7d0e1dd03c6f673bd59b76e2
-  evaluated 48b51e33 / 72b489b0, NOT the restored edit base or this candidate.
-  106W/30L overall, no faults; supplied matched development delta vs ff511c52
-  +0.00892857 across 56 side pairs. No promotion inferred.
-- That source's Ambush A loss 972d1330652b465c1e49dd645cc65a95b196f995cf4a42112af46cfd61df821c:
-  round1069, 900 collected / 794 submitted vs1008, one death. Ambush B loss
-  0b93f219ae848f2f059e07c6cf17fc3d8f811d32a10c9c6dc4b4ee9b1be725e7:
-  round1091, 688 collected / 582 submitted vs1034, two deaths. Both completed,
-  zero faults/suspensions/PvP damage. Low throughput motivates economy work;
-  it does not prove travel duration or identify individual stalled turns.
-  Opponent alpha6af1685b/87b9be45 from trusted feedback mapping. Complete
-  summaries: ambush-a-loss-summary.json and ambush-loss-summary.json.
-- Contrasting same-source Collision smoke wins b3aa8806 (A,1064 vs66) and
-  bdd68fd8 (B,1066 vs198), bounded-farming-smoke.json. Different map/opponent
-  is not a controlled contrast. Opponent revisions unknown in these summaries.
-- Frozen manifest 83314e70bb54166827c7c20206f7e086db33bc0095567d179d3d7a2a8dcafa8b:
-  verified all six file sets. Inspected alpha6af1685b's random Power stats/draft,
-  bounded damage/reset combat, union-of-spawns farming and all-bag banking;
-  beta7cab9b0f/fd5e2554's Varg/Tavi/Ryth, shield/dash/recovery, 12-group
-  shortlist/economy penalty; alpha82a14a04's timestamped return-at-arrival
-  respawn policy. No opponent private worker state accessed. Delivery scoring
-  is an independent refinement fitting gamma's existing banking discipline.
-- Prior target-aware combat, camp claims, threat banking, protected transit and
-  Ryth swaps were not selected. Avoid repetition without changed evidence.
-  Respawn-aware staging and bank batching remain separate future experiments.
-- Routine unchanged-doc iteration: compact reference, playbooks B/C/F/G,
-  RESEARCH/organizer ledger, C++ field/static reward and tribute contracts,
-  matching installed header inspected. SDK SHA256 ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264.
-  Engine2.2.5, lock0cabb3c7, suite published-17-release-225-v1. Organizer hub
+- Frozen manifest5b3413cd81492d5ed792cc24c1deb813e82d3855993b0f2d29c5976f23424d5d:
+  all six file sets hash-verified. Boss192daa8e/d10ae8b4 uses Vendetta/Varg/Ryth,
+  claim coordination, risk-budgeted clears, support shields, favorable PvP,
+  30-gem/near-altar banking and150-gold shopping. Inspected relevant full source.
+  Other packet sources: alpha82a14a04/046f1c3a random draft/Power build,
+  timestamped rotation (latter adds exposure-aware recovery); beta7cab9b0f and
+  a4a26c5d melee/reset farming and defensive builds, former gold-only penalty;
+  starter89976632 random draft/Power build. No private opponent state accessed.
+- Exact-base boss Collision losses: sideA85bee70b, round670,282 vs1032 tribute,
+  eight deaths,21617 camp damage taken vs6492; sideB639ac1ff, round719,
+  298 vs1132 tribute,11 deaths,19772 camp damage taken vs6884. Both completed,
+  zero faults/suspensions; own sourceff511c52 vs bossd10ae8b4 per trusted brief.
+  Saved full compact summaries boss-safety-85bee70b.json and639ac1ff.json.
+- Same-base contrasting Collision A smoke41c22e31,1028 vs66 tribute, completed,
+  no faults/suspensions (altar-control-smoke.json). Opponent revision unknown;
+  different opponent makes this a validity contrast, not a controlled comparison.
+- Latest-source Collision A loss377bccb4 (boss-safety-377bccb4.json) had41 deaths,
+  1818 bag loss and36 vs278 tribute by round2000; most death pressure is PvP.
+  Source846588e4, not edit base. This policy does not claim to solve ranged camping.
+- Boss finals motivate survival work but do not prove dangerous pull choices.
+  Main risks: full-group model can overexclude sequential/splash clears; no ally
+  credit can prevent useful cooperation; unseen design estimates can overstate
+  remaining HP. Conservative resets/shields and spell bursts are underestimated.
+  Extra Strength reads add fuel cost; original low-fuel fallback bypasses risk
+  estimates. Narrow-map all-dangerous openings may have no feasible target.
+- Routine unchanged-doc iteration: BOT_REFERENCE, playbooksB/C/D/F/G, RESEARCH,
+  organizer ledger, relevant rules and installed C++ camp/design/item contracts.
+  SDKee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264;
+  CLI2.2.5/lock0cabb3c7/suitepublished-17-release-225-v1. Organizer download hub
   is not complete policy review; production parity is not newly certified.
 
-## Checks, risks and next action
+## Validation and next action
 
-- bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json: PASSED,
-  exit0, source 846588e44611949d792d1181a38d6ce557b233cd93442f44831431bf9c3da154.
-  Report .agent/check-task-ff42f1f4a5724e2a898c2cea340c1a75.json. Actual helper
-  assertions compiled in the trusted build. No source edited after check launch.
-- Both Collision smokes completed, engine0.0.3/buildd7e29ae3, zero faults and
-  suspensions on BOTH sides. A 8c933552: round663,1010 vs44; B 3b923d62:
-  round573,1008 vs44. Opponent revisions unknown; smoke validates execution,
-  not matched strategic superiority. Full summaries: delivery-value-smoke.json.
-- git diff --check: PASSED, exit0. Manual source-isolation/visibility audit
-  passed; final file hashes and decision saved in delivery-value-evidence.json.
-- Risks: static minimum distance underestimates dynamic obstructions/large-group
-  collector position; full group channel cost overpenalizes split rewards;
-  altar-near competition/gold-only bias may slow collection. Initialization adds
-  one field; smoke headroom does not guarantee every map/turn is suspension-free.
-- Next: supervisor evaluates exact checked source vs ff511c52 on matched maps,
-  sides and opponents under unchanged gates. Compare wins and tribute first,
-  then collection, delivery travel, target distribution and suspensions. If
-  unsupported, inspect selected-group delivery estimates before changing weights
-  or bundling a new banking/rotation policy.
+- bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json PASSED,
+  exit0, checked source1d8ee4138be0bceae136f15ab642f9daf6788729b197b254f3e38c260e1d7b68.
+  Report .agent/check-task-e523e59b36b9442d9c09d5225bf2167d.json. Eight actual
+  helper assertions compiled. Per-file hashes unchanged after check launch.
+- Collision smokes25228946 (A,round540,1010 vs0) and242a34de (B,round557,
+  1002 vs22) completed with zero faults/suspensions on BOTH sides. Engine0.0.3,
+  buildd7e29ae3; opponent revisions unknown. Execution evidence, not matched
+  superiority. Full summaries camp-safety-smoke.json.
+- git diff --check PASSED exit0. Candidate decision, hashes and check result:
+  camp-safety-evidence.json. No source changes after trusted check.
+- Next: supervisor evaluates checked source against ff511c52 and protected
+  champion on matched maps, sides and frozen opponents. Compare wins/tribute
+  first, then early camp choices, deaths, recovery time and suspensions. If
+  overexclusion dominates, inspect live cooperative clear opportunities before
+  adding a helper credit or changing the exposure coefficient.

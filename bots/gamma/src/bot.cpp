@@ -1,6 +1,6 @@
 #include <cambc.h>
 #include "bot.h"
-#include "farm_value.h"
+#include "farm_risk.h"
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -11,7 +11,7 @@
 using cambc::vec2;
 using cambc::team;
 namespace {
-constexpr float RETREAT_HEALTH = 0.35f;
+constexpr float RETREAT_HEALTH = farm_risk::HEALTH_RESERVE;
 constexpr float HEALED_HEALTH = 0.98f;
 constexpr unsigned SHOP_RECALL_GOLD = 300;
 constexpr std::uint64_t PLAN_FUEL = 30000;
@@ -211,29 +211,20 @@ void Bot::buy_items() {
 void Bot::farm_camps() {
     auto& me = cambc::self();
     if (farms.empty()) {
-        // All positive bags bank immediately. Cache the missing return leg once
-        // from public terrain, ignoring uncertain future units/locks. Roots are
-        // free altar approaches, never the impassable altar tiles themselves.
-        const auto terrain = cambc::map::walls() | cambc::map::holes()
-            | cambc::map::altars() | cambc::map::spawn_region(team::enemy);
-        cambc::bitboard altar_approaches;
-        for (auto altar : cambc::map::altars().positions())
-            altar_approaches |= around(altar, cambc::constants::submit_gems_range);
-        altar_approaches &= ~terrain;
-        cambc::distance_field delivery;
-        cambc::bitboard reached;
-        delivery.compute(terrain, altar_approaches, reached);
-        for (const auto& group : cambc::map::camp_groups()) {
-            const auto spawns = group.spawn_tiles();
-            unsigned steps = cambc::distance_field::unreachable;
-            for (auto p : spawns.positions()) steps = std::min(steps, unsigned(delivery.get(p)));
-            farms.push_back({group, spawns, 0, steps});
-        }
+        for (const auto& group : cambc::map::camp_groups())
+            farms.push_back({group, group.spawn_tiles(), 0});
     }
     const unsigned now = cambc::round_number();
     const auto visible = cambc::vision::visible_tiles();
     const auto allies = cambc::vision::champion_tiles(team::ally);
     const auto enemies = cambc::vision::champion_tiles(team::enemy);
+    const auto items = me.item_count();
+    using I = cambc::item_type;
+    const bool jungle = items[I::jungle_emblem_of_strength]
+        || items[I::jungle_emblem_of_health] || items[I::jungle_emblem_of_focus];
+    const bool durability = items[I::durability_emblem_of_strength]
+        || items[I::durability_emblem_of_health] || items[I::durability_emblem_of_focus];
+    const float health = me.health(), max_health = me.max_health(), strength = me.strength();
     // Retain capture occupancy even if another camp/enemy could be attacked.
     for (std::size_t i = 0; i < farms.size(); ++i) {
         const auto& f = farms[i];
@@ -278,7 +269,7 @@ void Bot::farm_camps() {
         // Extra collectors do not accelerate capture. A visible ally already on
         // an uncontested cleared group owns collection; we rotate elsewhere.
         if (reward && !(f.spawns & allies).is_empty() && (f.spawns & enemies).is_empty()) continue;
-        float hp = 0;
+        float hp = 0, incoming = 0;
         bool monolith = false;
         cambc::bitboard goals;
         for (const auto& c : f.group.camps()) {
@@ -287,33 +278,42 @@ void Bot::farm_camps() {
             if (c.is_visible()) {
                 if (c.health() <= 0) continue;
                 hp += c.health();
+                incoming += c.strength();
                 goals |= around(c.position(), me.attack_range());
             } else if (!visible.is_set(c.spawn_position())) {
-                hp += c.base_stats().base_health; // Explicit uncertain design estimate.
+                const auto design = c.base_stats();
+                hp += design.base_health; // Explicit uncertain design estimate.
+                incoming += design.base_strength;
                 goals.set(c.spawn_position()); // Enter unseen spawn to reveal, not a blind approach ring.
             }
         }
         if (monolith && !reward) continue; // Do not solo a 20,000-HP, 200-damage objective.
+        // Reject clears estimated to cross our existing retreat boundary. This
+        // is recomputed from fresh visible HP, or explicitly uncertain design
+        // stats for unseen members; a committed target has no safety exemption.
+        if (!farm_risk::feasible(hp, incoming, strength, health, max_health, jungle, durability)) continue;
         goals &= ~blocked;
         unsigned dist = cambc::distance_field::unreachable;
         for (auto p : goals.positions()) dist = std::min(dist, unsigned(travel.get(p)));
         if (dist == cambc::distance_field::unreachable) continue;
-        const auto gems = f.group.gem_value();
-        if (gems && f.delivery_steps == cambc::distance_field::unreachable) continue;
-        // Value a completed cycle, not just acquisition. Full group gems estimate
-        // the channel; allies may split the reward. Current blockers and hostile
-        // locks remain the banker's concern, not hidden facts in this estimate.
+        const float value = float(f.group.gem_value()) + 0.12f * f.group.gold_value();
+        // Reward / (travel + clearing + capture). Resets improve clear estimates.
         const float cost = dist + hp / std::max(1.0f, me.strength() * 1.12f) + cambc::constants::capture_time + 1;
-        const float tribute = std::max(double(cambc::constants::submit_gem_minimum_duration),
-            cambc::constants::submit_gem_base_duration
-                + std::ceil(gems * cambc::constants::submit_gem_duration_multiplier));
-        float score = farm_value::score(cost, gems, f.group.gold_value(), f.delivery_steps,
-            static_cast<unsigned>(me.base_stats().base_move_speed), tribute);
+        float score = cost / std::max(1.0f, value);
         if (static_cast<int>(i) == target_group) score *= 0.85f; // Avoid target thrashing.
         if (score < best_score) { best_score = score; selected = static_cast<int>(i); }
     }
     target_group = selected;
     if (selected < 0) {
+        // Risk rejection must not strand a wounded farmer above the ordinary
+        // retreat threshold: heal/re-equip, then reconsider with a fresh budget.
+        if (health < max_health * HEALED_HEALTH) {
+            const auto spawn = cambc::map::spawn_region(team::ally);
+            move_to(spawn);
+            if (!spawn.is_set(me.position()) && !threatened()
+                && (me.can_move() || me.can_attack() || me.can_cast())) me.recall();
+            return;
+        }
         // Vacate collected regions even if every other group is cooling down.
         for (const auto& f : farms) if (f.spawns.is_set(me.position())) {
             move_to(around(me.position(), 1) & ~f.spawns);
