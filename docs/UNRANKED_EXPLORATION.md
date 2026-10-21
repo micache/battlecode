@@ -26,7 +26,24 @@ available. Fresh actual selection proofs and quota checks are still required.
 A subsequent team source change pauses outside creation until the boss/source
 mapping is reviewed; it never changes frozen local opponents mid-evaluation.
 
-Current owner update: **use prepared beta `7cab9b0f` after the owner uploads it**.
+Production changed during this deployment: the first v17 outside game reports
+engine **1.0.1**, build `c3e9ffc8d98c106f86660c58344dc26ced9459a504e2f0d90d88b4c8594c7765`,
+statistics format 1.0 and metric semantics 1. Its saved original projection is
+`tests/fixtures/official-101-boss-projection.json`; official metadata independently
+agrees on 923 rounds, Team B winning, and 29–1010 tributed gems. The narrow
+external reader accepts this exact reviewed tuple, validates all existing fields,
+and preserves its actual production build in shared feedback. The local parser
+still rejects that tuple: this change does not qualify a different local engine.
+The [official 3.0.4 release](https://pypi.org/project/cambc/3.0.4/) was published
+21 October, after the previous pinned-toolchain review. Local CLI 2.2.5/engine
+0.0.3 results must not be described as current production parity or submission
+qualification until the new CLI, SDK, settings and rules have been reconciled.
+`ops/review-external-statistics.py --request-id ID` reconciles only this exact
+reviewed statistics stop with services stopped; it cannot clear access denials,
+unknown creations, source mismatches or future unknown engine builds.
+
+Historical 19 October selection (superseded above): **use prepared beta
+`7cab9b0f` after the owner uploads it**.
 The target is source hash `fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa`;
 the expected ZIP is `artifacts/submissions/beta-7cab9b0f.zip`. No upload or
 activation is performed by the arena. The browser helper reads the selected

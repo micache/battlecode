@@ -58,6 +58,7 @@ def experiment_context(arena, bot):
                                 metadata.get(key) if type(metadata.get(key)) in (int, float) else None)
                              for key in ('official_match_id', 'source_commit', 'submission_id', 'outcome',
                                          'own_side', 'opponent_version', 'map_name', 'official_patch',
+                                         'official_engine_version', 'official_engine_build',
                                          'opponent_team_id', 'opponent_rank_at_request')}
             observation['available_diagnostics'] = sorted(name for name in metadata.get('file_sha256', {}) if name in
                 ('observations.json', 'final.json', 'stdout.log', 'stderr.log', 'bot-a.stdout.log', 'bot-b.stdout.log')

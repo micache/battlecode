@@ -10,6 +10,10 @@ from .common import ArenaError, read_json, require
 
 
 ENGINE_BUILD = 'd7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5'
+# Outside observations may come from a newer production engine. Reviewing its
+# unchanged statistics contract is NOT qualification of our local toolchain.
+EXTERNAL_ENGINES = {('0.0.3', ENGINE_BUILD),
+    ('1.0.1', 'c3e9ffc8d98c106f86660c58344dc26ced9459a504e2f0d90d88b4c8594c7765')}
 SIDES = {'teamA': 'A', 'teamB': 'B'}
 
 
@@ -40,10 +44,17 @@ def unsigned(value):
     return value
 
 
-def read_current(stats):
+def read_external(stats):
+    match = stats['match']
+    engine = (match['engineVersion'], match['engineBuildHash'])
+    require(engine in EXTERNAL_ENGINES, 'unreviewed external engine statistics')
+    return read_current(stats, expected_engine=engine)
+
+
+def read_current(stats, *, expected_engine=('0.0.3', ENGINE_BUILD)):
     require(stats['formatVersion'] == stats['jsonFormatVersion'] == '1.0', 'unreviewed statistics format')
     match = stats['match']
-    require(match['engineVersion'] == '0.0.3' and match['engineBuildHash'] == ENGINE_BUILD and
+    require((match['engineVersion'], match['engineBuildHash']) == expected_engine and
             match['metricSemanticsVersion'] == 1, 'unreviewed engine build or metric semantics')
     require(type(match['roundsStarted']) is int and 1 <= match['roundsStarted'] <= 2000 and
             type(match['roundsCompleted']) is int and

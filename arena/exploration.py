@@ -21,7 +21,7 @@ import uuid
 import zipfile
 
 from .common import ArenaError, atomic_bytes, atomic_json, canonical, file_hash, identity, read_json, require
-from .statistics import read_current
+from .statistics import read_external
 
 
 class CLIError(ArenaError):
@@ -100,7 +100,7 @@ class NativeCLI:
 
 
 def compact_statistics(stats):
-    faults, metrics, suspensions = read_current(stats)
+    faults, metrics, suspensions = read_external(stats)
     # Preserve measured events with round/position, not speculative loss causes.
     significant = []
     for event in stats['events']:
@@ -397,6 +397,8 @@ class Explorer:
             'submission_id':record['submission_id'], 'own_side':own['side'].upper(),
             'outcome':winners[0]['side'].upper(), 'map_name':canonical_map, 'official_map_name':match['map'],
             'official_patch':match['patchId'], 'opponent_version':enemy.get('version'),
+            'official_engine_version':stats['match']['engineVersion'],
+            'official_engine_build':stats['match']['engineBuildHash'],
             'opponent_team_id':record['opponent_id'], 'opponent_rank_at_request':record['opponent_rank'],
             'rounds':match['rounds'], 'own_tributed_gems':own['score'], 'opponent_tributed_gems':enemy['score'],
             'own_draft_ids':own['draft'], 'opponent_draft_ids':enemy['draft'],
@@ -404,6 +406,7 @@ class Explorer:
             'raw_archive':{'replay_bundle_sha256':file_hash(replay), 'statistics_gzip_sha256':file_hash(packed),
                            'statistics_sha256':hashlib.sha256(gzip.decompress(packed.read_bytes())).hexdigest()},
             'limits':['Uncontrolled outside game; not a local promotion score or a causal diagnosis.',
+                      'Statistics compatibility does not establish local/production engine parity; compare engine builds.',
                       'Own submitted source is pinned; it may differ from this worker\'s edit base.',
                       'Opponent private source/logs are unavailable; unknown versions remain unknown.',
                       'Post-game observations are not omniscient live runtime inputs.']}
@@ -411,7 +414,8 @@ class Explorer:
         require(all(len(v) < 700000 for v in files.values()), 'compact outside evidence unexpectedly large')
         return {**{k:observation[k] for k in ('official_match_id', 'source_commit', 'source_hash',
                 'submission_id', 'own_side', 'outcome', 'map_name', 'official_patch', 'opponent_version',
-                'opponent_team_id', 'opponent_rank_at_request', 'own_bot_faults')},
+                'opponent_team_id', 'opponent_rank_at_request', 'own_bot_faults',
+                'official_engine_version','official_engine_build')},
                 'official_group_id':record['group_id'],
                 'source_bot_id':record['bot_id'],
                 'official_raw_statistics':{'request_id':record['request_id'],

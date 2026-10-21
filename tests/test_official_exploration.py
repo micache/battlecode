@@ -15,6 +15,7 @@ from arena.operations import import_external
 from arena.retention import maintain_external
 from arena.strategy import experiment_context
 from arena.supervisor import handle_request
+from arena.statistics import read_current
 from test_arena import Harness
 
 
@@ -47,6 +48,19 @@ class QuotaTests(unittest.TestCase):
         self.assertEqual(result['match']['engineVersion'],'0.0.3')
         self.assertNotIn('championTimelines',result)
         self.assertLess(len(json.dumps(result)),700000)
+
+    def test_reviewed_production_101_is_external_only_not_local_qualification(self):
+        path = Path(__file__).parent / 'fixtures/official-101-boss-projection.json'
+        data = read_json(path)
+        result = compact_statistics(data)
+        self.assertEqual(result['match']['engineVersion'], '1.0.1')
+        self.assertEqual(result['metrics']['submitted_gems']['value'], {'A':29, 'B':1010})
+        self.assertEqual(result['bot_faults'], 0)
+        with self.assertRaisesRegex(ArenaError, 'unreviewed engine'):
+            read_current(data)
+        data['match']['engineBuildHash'] = '0'*64
+        with self.assertRaisesRegex(ArenaError, 'unreviewed external'):
+            compact_statistics(data)
 
 
 class ExplorationTests(Harness):
