@@ -3,8 +3,8 @@
 #include "bot.h"
 #include "altar_control.h"
 #include "camp_rotation.h"
-#include "camp_focus.h"
 #include "recovery.h"
+#include "skirmish.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -99,8 +99,6 @@ std::optional<Target> basic_target() {
         || me.restrictions().contains(cambc::buff_restrictions::attack))
         return std::nullopt;
     const auto range = me.attack_tiles();
-    if constexpr (std::is_same_v<Target, cambc::camp>)
-        return camp_focus::select(range);
     unsigned examined = 0;
     for (const auto& target : combat_targets<Target>()) {
         if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
@@ -135,13 +133,6 @@ bool fight(bool walked = false) {
         || cambc::fuel_remaining() < combat_fuel_reserve)
         return acted;
 
-    // Refresh after the first hit/splash. Spend a reset or direct spell on the
-    // next basic's camp rather than spreading damage among surviving camps.
-    // No basic-range survivor leaves the existing longer-range spell policy.
-    std::optional<cambc::camp> focused_camp;
-    if constexpr (std::is_same_v<Target, cambc::camp>)
-        focused_camp = camp_focus::select(me.attack_tiles());
-
     // At most two slots and sixteen visible aim points per slot; no tile search.
     // Compare useful direct damage against the additional basic from a reset.
     std::optional<cambc::ability> selected;
@@ -160,8 +151,6 @@ bool fight(bool walked = false) {
             for (const auto& target : combat_targets<Target>()) {
                 if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                     break;
-                if constexpr (std::is_same_v<Target, cambc::camp>)
-                    if (focused_camp && target != *focused_camp) continue;
                 if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
                     continue;
                 const float score = std::min(me.strength(), target.health());
@@ -170,7 +159,7 @@ bool fight(bool walked = false) {
                     selected = ability;
                     selected_target = target;
                 }
-                break; // Match the basic policy used after the reset.
+                break; // Match the first-target basic policy used after the reset.
             }
             continue;
         }
@@ -185,8 +174,6 @@ bool fight(bool walked = false) {
         for (const auto& target : combat_targets<Target>()) {
             if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
                 break;
-            if constexpr (std::is_same_v<Target, cambc::camp>)
-                if (focused_camp && target != *focused_camp) continue;
             if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
                 continue;
             // Ground spells aim at a visible enemy/camp, not unexplored terrain.
@@ -271,11 +258,15 @@ bool Bot::recover() {
         // spawn healing needs this turn end. Do not immediately walk away.
         if (recovering && health < maximum) return true;
         recovering = false;
+        disengaging = false;
         return false;
     }
     // Most healthy farming turns pay no threat scan cost.
     if (!recovering && health >= maximum * recovery::scan_health_fraction) return false;
-    auto seen = recovery::observe();
+    // Unfavourable fights use a four-tile envelope for potential ranged spells.
+    // It remains a conservative raw-basic proxy, not predicted spell damage.
+    const int enemy_range_floor = disengaging ? skirmish::danger_radius : 0;
+    auto seen = recovery::observe(enemy_range_floor);
     if (!recovering && !recovery::needs_recovery(health, maximum, seen.at(me.position()).damage))
         return false;
     recovering = true;
@@ -308,7 +299,7 @@ bool Bot::recover() {
     }
     if (spawn.is_set(me.position())) return true;
     if (cambc::fuel_remaining() < recovery::scan_reserve) return true;
-    seen = recovery::observe();
+    seen = recovery::observe(enemy_range_floor);
     // A quiet personally observed tile allows recall. Hidden attackers and
     // spells remain uncertainty; a partial scan never certifies a quiet tile.
     if (seen.complete && seen.at(me.position()).damage == 0
@@ -337,6 +328,7 @@ void Bot::play_turn() {
     // Refill control tools while dead so the next sortie can deny an altar.
     if (!me.is_alive()) {
         recovering = false;
+        disengaging = false;
         altar_control::buy_lock();
         return;
     }
@@ -356,6 +348,12 @@ void Bot::play_turn() {
 
     altar_control::place_lock();
 
+    // Preserve walking before a ranged basic or exclusive cast consumes it.
+    // Reuse the existing threat-aware escape and completed recovery sortie.
+    if (!at_spawn && !recovering && skirmish::outmatched()) {
+        recovering = true;
+        disengaging = true;
+    }
     if (recover()) return;
 
     // Keep the enemy-first policy, spending independent combat allowances.

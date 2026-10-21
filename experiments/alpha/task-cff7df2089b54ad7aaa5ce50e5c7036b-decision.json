@@ -1,0 +1,117 @@
+{
+  "task_id": "task-cff7df2089b54ad7aaa5ce50e5c7036b",
+  "bot_id": "alpha",
+  "base_source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+  "edit_commit": "046f1c3a41fe746c65c0982d06062623200fa931",
+  "input_revision": "3e5bc9fe97c646b940fd5266ce8710708c769f84",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "candidate_source_hash": "9b5dc61043e4c4c3f35d5d8d55a58060ac69475e383b11f19bcfc2694bb820a5",
+  "hypothesis": "Earlier disengagement from clearly unfavourable visible fights increases matched development win rate over the edit base; unchanged or lower win rate falsifies this prediction.",
+  "mechanism": "Before spending combat allowances, compare visible local health times Strength. When ours is below 0.8 of enemy power with an enemy within four tiles, reuse threat-aware escape and complete a recovery sortie. During this sortie, enemy exposure has a four-tile minimum for potential spells.",
+  "parameters": {
+    "support_radius": 5,
+    "danger_radius": 4,
+    "retreat_power_ratio": 0.8,
+    "scan_reserve": 65000,
+    "champion_limit_per_side": 16
+  },
+  "evidence": [
+    {
+      "kind": "evaluation",
+      "id": "7bf00779e54a677aca1f27aace3e649723c9c120ee10a49d0f5f5aa17d8b3f8b",
+      "source_hash": "a66053e075bb40f86561f53a77318cf06511304c9a1fb2ca6334ff413c93d1ba",
+      "development_delta": -0.026785714285714284,
+      "meaning": "Prior camp-focus experiment, not current edit base or this candidate."
+    },
+    {
+      "kind": "match",
+      "id": "7ab0ae9f13ad085d8b35c0de8f9a993cb70f9535242e2810e9c37b74bb8493ed",
+      "side": "B",
+      "map": "collision",
+      "source_commit": "046f1c3a41fe746c65c0982d06062623200fa931",
+      "source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+      "opponent_commit": "192daa8efb38fac4ea23765878987fd23d0d58ed",
+      "round": 636,
+      "own_deaths": 20,
+      "own_bag_loss": 234,
+      "own_tribute": 286,
+      "enemy_tribute": 1014
+    },
+    {
+      "kind": "match",
+      "id": "3a3e10bacf382beb4bc58b0a42f742e8949af6adf45c4a7b8e5d0e2b1389bdac",
+      "side": "A",
+      "map": "collision",
+      "source_commit": "046f1c3a41fe746c65c0982d06062623200fa931",
+      "source_hash": "07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2",
+      "opponent_commit": "192daa8efb38fac4ea23765878987fd23d0d58ed",
+      "round": 893,
+      "own_deaths": 17,
+      "own_bag_loss": 132,
+      "own_tribute": 572,
+      "enemy_tribute": 1020
+    },
+    {
+      "kind": "match",
+      "id": "09b121517d2b15bbccfea15aa33b60fe718885fb2f4eaecf0292e68b4a327bfd",
+      "side": "A",
+      "map": "corners",
+      "source_commit": "3e5bc9fe97c646b940fd5266ce8710708c769f84",
+      "source_hash": "a66053e075bb40f86561f53a77318cf06511304c9a1fb2ca6334ff413c93d1ba",
+      "opponent_commit": "ecbc8203fd2ef0696ef7784c8b39528bb182ad7b",
+      "round": 555,
+      "own_deaths": 0,
+      "own_tribute": 732,
+      "enemy_tribute": 1080,
+      "meaning": "Different source: loss without mortality; this policy does not address every farming defeat."
+    },
+    {
+      "kind": "evaluation",
+      "source_hash": "a66053e075bb40f86561f53a77318cf06511304c9a1fb2ca6334ff413c93d1ba",
+      "map": "stampede",
+      "wins": 8,
+      "losses": 0,
+      "meaning": "Contrasting development win aggregate, both sides; no individual trace or tactical attribution."
+    }
+  ],
+  "opponent_manifest_sha256": "cfc0e70971c8c42d73eb1bed58c326636cd22b4940aee7f64026b527824d44ca",
+  "opponent_findings": [
+    "Boss 192daa8e / d10ae8b4: Vendetta/Varg/Ryth first, group claims and value/work routes, staged farming items, 30-gem/near-altar banking, hp*Strength local power, engage/chase or flee according to balance.",
+    "Gamma ecbc8203 / ff511c52: melee farming, selective nearby defensive PvP/cheap finishes and no chase. Its target focus, route model and item build are not imported."
+  ],
+  "scope": "No draft, stat RNG, items, farm/capture/rotation, banking/locks, ordinary attack selection, channels, shared-memory protocol or engine changes. Four-byte shared round remains; all new state is private.",
+  "limits": [
+    "Source/rules deduction, no traced encounter causality or gain claim.",
+    "hp*Strength omits spells, shields, passives, mitigation, range advantage and hidden champions.",
+    "Ally proximity is only a support proxy, not guaranteed assistance.",
+    "Forced spawn sorties can abandon captures and safe tribute or sacrifice winning kills.",
+    "65k scan reserve is a planning bound, not measured normal-turn fuel headroom.",
+    "Smoke success does not establish full-game completion or strategic branch coverage."
+  ],
+  "tests": [
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+      "exit_code": 0,
+      "status": "PASSED",
+      "report_path": ".agent/check-task-cff7df2089b54ad7aaa5ce50e5c7036b.json"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "status": "PASSED"
+    }
+  ],
+  "source_sha256": {
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/bot.cpp": "037da2902c093ef810683766468597a4eda7dae6114b941891670e97242b9757",
+    "bots/alpha/src/bot.h": "a43fa0b54eeb7e4fa609c4de7df5657cea89c280f4e73e75ea19850a2ac66a40",
+    "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/alpha/src/recovery.h": "ef31abef6c29b818756cd27fb7adff4b51b38899657a458b1954ccfc2dbc52f4",
+    "bots/alpha/src/skirmish.h": "b28a9a74244344d68d7569c3fb756f5fdff82ca0d6b279116038af99d8b56fc7"
+  },
+  "next_action": "Supervisor compares this exact source against the edit base and protected champion on matched maps/both sides. Inspect wins first, then boss deaths/bag loss/submissions, collection regressions and fuel suspension."
+}

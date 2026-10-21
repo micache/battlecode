@@ -76,7 +76,7 @@ static_assert([] {
         && needs_recovery(200, 700, 0) && !needs_recovery(400, 700, 0);
 }());
 
-inline observation observe() {
+inline observation observe(int enemy_range_floor = 0) {
     observation result;
     if (cambc::fuel_remaining() < scan_reserve) {
         result.complete = false;
@@ -91,7 +91,8 @@ inline observation observe() {
         }
         if (!enemy.is_visible() || !enemy.is_alive()) continue;
         result.threats[result.count++] = {enemy.position(),
-            enemy.attack_range() + enemy.base_stats().base_move_speed, enemy.strength()};
+            std::max(enemy_range_floor, enemy.attack_range() + enemy.base_stats().base_move_speed),
+            enemy.strength()};
     }
     for (const auto& camp : cambc::vision::camps()) {
         if (result.count == threat_limit || cambc::fuel_remaining() < scan_reserve) {

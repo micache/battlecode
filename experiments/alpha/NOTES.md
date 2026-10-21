@@ -1,94 +1,101 @@
-# Current experiment: task-8dbeeaaf739e428597d05685211480df
+# Current experiment: task-cff7df2089b54ad7aaa5ce50e5c7036b
 
 ## Identity and status
-- Alpha, bot/alpha; input HEAD 60001c32ba5c5a08b45e6f46fb65a2b8dda50cc1.
-  Edit commit 046f1c3a41fe746c65c0982d06062623200fa931; base source
+- Alpha, bot/alpha; input HEAD 3e5bc9fe97c646b940fd5266ce8710708c769f84.
+  Edit commit 046f1c3a41fe746c65c0982d06062623200fa931, base source
   07022bad764ef37711c5afeddb10a434a0d5f9c5581e519f8bb575ced706fca2.
-  All nine starting source files byte-matched edit_commit. HEAD-relative source
-  changes were trusted preparation, not interrupted work. Latest candidate was
-  evaluated; no pending candidate. No old patch recovered or reapplied.
-- Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e stays in Git
-  outside this transaction. Prior notes archived as task-f8007f1...-NOTES.md.
+  All nine initial source files byte-matched edit_commit. HEAD-relative bot.cpp
+  and missing camp_focus.h were trusted preparation, not interrupted work.
+  Latest candidate evaluated; no pending work or recovered patch.
+- Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e stays in Git,
+  outside this transaction. Prior NOTES archived by task-8dbeeaaf... ID.
 - Engine/SDK 2.2.5; lock 0cabb3c78ae3c240c6bad22314505c71d3c16af68655326522d5f96bdae0a51d;
-  suite published-17-release-225-v1. Documents unchanged; compact reference,
-  playbooks, RESEARCH/organizer evidence limits, camp/action rules and relevant
-  C++/installed SDK camp visibility, attack-mask and ability contracts consulted.
-  Installed SDK SHA256 ee131e29...b72e264 verified. Organizer page is a download
-  hub; full event-policy review and official production parity are not claimed.
+  suite published-17-release-225-v1. Unchanged documents: compact reference,
+  playbooks B/C/D/E/F/G, RESEARCH/organizer limits and relevant C++/SDK vision,
+  attack/range and allowance contracts consulted. Installed SDK SHA256 verified
+  ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264.
+  Organizer page is a download hub; full event-policy/production parity unknown.
 
 ## One falsifiable hypothesis
-Concentrating camp basics, resets and nearby offensive casts on the lowest-health
-legal camp increases matched development win rate over the edit base. Unchanged
-or lower win rate falsifies this prediction. Collection/tribute, camp damage per
-collected gem and paired-win rounds diagnose the mechanism. This is an unmeasured
-source/rules deduction, not a traced cause of any match loss.
+Earlier disengagement from clearly unfavourable visible fights increases matched
+development win rate over the edit base. Unchanged or lower win rate falsifies
+this prediction. Boss deaths, bag loss and submitted gems diagnose the mechanism;
+collection and fuel diagnose regressions. This is an unmeasured source/rules
+hypothesis, not a traced explanation of any particular death.
 
 ## Evidence and decision
-- Evaluation 83be320a...24434012b0f measures 60001c32 / source 1d7d75b3...fbd39a,
-  NOT today's edit base. Jungle trial: development 83W/29L versus base 84W/28L;
-  matched delta -0.00892857 over 56 side-paired cases. Faults/missing/unknown zero.
-  Protected champion comparison 97W/39L is separate. Jungle is not reapplied.
-- Ambush B loss 1978eeda51cfe6bab26e01b0be8e3f7288bdb334a94af819c69e83556bdcb750:
-  same evaluated source versus frozen alpha 6af1685b / 87b9be45...e6382e01,
-  round 1091, collection/tribute 942/942 vs 1140/1034; own deaths zero,
-  camp damage done/taken 107045/28998 vs 66900/33875; no PvP/faults/suspensions.
-  More clearing damage with fewer collected gems motivates throughput inspection;
-  it does not prove target selection, capture abandonment or retreat timing.
-- Pilgrimage B loss 043803a51bc2b5068c47ab0508364668989dc139cecee73260fce594935c2b70:
-  same evaluated source versus gamma ecbc8203 / ff511c52...061671; round 1140,
-  own collection/tribute 1056/560 vs 1468/1036; 496 carried, own deaths one vs 11,
-  own PvP damage 15625.7 vs 1958; no faults/suspensions. This is also a banking/
-  combat-distraction weakness; the camp policy does not claim to fix that mechanism.
-- Contest A loss 224ebda89909e06578b64ebda632b16fda476550fec277d50ec4723f03a676cf:
-  same evaluated source versus the same frozen gamma; round 2000, tribute 200/400,
-  deaths 33/18. Different combat-heavy regime. Complete summaries saved by task ID.
-- Contrasting development wins: fragment and stampede each 8/8 across both sides,
-  at the same evaluated source. Aggregate evidence only; no invented win traces.
-- Frozen manifest d71a6c73...e9273 verified. Relevant beta 7cab9b0f / fd5e2554
-  and gamma ecbc8203 / ff511c52 file sets hash-verified and source inspected.
-  Gamma picks the lowest-health camp within its selected group; its melee draft,
-  value/cost routing, passives and selective PvP are not copied. Beta also commits
-  to groups and uses farming passives/recovery. Arena sources do not prove official
-  opponent behavior or causal gains from one component.
-- Base basics take the first in-range camp; its spell scorer can prefer a healthier
-  victim's larger useful damage over finishing the next basic's wounded victim.
-  Static camps cannot escape; focusing remaining HP can remove camp bodies sooner.
-  This differs from rejected PvP focus, broad AoE/finish bonuses and group-first
-  routing. It adds no group state queries, route scoring or new splash search.
-- Keep prior negative/deferred draft/stat/items, capture/deference/follow-through,
-  banking/batching, recall/resupply, broad AoE, PvP focus, dash and teleport trials.
+- Prior camp-focus experiment: evaluation 7bf00779e54a677aca1f27aace3e649723c9c120ee10a49d0f5f5aa17d8b3f8b
+  measures 3e5bc9fe / a66053e075bb40f86561f53a77318cf06511304c9a1fb2ca6334ff413c93d1ba,
+  NOT this edit base or new candidate. Development 81W/31L, matched base delta
+  -0.0267857 over 56 side pairs. Protected-champion 94W/42L is separate.
+  No faults/missing/unknown. Do not reapply lowest-health camp focus.
+- Exact edit-base self-play, boss 192daa8e / d10ae8b4 on collision:
+  B loss 7ab0ae9f13ad085d8b35c0de8f9a993cb70f9535242e2810e9c37b74bb8493ed,
+  round 636, own tribute/collection 286/520 vs 1014/1094; deaths 20 vs 2,
+  bag loss 234 vs 58. A loss 3a3e10bacf382beb4bc58b0a42f742e8949af6adf45c4a7b8e5d0e2b1389bdac,
+  round 893, own tribute/collection 572/726 vs 1020/1020; deaths 17 vs 0,
+  bag loss 132 vs 0. Both completed, no faults or fuel suspensions.
+  These establish severe mortality, not the first bad encounter or causal action.
+- Latest evaluated source also loses without mortality: corners A loss
+  09b121517d2b15bbccfea15aa33b60fe718885fb2f4eaecf0292e68b4a327bfd,
+  round 555 vs gamma ecbc8203 / ff511c52; own tribute/collection 732/804 vs
+  1080/1284, own deaths zero. This candidate does not fix all objective deficits.
+- Contrasting wins: latest evaluated source wins stampede 8/8 across both sides.
+  Aggregate only, no invented win trace or claim that local strength caused them.
+- Frozen manifest cfc0e709...24d44ca and all six source file sets hash-verified.
+  Boss drafts Vendetta/Varg/Ryth first, claims groups, scores value/work routes,
+  builds farming emblems, banks at 30/near altars, estimates local hp*Strength,
+  and engages/chases or flees by power ratio. Gamma uses selective nearby PvP,
+  cheap finishes, no chase. Those strategy differences are source observations,
+  not proof of official-opponent behavior or isolated component gains.
+- Base attacks any visible enemy in range before banking, and healthy champions
+  skip recovery scans. Range/movement exclusion can consume an escape turn.
+  Chosen change estimates a clear disadvantage BEFORE attacking and completes
+  the existing exposure-aware recovery. This differs from rejected PvP target
+  focus, low-health recall thresholds and draft/item or farming route changes.
+- Keep prior negative/deferred camp focus, Jungle, gem preference, group routing,
+  capture/deference/follow-through, banking/batching, resupply, AoE, dash/teleport.
 
-## Candidate policy and limits
-- camp_focus.h selects the lowest positive health among at most 16 personally
-  visible in-range camps; exact ties preserve engine order. No hidden live reads.
-- Every camp basic and reset follow-up uses a fresh selection. After the initial
-  basic/splash, refresh the basic-range survivor and restrict offensive cast/reset
-  aim to it. No survivor retains existing longer-range spell selection. Splash
-  can still hit other camps; no ally-vision assumptions or across-turn handles.
-- Keep the existing 18000 fuel guard, action legality and postmovement refresh.
-  The selector adds bounded scans; that guard is not measured fuel headroom.
-- Eight other source files remain byte-identical to edit_commit. Draft/stat RNG,
-  shops, recovery, routes/cooldown memory, PvP, banking/locks, four shared round
-  bytes and official yield keep the edit-base policy. No new shared protocol.
-- Risks: wounded camps can belong to less useful groups; kills alone do not earn
-  rewards; focusing can lose splash/useful damage or wake another group. Extra
-  scans can cost turns under fuel pressure. Group capture/banking problems remain.
+## Candidate policy
+- skirmish.h: trigger only off own spawn, outside channels/recovery. Use current
+  personally visible living champions within five tiles, hp*max(1,Strength).
+  Self contributes exactly once; exclude self from ally enumeration. Retreat
+  when allied power < 0.80 enemy power and an enemy is within four tiles.
+- At most 16 champions per side; stop scans below 65000 fuel. Partial scans do
+  not force early recovery. Most no-enemy turns use only a native mask check.
+  No hidden live reads, remembered enemy positions, or automatic ally vision.
+- Set private recovering/disengaging flags before combat. Reuse the existing
+  shield, exposure-first legal step, fresh postmove observation, quiet recall,
+  and spawn healing completion. Reset both flags on death/full spawn recovery.
+- For disengagement only, enemy exposure range is max(basic range + movement,4)
+  to avoid immediate recall in potential spell range. Exposure damage remains
+  raw Strength, not predicted spell damage. Ordinary low-health recovery keeps
+  its prior model. Camps and all farming behavior remain unchanged.
+- Keep draft/stat RNG, items, camp rotation, ordinary fight selection, bank/lock
+  policy, channel preservation, four shared round bytes and official turn yield.
+  No new team-memory protocol; all added state is private to one champion.
+- Risks: hp*Strength misses range, focus/spells, shields, passives, mitigation,
+  allied intentions and hidden units. Forced sorties can abandon useful capture,
+  tribute or kill windows; distant support can be overrated. Recall may still be
+  interrupted by pursuit. Scan guard is planning reserve, not measured headroom.
 
 ## Checks and next step
-- Trusted build compiles a selection contract: later wounded camp beats earlier
-  healthy camp; zero/dead health is excluded; equal-health ties stay stable;
-  reselect after death chooses the next survivor. Not an engine scenario test.
+- Embedded constexpr regressions compile through the trusted wrapper: equal
+  trades stay, outnumbered fights retreat, local support restores balance,
+  distant support is excluded, a nearby enemy is required, exact 0.80 stays.
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json PASSED,
-  exit 0; exact source a66053e075bb40f86561f53a77318cf06511304c9a1fb2ca6334ff413c93d1ba.
-  Report .agent/check-task-8dbeeaaf739e428597d05685211480df.json inspected;
-  saved copy task-8dbeeaaf739e428597d05685211480df-bot-check.json.
-  Smoke IDs ebb95790106b70ff619d7683e470d1a7a1af8c334a63ebb11e5c6fb76ee81a4e
-  and 5d0f6f99597ee4042cd15f85a60977520b826f592b2e27e002dbe4acec4b87e4.
-  Build/smoke success does not establish completed full games, focus branch
-  coverage, normal-turn headroom or competitive strength. No source edit afterward.
-- git diff --check PASSED, exit 0. Decision JSON records exact file hashes,
-  evidence limits, parameters and risk. READY_FOR_EVAL, with no strength claim.
-- Next: supervisor evaluates exact checked source against edit base and protected
-  champion on varied maps/both sides. Reject unchanged/lower matched win rate;
-  inspect target choices and camp-damage/collection efficiency before broadening.
-  No agents, tournament evaluation, commit/push, publication or official action.
+  exit 0. Source 9b5dc61043e4c4c3f35d5d8d55a58060ac69475e383b11f19bcfc2694bb820a5.
+  Report .agent/check-task-cff7df2089b54ad7aaa5ce50e5c7036b.json inspected and
+  saved under this task's -bot-check.json; check-report returned the same result.
+  Smoke IDs f53c399a7b5e6cc65610e8a581548381f3673e7ca79ff4e2e5d721ff5463554a
+  and 4019d6062b974415d2c1a0c20a035f575a3ea944162c62c4aee661d6a083de4d.
+  First smoke summary reports COMPLETED, zero faults/codes/fuel suspensions.
+  Wrapper summary omits candidate side/opponent source; no competitive attribution
+  is made. It does not establish branch coverage or normal-turn fuel headroom.
+- git diff --check PASSED, exit 0. Exact file hashes saved in decision JSON;
+  no source edits after trusted check. Compact game summaries saved by task ID.
+- READY_FOR_EVAL, with no strength claim. Supervisor compares checked source to
+  edit base and protected champion on matched maps/both sides. Reject unchanged
+  or lower matched win rate. Inspect boss mortality/bags/submissions and broad
+  collection/fuel before changing thresholds. No agents, tournament invocation,
+  commit/push, publication, official actions, or waiting for evaluation.
