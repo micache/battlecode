@@ -25,6 +25,7 @@ with lock(Path(config['root'])/'state/service.lock'),lock(Path(config['root'])/'
  a=Arena(config)
  require(not a.db.one("SELECT id FROM workers WHERE state='RUNNING'"),'model writer still active')
  result=register(a,read_json(sys.argv[1]))
+ a.build(result['revision_id'])
  atomic_json(Path(config['root'])/'public/team-boss-registration.json',result,420)
  print(json.dumps(result))
 '''
