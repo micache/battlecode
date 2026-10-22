@@ -10,6 +10,18 @@ readable format 1.0 / metric semantics 1. This does not relabel production 1.0.1
 or prior local 0.0.3 games. Local parsers require the exact contract's engine;
 outside observations retain their actual engine and map identities separately.
 
+Deployment completed 22 October: fresh both-side starter games, seven real-engine
+diagnostic types, 18 boss wiring games and a paused-queue process restart have
+saved receipts under `evidence/blaxel/cambc-305-*` and
+`evidence/blaxel/boss-v18-*`. The hidden fixture's original failed check remains
+recorded; its corrected outside-bush approach passes all three assertions.
+The first new v18 outside series `285f281a-20ed-41c9-93ab-02f57fba9d61`
+reports the identical 1.0.3 build on all five games. Each owner's real mailbox
+successfully returned its source-verified diagnostics. This establishes observed
+engine-build agreement, not access to a production settings dump or completed
+40-map candidate qualification. Services resumed with continuous private games,
+hourly coding cadence, one model/build/match slot and rolling retention.
+
 Fresh official `init --yes` produced 40 published maps. Their bytes are frozen
 in `evidence/map-pool-305.json`; both sides on every map remain mandatory for
 full qualification. `00monolith`, `00packs`, `00rows` are reserved. Automatic

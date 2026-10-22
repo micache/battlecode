@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-22",
+  "cli_version": "3.0.5",
+  "engine_version": "1.0.3",
+  "engine_build": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+  "engine_lock_hash": "ac2b5ad200d0df54380e94f82b1a327dd0407202533325808c8bf3af26c56136",
+  "map_count": 40,
+  "scoring_mode": "release; normal official fuel and ending; both sides",
+  "diagnostics": {
+    "crash": {
+      "match_id": "d8749dd58cb69698f83c18b167e104d0eb43a8931a778a1d250d6a3f3396bc60",
+      "sealed_artifact": "/srv/battlecode/acceptance/real-fixtures/crash-1792666754932495794",
+      "state": "COMPLETED",
+      "winner": "B",
+      "bot_faults": 6000,
+      "fuel_suspensions": 0,
+      "markers": {
+        "team-a.stdout": {},
+        "team-b.stdout": {}
+      }
+    },
+    "fuel": {
+      "match_id": "53aaa2dc464d39ec3085abc2f4ed45a0180a363ef9ebfee4c1f2d29aef061dee",
+      "sealed_artifact": "/srv/battlecode/acceptance/real-fixtures/fuel-1792666764633925613",
+      "state": "COMPLETED",
+      "winner": "B",
+      "bot_faults": 0,
+      "fuel_suspensions": 24,
+      "markers": {
+        "team-a.stdout": {},
+        "team-b.stdout": {}
+      }
+    },
+    "hidden": {
+      "match_id": "8c08f0f492b6451b59e33fbdb2743d2ff4417395ff5476ffd0bbc51f588fca94",
+      "sealed_artifact": "/srv/battlecode/acceptance/real-fixtures/hidden-1792668864937899550",
+      "state": "COMPLETED",
+      "winner": "B",
+      "bot_faults": 0,
+      "fuel_suspensions": 3,
+      "markers": {
+        "team-a.stdout": {
+          "CHECK PASS hidden-legal-fallback": 1,
+          "CHECK PASS hidden-obstruction-preserves-move": 1,
+          "CHECK PASS known-obstruction-throws": 1
+        },
+        "team-b.stdout": {}
+      }
+    },
+    "idle-tie": {
+      "match_id": "4b5079e54a7a096637915ee8661b368ad84fe9d19598a48059544dc8633ab302",
+      "sealed_artifact": "/srv/battlecode/acceptance/real-fixtures/idle-tie-1792666711702938701",
+      "state": "COMPLETED",
+      "winner": "B",
+      "bot_faults": 0,
+      "fuel_suspensions": 0,
+      "markers": {
+        "team-a.stdout": {},
+        "team-b.stdout": {}
+      }
+    },
+    "mechanics": {
+      "match_id": "178808b3409550a6d65ae60a17b8e244dfeac2c17db3006d7b76927b31e86031",
+      "sealed_artifact": "/srv/battlecode/acceptance/real-fixtures/mechanics-1792668507042867594",
+      "state": "COMPLETED",
+      "winner": "B",
+      "bot_faults": 0,
+      "fuel_suspensions": 2,
+      "markers": {
+        "team-a.stdout": {
+          "CHECK PASS blocked-target-path-keeps-legal-landing": 3,
+          "CHECK PASS capture-occupancy-five-later-phases": 1,
+          "CHECK PASS channel-completion": 3,
+          "CHECK PASS ranged-shared-action-allowance": 1,
+          "CHECK PASS recall-countdown": 12,
+          "CHECK PASS recall-start-five": 3,
+          "CHECK PASS safe-altar-approach": 507,
+          "CHECK PASS tribute-completion-next-start": 26,
+          "CHECK PASS tribute-start-duration": 26
+        },
+        "team-b.stdout": {
+          "CHECK PASS blocked-target-path-keeps-legal-landing": 3,
+          "CHECK PASS capture-occupancy-five-later-phases": 1,
+          "CHECK PASS channel-completion": 3,
+          "CHECK PASS ranged-shared-action-allowance": 1,
+          "CHECK PASS recall-countdown": 12,
+          "CHECK PASS recall-start-five": 3,
+          "CHECK PASS safe-altar-approach": 696,
+          "CHECK PASS tribute-completion-next-start": 102,
+          "CHECK PASS tribute-start-duration": 103
+        }
+      }
+    },
+    "timeout": {
+      "match_id": "a74f52a74b653fb9983da0a1dc5d28f48c65438e2e1f5991afa39530773cdbad",
+      "sealed_artifact": "/srv/battlecode/acceptance/real-fixtures/timeout-1792668555355262882",
+      "state": "TIMEOUT",
+      "winner": null,
+      "bot_faults": null,
+      "fuel_suspensions": null,
+      "markers": {
+        "team-a.stdout": {},
+        "team-b.stdout": {}
+      }
+    },
+    "truncated": {
+      "match_id": "67d0bc902eb0339f297cd1c5c5d9eb73a2a9ebee49012ebf9141cf28475552ca",
+      "sealed_artifact": "/srv/battlecode/acceptance/real-fixtures/truncated-1792668546042970649",
+      "state": "TRUNCATED",
+      "winner": null,
+      "bot_faults": 0,
+      "fuel_suspensions": null,
+      "markers": {
+        "team-a.stdout": {},
+        "team-b.stdout": {}
+      }
+    }
+  },
+  "prior_failed_hidden_fixture": {
+    "match_id": "1a716b27b5fb6665b499b16f4edd35e6ded57841826dd4908bed9a82ab9958b5",
+    "status": "preserved failed check; superseded by corrected outside-bush approach, not relabelled"
+  },
+  "process_restart": {
+    "verified": true,
+    "unchanged_workload": {
+      "jobs": 15624,
+      "sha256": "633a1586d2fd4404522817ec8a3651c54befaceb1e844984dd9327a646386ce4"
+    },
+    "vm_reboot_verified": false
+  },
+  "starter_evidence": "cambc-305-starter-check-20261022.json",
+  "visualizer_evidence": "cambc-305-official-visualizer-review-20261022.json",
+  "cpp_settings_evidence": "cambc-305-cpp-profile-20261022.json",
+  "boss_evidence": "boss-v18-three-map-wiring-20261022.json",
+  "old_evaluations": "Original suites/results retained; unfinished old-engine evaluations closed INCONCLUSIVE.",
+  "automatic_promotion_enabled": false,
+  "official_uploads_or_activation": false,
+  "submission_ready_claimed": false,
+  "production_engine_agreement": "All five source-verified v18 games in group 285f281a-20ed-41c9-93ab-02f57fba9d61 report engine 1.0.3 build fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f, identical to the local engine. See boss-v18-outside-feedback-20261022.json. A production settings dump is not available."
+}

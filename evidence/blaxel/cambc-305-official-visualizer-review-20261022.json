@@ -1,0 +1,581 @@
+{
+  "url": "http://127.0.0.1:7045/?replay=replay.zip&cambc-cli=1",
+  "served_replay_sha256": "8042800061a8b98a63ed631c1201d7bbcadf88e7858f309995d5b462869dd347",
+  "body": "Engine v1.0.3 · Replay v0.0.3\nreplay.zip\nLoad map / replay\nMatch analytics\nRound 2000\n5,904\n7,960\n373\n637\n21\n29\n68\n99\nGraphs (1)\nSubmitted gems\nA ·\n373\nB ·\n637\n0\n300\n600\n900\nR1\nR1000\nR2000\n\nClick a round to seek · Ctrl + scroll to zoom\n\nReset zoom\nExport CSV\nLogs\nA\nB\nshared round: 1997\nshared round: 1997\nshared round: 1998\nshared round: 1998\nshared round: 1998\nshared round: 1999\nshared round: 1999\nshared round: 1999\nshared round: 2000\nshared round: 2000\nAa\nab\n.*\n≈\n6003 log entries\nFuel\n\nRound 2000\n\nC++\n44,408\n/ 1,200,000\ntotal\n1,793\n/ 100,000\n18,518\n/ 100,000\n2,254\n/ 100,000\nC++\n44,329\n/ 1,200,000\ntotal\n6,007\n/ 100,000\n31,536\n/ 100,000\n8,727\n/ 100,000\n17,669\n/ 100,000\nHighlights\n5\n\nFinding highlights…\n\n516\n2\n50\n38\n2\n32\n1119\n2\n30\n814\n2\n25\n977\n2\n22\nx: —\ny: —\nShortcuts\nTEAM A\n27\nTEAM B\nTEAM B\nGEM VICTORY\nRound\n2000\n/\n2000\nAction\n16214\n/\n16214\n×\n+4\n×\n+4\n×\n+5\n×\n+3\n×\n+5\n×\n+2\n×\n+5\n×\n+5\n×\n+4\n×\n+3\n×\n+5\n×\n+3\n×\n+2\n×\n+3\n×\n+4\nUndo\nCtrl+Z\n×0.5\n1×\n×2\nRounds\nStep\nmode",
+  "buttons": [
+    {
+      "text": "Load map / replay",
+      "title": "Load map or replay",
+      "aria": "Load map or replay"
+    },
+    {
+      "text": "",
+      "title": "Graphics settings",
+      "aria": "Graphics settings"
+    },
+    {
+      "text": "",
+      "title": "Collapse left panel",
+      "aria": "Collapse left panel"
+    },
+    {
+      "text": "Match analytics",
+      "title": "Collapse",
+      "aria": null
+    },
+    {
+      "text": "5,9047,960",
+      "title": "Gold earned",
+      "aria": "Gold earned"
+    },
+    {
+      "text": "373637",
+      "title": "Gems banked",
+      "aria": "Gems banked"
+    },
+    {
+      "text": "2129",
+      "title": "Champion kills",
+      "aria": "Champion kills"
+    },
+    {
+      "text": "6899",
+      "title": "Camps captured",
+      "aria": "Camps captured"
+    },
+    {
+      "text": "Reset zoom",
+      "title": "",
+      "aria": null
+    },
+    {
+      "text": "Export CSV",
+      "title": "",
+      "aria": null
+    },
+    {
+      "text": "Logs",
+      "title": "Collapse",
+      "aria": null
+    },
+    {
+      "text": "A",
+      "title": "Team A stdout",
+      "aria": "Team A logs"
+    },
+    {
+      "text": "B",
+      "title": "Team B stdout",
+      "aria": "Team B logs"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Draft"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Ryth"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Marcella"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Prism"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Ryth's log"
+    },
+    {
+      "text": "shared round: 1997",
+      "title": "",
+      "aria": "Seek to log: shared round: 1997\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Prism's log"
+    },
+    {
+      "text": "shared round: 1997",
+      "title": "",
+      "aria": "Seek to log: shared round: 1997\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Marcella's log"
+    },
+    {
+      "text": "shared round: 1998",
+      "title": "",
+      "aria": "Seek to log: shared round: 1998\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Ryth's log"
+    },
+    {
+      "text": "shared round: 1998",
+      "title": "",
+      "aria": "Seek to log: shared round: 1998\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Prism's log"
+    },
+    {
+      "text": "shared round: 1998",
+      "title": "",
+      "aria": "Seek to log: shared round: 1998\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Marcella's log"
+    },
+    {
+      "text": "shared round: 1999",
+      "title": "",
+      "aria": "Seek to log: shared round: 1999\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Ryth's log"
+    },
+    {
+      "text": "shared round: 1999",
+      "title": "",
+      "aria": "Seek to log: shared round: 1999\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Marcella's log"
+    },
+    {
+      "text": "shared round: 1999",
+      "title": "",
+      "aria": "Seek to log: shared round: 1999\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Ryth's log"
+    },
+    {
+      "text": "shared round: 2000",
+      "title": "",
+      "aria": "Seek to log: shared round: 2000\n"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Seek to Prism's log"
+    },
+    {
+      "text": "shared round: 2000",
+      "title": "",
+      "aria": "Seek to log: shared round: 2000\n"
+    },
+    {
+      "text": "Aa",
+      "title": "Match case",
+      "aria": "Match case"
+    },
+    {
+      "text": "ab",
+      "title": "Whole word",
+      "aria": "Whole word"
+    },
+    {
+      "text": ".*",
+      "title": "Regular expression",
+      "aria": "Regular expression"
+    },
+    {
+      "text": "≈",
+      "title": "Fuzzy match",
+      "aria": "Fuzzy match"
+    },
+    {
+      "text": "Fuel",
+      "title": "Collapse",
+      "aria": null
+    },
+    {
+      "text": "Highlights 5",
+      "title": "Collapse",
+      "aria": null
+    },
+    {
+      "text": "",
+      "title": "Play highlight · rounds 516 to 571",
+      "aria": "Play highlight, Rounds 516 to 571, team A: 2 eliminated · 50-round fight · Ally losses included"
+    },
+    {
+      "text": "",
+      "title": "Play highlight · rounds 38 to 75",
+      "aria": "Play highlight, Rounds 38 to 75, team B: 2 eliminated · 32-round fight · Ally losses included"
+    },
+    {
+      "text": "",
+      "title": "Play highlight · rounds 1119 to 1149",
+      "aria": "Play highlight, Rounds 1119 to 1149, team B: 2 eliminated · 30-round fight · Ally losses included"
+    },
+    {
+      "text": "",
+      "title": "Play highlight · rounds 814 to 845",
+      "aria": "Play highlight, Rounds 814 to 845, team B: 2 eliminated · 25-round fight · Ally losses included"
+    },
+    {
+      "text": "",
+      "title": "Play highlight · rounds 977 to 1006",
+      "aria": "Play highlight, Rounds 977 to 1006, team B: 2 eliminated · 22-round fight · Ally losses included"
+    },
+    {
+      "text": "Toggle controls",
+      "title": "Toggle vision and camera controls",
+      "aria": "Toggle controls"
+    },
+    {
+      "text": "Scoreboard Tab",
+      "title": "Scoreboard (hold Tab)",
+      "aria": "Scoreboard"
+    },
+    {
+      "text": "Reset view Home",
+      "title": "Reset view (Home)",
+      "aria": "Reset view"
+    },
+    {
+      "text": "27",
+      "title": "Ryth · Ryth respawn: 27",
+      "aria": "Select Ryth, Team A"
+    },
+    {
+      "text": "",
+      "title": "View Ryth vision",
+      "aria": "View Ryth vision"
+    },
+    {
+      "text": "",
+      "title": "Follow Ryth with camera",
+      "aria": "Follow Ryth with camera"
+    },
+    {
+      "text": "",
+      "title": "Marcella",
+      "aria": "Select Marcella, Team A"
+    },
+    {
+      "text": "",
+      "title": "View Marcella vision",
+      "aria": "View Marcella vision"
+    },
+    {
+      "text": "",
+      "title": "Follow Marcella with camera",
+      "aria": "Follow Marcella with camera"
+    },
+    {
+      "text": "",
+      "title": "Prism",
+      "aria": "Select Prism, Team A"
+    },
+    {
+      "text": "",
+      "title": "View Prism vision",
+      "aria": "View Prism vision"
+    },
+    {
+      "text": "",
+      "title": "Follow Prism with camera",
+      "aria": "Follow Prism with camera"
+    },
+    {
+      "text": "",
+      "title": "Cassi & Issac",
+      "aria": "Select Cassi & Issac, Team B"
+    },
+    {
+      "text": "",
+      "title": "View Cassi vision",
+      "aria": "View Cassi vision"
+    },
+    {
+      "text": "",
+      "title": "View Issac vision",
+      "aria": "View Issac vision"
+    },
+    {
+      "text": "",
+      "title": "Follow Cassi with camera",
+      "aria": "Follow Cassi with camera"
+    },
+    {
+      "text": "",
+      "title": "Follow Issac with camera",
+      "aria": "Follow Issac with camera"
+    },
+    {
+      "text": "",
+      "title": "Tavi",
+      "aria": "Select Tavi, Team B"
+    },
+    {
+      "text": "",
+      "title": "View Tavi vision",
+      "aria": "View Tavi vision"
+    },
+    {
+      "text": "",
+      "title": "Follow Tavi with camera",
+      "aria": "Follow Tavi with camera"
+    },
+    {
+      "text": "",
+      "title": "Prism",
+      "aria": "Select Prism, Team B"
+    },
+    {
+      "text": "",
+      "title": "View Prism vision",
+      "aria": "View Prism vision"
+    },
+    {
+      "text": "",
+      "title": "Follow Prism with camera",
+      "aria": "Follow Prism with camera"
+    },
+    {
+      "text": "",
+      "title": "",
+      "aria": "Expand timeline"
+    },
+    {
+      "text": "×+4",
+      "title": "",
+      "aria": "5 nearby timeline events"
+    },
+    {
+      "text": "×+4",
+      "title": "",
+      "aria": "5 nearby timeline events"
+    },
+    {
+      "text": "×+5",
+      "title": "",
+      "aria": "6 nearby timeline events"
+    },
+    {
+      "text": "×+3",
+      "title": "",
+      "aria": "4 nearby timeline events"
+    },
+    {
+      "text": "×+5",
+      "title": "",
+      "aria": "6 nearby timeline events"
+    },
+    {
+      "text": "×+2",
+      "title": "",
+      "aria": "3 nearby timeline events"
+    },
+    {
+      "text": "×+5",
+      "title": "",
+      "aria": "6 nearby timeline events"
+    },
+    {
+      "text": "×+5",
+      "title": "",
+      "aria": "6 nearby timeline events"
+    },
+    {
+      "text": "×+4",
+      "title": "",
+      "aria": "5 nearby timeline events"
+    },
+    {
+      "text": "×+3",
+      "title": "",
+      "aria": "4 nearby timeline events"
+    },
+    {
+      "text": "×+5",
+      "title": "",
+      "aria": "6 nearby timeline events"
+    },
+    {
+      "text": "×+3",
+      "title": "",
+      "aria": "4 nearby timeline events"
+    },
+    {
+      "text": "×+2",
+      "title": "",
+      "aria": "3 nearby timeline events"
+    },
+    {
+      "text": "×+3",
+      "title": "",
+      "aria": "4 nearby timeline events"
+    },
+    {
+      "text": "×+4",
+      "title": "",
+      "aria": "5 nearby timeline events"
+    },
+    {
+      "text": "Undo Ctrl+Z",
+      "title": "Undo the last input at the selected action (Ctrl/Cmd+Z)",
+      "aria": "Undo"
+    },
+    {
+      "text": "",
+      "title": "Previous round (↑, hold to repeat) · follows the selected champion’s turn",
+      "aria": "Previous round"
+    },
+    {
+      "text": "",
+      "title": "Previous action (←, hold to repeat)",
+      "aria": "Step backward"
+    },
+    {
+      "text": "",
+      "title": "Play (Space / K)",
+      "aria": "Play"
+    },
+    {
+      "text": "",
+      "title": "Next action (→, hold to repeat)",
+      "aria": "Step forward"
+    },
+    {
+      "text": "",
+      "title": "Next round (↓, hold to repeat) · follows the selected champion’s turn",
+      "aria": "Next round"
+    },
+    {
+      "text": "×0.5",
+      "title": "Halve playback speed",
+      "aria": "Halve playback speed"
+    },
+    {
+      "text": "×2",
+      "title": "Double playback speed",
+      "aria": "Double playback speed"
+    },
+    {
+      "text": "Rounds",
+      "title": "Switch slider to actions",
+      "aria": "Round-based timeline"
+    }
+  ],
+  "inputs": [
+    {
+      "type": "file",
+      "min": "",
+      "max": "",
+      "value": "",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": null
+    },
+    {
+      "type": "search",
+      "min": "",
+      "max": "",
+      "value": "",
+      "aria": "Find in team logs"
+    },
+    {
+      "type": "range",
+      "min": "0",
+      "max": "2003",
+      "value": "2003",
+      "aria": "Seek timeline round"
+    },
+    {
+      "type": "checkbox",
+      "min": "",
+      "max": "",
+      "value": "on",
+      "aria": "Step mode"
+    }
+  ],
+  "errors": []
+}

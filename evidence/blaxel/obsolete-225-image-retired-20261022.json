@@ -1,0 +1,1 @@
+{"at": 1792668818.1714845, "removed_obsolete_image": "sha256:0ee607f18ca3acd4e45b7e1c650a841c8f3620d90383ec8fe16f8ab04b46cf55", "retained_current_image": "sha256:45d36871db1d22f844fc437df51345eca8affdcb832f8557df5d3ac8db2efea8", "old_sources_results_and_locks_preserved": true, "recovery": "Rebuild historical 2.2.5 image from its pinned Git recipe; no old results relabelled."}
