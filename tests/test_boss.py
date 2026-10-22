@@ -66,6 +66,18 @@ class BossTests(Harness):
         with self.assertRaises(ArenaError):
             handle_request(self.arena,'beta',{'operation':'slice','payload':{'match_id':row['id'],'file':'summary.json'}})
 
+    def test_migration_wiring_uses_explicit_preserved_sources_and_three_maps(self):
+        self.install()
+        selected={b:self.arena.db.one('SELECT accepted_revision FROM bots WHERE id=?',(b,))['accepted_revision']
+                  for b in self.config['workers']}
+        rid=bootstrap(self.arena,selected,self.config['evaluation']['screen_maps'])
+        cases=self.arena.db.all('SELECT * FROM training_cases WHERE round_id=?',(rid,))
+        self.assertEqual(len(cases),len(selected)*3*2)
+        self.assertEqual({c['map_name'] for c in cases},set(self.config['evaluation']['screen_maps']))
+        for c in cases:
+            bot=c['a_bot'] if c['a_bot']!='boss' else c['b_bot']
+            self.assertEqual(c['a_revision'] if c['a_bot']==bot else c['b_revision'],selected[bot])
+
     def test_boss_external_import_needs_private_trusted_collector_payload(self):
         boss,_=self.install()
         self.config['official_exploration'].update(enabled=True,share_feedback=True,

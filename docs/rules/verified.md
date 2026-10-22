@@ -1,4 +1,16 @@
-18 October current-game update: the official CLI is now hash-pinned to 2.2.5,
+22 October reviewed update: hash-pinned official CLI 3.0.5, bundled engine 1.0.3
+build `fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f`,
+release mode, fresh 40-map byte manifest in evidence/map-pool-305.json. New
+official GameRules/C++ API hashes and reconciliation are in organizer-agents.md.
+The compact reference reflects changed balance, Golem, Heart of Ruin and current
+movement semantics. All 134 exported error name/number pairs match the installed
+header; ward::owner is now available. See docs/TOOLCHAIN_305.md for the stopped
+transition and real qualification. Earlier 1.0.1 outside games and local 0.0.3
+evaluations remain tied to their actual versions. A production settings dump is
+still unavailable; no undisclosed server override or leaderboard strength is
+certified merely by using the matching published release.
+
+Historical 18 October update: the official CLI was hash-pinned to 2.2.5,
 with release-mode build/run commands and fresh 17-map pool hashes in
 `evidence/map-pool-225.json`. Its statistics identify engine 0.0.3 build
 `d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5`,

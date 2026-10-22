@@ -1,5 +1,14 @@
 # On-server rolling history
 
+22 October extension: keep only the newest three unchanged, successfully
+published generated publication/worker checkouts per lane. Verify completion
+and immutable source identity first, journal deletion, and retain push intents,
+commits, result/usage records, patches and notes. Dirty, partial or failed work
+is not removed. The worker handles only its own generated attempt directory;
+credentials and other home contents are never targets. Routine raw evidence
+from obsolete engine suites no longer pins an entire old full evaluation after
+migration; scores, identities and compact lessons remain. See TOOLCHAIN_305.md.
+
 The owner selected oldest-first local retention on 18 October 2026, replacing
 the laptop offloader. The server does not need the operator machine to remain
 online to maintain match-history space. The old offload timer is disabled;

@@ -67,38 +67,47 @@ def readable(arena, job):
         "SELECT job_id FROM evaluation_cases WHERE job_id=? AND opponent=? AND role='candidate'",(job['id'],rid)))
 
 
-def bootstrap(arena):
-    """One complete-game, both-side wiring pair per worker; not a full boss gate."""
+def bootstrap(arena, revision_ids=None, map_names=None):
+    """Complete-game wiring pairs; optionally pin migration sources/maps explicitly."""
     from .development import select_base
     from .retention import maintain
     boss=arena.config['boss'];selected={}
+    require(revision_ids is None or set(revision_ids)==set(arena.config['workers']),
+            'explicit boss wiring roster must identify every worker')
     for bot in arena.config['workers']:
         maintain(arena)
-        row,_=select_base(arena,bot)
+        if revision_ids is None:row,_=select_base(arena,bot)
+        else:row=arena.db.one('SELECT * FROM revisions WHERE id=?',(revision_ids[bot],))
         require(row,'boss bootstrap needs an evaluated worker base')
+        require(row['bot_id']==bot,'boss wiring revision belongs to another lane')
         selected[bot]={'id':row['id'],'commit_sha':row['commit_sha'],'source_hash':row['source_hash'],
                        'build':arena.build(row['id'])}
     row=arena.db.one('SELECT * FROM revisions WHERE id=?',(boss['revision_id'],))
     maintain(arena)
     selected['boss']={'id':row['id'],'commit_sha':row['commit_sha'],'source_hash':row['source_hash'],
                       'build':arena.build(row['id'])}
-    name=arena.config['evaluation']['screen_maps'][0];map_info=arena.freeze_maps()[name]
+    names=[arena.config['evaluation']['screen_maps'][0]] if map_names is None else list(map_names)
+    require(names and len(names)==len(set(names)) and
+            set(names)<=set(arena.config['evaluation']['development_maps']),'development wiring maps required')
+    maps=arena.freeze_maps();chosen_maps={n:maps[n] for n in names}
     rid='boss-bootstrap-'+identity({'roster':{b:v['id'] for b,v in selected.items()},
-        'engine':arena.adapter().lock_hash,'infrastructure':arena.config['infrastructure_commit']})[:32]
+        'engine':arena.adapter().lock_hash,'maps':chosen_maps,
+        'infrastructure':arena.config['infrastructure_commit']})[:32]
     spec={'engine_lock_hash':arena.adapter().lock_hash,'infrastructure_commit':arena.config['infrastructure_commit'],
-          'boss_revision':boss['revision_id'],'roster':selected,'maps':{name:map_info},
+          'boss_revision':boss['revision_id'],'roster':selected,'maps':chosen_maps,
           'purpose':'Initial boss wiring, full games; not full-map evaluation or promotion','independent_reruns':False}
     with arena.db.transaction():
         arena.db.execute("INSERT OR IGNORE INTO training_rounds VALUES(?,?,'RUNNING',?,NULL)",
                          (rid,json.dumps(spec),time.time()))
         for bot in arena.config['workers']:
-            for a_bot,b_bot in [(bot,'boss'),('boss',bot)]:
-                a,b=selected[a_bot],selected[b_bot]
-                jid=arena.queue_match(a['build'],b['build'],map_info,
-                                     training_round={'id':rid,'a_bot':a_bot,'b_bot':b_bot})
-                arena.db.execute('INSERT OR IGNORE INTO training_cases VALUES(?,?,?,?,?,?,?,?)',
-                    (jid,rid,a_bot,b_bot,a['id'],b['id'],name,identity({'a':a['source_hash'],'b':b['source_hash'],
-                                                                   'map':map_info['hash'],'engine':arena.adapter().lock_hash})))
+            for name,map_info in chosen_maps.items():
+                for a_bot,b_bot in [(bot,'boss'),('boss',bot)]:
+                    a,b=selected[a_bot],selected[b_bot]
+                    jid=arena.queue_match(a['build'],b['build'],map_info,
+                                         training_round={'id':rid,'a_bot':a_bot,'b_bot':b_bot})
+                    arena.db.execute('INSERT OR IGNORE INTO training_cases VALUES(?,?,?,?,?,?,?,?)',
+                        (jid,rid,a_bot,b_bot,a['id'],b['id'],name,identity({'a':a['source_hash'],'b':b['source_hash'],
+                                                                       'map':map_info['hash'],'engine':arena.adapter().lock_hash})))
     for row in arena.db.all('SELECT job_id FROM training_cases WHERE round_id=?',(rid,)):
         jid=row['job_id']
         maintain(arena)
