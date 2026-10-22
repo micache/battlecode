@@ -9,7 +9,7 @@ import time
 
 sys.path.insert(0, '/opt/battlecode')
 from arena.common import atomic_json, file_hash, read_json, require
-from arena.statistics import read_current, unsigned
+from arena.statistics import read_current, unsigned, ENGINE_IDENTITIES
 
 
 def main():
@@ -26,9 +26,10 @@ def main():
             'saved real match fixture required')
     require(replay.parent == fixture.parent and replay.suffix == '.repl26a', 'matching saved replay required')
     stats, inspected = read_json(fixture), read_json(review)
-    current = config['engine']['version'] == '2.2.5'
+    current = config['engine']['version'] in ENGINE_IDENTITIES
+    expected=ENGINE_IDENTITIES.get(config['engine']['version'])
     if current:
-        read_current(stats)
+        read_current(stats,expected_engine=expected)
         require(inspected.get('served_replay_sha256') == file_hash(replay),
                 'visualizer review must verify the exact saved replay bytes')
         match = stats['match']
@@ -52,7 +53,7 @@ def main():
         actual = files[-1]
         data, process = read_json(actual), read_json(actual.parent / 'process-result.json')
         if current:
-            actual_faults, measurements, suspensions = read_current(data)
+            actual_faults, measurements, suspensions = read_current(data,expected_engine=expected)
             final_round, final_outcome = data['match']['roundsStarted'], data['match']['outcome']
             by_side = measurements['bot_faults_by_side']['value']
             require(by_side == ({'A':6000, 'B':0} if name == 'crash' else {'A':0, 'B':0}),
@@ -86,6 +87,7 @@ def main():
         'review_evidence':{'replay':str(replay),'replay_sha256':file_hash(replay),
                            'review':str(review),'review_sha256':file_hash(review), 'diagnostics':diagnostics},
         'created':time.time()}
+    if config['engine']['version']=='3.0.5':contract['statistics_schema']='cambc-305-json-v1'
     atomic_json(config['parser_contract'], contract, 0o644)
     print(json.dumps(contract, indent=2))
 

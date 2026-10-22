@@ -1,25 +1,25 @@
 # Bot reference grounded in the supplied handbook
 
-Current runtime update, 18 October 2026: CLI 2.2.5, official engine 0.0.3
-build `d7e29ae3546357b011419c764204b7b9e2232bdb1b07868250c6b35d4c18d2a5`,
-release builds and the complete 17-map published pool. The new user-supplied
-GameRules.md is unchanged; the refreshed C++ export adds visibility annotations
-and `ward::owner()`. IMPORTANT: that last method is not present in CLI 2.2.5's
-installed header (SHA256 `ee131e2981c16f696cb82cd6b04dc1871f45323057e51f7bb676a893ab72e264`).
-Do not call it or invent an ABI workaround. The installed matching SDK is the
-compilation contract; the download hub can document a newer API before release.
-All 134 documented error names/numbers match the installed error enum. See
-`sources/EngineErrors.md` for handling. Use `error.code()`, `error.message()` and
-`to_string(code)`; always reach a legal turn yield after bounded recovery.
+22 October reviewed update: CLI 3.0.5, bundled engine 1.0.3 build
+`fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f`,
+release mode and all 40 currently published maps. Fresh organizer exports replace
+sources/GameRules.md and sources/BotAPICpp.md byte-for-byte; prior versions remain
+in Git. Matching installed C++ header SHA256:
+`894229e17d886358719abb70cac9ab5993263a0c05bf7df14fc48fa04a8336d3`.
+The old ward::owner documentation gap is resolved in this header. Use the installed
+SDK, not stale branch documentation. EngineErrors.md is a historical reference;
+installed error.code(), error.message() and to_string(code) are authoritative.
+Always yield after bounded recovery. Qualification artifacts, not this note,
+establish measured settings and production build agreement.
 
 `cambc build --release` and `cambc run --release` match platform mode.
 `debug_block` bodies do not execute there: never place strategy, state changes
 or necessary turn yielding only inside one. No custom fuel or round override
-is used for scoring. CLI 2.2.5 statistics require `--json` for readable output.
+is used for scoring. Current statistics require `--json` for readable output.
 Use the compact `summary.json` evidence slice before large raw timelines;
 the original `final.json`, replay and observed engine seed are retained.
 
-Current access addendum, 17 October 2026: the organizer's LLM-download page is now
+Historical access addendum, 17 October 2026: the organizer's LLM-download page is now
 accessible and its GameRules.md is byte-identical to the reviewed supplied file.
 The current C++ API export is `sources/BotAPICpp.md`; use it with the pinned
 installed C++ header, not Python examples. See `docs/rules/organizer-agents.md`
@@ -28,9 +28,9 @@ below describe the original design review, not the subsequently running arena;
 actual execution evidence lives under `evidence/blaxel/`. Production parity and
 automatic champion promotion are still not certified.
 
-Reviewed 16 October 2026, Asia/Saigon. Read the complete [GameRules.md](sources/GameRules.md) and [BotAPIPython.md](sources/BotAPIPython.md) at bootstrap, then consult this reference and relevant sections on demand. These are user-supplied exports of the event handbook/API, not an independently retrieved live website. Their byte hashes are pinned in config/arena.example.json. They do not include the separate organizers' AGENTS.md, event participation/AI policies, submission constraints, or challenge automation documentation.
+Read complete current GameRules.md, BotAPICpp.md and the matching installed C++ SDK at bootstrap or a game/SDK change. On routine unchanged iterations consult compact references and relevant sections. The historical Python export is not the C++ compilation contract; do not reread it for C++ work. The current exports were downloaded from the organizer's approved browser controls on 22 October; hashes and limits are in docs/rules/organizer-agents.md.
 
-This is our derived guidance. Preserve the exports unchanged. If an SDK update disagrees with them, record the disagreement, check the current authorized source and run a small engine fixture; do not silently substitute assumptions. The arena remains an implementation specification and has not run a complete game.
+This is our derived guidance. Preserve the exports unchanged. If an SDK update disagrees with them, record the disagreement, check the current authorized source and run a small engine fixture; do not silently substitute assumptions. The earlier execution limits are historical; do not confuse old-version evidence with new qualification.
 
 ## 1. Objective and evaluation
 
@@ -39,7 +39,7 @@ This is our derived guidance. Preserve the exports unchanged. If an SDK update d
 | First to 1,000 **tributed** gems wins immediately | Optimize actual win rate and successful tribute, not carried gems or damage alone. |
 | At 2,000 rounds: tributed gems, lifetime gold earned, champion kills, then Team B | Run both side assignments. A complete tie is a Team B win, not a draw. Gold remaining is not the gold tiebreak. |
 | Local runs can stop earlier | Debug truncation and host timeout must not be scored as completed games. Verify the effective runner settings and terminal result. |
-| A champion killer receives the victim's carried gems and 50 base gold; no assist gold | Record steals and lost bags only if supported by actual telemetry. Camp-caused deaths destroy the bag. |
+| A champion killer receives the victim's carried gems and 100 base gold; no assist gold | Record steals and lost bags only if supported by actual telemetry. Camp-caused deaths destroy the bag. |
 | Death waits 60 owner turn-end ticks, then an available spawn tile; dead champions still receive turns to shop | Avoid treating death as a lost entire bot process. Distinguish dead-unit shopping from live action selection. |
 
 Engine outcomes are authoritative after parser/fixture validation. Do not reconstruct a winner from a partial statistic or a reduced proxy. Attribute a complete-tie Team B win separately when the actual result exposes its reason, so a worker does not mistake side bias for strategic progress.
@@ -72,17 +72,18 @@ Normally there is one ordinary 8-direction move, one basic attack and **one succ
 
 The starting turn supplies the first countdown tick. A one-tick tribute completes at the next owner turn start, not at the end of its starting turn. Duration is fixed using the starting bag; completion submits the entire current bag, including a reward captured since starting. Start tribute from a free tile within Chebyshev distance 1 of an altar, with at least one gem. Starting a channel prevents other actions until completion/cancellation. Do not repeatedly restart a useful channel.
 
-An opposing altar lock blocks tribute, and placing one cancels opposing tribute at that altar. A lock takes three basic hits; `submit_gems()` against a hostile lock may perform a lock attack rather than start tribute. Inspect channel/lock state afterward; this method returns `None`, not a success boolean.
+An opposing altar lock blocks tribute, and placing one cancels opposing tribute at that altar. A lock takes five basic hits; `submit_gems()` against a hostile lock may perform a lock attack rather than start tribute. Inspect channel/lock state afterward; this method returns `None`, not a success boolean.
 
 ## 4. Farming, capture, items and safety
 
-| Camp | HP | Strength | Gold | Gems | Respawn rounds |
-|---|---:|---:|---:|---:|---:|
-| Wolf | 1,350 | 20 | 90 | 22 | 40 |
-| Elk | 2,400 | 60 | 160 | 36 | 60 |
-| Gem cluster | 500 | 0 | 0 | 24 | 50 |
-| Gold cluster | 500 | 0 | 35 | 0 | 50 |
-| Monolith | 20,000 | 200 | 300 | 200 | 150 |
+| Camp | HP | Strength | Range | Gold | Gems | Respawn rounds |
+|---|---:|---:|---:|---:|---:|---:|
+| Wolf | 1,350 | 20 | 3 | 40 | 4 | 40 |
+| Elk | 2,400 | 60 | 4 | 90 | 15 | 60 |
+| Golem | 5,000 | 120 | 4 | 160 | 36 | 80 |
+| Gem cluster | 120 | 0 | 0 | 0 | 7 | 50 |
+| Gold cluster | 120 | 0 | 0 | 20 | 0 | 50 |
+| Monolith | 20,000 | 200 | 5 | 300 | 200 | 150 |
 
 Camps group through cardinally connected spawn tiles. All monsters in a group must die, then your team must occupy at least one spawn tile uncontested. At a capture phase this starts a five-round timer; later capture phases count it down. Empty or contested occupancy resets progress. More allies do not accelerate capture; rewards split among allies present on completion, with integer remainder to the lowest ID. Killing monsters alone is not collecting the reward.
 
@@ -90,7 +91,7 @@ The group's respawn uses the longest member cooldown after rewards are claimed. 
 
 Shards cost 30 gold; five matching shards combine into an emblem (150 gold). Stats stack, including duplicate emblems, but duplicate family passives do not. Monster adds 10% camp damage; Durability reduces incoming damage 10%; Treasure adds 20% gold; Jungle reduces camp damage 30%; Home reduces recall to three ticks. Power grants six shards' worth of the selected stat; Bruiser grants five of it plus one of each other stat. Evaluate role-specific return rather than spending indiscriminately.
 
-Locks/crystals cost 10 gold and have carry limit one each. Buy on own spawn or while dead. Tavi can buy shards in the field, but not consumables there; field Health purchases do not heal. Tavi alone can sell, at spawn for full purchase value; refunds do not count as earned gold. Vesper's 20% gold passive plus Treasure is 40%, not multiplicative 44%.
+Locks/crystals cost 10 gold and have carry limit one each. Buy on own spawn or while dead. Tavi can buy shards in the field, but not consumables there; field Health purchases do not heal. Tavi alone can sell, at spawn for full purchase value; refunds do not count as earned gold. Vesper's 33% gold passive plus Treasure is 53%, not a multiplicative bonus.
 
 ## 5. Published champion kits
 
@@ -101,15 +102,16 @@ The full export includes base/growth stats for every body; use those tables and 
 | Cassi | Ranged | `2 × Focus` unit damage, range 4, excludes walk | One-round unit stun, range 4, walk compatible | Linked death with Issac |
 | Issac | Melee | Attack reset | Dash up to 2 | Linked death with Cassi |
 | Ryth | Melee | Ground AoE `1 × Focus` + stun, range 4, radius 1, excludes walk | Attack reset | Strength gains 1% of bonus Health |
-| Vesper Vale | Ranged | Attack reset | Dash up to 2 | +20% gold |
-| Prism | Ranged | Unit `1.5 × Focus` + stun, range 4, excludes walk | Ground AoE `1 × Focus`, range 4, radius 1, excludes walk | +0.2 Focus per carried gem; banking removes this bonus |
+| Vesper Vale | Ranged | Attack reset | Dash up to 2 | +33% gold |
+| Prism | Ranged | Unit `1.5 × Focus` + stun, range 4, excludes walk | Ground AoE `1 × Focus`, range 4, radius 1, excludes walk | +1.5 Focus per carried gem; banking removes this bonus |
 | Stellar | Ranged | Unit `2 × Focus`, range 4, excludes walk | Ground AoE `1.4 × Focus`, range 4, radius 1, excludes walk | No passive stated |
 | Vendetta | Melee | Attack reset | Dash up to 2 | A kill, including a monster, resets all ability cooldowns |
-| Marcella | Melee | Enhanced attack reset; next attack stuns | Unit `2 × Focus`, range 4, excludes walk | Immune to stuns |
-| Tavi | Ranged | Attack reset | Unit `2.2 × Focus` + stun, range 4, excludes walk | Field shard purchases; spawn selling |
+| Marcella | Melee | Enhanced attack reset; next attack stuns | Unit `2 × Focus`, range 4, excludes walk | Immune to stuns; +2 gold per gem tributed |
+| Tavi | Ranged | Attack reset | Unit `1.4 × Focus` + stun, range 4, excludes walk | Field shard purchases; spawn selling |
 | Willow | Ranged | Heal another ally up to `3 × Focus`, range 4, walk compatible | Attack reset | Modest stat growth; no self-heal target |
-| Ren | Melee | Unit `1.25 × Focus` + stun, range 4, excludes walk | Dash up to 2 | Retaliates `0.2 × Focus` on damage, including as he dies |
+| Ren | Melee | Unit `0.75 × Focus` + stun, range 4, excludes walk | Dash up to 2 | Retaliates `0.2 × Focus` on damage, including as he dies |
 | Varg | Melee | Attack reset | Self shield `2.5 × Focus`, five turns, walk compatible | Basic attack splash Strength damage in radius 1; no double hit on primary target |
+| Heart of Ruin | Melee | Self shield `1.5 × Focus`, five turns | Dash 2, landing radius 1: `1.5 × Focus` + stun | Damage scales linearly with missing-health fraction, up to +50%; shields do not count as health |
 
 Protecting a large bag, clear speed, safe capture and timely tribute can matter more than winning a fight. A Prism banking threshold or Vendetta kill-reset sequence should be a separate measured experiment, not a wholesale rewrite.
 
@@ -117,10 +119,10 @@ Protecting a large bag, clear speed, safe capture and timely tribute can matter 
 
 - Map dimensions are 30–100 per axis in the handbook; query actual dimensions. `+y` is north. Walking uses eight adjacent directions; do not assume Manhattan distance.
 - Walls and bushes occlude vision; holes do not. A champion sees across its connected bush cluster and out of it. Normal vision is 8. Each champion sees only its own vision plus its own ward; ally vision/wards are not automatically shared.
-- Ward handbook defaults: vision 6, placement radius 2, one active permanent ward, replacement up to once per round. Use current cooldown/settings and placement geometry; a placement-range mask is not a full legality check.
+- Ward handbook defaults: vision 6, placement radius 2, one active permanent ward, a free charge recharging over 10 owner turn ends. Use current cooldown/settings and placement geometry; a placement-range mask is not a full legality check.
 - Attack, spell and ward masks must be combined with visibility, occupancy, restrictions, cooldown, target type and current allowance as applicable. `Ability.valid_tiles()` explicitly checks range only, not visibility/occupancy.
 - `move(delta)` takes a direction/displacement; `move_absolute(destination)` takes a map tile. `DistanceField.next_move_from(position)` returns a direction delta or `None`; use it with `move`, not `move_absolute`.
-- `move_towards(target)` requires a reachable free goal. Do not pass the altar tile or an occupied monster tile: approach a free tile in tribute/attack range instead. A `False` return can mean already there, unavailable movement, blocked/unreachable goal, or a newly revealed occupant; it is not proof of an enemy.
+- CLI 3.0.5 `move_towards(target)` treats the target as free for pathfinding, including a blocked target. The engine still rejects landing on a known blocked tile. Prefer a free reachable approach tile in tribute/attack range and stop there; do not walk onto the altar or monster. A `False` return can mean already there, unavailable movement, no route, or a newly revealed occupant; it is not proof of an enemy. This differs from the old SDK's blocked-target behavior.
 - Direct movement, dash and crystal use can return `False` when an unseen blocker is revealed without consuming the relevant allowance/cooldown/consumable. Known-invalid targets raise. Refresh observations and try a bounded alternative. A crystal's `True` means its channel started, not teleport completion.
 - `bc.game_map.camp_groups()` and `camp.spawn_position()` expose static layout. `bc.vision.*` and visibility checks govern live observations. The inspected SDK rejects `CampGroup.state()` outside vision. Log round-stamped observations; do not infer hidden current health or occupancy from cached handles.
 - `game_map.walls()` is cached; copy it before mutation. A Bitboard used as `out`/scratch is overwritten. Reuse buffers intentionally; do not alias cached terrain into mutable scratch.
@@ -133,7 +135,7 @@ Do not run every illustrative fragment verbatim. Some fragments omit initializat
 1. `Bitboard.reachable_tiles` and several `DistanceField.compute*` signatures have `self`, while example calls use the class without an instance. Call a properly constructed instance as the matching SDK requires.
 2. `ItemType.name` and `ConsumableType.name` are displayed like methods in the export, but the inspected SDK implements properties and its examples use `.name`. `Vec2.x`/`.y` similarly require checking descriptor behavior. Read the installed binding, not just an exporter-rendered signature.
 3. `Champion.can_buy`'s default is an internal omission sentinel. In the inspected SDK, passing `count` for a consumable raises TypeError. Use `me.can_buy(consumable)` / `me.buy(consumable)`; use count only for equipment. Do not import the private sentinel.
-4. The handbook wall table says a TP crystal can reach walls, but its movement section forbids wall landings. It also gives conflicting camp-sleep descriptions and says all camps range 3 despite cluster range 0 in its table. Preserve these disagreements; use valid destination APIs and type-specific stats, then verify an isolated fixture before relying on the disputed behavior. Do not infer production behavior by choosing the most convenient sentence.
+4. The handbook wall table still says a TP crystal can reach walls, but the movement section forbids wall landings. Its Stellar example mentions base Focus 85 while the current roster says 70; use actual type design and settings instead. Preserve these disagreements; use valid destination APIs and type-specific stats, then verify an isolated fixture before relying on the disputed behavior. Do not infer production behavior by choosing the most convenient sentence.
 
 These defects do not invalidate the entire export. They mean examples and generic prose require reconciliation with current bindings and actual engine behavior.
 
@@ -143,4 +145,4 @@ Handbook defaults: C++/Rust **100,000 fuel per turn**; OCaml 5× = 500,000; Pyth
 
 Exhaustion **suspends execution and resumes from that point on a later turn**. It is not automatically a crash, disqualification or whole-match loss. It can still waste turns and make a plan stale. Reserve enough fuel to finish a legal useful action and call `end_turn()` intentionally; the API's `<1000` example is illustrative, not a safe universal threshold. Measure headroom using the real language budget and call costs. Diagnose repeated suspension separately from process errors or faults.
 
-No complete game or runtime-settings fixture has yet been executed for this pack. Read back effective settings and verify budgets, timing, result fields and parser attribution before claiming parity. The user-supplied exports do not resolve participation/AI policies, build/upload limits, official challenge automation, credentials, quota, submission activation, replay permissions, or the missing organizers' AGENTS.md. Those remain tracked in RULES_CHECKLIST.md; they do not require changing the selected single-server architecture.
+The original design had no execution evidence; current measured qualification lives under evidence/blaxel/ and the server acceptance directory. Read back effective settings and verify budgets, timing, result fields and parser attribution before claiming parity. The user-supplied exports do not resolve participation/AI policies, build/upload limits, official challenge automation, credentials, quota, submission activation, replay permissions, or the missing organizers' AGENTS.md. Those remain tracked in RULES_CHECKLIST.md; they do not require changing the selected single-server architecture.

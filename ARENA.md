@@ -1,5 +1,13 @@
 # Arena implementation assignment
 
+22 October maintenance: pin reviewed CLI 3.0.5 / bundled engine 1.0.3 and the
+fresh 40-map pool. Preserve old suites/results under their original identities;
+close unfinished old-engine evaluations as version-change INCONCLUSIVE before
+new baselines. Full gates use every current frozen map on both sides. Refresh
+worker rules/API/SDK references, retain the shared boss and outside evidence,
+and keep automatic promotion and official upload/activation disabled. See
+docs/TOOLCHAIN_305.md. Earlier version/map counts below are historical.
+
 Current owner override (18 October 2026): use pinned official CLI 2.2.5 and
 release mode, with all 17 currently published maps. The earlier nine-map counts
 below are historical. Full evaluation is never downgraded by a daily promotion

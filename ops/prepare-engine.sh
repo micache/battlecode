@@ -2,8 +2,8 @@
 # Trusted network-enabled maintenance only. Stage; never switch live configuration.
 set -euo pipefail
 cd "$(dirname "$0")"
-arena_version=2.2.5
-arena_stage=/srv/battlecode/toolchains/cambc-225
+arena_version=3.0.5
+arena_stage=/srv/battlecode/toolchains/cambc-305
 test ! -e "$arena_stage"
 podman --cgroup-manager=cgroupfs build --network=host --tag battlecode-toolchain:$arena_version --file Containerfile .
 arena_image_id=$(podman image inspect --format '{{.Id}}' battlecode-toolchain:$arena_version)

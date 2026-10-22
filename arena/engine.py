@@ -82,9 +82,11 @@ def normalize_result(artifacts, contract, engine_hash):
         from .statistics import saved_bytes
         stats = json.loads(saved_bytes(stats_path))
         current_metrics, current_suspensions = {}, None
-        if contract.get('statistics_schema') == 'cambc-225-json-v1':
+        if contract.get('statistics_schema') in ('cambc-225-json-v1','cambc-305-json-v1'):
             from .statistics import read_current
-            faults, current_metrics, current_suspensions = read_current(stats)
+            from .statistics import ENGINE_IDENTITIES
+            expected=ENGINE_IDENTITIES['3.0.5' if contract['statistics_schema']=='cambc-305-json-v1' else '2.2.5']
+            faults, current_metrics, current_suspensions = read_current(stats,expected_engine=expected)
         if contract.get("statistics_schema") == "cambc-216-v2":
             require(stats["schemaVersion"] == 2 and stats["engineVersion"] == "0.0.1" and
                     stats["engineVersionPacked"] == 65536, "unreviewed statistics/embedded-engine version")
@@ -167,7 +169,7 @@ class OfficialEngine:
         else:
             require(re.fullmatch(r"sha256:[a-f0-9]{64}", self.lock["image_id"]), "immutable local OCI image required")
         require(self.lock.get("compiler_versions") and self.lock.get("recipe_sha256"), "incomplete toolchain lock")
-        if self.lock['version'] == '2.2.5':
+        if self.lock['version'] in ('2.2.5','3.0.5'):
             require(self.lock.get('build_mode') == 'release', 'platform-equivalent release build required')
         require(tree_hash(self.lock["project_template"]) == self.lock["template_sha256"], "SDK/template changed")
         self.contract = read_json(config["parser_contract"]) if Path(config["parser_contract"]).exists() else None
@@ -228,7 +230,7 @@ class OfficialEngine:
         self.prepare_project(work, {side: Path(snapshot) / "src" for side in ("side-a", "side-b")})
         output = directory / "output"
         output.mkdir(exist_ok=True)
-        release = ['--release'] if self.lock['version'] == '2.2.5' else []
+        release = ['--release'] if self.lock['version'] in ('2.2.5','3.0.5') else []
         process = self.execute(work, output, ["build", "side-a", *release, "--output", "/output/bot.wasm"],
                                self.config["limits"]["build_timeout_seconds"], f"bc-build-{build_id[:24]}")
         if process['timeout'] or process['returncode'] != 0 or not (output / 'bot.wasm').exists():
@@ -338,7 +340,7 @@ class OfficialEngine:
         shutil.copyfile(spec["map_path"], project / "frozen.map26a")
         artifacts = output / "artifacts"
         artifacts.mkdir()
-        release = ['--release', '--json'] if self.lock['version'] == '2.2.5' else []
+        release = ['--release', '--json'] if self.lock['version'] in ('2.2.5','3.0.5') else []
         self.execute(project, artifacts, ["run", "side-a", "side-b", *release, "--map", "/work/frozen.map26a",
                                          "--out-dir", "/output", "--statistics", "/output/final.json"],
                      self.config["limits"]["match_timeout_seconds"], f"bc-match-{spec['job_id'][:24]}")
@@ -356,7 +358,7 @@ class OfficialEngine:
             except (zipfile.BadZipFile, OSError):
                 pass  # Normalization still decides from the strict authoritative contract.
         result = normalize_result(artifacts, self.contract, self.lock["engine_sha256"])
-        if result['completed'] and self.lock['version'] == '2.2.5':
+        if result['completed'] and self.lock['version'] in ('2.2.5','3.0.5'):
             stats = read_json(artifacts / 'final.json')
             require(stats['match']['mapHash'] == spec['map_hash'], 'statistics map differs from frozen input')
             # Readable handoff avoids paging through hundreds of KiB of timelines.

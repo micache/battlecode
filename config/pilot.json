@@ -5,13 +5,13 @@
   "infrastructure": "/opt/battlecode",
   "root": "/srv/battlecode",
   "mirror": "/srv/battlecode/repos/source.git",
-  "maps": "/srv/battlecode/toolchains/cambc-225/template/maps",
-  "map_manifest": "/opt/battlecode/evidence/map-pool-225.json",
+  "maps": "/srv/battlecode/toolchains/cambc-305/template/maps",
+  "map_manifest": "/opt/battlecode/evidence/map-pool-305.json",
   "engine_lock": "/srv/battlecode/locks/engine.json",
   "parser_contract": "/etc/battlecode/parser.json",
   "engine": {
-    "version": "2.2.5",
-    "binary_sha256": "47c4d2d78ba29e7ef8c4633845f26659ece968c9424409a300a9ea4b89e7eaa2"
+    "version": "3.0.5",
+    "binary_sha256": "9967da2e981897f70ed4bacb187e73103bb6ca728baecb275e071fbb220a6fff"
   },
   "limits": {
     "matches": 1,
@@ -27,26 +27,56 @@
     "minimum_free_bytes": 2147483648
   },
   "evaluation": {
-    "suite_version": "pilot-wiring-v1",
+    "suite_version": "published-40-release-305-v1",
     "automatic_promotion": false,
     "screen_maps": [
-      "collision",
-      "corners",
-      "elkring"
+      "00collision",
+      "00corners",
+      "00elkring"
     ],
     "development_maps": [
-      "collision",
-      "corners",
-      "elkring",
-      "expanse",
-      "interlock",
-      "lanes",
-      "ambush", "contest", "eight", "fragment", "pilgrimage", "rushbait-v2", "stampede", "swirl"
+      "00ambush",
+      "00collision",
+      "00contest",
+      "00corners",
+      "00eight",
+      "00elkring",
+      "00expanse",
+      "00fragment",
+      "00gem-fields",
+      "00gemfight",
+      "00great-wall",
+      "00interlock",
+      "00lanes",
+      "00lost-world",
+      "00pilgrimage",
+      "00quadrants",
+      "00reverse-spiral",
+      "00road-of-riches",
+      "00rushbait-v2",
+      "00split",
+      "00stampede",
+      "00swirl",
+      "01big-world",
+      "01boss-battle",
+      "01broken-curve",
+      "01concentrated-wealth",
+      "01corridors",
+      "01elk-arena",
+      "01fracture",
+      "01gold-rush",
+      "01hooks",
+      "01islands",
+      "01shortcut",
+      "01starfish",
+      "01starvation",
+      "01the-farm",
+      "01yellow-brick-road"
     ],
     "holdout_maps": [
-      "monolith",
-      "packs",
-      "rows"
+      "00monolith",
+      "00packs",
+      "00rows"
     ],
     "opponent_revision_ids": [],
     "minimum_gain": 0.05,

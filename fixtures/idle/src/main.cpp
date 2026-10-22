@@ -14,6 +14,9 @@ int main() {
                       << " draft_bytes=" << cambc::draft_memory.size()
                       << " live_bytes=" << cambc::shared_memory.size()
                       << " remaining_fuel=" << cambc::fuel_remaining() << '\n';
+            std::cout << "BALANCE kill_gold=" << cambc::constants::kill_gold
+                      << " ward_cooldown=" << cambc::constants::ward_cooldown
+                      << " altar_lock_hits=" << cambc::constants::altar_lock_hits << '\n';
         }
         if (cambc::is_draft()) {
             auto picked = cambc::draft::current_draft(cambc::team::ally);

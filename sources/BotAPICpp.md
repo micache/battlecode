@@ -83,15 +83,15 @@ struct ability_damage : ability_properties { static constexpr ability_kind kind;
 ### ability_dash
 
 ```cpp
-struct ability_dash : ability_properties { static constexpr ability_kind kind; float range; };
+struct ability_dash : ability_properties { static constexpr ability_kind kind; float range; float radius; float modifier; std::int32_t duration; };
 ```
 
-Cached dash ability metadata.
+Dash metadata. Landing effects apply to enemies and camps only after a successful dash. range: Maximum dash travel distance in tiles. Diagonal steps count as one; the destination must be a different tile reachable by a legal dash path. radius: Chebyshev radius in tiles around the landing tile for damage and stun; 1 includes all eight neighbouring tiles. modifier: Landing damage multiplier: base damage = caster Focus * modifier, before damage bonuses and mitigation. 0 disables landing damage. duration: Stun duration applied on landing, in turns; 0 disables stun. This is not the dash travel time.
 
 Public SDK type declaration.
 
 ```cpp
-struct ability_dash : ability_properties { static constexpr ability_kind kind; float range; };
+struct ability_dash : ability_properties { static constexpr ability_kind kind; float range; float radius; float modifier; std::int32_t duration; };
 ```
 
 ### ability_heal
@@ -349,7 +349,7 @@ struct camp_stats { float vision_radius; std::int32_t base_move_speed, base_atta
 ### camp_type
 
 ```cpp
-enum class camp_type : std::int32_t { wolf, elk, gem_cluster, gold_cluster, monolith };
+enum class camp_type : std::int32_t { wolf, elk, gem_cluster, gold_cluster, monolith, golem };
 ```
 
 Physical camp types.
@@ -357,7 +357,7 @@ Physical camp types.
 Public SDK type declaration.
 
 ```cpp
-enum class camp_type : std::int32_t { wolf, elk, gem_cluster, gold_cluster, monolith };
+enum class camp_type : std::int32_t { wolf, elk, gem_cluster, gold_cluster, monolith, golem };
 ```
 
 ### champion
@@ -377,7 +377,7 @@ class champion : public unit { };
 ### champion_draft
 
 ```cpp
-enum class champion_draft : std::int32_t { ryth = 0, vesper_vale, vendetta, cassi_and_issac, stellar, prism, marcella, willow, ren, varg, tavi, };
+enum class champion_draft : std::int32_t { ryth = 0, vesper_vale, vendetta, cassi_and_issac, stellar, prism, marcella, willow, ren, varg, tavi, heart_of_ruin, };
 ```
 
 Draft choices; Cassi and Issac share one pick.
@@ -385,7 +385,7 @@ Draft choices; Cassi and Issac share one pick.
 Public SDK type declaration.
 
 ```cpp
-enum class champion_draft : std::int32_t { ryth = 0, vesper_vale, vendetta, cassi_and_issac, stellar, prism, marcella, willow, ren, varg, tavi, };
+enum class champion_draft : std::int32_t { ryth = 0, vesper_vale, vendetta, cassi_and_issac, stellar, prism, marcella, willow, ren, varg, tavi, heart_of_ruin, };
 ```
 
 ### champion_state
@@ -419,7 +419,7 @@ struct champion_stats { std::int32_t vision_radius, base_move_speed, base_attack
 ### champion_type
 
 ```cpp
-enum class champion_type : std::int32_t { ryth = 0, vesper_vale, vendetta, cassi, issac, stellar, prism, marcella, willow, ren, varg, tavi, };
+enum class champion_type : std::int32_t { ryth = 0, vesper_vale, vendetta, cassi, issac, stellar, prism, marcella, willow, ren, varg, tavi, heart_of_ruin, };
 ```
 
 Physical champion types; Cassi and Issac are separate champions.
@@ -427,7 +427,7 @@ Physical champion types; Cassi and Issac are separate champions.
 Public SDK type declaration.
 
 ```cpp
-enum class champion_type : std::int32_t { ryth = 0, vesper_vale, vendetta, cassi, issac, stellar, prism, marcella, willow, ren, varg, tavi, };
+enum class champion_type : std::int32_t { ryth = 0, vesper_vale, vendetta, cassi, issac, stellar, prism, marcella, willow, ren, varg, tavi, heart_of_ruin, };
 ```
 
 ### champions
@@ -787,7 +787,7 @@ auto result = subject.opponent(side);
 ### passive_type
 
 ```cpp
-enum class passive_type : std::uint8_t { none, bonus_gold, remote_shop, gem_focus, splash_attack, health_strength, reset_cooldowns_on_kill, retaliation, stun_immunity, };
+enum class passive_type : std::uint8_t { none, bonus_gold, remote_shop, gem_focus, splash_attack, health_strength, reset_cooldowns_on_kill, retaliation, stun_immunity, missing_health_damage = 10, };
 ```
 
 Champion passive effect tags from the engine definition.
@@ -795,7 +795,7 @@ Champion passive effect tags from the engine definition.
 Public SDK type declaration.
 
 ```cpp
-enum class passive_type : std::uint8_t { none, bonus_gold, remote_shop, gem_focus, splash_attack, health_strength, reset_cooldowns_on_kill, retaliation, stun_immunity, };
+enum class passive_type : std::uint8_t { none, bonus_gold, remote_shop, gem_focus, splash_attack, health_strength, reset_cooldowns_on_kill, retaliation, stun_immunity, missing_health_damage = 10, };
 ```
 
 ### resign
@@ -1201,7 +1201,7 @@ auto result = subject.cooldown();
 float damage_amount() const
 ```
 
-Query damage before absorption/health limits; includes caster items and passives.
+Query Focus-scaled damage, including dash landing damage and caster outgoing bonuses such as Heart of Ruin's passive. Excludes target-dependent modifiers, shields and health limits.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
@@ -4411,6 +4411,23 @@ Inputs:
 auto is_gold_cluster = subject.is_gold_cluster();
 ```
 
+### is_golem
+
+```cpp
+bool is_golem() const noexcept
+```
+
+Check whether this camp is a golem.
+
+Evaluate a visible camp before choosing where to farm.
+
+Inputs:
+- subject: bc::camp (a valid instance)
+
+```cpp
+auto is_golem = subject.is_golem();
+```
+
 ### is_monolith
 
 ```cpp
@@ -5398,11 +5415,11 @@ if (me.can_move()) {
 bool move_towards(vec2 target) const
 ```
 
-Move to the reachable tile on a shortest path to `target`, avoiding walls, holes, altars, the enemy spawn and visible units. Returns false without moving when already there, unable to move, or `target` is blocked or unreachable, and false for a newly revealed hidden obstruction. @param target Map tile to approach.
+Move to the reachable tile on a shortest path to `target`. Always treat the target as free for pathfinding, while avoiding other walls, holes, altars, enemy spawn tiles, visible units and teleport reservations. Returns false when already there, unable to move, no route exists, or a hidden obstruction is revealed. The engine still validates the chosen landing tile: trying to enter a known blocked target throws. @param target Map tile to approach.
 
 **gameplay**: This function can only be used by champion bots and is not usable during draft phase.
 
-Take a planned step; false means no movement occurred.
+Path towards a target even when its tile is blocked. Stop at the desired range: the engine still rejects landing on a known blocked tile.
 
 Inputs:
 - destination: a destination selected by your pathfinder
@@ -6673,6 +6690,43 @@ Inputs:
 
 ```cpp
 auto result = subject.compute_with_expansion_count(walls, roots, visited, max_distance);
+```
+
+### copy_from
+
+```cpp
+void copy_from(const distance_field& source, const bitboard& mask)
+```
+
+Copy only tiles selected by mask, preserving every unselected value in this field. Mask padding is ignored. Reuses this field's storage; self-copy is a no-op. @param source Field to copy from. @param mask Tiles to copy.
+
+Update selected tiles while preserving the rest of an existing distance field.
+
+Inputs:
+- destination: existing distance field to update
+- source: distance field to copy from
+- mask: bitboard selecting the tiles to copy
+
+```cpp
+destination.copy_from(source, mask);
+```
+
+### copy_from
+
+```cpp
+void copy_from(const distance_field& source)
+```
+
+Copy all distances from source into this field, reusing its storage. Self-copy is a no-op. @param source Field to copy from.
+
+Replace an existing distance field while reusing its storage.
+
+Inputs:
+- destination: existing distance field to update
+- source: distance field to copy from
+
+```cpp
+destination.copy_from(source);
 ```
 
 ### distance_field
@@ -9187,6 +9241,76 @@ Inputs:
 auto result = bc::vision::altar_locks(side);
 ```
 
+### asleep_camp_tiles
+
+```cpp
+bitboard asleep_camp_tiles()
+```
+
+Get the tiles of visible asleep camps. Dead camps are excluded.
+
+**gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+Check visible objects before choosing a destination.
+
+```cpp
+auto result = bc::vision::asleep_camp_tiles();
+```
+
+### asleep_camp_tiles_into
+
+```cpp
+void asleep_camp_tiles_into(bitboard& out)
+```
+
+Like `asleep_camp_tiles`, but writes into `out`. @param out Destination; its previous contents are overwritten.
+
+**gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+Check visible objects before choosing a destination.
+
+Inputs:
+- out: bitboard&
+
+```cpp
+bc::vision::asleep_camp_tiles_into(out);
+```
+
+### awake_camp_tiles
+
+```cpp
+bitboard awake_camp_tiles()
+```
+
+Get the tiles of visible awake camps. Dead camps are excluded.
+
+**gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+Check visible objects before choosing a destination.
+
+```cpp
+auto result = bc::vision::awake_camp_tiles();
+```
+
+### awake_camp_tiles_into
+
+```cpp
+void awake_camp_tiles_into(bitboard& out)
+```
+
+Like `awake_camp_tiles`, but writes into `out`. @param out Destination; its previous contents are overwritten.
+
+**gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+Check visible objects before choosing a destination.
+
+Inputs:
+- out: bitboard&
+
+```cpp
+bc::vision::awake_camp_tiles_into(out);
+```
+
 ### camp_at
 
 ```cpp
@@ -9518,6 +9642,25 @@ Inputs:
 
 ```cpp
 auto has_ward = bc::vision::has_ward(position);
+```
+
+### in_vision
+
+```cpp
+bool in_vision(vec2 position)
+```
+
+Check current self vision, including owned ward vision, whether or not the tile is occupied. Hidden tiles return false; out-of-bounds positions throw api_bad_position. @param position Tile to query.
+
+**gameplay**: This function can only be used by champion bots and is not usable during draft phase.
+
+Check visible objects before choosing a destination.
+
+Inputs:
+- position: vec2
+
+```cpp
+auto result = bc::vision::in_vision(position);
 ```
 
 ### teleport_at

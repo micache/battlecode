@@ -75,7 +75,7 @@
     "engine_version": {
       "type": "string",
       "enum": [
-        "2.1.6", "2.2.5"
+        "2.1.6", "2.2.5", "3.0.5"
       ]
     },
     "engine_lock_hash": {

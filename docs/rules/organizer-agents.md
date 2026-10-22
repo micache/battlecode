@@ -1,5 +1,18 @@
 # Organizer Agents.md page — access record
 
+22 October: fresh official hub downloads replace the current C++ references.
+GameRules.md SHA256 `d0ffc1267709acc546a3ad54c9861aca1ae2707f2a7196cdb804392955d13f94`;
+BotAPICpp.md SHA256 `59c88e086a713cc80eb414f31b25e4ed5ff1be6dbcf311822eeab687cbb2d71a`.
+Full rules and the C++ export delta were reviewed against CLI 3.0.5's installed
+header (`894229e17d886358719abb70cac9ab5993263a0c05bf7df14fc48fa04a8336d3`).
+Changes include Golem, Heart of Ruin, changed rewards/passives/spell coefficients,
+five-hit locks, ten-turn ward recharge, and changed move_towards semantics.
+Ward owner(), awake/asleep camp masks, in_vision(), and distance-field copy
+overloads are available in the new header. The old Python export remains a
+historical language-specific reference, not an instruction to reread it for C++.
+The hub is still a Markdown download page, not a separate behavioral policy.
+Previous claims below describe the earlier review, not the current rules.
+
 18 October update: the owner supplied fresh root-directory exports. GameRules.md
 still hashes to `1c7fcf111d95b4734070f8f676cd50a48154feb0673de73a31c79845afa34732`.
 The current `sources/BotAPICpp.md` is an unchanged copy of the new supplied

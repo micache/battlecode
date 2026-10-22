@@ -20,6 +20,12 @@ from arena.common import atomic_json, file_hash, lock, read_json, require
 ROOT = Path('/srv/battlecode')
 RECORD = ROOT / 'acceptance/cambc-225-transition'
 STAGE = ROOT / 'toolchains/cambc-225'
+TARGET='2.2.5'
+TAG='225'
+ENGINES={
+    '2.2.5':{'version':'2.2.5','binary_sha256':'47c4d2d78ba29e7ef8c4633845f26659ece968c9424409a300a9ea4b89e7eaa2'},
+    '3.0.5':{'version':'3.0.5','binary_sha256':'9967da2e981897f70ed4bacb187e73103bb6ca728baecb275e071fbb220a6fff'},
+}
 
 
 def capture():
@@ -30,7 +36,8 @@ def capture():
     require(os.geteuid() == (ROOT / 'state').stat().st_uid, 'run capture as bc-arena')
     require(not RECORD.exists(), 'transition capture exists; preserve and inspect it')
     config = load('/etc/battlecode/arena.json')
-    require(config['engine']['version'] == '2.1.6', 'capture the old engine before activation')
+    require(config['engine']['version'] == ('2.1.6' if TARGET=='2.2.5' else '2.2.5'),
+            'capture the old engine before activation')
     arena = Arena(config)
     require(arena.db.get('paused') and not arena.db.one("SELECT id FROM workers WHERE state='RUNNING'"),
             'pause and finish active coding tasks first')
@@ -61,7 +68,8 @@ def activate():
     old = read_json(RECORD / 'config.json')
     config = read_json('/etc/battlecode/arena.json')
     require(config['engine'] == old['engine'], 'configuration already changed; inspect instead of retrying')
-    expected = read_json('/opt/battlecode/evidence/map-pool-225.json')
+    manifest='/opt/battlecode/evidence/map-pool-'+TAG+'.json'
+    expected = read_json(manifest)
     maps = STAGE / 'template/maps'
     require({p.stem for p in maps.glob('*.map26a')} == {m['name'] for m in expected['maps']},
             'staged published map pool differs from reviewed manifest')
@@ -71,17 +79,22 @@ def activate():
     for path in (STAGE.parent, STAGE, STAGE / 'template', *(STAGE / 'template').rglob('*')):
         require(not path.is_symlink(), 'unexpected staged SDK symlink')
         path.chmod(path.stat().st_mode | (0o555 if path.is_dir() else 0o444))
-    config['engine'] = read_json('/opt/battlecode/config/pilot.json')['engine']
-    config['engine_lock'] = str(ROOT / 'locks/engine-225.json')
-    config['parser_contract'] = '/etc/battlecode/parser-225.json'
+    config['engine'] = ENGINES[TARGET]
+    config['engine_lock'] = str(ROOT / ('locks/engine-'+TAG+'.json'))
+    config['parser_contract'] = '/etc/battlecode/parser-'+TAG+'.json'
     require(not Path(config['engine_lock']).exists() and not Path(config['parser_contract']).exists(),
             'new-version lock/parser already exists; reconcile interrupted activation')
     config['maps'] = str(maps)
-    config['map_manifest'] = '/opt/battlecode/evidence/map-pool-225.json'
+    config['map_manifest'] = manifest
     gate = config['evaluation']
     holdouts = gate['holdout_maps']
+    if TARGET=='3.0.5':
+        holdouts=['00monolith','00packs','00rows']
+        gate['holdout_maps']=holdouts
+        gate['screen_maps']=['00collision','00corners','00elkring']
+        config['official_exploration']['map_manifest']=manifest
     require(set(holdouts) <= {m['name'] for m in expected['maps']}, 'reserved map disappeared; review split')
-    gate.update(full_evaluation=True, suite_version='published-17-release-225-v1',
+    gate.update(full_evaluation=True, suite_version='published-'+str(len(expected['maps']))+'-release-'+TAG+'-v1',
                 development_maps=[m['name'] for m in expected['maps'] if m['name'] not in holdouts])
     gate.pop('max_promotion_checks_per_day', None)
     # Promotion remains disabled: expanded coverage is not permission to bypass readiness.
@@ -93,7 +106,7 @@ def activate():
                    check=True, stdout=subprocess.DEVNULL)
     atomic_json(RECORD / 'activation.json', {'at': time.time(), 'config': config,
                 'engine': read_json(config['engine_lock']), 'services_started': False})
-    print(json.dumps({'activated': '2.2.5', 'maps': len(expected['maps']), 'services_started': False}))
+    print(json.dumps({'activated': TARGET, 'maps': len(expected['maps']), 'services_started': False}))
 
 
 def rebaseline():
@@ -102,7 +115,7 @@ def rebaseline():
     from arena.operations import ensure_starter_reference
     require(os.geteuid() == (ROOT / 'state').stat().st_uid, 'run rebaseline as bc-arena')
     arena = Arena(load('/etc/battlecode/arena.json'))
-    require(arena.config['engine']['version'] == '2.2.5' and arena.db.get('paused'), 'new engine must remain paused')
+    require(arena.config['engine']['version'] == TARGET and arena.db.get('paused'), 'new engine must remain paused')
     require(arena.db.get('starter_verified') and arena.adapter().contract and
             arena.db.get('starter_engine_lock_hash') == arena.adapter().lock_hash,
             'review new starter/parser first; old starter verification cannot carry forward')
@@ -136,9 +149,14 @@ def rebaseline():
 
 
 def main():
+    global TARGET,TAG,RECORD,STAGE
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('capture', 'activate', 'rebaseline'))
+    parser.add_argument('--target',choices=sorted(ENGINES),default='2.2.5')
     args = parser.parse_args()
+    TARGET=args.target;TAG=TARGET.replace('.','')
+    RECORD=ROOT/('acceptance/cambc-'+TAG+'-transition')
+    STAGE=ROOT/('toolchains/cambc-'+TAG)
     # Read-only lock opens: root must not create arena-owned lock files.
     with (ROOT / 'state/service.lock').open('r') as service, (ROOT / 'model.lock').open('r') as model:
         for handle in (service, model):

@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from arena.common import ArenaError, atomic_json, read_json
 from arena.engine import normalize_result
-from arena.statistics import read_current
+from arena.statistics import read_current,ENGINE_IDENTITIES
 from test_arena import Harness, ENGINE_HASH, synthetic_contract
 from arena.memory import training_window
 from arena.training import roster
@@ -17,6 +17,40 @@ FIXTURE = Path(__file__).parent / 'fixtures/cambc-225-starter-projection.json'
 
 
 class CurrentToolchainTests(Harness):
+    def test_305_actual_statistics_require_the_matching_local_contract(self):
+        stats=read_json(FIXTURE.with_name('cambc-305-starter-projection.json'))
+        faults,metrics,suspensions=read_current(stats,expected_engine=ENGINE_IDENTITIES['3.0.5'])
+        self.assertEqual(faults,0)
+        self.assertEqual(metrics['submitted_gems']['value'],{'A':373,'B':637})
+        with self.assertRaises(ArenaError):read_current(stats)
+        with tempfile.TemporaryDirectory() as temp:
+            output=Path(temp);atomic_json(output/'final.json',stats)
+            atomic_json(output/'process-result.json',{'returncode':0,'timeout':False})
+            (output/'placeholder.repl26a').write_bytes(b'SYNTHETIC replay presence only')
+            contract=synthetic_contract()
+            contract.update(statistics_schema='cambc-305-json-v1',completion_mode='final_statistics_contract',
+                winner_pointer='/match/outcome',winner_values={'teamA':'A','teamB':'B'},reason_pointer=None)
+            self.assertEqual(normalize_result(output,contract,ENGINE_HASH)['state'],'COMPLETED')
+            contract['statistics_schema']='cambc-225-json-v1'
+            self.assertEqual(normalize_result(output,contract,ENGINE_HASH)['state'],'INFRA_ERROR')
+
+    def test_current_forty_map_suite_freezes_every_map_on_both_sides(self):
+        self.establish()
+        manifest=read_json(FIXTURE.parent.parent.parent/'evidence/map-pool-305.json')
+        self.config['evaluation'].update(full_evaluation=True,
+            screen_maps=['00collision','00corners','00elkring'],
+            development_maps=[m['name'] for m in manifest['maps'] if m['role']=='development'],
+            holdout_maps=[m['name'] for m in manifest['maps'] if m['role']=='holdout'])
+        for m in manifest['maps']:(self.maps/(m['name']+'.map26a')).write_text('SYNTHETIC MAP '+m['name'])
+        from arena.common import file_hash
+        atomic_json(self.path/'maps.json',{'maps':[{'name':m['name'],
+            'sha256':file_hash(self.maps/(m['name']+'.map26a'))} for m in manifest['maps']]})
+        row=self.commit('alpha','forty-map contender');eid=self.arena.start_evaluation(row['id'])
+        self.finish_all()
+        cells={(c['map_name'],c['candidate_side']) for c in self.arena.evaluation_cases(eid) if c['role']=='candidate'}
+        self.assertEqual(cells,{(m['name'],side) for m in manifest['maps'] for side in ('A','B')})
+        self.assertEqual(len(cells),80)
+
     def test_current_saved_official_statistics_and_unknown_versions_fail_closed(self):
         stats = read_json(FIXTURE)
         faults, metrics, suspensions = read_current(stats)

@@ -39,7 +39,8 @@ def new_task(arena, bot, owner="server"):
     require(edit_base, 'validated development base required')
     context = experiment_context(arena, bot)
     prior_strategy = db.one("SELECT id FROM tasks WHERE bot_id=? AND state='PUBLISHED' "
-                            "AND json_extract(envelope,'$.strategy.version')='competitive-v1' LIMIT 1", (bot,))
+                            "AND json_extract(envelope,'$.strategy.version')='competitive-v1' "
+                            "AND json_extract(envelope,'$.engine_lock_hash')=? LIMIT 1", (bot,arena.adapter().lock_hash))
     phase = context['mode'] if prior_strategy else 'foundation'
     envelope = {"protocol_version": 1, "role": "bot_worker", "task_id": task_id, "bot_id": bot,
                 "branch": config["workers"][bot]["branch"], "base_source_hash": edit_base['source_hash'],

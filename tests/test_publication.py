@@ -12,6 +12,36 @@ from arena.worker import candidate_payload, make_attempt, publish_attempt, perfo
 
 
 class PublicationTests(Harness):
+    def test_completed_publication_and_owner_checkouts_retire_without_losing_commits(self):
+        from arena.retention import prune_publications
+        from arena.worker import checkpoint,prune_published_attempts
+        bot,task=self.envelope();config=self.owner_configs[bot]
+        Path(config['attempts']).mkdir();attempt=make_attempt(config,task)
+        (attempt/'bots'/bot/'src/main.cpp').write_text('synthetic published strategy')
+        atomic_json(attempt/'.agent'/('final-'+task['task_id']+'.json'),self.final_result(bot,task))
+        with patch('arena.worker.request',self.request):result=publish_attempt(config,attempt)
+        self.request(config,'worker-finished',result)
+        private=Path(config['attempts'])/'supervisor'/task['task_id'];private.mkdir(parents=True)
+        checkpoint(attempt,private/'checkpoint')
+        atomic_json(private/'outcome.json',result);atomic_json(private/'delivered.json',{'state':'PUBLISHED'})
+        publication=self.root/'publication'/task['task_id']
+        (publication/'human.txt').write_text('unpublished human work')
+        self.assertEqual(prune_publications(self.arena,keep=0)[0],[])
+        (publication/'human.txt').unlink()
+        removed,_=prune_publications(self.arena,keep=0)
+        self.assertEqual(removed,[task['task_id']])
+        self.assertFalse((publication/'.git').exists())
+        self.assertTrue((publication/'publication-intent.json').is_file())
+        self.assertEqual(git(self.config['mirror'],'show',result['commit']+':bots/'+bot+'/src/main.cpp'),
+                         'synthetic published strategy')
+        (attempt/'human.txt').write_text('unpublished owner work')
+        self.assertEqual(prune_published_attempts(config,keep=0),[])
+        (attempt/'human.txt').unlink()
+        self.assertEqual(prune_published_attempts(config,keep=0),[task['task_id']])
+        self.assertFalse(attempt.exists())
+        self.assertTrue((private/'checkpoint/changes.patch').is_file())
+        self.assertEqual(prune_published_attempts(config,keep=0),[])
+
     def setUp(self):
         super().setUp()
         self.establish()

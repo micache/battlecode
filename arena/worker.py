@@ -241,6 +241,7 @@ def serve(config_path):
     Path(config["attempts"]).mkdir(parents=True, exist_ok=True, mode=0o700)
     with lock(Path(config["attempts"]) / "worker.lock"):
         while True:
+            prune_published_attempts(config)
             task_directory = Path(config["root"]) / "tasks" / config["bot_id"]
             for path in sorted(task_directory.glob("task-*.json")):
                 receipt = Path(config["attempts"]) / "supervisor" / path.stem / "delivered.json"
@@ -255,3 +256,40 @@ def serve(config_path):
                 response = request(config, "worker-finished", outcome, timeout=120)
                 atomic_json(receipt, response, 0o600)
             time.sleep(5)
+
+
+def prune_published_attempts(config,keep=3):
+    """Only this owner's confirmed published, unchanged generated checkouts."""
+    base=Path(config['attempts']);records=[]
+    from .storage import remove_redundant
+    for path in (base/'supervisor').glob('task-*/outcome.json'):
+        receipt=path.parent/'delivered.json'
+        if receipt.exists() and read_json(receipt).get('state')=='PUBLISHED':
+            outcome=read_json(path)
+            if outcome.get('state')=='PUBLISHED':records.append((path,outcome))
+    records.sort(key=lambda r:r[0].stat().st_mtime,reverse=True)
+    removed=[]
+    for path,outcome in records[keep:]:
+        tid=path.parent.name
+        require(re.fullmatch('task-[a-f0-9]{32}',tid),'unexpected completed worker checkpoint')
+        attempt=base/tid;marker=path.parent/'retired-checkout.json';stage=base/('.retired-'+tid)
+        if stage.exists():
+            require(marker.exists() and not stage.is_symlink(),'unreviewed interrupted checkout retirement')
+            remove_redundant(stage)
+        if not attempt.exists() or not (path.parent/'checkpoint/changes.patch').is_file():continue
+        require(not attempt.is_symlink(),'unexpected worker checkout symlink')
+        own=attempt/'bots'/config['bot_id']/'src'
+        notes=attempt/'experiments'/config['bot_id']
+        saved=path.parent/'checkpoint'
+        if tree_hash(own)!=outcome.get('source_hash'):continue
+        untracked=git(attempt,'ls-files','--others','--exclude-standard').splitlines()
+        prefixes=('bots/'+config['bot_id']+'/', 'experiments/'+config['bot_id']+'/')
+        if any(not name.startswith(prefixes) for name in untracked):continue
+        if notes.exists() and (not (saved/'notes'/config['bot_id']).exists() or
+                tree_hash(notes)!=tree_hash(saved/'notes'/config['bot_id'])):continue
+        diff=subprocess.check_output(['git','-C',str(attempt),'diff','--no-ext-diff','--no-textconv','--binary','HEAD'])
+        if diff!=(saved/'changes.patch').read_bytes():continue
+        atomic_json(marker,{'task_id':tid,'commit':outcome['commit'],'at':time.time(),
+                    'recovery':'Published source/notes in Git; outcome, usage, patch and notes retained locally.'},0o600)
+        attempt.rename(stage);remove_redundant(stage);removed.append(tid)
+    return removed

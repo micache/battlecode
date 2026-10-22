@@ -257,7 +257,7 @@ class Arena:
             if suite["engine_lock_hash"] != self.adapter().lock_hash:
                 for case in cases:
                     self.db.execute("UPDATE match_jobs SET state='CANCELLED' WHERE id=? AND state='QUEUED'", (case["job_id"],))
-                metrics = summarize(cases, suite["gate"], self.config["evaluation"]["holdout_maps"], False)
+                metrics = summarize(cases, suite["gate"], suite['gate']['holdout_maps'], False)
                 metrics["version_change"] = "engine lock changed; old cases retained and evaluation not promoted"
                 self.finish_evaluation(evaluation, metrics, "INCONCLUSIVE")
                 continue

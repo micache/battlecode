@@ -34,7 +34,7 @@ def register_toolchain(config, image_id, template, compiler_record, profile_reco
             "compiler_versions": compiler_record, "language": "cpp", "effective_profile": None,
             "recipe_sha256": file_hash(Path(config["infrastructure"]) / "ops/Containerfile"),
             "created": time.time()}
-    if config['engine']['version'] == '2.2.5':
+    if config['engine']['version'] in ('2.2.5','3.0.5'):
         lock['build_mode'] = 'release'
     if profile_record:
         profile = profile_record['effective_profile']
@@ -50,7 +50,7 @@ def register_toolchain(config, image_id, template, compiler_record, profile_reco
 
 def starter_snapshot(arena):
     # An upgrade must not silently reuse a prior CLI's starter implementation.
-    if arena.adapter().lock.get('version') == '2.2.5':
+    if arena.adapter().lock.get('version') in ('2.2.5','3.0.5'):
         return arena.root / 'starters' / arena.adapter().lock_hash
     return arena.root / 'starter'
 
@@ -64,9 +64,9 @@ def starter_check(arena, normalize_only=False):
         shutil.copytree(Path(engine.lock["project_template"]) / "bots/side-a/src", snapshot / "src")
     build = engine.prepare_bot(snapshot, "official-starter")
     map_info = arena.freeze_maps()[arena.config["evaluation"]["screen_maps"][0]]
-    require(not normalize_only or engine.lock.get('version') != '2.2.5',
+    require(not normalize_only or engine.lock.get('version') not in ('2.2.5','3.0.5'),
             'run fresh reviewed starter games; do not relabel initial unreviewed attempts')
-    parser_revision = ':' + identity(engine.contract) if engine.lock.get('version') == '2.2.5' else ''
+    parser_revision = ':' + identity(engine.contract) if engine.lock.get('version') in ('2.2.5','3.0.5') else ''
     jobs = [arena.queue_match(build, build, map_info, repetition=f"starter-side-{side}{parser_revision}")
             for side in ("A", "B")]
     # Two acceptance runs are explicitly recorded as deterministic repetitions, not independent samples.

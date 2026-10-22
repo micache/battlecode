@@ -41,7 +41,7 @@ def load(path):
                 'boss must be an immutable reference, not a model worker')
     if config['official']['challenges']:
         outside = config.get('official_exploration', {})
-        require(config['engine']['version'] == '2.2.5' and outside.get('enabled') is True and
+        require(config['engine']['version'] in ('2.2.5','3.0.5') and outside.get('enabled') is True and
                 outside.get('owner_authorized') is True and outside.get('interface') == 'cambc-225-match-groups' and
                 (outside.get('bot_id') in workers or
                  (outside.get('bot_id')=='boss' and config.get('boss',{}).get('enabled') is True and
@@ -53,7 +53,7 @@ def load(path):
                 'owner-approved pinned-source native CLI outside-play configuration required')
     require(config["billing"] == {"subscription_only": True, "api_fallback": False,
                                   "cross_account_failover": False}, "subscription isolation required")
-    require(config["engine"]["version"] in ("2.1.6", "2.2.5"), "review engine update before use")
+    require(config["engine"]["version"] in ("2.1.6", "2.2.5", "3.0.5"), "review engine update before use")
     require(config["evaluation"]["minimum_gain"] >= 0.05 and
             config["evaluation"]["maximum_map_drop"] <= 0.25, "weakened promotion gate")
     development, holdouts = (config['evaluation'][k] for k in ('development_maps', 'holdout_maps'))

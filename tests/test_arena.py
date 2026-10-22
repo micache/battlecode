@@ -92,9 +92,10 @@ class Harness(unittest.TestCase):
         self.root.mkdir()
         self.config = read_json(PROJECT / "config/pilot.json")
         # Preserve the historical synthetic nine-map fixtures. Current real
-        # seventeen-map coverage has its own regression below.
+        # current published-map coverage has its own dedicated regressions.
         self.config['evaluation'].update(full_evaluation=False, development_maps=[
-            'collision','corners','elkring','expanse','interlock','lanes'])
+            'collision','corners','elkring','expanse','interlock','lanes'],
+            screen_maps=['collision','corners','elkring'],holdout_maps=['monolith','packs','rows'])
         self.config['limits']['improvement_interval_seconds'] = 0  # Fast synthetic event-driven fixtures.
         self.config.update({"root": str(self.root), "mirror": str(self.repo), "infrastructure_commit": self.base,
                             "infrastructure": str(PROJECT), "maps": str(self.path / "maps"),

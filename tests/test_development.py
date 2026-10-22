@@ -83,6 +83,9 @@ class DevelopmentTests(Harness):
         self.arena.db.execute("UPDATE tasks SET state='PUBLISHED' WHERE id=?", (first['task_id'],))
         second = new_task(self.arena, 'alpha')
         self.assertEqual(second['strategy']['phase'], 'refinement')
+        self.engine.lock_hash='a'*64
+        third=new_task(self.arena,'alpha')
+        self.assertEqual(third['strategy']['phase'],'foundation')
 
     def test_new_candidate_and_frozen_development_base_get_same_six_map_panel(self):
         accepted, _ = self.establish()

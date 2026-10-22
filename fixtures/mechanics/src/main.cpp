@@ -61,8 +61,13 @@ int main() {
                     }
                     if (!approach_checked && me.can_move() && !cambc::map::altars().is_empty()) {
                         const auto old=me.position();
-                        const bool moved=me.move_towards(cambc::map::altars().positions().front());
-                        check(!moved && me.position()==old && me.can_move(),"blocked-altar-target-preserves-move");
+                        try {
+                            const bool moved=me.move_towards(cambc::map::altars().positions().front());
+                            check(!cambc::map::altars().is_set(me.position()) &&
+                                  (moved || me.position()==old),"blocked-target-path-keeps-legal-landing");
+                        } catch(const cambc::error&) {
+                            check(me.position()==old && me.can_move(),"blocked-target-landing-rejected");
+                        }
                         approach_checked=true;
                     }
                     const auto before=me.position();

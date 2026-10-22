@@ -112,6 +112,7 @@ def compact_project(arena, job):
 
 def protected_jobs(arena):
     db = arena.db
+    engine=arena.adapter().lock_hash
     protected, evaluations = set(), set()
     evaluations.update(r['id'] for r in db.all("SELECT id FROM evaluations WHERE state='EVALUATING' "
                                               "OR revision_id IN (SELECT accepted_revision FROM bots)"))
@@ -120,6 +121,7 @@ def protected_jobs(arena):
         # representative failures. Old scores/lessons stay in SQLite regardless.
         rows = db.all('SELECT id,suite,metrics FROM evaluations WHERE bot_id=? AND finished IS NOT NULL '
                       'ORDER BY created DESC', (bot,))
+        rows=[r for r in rows if json.loads(r['suite'])['engine_lock_hash']==engine]
         if rows:
             evaluations.add(rows[0]['id'])
         full = next((r for r in rows if json.loads(r['suite'])['coverage'] in ('full-nine-map','full-map-pool')), None)
@@ -269,13 +271,50 @@ def maintain_external(arena):
                          (json.dumps(metadata), row['official_id']))
 
 
+def prune_publications(arena, keep=3):
+    """Completed push checkouts are reproducible; intents and Git history stay."""
+    from .gitstore import git
+    retired, reclaimed = [], 0
+    for bot in arena.config['workers']:
+        rows=arena.db.all("SELECT id,published_commit FROM tasks WHERE bot_id=? AND state='PUBLISHED' "
+                          "AND published_commit IS NOT NULL ORDER BY created DESC",(bot,))
+        for row in rows[keep:]:
+            directory=arena.root/'publication'/row['id']
+            if not directory.is_dir() or directory.is_symlink():continue
+            marker=directory/'retired-checkout.json'
+            if not marker.exists():
+                if not (directory/'.git').is_dir():continue
+                intent=read_json(directory/'publication-intent.json')
+                require(intent['task_id']==row['id'] and intent['commit']==row['published_commit'],
+                        'published checkpoint identity differs')
+                git(arena.config['mirror'],'cat-file','-e',row['published_commit']+'^{commit}')
+                require(git(directory,'rev-parse','HEAD')==row['published_commit'],'published checkout changed')
+                if git(directory,'status','--porcelain','--untracked-files=all') != '?? publication-intent.json':
+                    continue  # Never discard unknown edits or a partial transaction.
+                atomic_json(marker,{'task_id':row['id'],'commit':row['published_commit'],
+                    'at':time.time(),'bytes':size(directory),'state':'DELETING',
+                    'recovery':'Recreate checkout from preserved mirror/GitHub commit; push intent retained.'})
+            record=read_json(marker)
+            if record['state']=='DELETED':continue
+            for child in directory.iterdir():
+                if child.name in ('publication-intent.json','retired-checkout.json'):continue
+                require(not child.is_symlink(),'unexpected published checkpoint symlink')
+                if child.is_dir():remove_redundant(child)
+                else:child.unlink()
+            record['state']='DELETED';atomic_json(marker,record)
+            retired.append(row['id']);reclaimed+=record['bytes']
+    return retired,reclaimed
+
+
 def maintain(arena, compaction_limit=8, deletion_limit=128):
     if not arena.config['limits'].get('rolling_history', False):
         return {'enabled':False}
     maintain_external(arena)
     for row in arena.db.all("SELECT record FROM artifact_retirements WHERE state='DELETING'"):
         finish_retirement(arena, json.loads(row['record']))
-    removed_builds,reclaimed = prune_build_cache(arena)
+    publications,reclaimed = prune_publications(arena)
+    removed_builds,build_bytes = prune_build_cache(arena)
+    reclaimed += build_bytes
     compacted = []
     for job in arena.db.all("SELECT * FROM match_jobs WHERE state='COMPLETED' AND artifact IS NOT NULL ORDER BY created DESC,id DESC"):
         path = Path(job['artifact'])
@@ -307,6 +346,7 @@ def maintain(arena, compaction_limit=8, deletion_limit=128):
                 break
     report = {'enabled':True,'at':time.time(),'compacted_projects':compacted,
               'retired_build_caches':removed_builds,
+              'retired_publication_checkouts':publications,
               'retired_matches':[r['job_id'] for r in records], 'reclaimed_bytes':reclaimed,
               'total_reclaimed_bytes':arena.db.get('rolling_history',{}).get('total_reclaimed_bytes',0)+reclaimed,
               'free_bytes':shutil.disk_usage(arena.root).free,'artifact_bytes':total,

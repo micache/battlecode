@@ -11,3 +11,4 @@ artifacts/submissions/
 artifacts/acceptance/
 artifacts/challenges/
 artifacts/official-beta-history-import-*.json
+artifacts/handbook-live-*/
