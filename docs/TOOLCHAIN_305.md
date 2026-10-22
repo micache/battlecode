@@ -68,6 +68,24 @@ Start the managed `ops/blaxel-start.py` process, then `as-arena.py arena start`.
 Normal status/pause/stop commands remain unchanged. New full suites must finish
 before any current-engine submission-readiness claim.
 
+If the server browser lacks WebGL2, download the exact saved replay and review
+it on the operator machine using the same pinned official CLI. Do not replace
+the official viewer with a guessed replay decoder. `inspect-replay.cjs` accepts
+operator-only `ARENA_REVIEW_PLAYWRIGHT` (Node package path) and
+`ARENA_REVIEW_CHROMIUM` (optional executable path). Use a fresh browser context,
+verify the served replay SHA256, seek the fully indexed final frame, and retain
+both JSON and screenshot. Copy that JSON back as the explicit `--review` file;
+`review-parser.py` still verifies the exact replay hash, final round and scores.
+The 22 October server replay was successfully reviewed this way after server
+Chromium reported WebGL2 unavailable, including with SwiftShader enabled.
+
+Before resuming new suites, verify process recovery while globally paused with
+`python3 /opt/battlecode/ops/restart-check.py --allow-paused-queue`.
+It refuses active models/matches, kills only the validated arena process, and
+requires a new healthy heartbeat with unchanged queued specifications, attempts,
+terminal results and accepted revisions. This is process recovery, not proof of
+physical VM reboot persistence.
+
 ## Bounded storage
 
 Rolling maintenance also retires completed publication Git checkouts beyond

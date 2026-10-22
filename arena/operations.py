@@ -13,6 +13,14 @@ from .engine import PROFILE, normalize_result
 from .protocol import save_source
 
 
+def idle_workload(database):
+    """Read-only restart proof: queued identities, attempts and terminal scores stay put."""
+    with contextlib.closing(sqlite3.connect(Path(database).resolve().as_uri() + '?mode=ro', uri=True)) as db:
+        rows = db.execute('SELECT id,state,attempt_count,spec,result FROM match_jobs ORDER BY id').fetchall()
+    require(not any(row[1] == 'RUNNING' for row in rows), 'database still has an active match')
+    return {'jobs': len(rows), 'sha256': identity(rows)}
+
+
 def register_toolchain(config, image_id, template, compiler_record, profile_record=None):
     require(isinstance(image_id, str) and re.fullmatch(r'(sha256:)?[a-f0-9]{64}', image_id), 'immutable image ID required')
     image_id = 'sha256:' + image_id.removeprefix('sha256:')

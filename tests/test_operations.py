@@ -13,6 +13,28 @@ from arena.supervisor import handle_request
 
 
 class OperationsTests(Harness):
+    def test_paused_restart_fingerprint_preserves_queue_and_terminal_attempts(self):
+        from arena.operations import idle_workload
+        self.establish()
+        database = self.arena.root / 'state/arena.sqlite'
+        first = idle_workload(database)
+        self.assertEqual(first, idle_workload(database))
+        self.arena.db.execute("UPDATE match_jobs SET result='{}' WHERE id=(SELECT id FROM match_jobs LIMIT 1)")
+        self.assertNotEqual(first, idle_workload(database))
+        self.arena.db.execute('UPDATE match_jobs SET attempt_count=attempt_count+1 WHERE id=(SELECT id FROM match_jobs LIMIT 1)')
+        self.assertNotEqual(first, idle_workload(database))
+        self.arena.db.execute("UPDATE match_jobs SET state='RUNNING' WHERE id=(SELECT id FROM match_jobs LIMIT 1)")
+        with self.assertRaisesRegex(ArenaError, 'active match'):
+            idle_workload(database)
+
+    def test_restart_fingerprint_cannot_create_a_missing_database(self):
+        import sqlite3
+        from arena.operations import idle_workload
+        missing = self.arena.root / 'missing.sqlite'
+        with self.assertRaises(sqlite3.OperationalError):
+            idle_workload(missing)
+        self.assertFalse(missing.exists())
+
     def test_disk_error_cannot_leave_an_orphan_running_beside_new_games(self):
         self.establish()
         starter = self.arena.build(self.arena.db.get('starter_revision'))

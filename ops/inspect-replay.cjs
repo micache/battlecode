@@ -1,6 +1,6 @@
 // Read-only inspection of the locally served official visualiser.
 // Playwright 1.56.1 and its matching headless Chromium are operator test tools.
-const { chromium } = require('/opt/battlecode-check-tools/node_modules/playwright');
+const { chromium } = require(process.env.ARENA_REVIEW_PLAYWRIGHT || '/opt/battlecode-check-tools/node_modules/playwright');
 const fs = require('node:fs');
 (async () => {
   const output = process.argv[2];
@@ -9,7 +9,7 @@ const fs = require('node:fs');
   if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('invalid local review port');
   if (!Number.isInteger(expectedRound) || expectedRound < 1) throw new Error('expected final statistics round required');
   const browser = await chromium.launch({headless: true,
-    executablePath: fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined,
+    executablePath: process.env.ARENA_REVIEW_CHROMIUM || (fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined),
     args: ['--no-sandbox', '--disable-dev-shm-usage', '--enable-unsafe-swiftshader']});
   const cleanup = setTimeout(() => browser.close().finally(() => process.exit(2)), 120000);
   const context = await browser.newContext({viewport: {width: 900, height: 650}});
