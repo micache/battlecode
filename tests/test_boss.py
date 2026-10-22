@@ -45,6 +45,21 @@ class BossTests(Harness):
             self.assertEqual(item['role'],'shared-boss')
             self.assertEqual(item['source_hash'],boss['source_hash'])
 
+    def test_only_owner_mapped_historical_bosses_remain_shared_after_refresh(self):
+        old,envelope=self.install()
+        envelope['source']={'main.cpp':base64.b64encode(b'SYNTHETIC NEW TEAM BOSS').decode()}
+        envelope['proof'].update(source_hash=decode_source(envelope['source'])[1],package_sha256='b'*64)
+        sid='00000000-0000-4000-8000-000000000019'
+        envelope['proof']['active'].update(id=sid,version=19)
+        envelope['proof']['selected']={'id':sid}
+        new=register(self.arena,envelope);self.config['boss']=new
+        self.config['official_exploration'].update(enabled=True,share_feedback=True,
+            shared_sources=[{k:old[k] for k in ['bot_id','source_commit','source_hash','submission_id']}])
+        packet=read_json(freeze_opponents(self.arena,'alpha','task-boss-refresh')['manifest'])['opponents']
+        self.assertEqual(packet[0]['source_hash'],new['source_hash'])
+        history=next(v for v in packet if v['source_hash']==old['source_hash'])
+        self.assertEqual(history['role'],'shared-boss-history')
+
     def test_bootstrap_shares_results_and_development_traces_without_extra_models(self):
         boss,_=self.install()
         count=self.arena.db.one('SELECT count(*) n FROM tasks')['n']

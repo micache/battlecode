@@ -10,7 +10,7 @@ const fs = require('node:fs');
   if (!Number.isInteger(expectedRound) || expectedRound < 1) throw new Error('expected final statistics round required');
   const browser = await chromium.launch({headless: true,
     executablePath: fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined,
-    args: ['--no-sandbox', '--disable-dev-shm-usage']});
+    args: ['--no-sandbox', '--disable-dev-shm-usage', '--enable-unsafe-swiftshader']});
   const cleanup = setTimeout(() => browser.close().finally(() => process.exit(2)), 120000);
   const context = await browser.newContext({viewport: {width: 900, height: 650}});
   await context.route('**/*', route => {

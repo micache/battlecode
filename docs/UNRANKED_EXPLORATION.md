@@ -1,5 +1,22 @@
 # Outside exploration — 19 October 2026
 
+22 October refresh: the current active and selected own source is v18
+`v17_fix1.zip`, submission `af076e4b-a998-4843-bcb1-2ba23369895b`, source hash
+`f4b4f65eeee02988088b4240606d64563285404fb1393d297e9be931f4ced27c`.
+The previous v17 target below is historical. Keep both immutable source histories;
+only future suites and new outside requests use the newly reviewed selection.
+Local current-game maintenance is documented in docs/TOOLCHAIN_305.md.
+
+To stage an own-team boss with the already-approved operator browser, stop the
+local source-proof timer briefly, run `python3 ops/stage-team-boss.py`, and restart
+the timer. It prints a private server source-envelope path, not source bytes or
+credentials. With arena/worker services stopped, run server-side
+`python3 /opt/battlecode/ops/configure-team-boss.py --source-envelope PRINTED_PATH`.
+Staging alone never uploads/activates a bot or changes an arena opponent. Active
+and selected must agree on one compiled C++ submission, and later source changes
+still stop new outside requests until reviewed. Historical owner-mapped boss
+sources remain shared for learning, distinct from the current boss.
+
 **21 October update:** the owner selected the current live team bot as a shared
 read-only boss and the new outside source. The verified initial reference is
 v17 `v4.zip`, submission `b2012bf6-f9ec-4f66-9bd6-78cbad3f573b`, source hash
