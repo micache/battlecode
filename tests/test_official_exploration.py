@@ -64,6 +64,77 @@ class QuotaTests(unittest.TestCase):
 
 
 class ExplorationTests(Harness):
+    def unknown(self, kind='CLIThrottle'):
+        self.policy();explorer=Explorer(self.config,cli=object())
+        rid='a'*32
+        record={'request_id':rid,'state':'UNKNOWN','created_at':time.time()-600,'next_poll':0,
+                'opponent_id':'enemy','opponent_rank':1,'source_commit':explorer.policy['source_commit'],
+                'source_hash':explorer.policy['source_hash'],'submission_id':'own-submission','bot_id':'alpha',
+                'creation_error':{'kind':kind,'message':'synthetic response failure'}}
+        path=explorer.root/'requests'/rid/'record.json';atomic_json(path,record)
+        explorer.reconcile_records()
+        return explorer,path,record
+
+    def history(self,explorer,record,groups=(),**overrides):
+        data={'team_id':'own-team','observed_at':time.time(),'coverage_from':0,'groups':list(groups),**overrides}
+        save_source_proofs(self.config,{'creation_history':data})
+        return data
+
+    def test_unknown_429_reconciles_absence_without_retry_and_survives_restart(self):
+        explorer,path,record=self.unknown();self.history(explorer,record)
+        now=time.time();explorer.reconcile_unknown(now)
+        self.assertEqual(read_json(path)['state'],'NOT_CREATED')
+        self.assertIsNone(explorer.state['blocked'])
+        self.assertGreaterEqual(explorer.state['next_create'],now+72)
+        recovered=Explorer(self.config,cli=object())
+        recovered.create(now)
+        self.assertEqual(len(recovered.records()),1)
+        self.assertIsNone(recovered.state['blocked'])
+
+    def test_lost_response_adopts_unique_actual_group_once(self):
+        import datetime
+        explorer,path,record=self.unknown('CLIError')
+        group={'id':'00000000-0000-4000-8000-000000000008','kind':'unranked',
+               'createdAt':datetime.datetime.fromtimestamp(record['created_at'],datetime.timezone.utc).isoformat(),
+               'sides':[{'teamId':'own-team','submissionId':'own-submission'},{'teamId':'enemy'}]}
+        self.history(explorer,record,[group]);explorer.reconcile_unknown(time.time())
+        self.assertEqual(read_json(path)['group_id'],group['id'])
+        self.assertEqual(read_json(path)['state'],'QUEUED')
+        self.assertEqual(explorer.state['created'],1)
+        self.assertEqual(explorer.state['sequence'],1)
+        explorer.reconcile_unknown(time.time())
+        self.assertEqual(explorer.state['sequence'],1)
+
+    def test_incomplete_stale_or_nonquota_absence_cannot_clear_unknown(self):
+        explorer,path,record=self.unknown()
+        for overrides in [{'coverage_from':record['created_at']}, {'observed_at':time.time()-181},
+                          {'observed_at':record['created_at']+100}]:
+            self.history(explorer,record,**overrides);explorer.reconcile_unknown(time.time())
+            self.assertEqual(read_json(path)['state'],'UNKNOWN')
+        record['creation_error']['kind']='CLIError';atomic_json(path,record)
+        self.history(explorer,record);explorer.reconcile_unknown(time.time())
+        self.assertEqual(read_json(path)['state'],'UNKNOWN')
+
+    def test_ambiguous_duplicate_history_never_adopts_or_retries(self):
+        import datetime
+        explorer,path,record=self.unknown()
+        group={'id':'00000000-0000-4000-8000-000000000008','kind':'unranked',
+               'createdAt':datetime.datetime.fromtimestamp(record['created_at'],datetime.timezone.utc).isoformat(),
+               'sides':[{'teamId':'own-team','submissionId':'own-submission'},{'teamId':'enemy'}]}
+        self.history(explorer,record,[group,dict(group,id='00000000-0000-4000-8000-000000000009')])
+        explorer.reconcile_unknown(time.time())
+        self.assertEqual(read_json(path)['state'],'UNKNOWN')
+        self.assertIn('Unknown creation',explorer.state['blocked'])
+
+    def test_unknown_new_creation_does_not_stop_known_group_collection(self):
+        explorer,path,record=self.unknown()
+        known=explorer.root/'requests'/('b'*32)/'record.json'
+        atomic_json(known,dict(record,request_id='b'*32,state='QUEUED',group_id='known-group'))
+        with patch.object(explorer,'collect') as collect,patch.object(explorer,'create') as create:
+            explorer.step()
+        create.assert_not_called();collect.assert_called_once()
+        self.assertEqual(read_json(path)['state'],'UNKNOWN')
+
     def test_outside_maps_need_reviewed_hash_and_keep_reserved_variants_hidden(self):
         self.policy()
         manifest=Path(__file__).parent.parent/'evidence/map-pool-external-304.json'
@@ -194,6 +265,7 @@ class ExplorationTests(Harness):
                 raise OSError('synthetic lost response')
         explorer=Explorer(self.config,cli=FakeCLI())
         with self.assertRaises(OSError):explorer.create(time.time())
+        self.assertEqual(read_json(explorer.records()[0])['creation_error']['kind'],'OSError')
         recovered=Explorer(self.config,cli=FakeCLI())
         self.assertIn('Unknown creation',recovered.state['blocked'])
         recovered.create(time.time()+3600)

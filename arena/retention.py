@@ -110,7 +110,7 @@ def compact_project(arena, job):
     return removed_bytes
 
 
-def protected_jobs(arena):
+def protected_jobs(arena, bounded=False):
     db = arena.db
     engine=arena.adapter().lock_hash
     protected, evaluations = set(), set()
@@ -154,7 +154,22 @@ def protected_jobs(arena):
         if value.get('evaluation_id'):
             evaluations.add(value['evaluation_id'])
     for eid in evaluations:
-        protected.update(r['job_id'] for r in db.all('SELECT job_id FROM evaluation_cases WHERE evaluation_id=?', (eid,)))
+        if not bounded:
+            protected.update(r['job_id'] for r in db.all('SELECT job_id FROM evaluation_cases WHERE evaluation_id=?', (eid,)))
+            continue
+        # Full scores/suite/build identities remain in SQLite. Raw evidence
+        # cannot pin every game in an arbitrarily large in-flight suite.
+        losses, wins = set(), set()
+        for row in db.all("SELECT c.job_id,c.candidate_side,c.map_name,j.result FROM evaluation_cases c "
+                          "JOIN match_jobs j ON j.id=c.job_id WHERE c.evaluation_id=? "
+                          "AND c.role='candidate' AND j.state='COMPLETED' AND j.artifact IS NOT NULL "
+                          "ORDER BY j.created DESC,j.id DESC", (eid,)):
+            if row['map_name'] not in arena.config['evaluation']['development_maps']:
+                continue
+            result=json.loads(row['result'])
+            bucket= wins if result.get('winner')==row['candidate_side'] else losses
+            if row['map_name'] not in bucket and len(bucket)<(1 if bucket is wins else 3):
+                bucket.add(row['map_name']);protected.add(row['job_id'])
     for row in db.all('SELECT id,spec FROM match_jobs'):
         if json.loads(row['spec']).get('verification_repetition'):
             protected.add(row['id'])
@@ -330,18 +345,27 @@ def maintain(arena, compaction_limit=8, deletion_limit=128):
     deleting = free < reserve + 256*1024**2 or total >= budget
     records = []
     if deleting:
-        protected = protected_jobs(arena)
         recent = arena.db.all("SELECT id FROM match_jobs WHERE state='COMPLETED' AND artifact IS NOT NULL "
                               'ORDER BY created DESC,id DESC LIMIT 120')
-        protected.update(r['id'] for r in recent)
-        for job in arena.db.all("SELECT * FROM match_jobs WHERE state='COMPLETED' AND artifact IS NOT NULL ORDER BY created,id"):
-            if job['id'] in protected:
-                continue
-            record = retire(arena, job)
-            records.append(record)
-            reclaimed += record['bytes']
-            total -= record['bytes']
-            free = shutil.disk_usage(arena.root).free
+        recent_ids=set();recent_bytes=0
+        for row in recent:
+            amount=size(checked_root(arena,row['id']))
+            if recent_bytes+amount<=budget*.25:
+                recent_ids.add(row['id']);recent_bytes+=amount
+        # Prefer preserving complete suites. If they alone exceed the target,
+        # retire their oldest non-representative raw files too, never scores.
+        for bounded in (False,True):
+            protected = protected_jobs(arena,bounded=bounded) | recent_ids
+            for job in arena.db.all("SELECT * FROM match_jobs WHERE state='COMPLETED' AND artifact IS NOT NULL ORDER BY created,id"):
+                if job['id'] in protected:
+                    continue
+                record = retire(arena, job)
+                records.append(record)
+                reclaimed += record['bytes']
+                total -= record['bytes']
+                free = shutil.disk_usage(arena.root).free
+                if (free >= reserve + 768*1024**2 and total < budget * .75) or len(records) >= deletion_limit:
+                    break
             if (free >= reserve + 768*1024**2 and total < budget * .75) or len(records) >= deletion_limit:
                 break
     report = {'enabled':True,'at':time.time(),'compacted_projects':compacted,
@@ -351,8 +375,10 @@ def maintain(arena, compaction_limit=8, deletion_limit=128):
               'total_reclaimed_bytes':arena.db.get('rolling_history',{}).get('total_reclaimed_bytes',0)+reclaimed,
               'free_bytes':shutil.disk_usage(arena.root).free,'artifact_bytes':total,
               'total_retired_matches':arena.db.one("SELECT count(*) AS n FROM artifact_retirements WHERE state='DELETED'")['n'],
-              'policy':'oldest routine raw matches first; newest 120, active/accepted/latest evaluations, '
-                       'bounded failures and parser/bootstrap evidence protected; no offloading',
+              'target_exceeded':total>=budget,
+              'policy':'oldest raw files first; complete suites preferred, bounded representative failures/wins '
+                       'and up to 120 recent games within 25% of target retained; parser/bootstrap/recovery '
+                       'evidence protected; all normalized scores and immutable source/suite/build IDs retained; no offloading',
               'raw_retirement_is_permanent':True}
     arena.db.put('rolling_history', report)
     return report

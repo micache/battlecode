@@ -38,6 +38,7 @@ def summarize(cases, gate, holdouts, full=False):
             if not won and case["map_name"] not in holdouts:
                 failures.append({"match_id": case["job_id"], "side": case["candidate_side"],
                                  "map": case["map_name"], "artifact": case.get("artifact"),
+                                 "raw_available":bool(case.get('artifact')),
                                  "round": result.get("metrics", {}).get("round", {}).get("value"),
                                  "final_metrics": result.get("metrics", {}), "trace": None})
         grouped[(case["role"], case["map_name"], case["opponent"])].append(
@@ -72,6 +73,9 @@ def summarize(cases, gate, holdouts, full=False):
             decision = "ACCEPTED"
         else:
             decision = "REJECTED"
+    # Raw FIFO retirement never changes scores. Prefer still-readable traces
+    # in the small worker handoff instead of sending it to retired files.
+    failures.sort(key=lambda f:not f['raw_available'])
     return {"decision": decision, "wins": wins, "losses": losses,
             "common_opponent_delta": delta, "per_map": maps, "holdout_delta": holdout_delta,
             "missing": sorted(set(missing)), "fault_matches": sorted(set(faults)),

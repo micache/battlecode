@@ -36,7 +36,8 @@ def main():
                 explorer.publish_status()
             except Exception as exc:
                 # A private simulation must never stop because the website/login failed.
-                explorer.state['blocked'] = str(exc)[:1000]
+                if not getattr(exc,'creation_outcome_unknown',False):
+                    explorer.state['blocked'] = str(exc)[:1000]
                 explorer.save()
                 explorer.publish_status()
             delay = min(5, max(1, int(explorer.state.get('next_create', 0) - time.time())))

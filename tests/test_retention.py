@@ -8,10 +8,56 @@ from arena.common import ArenaError, atomic_json, read_json, identity, file_hash
 from arena.statistics import saved_bytes
 from arena.supervisor import handle_request
 from arena.engine import seal_artifacts, verify_artifacts
-from arena.retention import compact_project, finish_compaction, maintain, protected_jobs, retire, prune_build_cache
+from arena.retention import compact_project, finish_compaction, maintain, protected_jobs, retire, prune_build_cache, size
 
 
 class RetentionTests(Harness):
+    def test_large_active_suite_cannot_pin_all_raw_history_forever(self):
+        self.establish()
+        candidate=self.commit('alpha','large current suite')
+        eid=self.arena.start_evaluation(candidate['id'])
+        build=self.arena.build(candidate['id']);m=self.arena.freeze_maps()['collision']
+        jobs=[]
+        for n in range(125):
+            jid=self.arena.queue_match(build,build,m,training_round={'id':'retention-'+str(n)})
+            self.arena.run_one_match(jid);jobs.append(jid)
+            self.arena.db.execute('INSERT INTO evaluation_cases VALUES(?,?,?,?,?,?,?)',
+                (eid,jid,'A','candidate','collision','frozen-opponent-'+str(n),'screen'))
+        before={r['id']:r['result'] for r in self.arena.db.all('SELECT id,result FROM match_jobs')}
+        self.config['limits'].update(rolling_history=True,minimum_free_bytes=0,
+                                     artifact_budget_bytes=int(size(self.root/'matches')*.8))
+        report=maintain(self.arena)
+        self.assertTrue(set(report['retired_matches']) & set(jobs))
+        self.assertEqual(before,{r['id']:r['result'] for r in self.arena.db.all('SELECT id,result FROM match_jobs')})
+        self.assertEqual(self.arena.db.one('SELECT state FROM evaluations WHERE id=?',(eid,))['state'],'EVALUATING')
+        self.assertTrue(all(c['result']['completed'] for c in self.arena.evaluation_cases(eid) if c['job_id'] in jobs))
+        from arena.evaluate import summarize
+        metrics=summarize(self.arena.evaluation_cases(eid),self.config['evaluation'],[],False)
+        self.assertTrue(all(f['raw_available'] for f in metrics['representative_failures']))
+
+    def test_rolling_target_is_not_a_scheduler_interlock(self):
+        self.establish()
+        build=self.arena.build(self.arena.db.get('starter_revision'))
+        jid=self.arena.queue_match(build,build,self.arena.freeze_maps()['collision'],repetition='rolling-target')
+        self.config['limits'].update(rolling_history=True,artifact_budget_bytes=1,minimum_free_bytes=0)
+        self.arena.db.put('paused',False)
+        with patch('arena.service.poll'),patch('arena.supervisor.dispatch_tasks'):
+            self.arena.step()
+        self.assertFalse(self.arena.db.get('disk_pressure'))
+        self.assertEqual(self.arena.db.one('SELECT state FROM match_jobs WHERE id=?',(jid,))['state'],'COMPLETED')
+
+    def test_progress_health_detects_stall_despite_fresh_heartbeat_and_respects_real_floor(self):
+        from arena.health import progress
+        self.establish()
+        status=self.arena.status();status.update(paused=False,matches=[{'state':'QUEUED','count':1}])
+        last=self.arena.db.one('SELECT max(finished) AS finished FROM match_attempts')['finished']
+        status['heartbeat']=last+2000
+        self.assertEqual(progress(status,self.arena.db,self.config['limits'],last+2000)['state'],'STALLED')
+        status['disk']['free']=0
+        self.assertEqual(progress(status,self.arena.db,self.config['limits'],last+2000)['state'],'STORAGE_BLOCKED')
+        status['paused']=True
+        self.assertEqual(progress(status,self.arena.db,self.config['limits'],last+2000)['state'],'PAUSED')
+
     def test_build_lru_pins_future_stage_development_base(self):
         import os
         self.establish()

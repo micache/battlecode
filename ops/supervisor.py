@@ -113,12 +113,15 @@ def unit(name):
                             "restarts": restarts, "history": history[-20:]}, 0o600)
                 if name == 'arena' and time.monotonic() - started > 1800:
                     try:
-                        heartbeat = read_json('/srv/battlecode/public/status.json').get('heartbeat') or 0
+                        status = read_json('/srv/battlecode/public/status.json')
+                        heartbeat = status.get('heartbeat') or 0
+                        stalled = status.get('health',{}).get('state')=='STALLED'
                     except (OSError, ValueError):
-                        heartbeat = 0
-                    if time.time() - heartbeat > 1800:
+                        heartbeat,stalled = 0,False
+                    if time.time() - heartbeat > 1800 or stalled:
                         atomic_json(ROOT / 'watchdog.json', {'unit': name, 'at': time.time(),
-                                    'reason': 'scheduler heartbeat stale for over 30 minutes',
+                                    'reason': 'queued games stalled despite heartbeat' if stalled else
+                                              'scheduler heartbeat stale for over 30 minutes',
                                     'action': 'terminate descendants and restart; preserve attempts'}, 0o600)
                         break
                 time.sleep(1)

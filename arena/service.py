@@ -366,7 +366,7 @@ class Arena:
         for bot in self.config["workers"]:
             latest = self.root / "feedback" / bot / "latest.json"
             feedback_ages[bot] = (time.time() - read_json(latest)["summary"]["created"]) if latest.exists() else None
-        return {"protocol_version": 1, "timestamp": time.time(),
+        result = {"protocol_version": 1, "timestamp": time.time(),
                 "paused": self.db.get("paused", True), "adapter_paused": self.db.get("adapter_paused", False),
                 "readiness": self.db.get("readiness", {}), "workers": self.db.all("SELECT * FROM workers"),
                 "bots": self.db.all("SELECT * FROM bots"),
@@ -379,6 +379,9 @@ class Arena:
                 'improvement_interval_seconds': self.config['limits'].get('improvement_interval_seconds', 3600),
                 'worker_providers': {bot: setting.get('provider', 'codex') for bot, setting in self.config['workers'].items()},
                 "official_enabled": False}
+        from .health import progress
+        result['health']=progress(result,self.db,self.config['limits'])
+        return result
 
     def export_status(self):
         status = self.status()
@@ -420,8 +423,12 @@ class Arena:
             from .storage import archive_projects
             self.db.put('project_archive_maintenance', archive_projects(self))
         status = self.export_status()
+        # With rolling retention the raw-history budget is a cleanup target,
+        # not a scheduling interlock. Protected evidence exceeding that target
+        # must not deadlock the evaluation that would otherwise release it.
         pressure = (status["disk"]["free"] < self.config["limits"]["minimum_free_bytes"] or
-                    status["disk"]["artifact_bytes"] >= self.config["limits"]["artifact_budget_bytes"])
+                    (not self.config['limits'].get('rolling_history',False) and
+                     status["disk"]["artifact_bytes"] >= self.config["limits"]["artifact_budget_bytes"]))
         self.db.put("disk_pressure", pressure)
         interval = self.config['limits'].get('backup_interval_seconds', 0)
         if interval and not pressure and time.time() - self.db.get('last_backup_at', 0) >= interval:

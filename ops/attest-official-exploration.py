@@ -9,7 +9,7 @@ from pathlib import Path, PurePosixPath
 import shlex
 import sys
 import time
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 import uuid
 import zipfile
 import zlib
@@ -26,6 +26,30 @@ from arena.exploration import save_source_proofs
 print(json.dumps({'attested_groups':save_source_proofs(read_json('/etc/battlecode/arena.json'),
  json.loads(zlib.decompress(base64.b64decode(sys.argv[1]))))}))
 '''
+
+
+def creation_history(get, team, oldest, max_groups=2000):
+    """Own-team scope and `before` cursor were observed in the official UI.
+
+    Read until the entire request window is covered. A bounded/incomplete
+    listing cannot prove absence. No private opponent data or POSTs.
+    """
+    query={'scope':'team'};groups={};seen=set()
+    while True:
+        data=get('/api/v1/match-groups?'+urlencode(query)).json()
+        require(data['myTeamId']==team,'history team mismatch')
+        for group in data['groups']:
+            require(any(s['teamId']==team for s in group['sides']),'non-team group in scoped history')
+            groups[group['id']]={k:group[k] for k in ('id','kind','createdAt','sides')}
+        require(len(groups)<=max_groups,'history reconciliation bound reached; preserve unknown')
+        from arena.exploration import timestamp
+        boundary=min((timestamp(g['createdAt']) for g in groups.values()),default=time.time())
+        if not data['more'] or boundary<=oldest-30:
+            return {'team_id':team,'observed_at':time.time(),'coverage_from':0 if not data['more'] else boundary,
+                    'groups':list(groups.values())}
+        cursor=data['next'];require(cursor and cursor not in seen,'missing/repeated history cursor')
+        seen.add(cursor);query['before']=cursor
+        time.sleep(.5)
 
 
 def archive_source_hash(data):
@@ -80,6 +104,10 @@ def main():
     root = Path.home() / '.local/share/battlecode-exploration'
     root.mkdir(mode=0o700, exist_ok=True)
     with lock(root / 'attestation.lock'):
+        wait=root/'attestation-wait.json'
+        if wait.exists() and read_json(wait)['retry_at']>time.time():
+            print(json.dumps({'state':'RATE_WAIT','retry_at':read_json(wait)['retry_at']}))
+            return
         stop = root / 'attestation-stop.json'
         if stop.exists():
             require(args.resume_after_review, 'review attestation-stop.json before resuming')
@@ -107,7 +135,14 @@ def main():
             try:
                 def get(path):
                     response = context.request.get(ORIGIN + path, timeout=60000)
-                    if response.status in (401,403,429):
+                    if response.status==429:
+                        retry=response.headers.get('retry-after','60')
+                        try:delay=float(retry)
+                        except ValueError:
+                            import email.utils
+                            delay=email.utils.parsedate_to_datetime(retry).timestamp()-time.time()
+                        atomic_json(wait,{'at':time.time(),'retry_at':time.time()+max(60,delay),'status':429},0o600)
+                    if response.status in (401,403):
                         atomic_json(stop, {'status':response.status, 'retry_after':response.headers.get('retry-after'),
                                           'at':time.time()}, 0o600)
                     require(response.ok, 'source-proof access stop: HTTP ' + str(response.status))
@@ -123,6 +158,8 @@ def main():
                     atomic_json(cached, {'submission_id':sid, 'source_hash':archive_source_hash(data),
                         'package_sha256':hashlib.sha256(data).hexdigest()}, 0o600)
                 selection = {**read_json(cached), 'team_id':pending['team_id'], 'observed_at':time.time()}
+                unknown=pending.get('unknown_requests',[])
+                history=creation_history(get,pending['team_id'],min(r['created_at'] for r in unknown)) if unknown else None
                 for item in wanted[:args.max_groups]:
                     uuid.UUID(item['group_id'])
                     data = get('/api/v1/match-groups/' + item['group_id']).json()
@@ -138,6 +175,7 @@ def main():
             finally:
                 context.close()
         batch = {'selection':selection, 'proofs':proofs}
+        if history:batch['creation_history']=history
         complete = deliver(client, endpoint, root, batch)
         if complete:
             for item in proofs:

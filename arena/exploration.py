@@ -154,6 +154,12 @@ def save_source_proofs(config, batch):
     """Trusted read-only browser facts. Mismatches must reach the server too."""
     policy = config['official_exploration']
     root = Path(config['root']) / 'official-exploration'
+    history=batch.get('creation_history')
+    if history:
+        require(history['team_id']==policy['team_id'] and isinstance(history['groups'],list) and
+                len(history['groups'])<=2000 and 0<=history['coverage_from']<=history['observed_at'],
+                'invalid creation-history proof')
+        atomic_json(root/'creation-history.json',history,0o600)
     selection = batch.get('selection')
     if selection:
         require(selection['team_id'] == policy['team_id'], 'source-proof team changed')
@@ -216,9 +222,49 @@ class Explorer:
         self.state['created'] = max(self.state['created'], sum(bool(r.get('group_id')) for r in records))
         for record in records:
             self.state['next_create'] = max(self.state['next_create'], record['created_at'] + 72)
-            if record['state'] == 'UNKNOWN':
+            if record['state'] == 'UNKNOWN' and (not self.state.get('blocked') or
+                                                self.state['blocked'].startswith('Unknown creation:')):
                 self.state['blocked'] = 'Unknown creation: inspect request ' + record['request_id'] + '; never retry blindly'
         self.save()
+
+    def reconcile_unknown(self, now):
+        """Resolve from trusted own-team history, never by retrying a POST."""
+        path=self.root/'creation-history.json'
+        if not path.exists():return
+        history=read_json(path)
+        if history['team_id']!=self.policy['team_id'] or not -30<=now-history['observed_at']<=180:return
+        records=[(p,read_json(p)) for p in self.records()]
+        claimed={r.get('group_id') for _,r in records if r.get('group_id')}
+        for path,record in records:
+            if record['state']!='UNKNOWN':continue
+            start=record['created_at']
+            if history['coverage_from']>start-30 or history['observed_at']<start+240:continue
+            matches=[]
+            for group in history['groups']:
+                if group['kind']!='unranked' or not start-30<=timestamp(group['createdAt'])<=start+240:continue
+                sides=group['sides']
+                if {s['teamId'] for s in sides}!={self.policy['team_id'],record['opponent_id']}:continue
+                matches.append(group)
+            proof={'at':now,'history_sha256':identity(history),'history_observed_at':history['observed_at'],
+                   'coverage_from':history['coverage_from'],'matching_groups':len(matches)}
+            if len(matches)==1 and matches[0]['id'] not in claimed:
+                group=matches[0];own=next(s for s in group['sides'] if s['teamId']==self.policy['team_id'])
+                if own.get('submissionId')!=record['submission_id']:continue
+                uuid.UUID(group['id'])
+                record.update(state='QUEUED',group_id=group['id'],next_poll=0,reconciliation=proof)
+                claimed.add(group['id'])
+                self.state['sequence']+=1
+            elif not matches and record.get('creation_error',{}).get('kind') in ('CLIThrottle','REVIEWED_HTTP429'):
+                # Explicit 429 plus a fresh complete history of the now-closed
+                # window establishes rejection, including any hidden CLI retry.
+                record.update(state='NOT_CREATED',reconciliation=proof)
+                self.state['next_create']=max(self.state['next_create'],now+72)
+            else:continue
+            atomic_json(path,record,0o600)
+        if (self.state.get('blocked') or '').startswith('Unknown creation:') and not any(
+                read_json(p)['state']=='UNKNOWN' for p in self.records()):
+            self.state['blocked']=None
+        self.reconcile_records()
 
     def validate_source(self):
         with self.db() as db:
@@ -289,9 +335,12 @@ class Explorer:
             response = self.cli.run(['match-groups', 'create', opponent['teamId'], '--json'])
             record.update(group_id=str(uuid.UUID(response['groupId'])), state='QUEUED', response=response)
             atomic_json(path, record, 0o600)
-        except Exception:
+        except Exception as exc:
+            record['creation_error']={'kind':type(exc).__name__,'message':str(exc)[:2000],'at':time.time()}
+            atomic_json(path,record,0o600)
             self.state['blocked'] = 'Unknown creation: inspect request ' + rid + '; never retry blindly'
             self.save()
+            exc.creation_outcome_unknown=True
             raise
         self.state.update(sequence=self.state['sequence'] + 1, created=self.state['created'] + 1,
                           next_create=record['created_at'] + max(72, self.policy.get('interval_seconds', 72)))
@@ -488,6 +537,7 @@ class Explorer:
             self.publish_status()
             return
         self.state.pop('official_retry_at', None)
+        self.reconcile_unknown(now)
         # Process source changes BEFORE creating another non-idempotent request.
         for path in self.records():
             record = read_json(path)
@@ -508,10 +558,12 @@ class Explorer:
                 self.state['next_create'] = max(self.state['next_create'], now + 60)
             else:
                 self.create(now)
+        # An unknown NEW creation stops new POSTs, not collection of already
+        # identified games. Other access/source/schema stops still stop reads.
+        if not self.state.get('blocked') or self.state['blocked'].startswith('Unknown creation:'):
             due = [p for p in self.records() if read_json(p)['state'] in ('QUEUED', 'COLLECTING') and
                    read_json(p).get('next_poll', 0) <= now]
-            if due:
-                self.collect(min(due, key=lambda p:read_json(p)['created_at']), now)
+            if due:self.collect(min(due, key=lambda p:read_json(p)['created_at']), now)
         self.prune()
         self.publish_status()
 
@@ -529,5 +581,7 @@ class Explorer:
             'team_id':self.policy['team_id'], 'submission_id':self.policy['submission_id'],
             'source_commit':self.policy['source_commit'],
             'source_hash':self.policy['source_hash'],
+            'unknown_requests':[{k:r[k] for k in ('request_id','created_at','opponent_id','submission_id')}
+                                for r in records if r['state']=='UNKNOWN'],
             'requests':[{k:r[k] for k in ('request_id','group_id','submission_id','source_commit')} for r in records
                         if r['state'] == 'QUEUED' and r.get('group_id')]}, 0o644)
