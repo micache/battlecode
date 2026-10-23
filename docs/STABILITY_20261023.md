@@ -44,3 +44,24 @@ procedure. Saved suites and queued jobs are preserved, not restarted or
 relabelled. Verify advancing real games, bounded retention, outside imports
 and progress health before handing off. Reboot persistence is not established
 by a process restart test.
+
+## Saved deployment observations
+
+Runtime `ecffa1b57359a5262a23da9ad426b281fbe1322b` was installed with
+services stopped. The pre-change backup and unchanged workload fingerprint
+cover 18,138 jobs. Rolling maintenance retired 851 old raw game directories
+(about 192 MiB); normalized results, frozen inputs and attempt counts were
+unchanged. Restart recovery passed. The legacy 429 intent became NOT_CREATED
+only after fresh own-team history covered its entire closed request window
+with no matching group. The previously stuck five-game series then imported.
+
+At the saved live check, 38 further private games had completed with zero bot
+faults, all five service units were alive, health was WORKING and the full
+40-map suites remained intact. 176 local regression tests passed. Receipts:
+`evidence/blaxel/stability-{retention-repair,legacy-throttle-review,restart,live-check}-20261023.json`.
+These are bounded observations, not a claim of unlimited uptime.
+
+Creating the next outside series exposed the native CLI's seven-day contest
+session expiry (`Sign in first with cambc login`). Owner renewal was requested
+immediately. This explicit authentication stop is separate from the repaired
+retention/429 faults and does not stop private matches or their evaluations.
