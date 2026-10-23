@@ -20,7 +20,7 @@ import time
 import uuid
 import zipfile
 
-from .common import ArenaError, atomic_bytes, atomic_json, canonical, file_hash, identity, read_json, require
+from .common import ArenaError, atomic_bytes, atomic_json, canonical, file_hash, identity, read_json, require, sync_directory
 from .statistics import read_external
 
 
@@ -63,6 +63,10 @@ class NativeCLI:
             require(re.fullmatch('bc-outside-[a-f0-9]{24}',name), 'unexpected official container identity')
             subprocess.run(['podman','--cgroup-manager=cgroupfs','rm','-f',name],
                            capture_output=True,timeout=20,check=True)
+        for path in (self.root/'requests').glob('*/.pending-*'):
+            if re.fullmatch(r'\.pending-(?:replays\.zip|[a-f0-9-]{36}-statistics\.json)-[a-f0-9]{24}',path.name):
+                require(path.is_file() and not path.is_symlink(),'unsafe pending official download')
+                path.unlink()  # Unpublished partial output only; valid final downloads stay.
 
     def run(self, args, output=None):
         allowed = (args[:1] == ['ladder'] or args[:2] in (
@@ -78,24 +82,38 @@ class NativeCLI:
                    '--volume', '/var/lib/battlecode-volume/official-auth:/auth:rw',
                    '--env', 'HOME=/auth', '--env', 'XDG_CONFIG_HOME=/auth/config',
                    '--env', 'XDG_CACHE_HOME=/auth/.cache']
+        pending=None
         if output is not None:
             output = Path(output)
             output.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
             require(output.resolve().is_relative_to(self.root.resolve()), 'outside output escaped its store')
             command += ['--volume', str(output.parent) + ':/output:rw']
-            args = args + ['--output', '/output/' + output.name]
+            require(not output.exists(),'outside download already exists; preserve it')
+            pending=output.with_name('.pending-'+output.name+'-'+uuid.uuid4().hex[:24])
+            args = args + ['--output', '/output/' + pending.name]
         try:
             result = subprocess.run(command + [self.image, 'cambc'] + args,
                                     capture_output=True, text=True, timeout=180)
         except subprocess.TimeoutExpired as exc:
             subprocess.run(['podman', '--cgroup-manager=cgroupfs', 'rm', '-f', name],
                            capture_output=True, timeout=20)
+            if pending is not None and pending.is_file():pending.unlink()
             raise CLIError('official CLI timeout; creation outcome must be reconciled') from exc
         if result.returncode:
+            if pending is not None and pending.is_file():pending.unlink()
             wait = re.search(r'HTTP 429\).*?retry after (\d+) seconds', result.stderr, re.I | re.S)
             if wait:
                 raise CLIThrottle(result.stderr[-2000:], int(wait.group(1)))
             raise CLIError(result.stderr[-2000:] or 'official CLI failed without diagnostics')
+        if pending is not None:
+            try:
+                require(pending.is_file() and not pending.is_symlink(),'official output missing or unsafe')
+                if args[:2]==['match-groups','download']:require(zipfile.is_zipfile(pending),'incomplete official replay archive')
+                elif '--json' in args:read_json(pending)
+                with pending.open('rb') as stream:os.fsync(stream.fileno())
+                os.replace(pending,output);sync_directory(output.parent)
+            finally:
+                if pending.is_file():pending.unlink()
         return json.loads(result.stdout) if '--json' in args and output is None else result.stdout
 
 
@@ -219,7 +237,12 @@ class Explorer:
 
     def reconcile_records(self):
         records = [read_json(p) for p in self.records()]
-        self.state['created'] = max(self.state['created'], sum(bool(r.get('group_id')) for r in records))
+        known=len({r['group_id'] for r in records if r.get('group_id')})
+        self.state['created'] = max(self.state['created'], known)
+        self.state['sequence'] = max(self.state['sequence'], known)
+        if (not any(r['state']=='UNKNOWN' for r in records) and
+                (self.state.get('blocked') or '').startswith('Unknown creation:')):
+            self.state['blocked']=None  # Recover a crash after record commit, before state save.
         for record in records:
             self.state['next_create'] = max(self.state['next_create'], record['created_at'] + 72)
             if record['state'] == 'UNKNOWN' and (not self.state.get('blocked') or

@@ -20,6 +20,32 @@ from test_arena import Harness
 
 
 class QuotaTests(unittest.TestCase):
+    def test_download_publication_is_atomic_and_timeout_cannot_leave_a_false_cache_hit(self):
+        import tempfile,subprocess
+        from types import SimpleNamespace
+        from arena.exploration import CLIError
+        with tempfile.TemporaryDirectory() as directory:
+            cli=NativeCLI.__new__(NativeCLI);cli.root=Path(directory);cli.image='test-image'
+            target=cli.root/'requests'/('a'*32)/('00000000-0000-4000-8000-000000000001-statistics.json')
+            def run(command,**kwargs):
+                if '--output' not in command:return SimpleNamespace(returncode=0,stdout='',stderr='')
+                stage=target.parent/Path(command[command.index('--output')+1]).name
+                stage.write_bytes(b'{"complete":true}')
+                self.assertFalse(target.exists())
+                return SimpleNamespace(returncode=0,stdout='saved',stderr='')
+            with patch('arena.exploration.subprocess.run',side_effect=run):
+                cli.run(['matches','summary','match','--json'],output=target)
+            self.assertEqual(read_json(target),{'complete':True})
+            target.unlink()
+            def timeout(command,**kwargs):
+                if '--output' not in command:return SimpleNamespace(returncode=0,stdout='',stderr='')
+                (target.parent/Path(command[command.index('--output')+1]).name).write_bytes(b'{partial')
+                raise subprocess.TimeoutExpired(command,180)
+            with patch('arena.exploration.subprocess.run',side_effect=timeout):
+                with self.assertRaises(CLIError):cli.run(['matches','summary','match','--json'],output=target)
+            self.assertFalse(target.exists())
+            self.assertFalse(list(target.parent.glob('.pending-*')))
+
     def test_shared_quota_uses_server_reset_and_readiness(self):
         data = {'ready':True, 'quota':{'limit':50,'used':49,'resetsAt':None}}
         self.assertEqual(quota_wait(data,100),100)
@@ -90,6 +116,15 @@ class ExplorationTests(Harness):
         recovered.create(now)
         self.assertEqual(len(recovered.records()),1)
         self.assertIsNone(recovered.state['blocked'])
+
+    def test_reconciliation_record_commit_recovers_without_a_fresh_browser_proof(self):
+        explorer,path,record=self.unknown()
+        record['state']='NOT_CREATED';atomic_json(path,record)
+        # Simulate crash before the state-file blocker was cleared.
+        explorer.save()
+        recovered=Explorer(self.config,cli=object())
+        self.assertIsNone(recovered.state['blocked'])
+        self.assertEqual(read_json(path)['state'],'NOT_CREATED')
 
     def test_lost_response_adopts_unique_actual_group_once(self):
         import datetime
