@@ -38,6 +38,11 @@ void Bot::initialize() {
     altars = bc::map::altars().positions();
     for (auto a : altars) altar_goals |= around(a, bc::constants::submit_gems_range);
     altar_goals &= ~terrain;
+    // Static topology only: occupants are refreshed separately for legal moves.
+    // First play has 2x fuel; cache the bank field once, not per route query.
+    altar_field.emplace();
+    bc::bitboard visited;
+    altar_field->compute(terrain, altar_goals, visited);
     const auto& bytes = bc::draft_memory;
     if (bytes.size() >= policy::plan_header && std::to_integer<int>(bytes[0]) == 'G'
         && std::to_integer<int>(bytes[1]) == 'A' && std::to_integer<int>(bytes[2]) == 1) {
@@ -56,6 +61,40 @@ void Bot::initialize() {
     for (unsigned i = 0; i < roster.size(); ++i) if (roster[i] == me) slot = i;
     me.set_priority(100 - slot);
     initialized = true;
+}
+
+void Bot::refresh_travel() {
+    travel_position = bc::self().position();
+    if (travel_field) {
+        // Use topological displacement, not straight-line separation: walking
+        // around a wall can return geometrically near the old origin.
+        const auto d = travel_field->get(travel_position);
+        if (d == bc::distance_field::unreachable) {
+            // Recall/respawn can change connected component. Old unreachable
+            // observations must not veto the new component's objectives.
+            travel_field.reset();
+            travel_round = -1;
+            for (auto& r : routes) r.travel = -1;
+        } else travel_displacement = d;
+    }
+    if (travel_round >= 0 && travel_displacement < policy::travel_refresh_steps
+        && now - travel_round < policy::travel_refresh_rounds) return;
+    // At most one field, with room for a normal legal action and turn yield.
+    if (bc::fuel_remaining() < policy::distance_floor) return;
+    if (!travel_field) travel_field.emplace();
+    bc::bitboard visited;
+    travel_field->compute(terrain, around(travel_position, 0), visited);
+    travel_displacement = 0;
+    travel_round = now;
+    for (auto& r : routes) {
+        const auto d = travel_field->get(r.anchor);
+        r.travel = d == bc::distance_field::unreachable ? policy::unreachable : d;
+    }
+}
+
+int Bot::route_distance(int i) const {
+    return policy::route_distance(routes[i].travel, travel_displacement,
+        dist(travel_position, routes[i].anchor));
 }
 
 void Bot::buy_items() {
@@ -256,6 +295,7 @@ void Bot::recover() {
 void Bot::farm() {
     auto& me = bc::self();
     if (routes.empty()) { fight(false); return; }
+    refresh_travel();
     const auto visible = bc::vision::visible_tiles();
     if (target >= 0) {
         observe(target, visible);
@@ -270,17 +310,20 @@ void Bot::farm() {
     near.reserve(policy::shortlist+2);
     for (unsigned i = 0; i < routes.size(); ++i) {
         if (routes[i].ready_at > now) continue;
-        const int d = dist(me.position(), routes[i].anchor);
+        const int d = route_distance(i);
+        if (d == policy::unreachable) continue;
         auto at = std::lower_bound(near.begin(), near.end(), std::pair{d,static_cast<int>(i)});
         near.insert(at,{d,static_cast<int>(i)});
         if (near.size() > policy::shortlist) near.pop_back();
         if (i % 32 == 0 && bc::fuel_remaining() < policy::planning_floor) break;
     }
-    if (target >= 0) near.insert(near.begin(), {0,target});
+    if (target >= 0 && route_distance(target) < policy::unreachable) near.insert(near.begin(), {0,target});
     const int probe = cursor++ % routes.size();
-    if (routes[probe].ready_at <= now) near.push_back({dist(me.position(),routes[probe].anchor),probe});
+    if (routes[probe].ready_at <= now && route_distance(probe) < policy::unreachable)
+        near.push_back({route_distance(probe),probe});
     float best_score = -1;
-    int best = target;
+    int best = target >= 0 && route_distance(target) < policy::unreachable
+        && routes[target].ready_at <= now ? target : -1;
     const auto allies = bc::vision::champions(team::ally);
     const auto items = me.item_count();
     const float mitigation = (items[bc::item_type::jungle_emblem_of_strength] ? 0.7f : 1.0f)
@@ -313,7 +356,7 @@ void Bot::farm() {
         // Soft recovery cost rather than an absolute risk veto: hard exclusions
         // previously regressed on another edit base. Large camps are penalized.
         float score = policy::route_score(policy::value(g.gem_value(),g.gold_value(),now),
-            dist(me.position(),r.anchor), clear + 20.0f*exposure/std::max(1.0f,me.health()), bc::constants::capture_time);
+            route_distance(i), clear + 20.0f*exposure/std::max(1.0f,me.health()), bc::constants::capture_time);
         if (exposure > me.health()) score *= 0.15f;
         if (i == target) score *= 1.30f;
         // Stable affinity spreads the opening; a visible nearer ally overrides
@@ -324,7 +367,12 @@ void Bot::farm() {
         if (score > best_score) { best_score = score; best = i; }
     }
     target = best;
-    if (target < 0 || !routes[target].group) { recover(); return; }
+    if (target < 0 || !routes[target].group) {
+        // No reachable work: deliver even a small bag before recovery.
+        if (me.gem_count() && altar_field->get(me.position()) != bc::distance_field::unreachable) bank();
+        else recover();
+        return;
+    }
     auto& r = routes[target];
     observe(target, bc::vision::visible_tiles());
     if (r.state == 3 && r.observed_at == now) { target = -1; walk(around(me.position(),1) & ~r.group->spawn_tiles()); return; }
@@ -355,6 +403,8 @@ void Bot::log(const char* mode) {
     auto& me = bc::self();
     std::cout << "r=" << now << " mode=" << mode << " target=" << target
         << " hp=" << static_cast<int>(me.health()) << " gems=" << me.gem_count()
+        << " xy=" << me.position().x << "," << me.position().y
+        << " route_age=" << (travel_round < 0 ? -1 : now-travel_round)
         << " fuel=" << bc::fuel_remaining() << '\n';
 }
 
@@ -382,10 +432,11 @@ void Bot::play_turn() {
             log("capture"); return;
         }
     }
-    int altar_distance = 10000;
-    for (auto a : altars) altar_distance = std::min(altar_distance,dist(me.position(),a)-1);
+    const auto bank_distance = altar_field->get(me.position());
+    const int altar_distance = bank_distance == bc::distance_field::unreachable
+        ? policy::unreachable : bank_distance;
     const int gems = me.gem_count();
-    if (gems && (gems >= policy::bank_bag || altar_distance <= policy::near_bank
+    if (gems && altar_distance < policy::unreachable && (gems >= policy::bank_bag || altar_distance <= policy::near_bank
         || gems + bc::global_submitted_gems(team::ally) >= bc::constants::winning_gems
         || now + altar_distance + policy::tribute_ticks(gems)+25 >= static_cast<int>(bc::constants::max_rounds))) {
         bank(); log("bank"); return;

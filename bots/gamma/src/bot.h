@@ -9,6 +9,7 @@ class Bot {
         std::optional<cambc::map::camp_group> group;
         int ready_at = 0, observed_at = -1, state = 0;
         float hp = 0, strength = 0;
+        int travel = -1; // Static distance observation from travel_origin.
     };
     bool initialized = false;
     bool recovering = false;
@@ -17,6 +18,13 @@ class Bot {
     std::vector<Route> routes;
     cambc::bitboard terrain, spawn, altar_goals;
     std::vector<cambc::vec2> altars;
+    std::optional<cambc::distance_field> altar_field;
+    std::optional<cambc::distance_field> travel_field;
+    cambc::vec2 travel_position{};
+    int travel_displacement = 0;
+    int travel_round = -1;
+    void refresh_travel();
+    int route_distance(int index) const;
     void initialize();
     void buy_items();
     bool walk(cambc::bitboard goals, bool dash = false);

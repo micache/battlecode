@@ -1,113 +1,99 @@
 # Gamma operational notes
 
-## task-423449f15111476db311d689ef85b218 — melee objective foundation
+## task-93a56bca32614c11b13bb0bc448670dd — reachable objective routing
 
-- Trusted envelope phase **foundation**, brief experiment label exploration.
-  Bot gamma, branch bot/gamma, HEAD/input c0c61f22592660fbd222d6f9130a9c2562f31183.
-  Actual edit base/protected champion 1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d,
-  source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  All six starting source files matched that commit; prepared restoration and
-  farm_risk.h deletion were intentional. No pending own evaluation was supplied.
-  Old operational notes archived as task-e523e59b36b9442d9c09d5225bf2167d.md.
-- Hypothesis: deliberate melee farming with draft-cached layout, ability
-  sequencing, completed capture, deterministic reinvestment and timely tribute
-  increases matched win rate AND mean submitted gems over the trusted starter,
-  without new own faults. Non-positive win change, non-increasing mean tribute
-  or a new own fault falsifies it. This is a rules/source foundation deduction;
-  smoke results establish execution only, not matched superiority.
+- Refinement; branch bot/gamma. Trusted edit base/protected champion
+  1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d, source
+  9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+  HEAD/input aae86b28b8ceb20dba746ddd8b597be83f69deea differs deliberately.
+  All six starting files matched the trusted base; prepared plan.h deletion was
+  intentional. Reused inspected own HEAD melee implementation explicitly as
+  part of this candidate, not as a change of edit base.
+- Prior task d684842d had QUOTA_WAIT, zero checks/evaluations, no publication.
+  Its exact source equals this trusted starter. Its checkpoint patch and notes
+  remain intact at the supplied recovery paths; no unfinished strategy found.
+- Hypothesis: topology-aware camp shortlisting and bank timing on the measured
+  melee economy increases matched wins AND mean tribute over aae86b28/source
+  7762c7e2, retains its gain over the trusted starter, without new own faults or
+  fuel suspensions. Non-positive win/tribute change or new reliability failures
+  falsifies it. Routing mechanism is an unmeasured rules/source deduction.
 
-## Audit and chosen policy
+## Evidence and decision
 
-- Starter bottlenecks: random draft/build, zero ability use, no gold recall,
-  nearest-only camp selection, arbitrary PvP priority, no safe recall escape
-  or spawn-heal wait. Existing draft dispatch and unconditional main-loop yield
-  remain. Latest evaluated c0c61f22/source1d8ee413 is NOT this edit base:
-  d25feff5 reported234W/166L, zero faults, development delta-0.0648649 against
-  ecbc8203/sourceff511c52 over185 pairs. It does not evaluate today's source.
-- Draft Varg, Vendetta, Ryth, Marcella, Heart of Ruin, then legal fallbacks.
-  Melee walking plus attacking supports clear/capture turnover. Varg handles
-  dense camps, Vendetta finishes, Ryth/Marcella control. Heart appears only on
-  five-pick maps and is newly supported by SDK3.0.5; no five-pick smoke yet.
-- First draft computes layout once and writes static anchors using protocol
-  GA/version1/count16/xy8 pairs, <=1023 of1024 bytes. Retain nearest509 groups
-  if capacity exceeded. Gameplay lazily loads shortlisted groups by anchor.
-  The eight live shared bytes are unused; no hidden ally vision is assumed.
-- Shortlist8 nearby groups plus committed target and rotating probe. Score
-  (5*gems + gold weighted1 before round900,0.35 later)/(8+travel+clear+capture).
-  Clear uses current visible HP, otherwise design HP; 1.12 reset estimate,
-  Varg splash factor capped2.5. Exposure0.45*clear*summedStrength*mitigation
-  adds recovery cost; predicted loss>currentHP multiplies score0.15, no hard veto.
-  Commitment bonus1.30, slot affinity1.15, nearer-visible-ally penalty0.65.
-  Another collector on a cleared region suppresses duplicate capture.
-- Remain on reward tiles through capture; enter on the final-kill turn when
-  movement remains. Leave after collection. Respawn estimates expire at their
-  observed timer; current state reads require visible original spawn tiles.
-  Eight failed path attempts defer a route12 rounds. Stationary attack/capture
-  turns do NOT increment this counter (corrected during this invocation).
-- Attack then reset then fresh target check, or legal direct/ground damage.
-  One successful cast respected across slots. Shields under pressure; conservative
-  dash paths use free landing tiles and ordinary passable intermediate tiles.
-  Walk goals always exclude known occupants/terrain; two bounded hidden-block
-  retries refresh observations. No blocked altar/monster passed to move_towards.
-- Buy Jungle Strength, Monster Strength, Durability Health, then Power Strength.
-  Finish each emblem before next stage; spend dead/spawn turns. Shop recall at
- 150 gold before Jungle,300 later, only safe and empty-bag. Hold spawn until98%HP.
-- Bank at24 gems, within6 estimated walking tiles of altar, winning bag or
-  endgame deadline. Fresh post-move altar/lock check starts tribute on arrival.
-  Allied locks permit tribute; hostile locks are attacked; buy/place spare locks.
-  Preserve existing channels. Retreat below40%HP, leave awake-camp/enemy threat
-  before recall. Unfavorable visible PvP (enemy power>1.2*local ally power)
-  retreats toward spawn. No long chase. Capture can use shield/adjacent defense.
-- Planning stops below45k fuel; movement has18k entry floor and two attempts.
-  These are policy guardrails, not universal measured cost bounds. Exact normal
-  C++ budget remains100k; no fuel/round overrides or host compiler used.
+- Evaluation43a38de3, source7762c7e2: REJECTED,270W/130L. Matched development
+  delta+0.5027027 versus starter over185 side-paired cases, not a near-zero delta.
+  Per-map candidate/base: islands0.1/0.4, corridors0.2/0.2, ambush0.5/0.3.
+  Development mean tribute705.37, collection785.29, bag loss55.05; zero own
+  faults/suspensions in370 observations. These statistics evaluate the previous
+  candidate, not today's source; rejection remains a negative finding.
+- Development loss29487e014d4ce38b92a30ba405f829a8f92ecfdfc6762bcf8191bc8c03f7f939,
+  A/00ambush, source7762c7e2: tribute695/1007, collection732/1007, deaths8/3,
+  no own bag loss. Ryth collected18, Marcella0; not proof of a pathfinding cause.
+- Loss2bcc768849540be3454ab4d05688cf0a97c1577f4ffb229e6b8a2c1d2002f233,
+  A/00ambush, same source: tribute583/1013, collection915/1101, own bag loss207,
+  carried125. Multiple bottlenecks remain; kills15/5 did not win the objective.
+  Full compact summaries saved under29487e01-summary.json and2bcc7688-summary.json.
+- All six frozen opponent file sets verified against manifest9ef7d19b. Relevant
+  boss ea15ef0f/sourcef4b4f65e uses reachable distances, risk budgets, shared claims,
+  Vendetta/Varg/Ryth, local-power combat and30-gem banking. Beta7cab9b0f uses
+  Varg/Tavi/Ryth, reset farming and staged defensive items. Imported the reachable
+  distance principle independently; retained our roster/soft-risk policy and
+  private routes. Opponent source predicts policy, not observed runtime events.
+- Alternatives deferred: repeating harder camp vetoes (prior negative finding),
+  delivery-cost ranking (prior inconclusive), or live claims without evidence of
+  duplicate work. Historical detail is in archive/task-423449f15111476db311d689ef85b218.md
+  and older archives. No claim that topology alone explains the measured losses.
 
-## Opponents and rules evidence
+## Candidate policy and contracts
 
-- Manifest b4d5b861251d0319b3338a866ca85ba71c8391af92169e679f3c0f9ec6fc666d,
-  all six source file sets hash-verified. Relevant strategy source inspected.
-  Boss ea15ef0f/sourcef4b4f65e: Vendetta/Varg/Ryth opening, shared claims,
-  exposure-budgeted camps, support shields, local-power PvP,30-gem/near-altar
-  banking,150-gold shopping. This candidate adopts the basic throughput mechanics
-  while keeping independent routes and a soft exposure cost. No boss code copied.
-- Alpha82a14a04 and5f73d078: random draft/Power stat build, legal combat and
-  timestamped rotation. Beta7cab9b0f: Varg/Tavi/Ryth draft, reset farming,
-  defensive item stages, bounded camp scan. Beta0ca5c04 matches our starter.
-  Historical boss192daa8e uses a similar coordinated economy. Frozen sources
-  reveal policies, not per-turn events or official-opponent behavior.
-- Changed-document review: current GameRules, C++ API/installed cambc.h,
-  BOT_REFERENCE, RESEARCH, organizer ledger and playbooksA/C/D/E/F/G.
-  CLI3.0.5/engine1.0.3 buildfcb6c3e8; lockac2b5ad2, suitepublished-40-release-305-v1.
-  SDK SHA256894229e17d886358719abb70cac9ab5993263a0c05bf7df14fc48fa04a8336d3.
-  Material updates: Golem/Heart, camp awake masks, five-hit locks,10-turn wards,
-  move_towards target considered free but known blocked landing still throws.
-  Objective uses SDK winning_gems/max_rounds and rules1000/2000; gold tie counts
-  lifetime earned, final complete tie favors B. Tribute ignores ordinary damage;
-  recall does not; spawn heals at turn end; extra collectors do not speed capture.
-  Organizer Agents page is a download hub, not a full event-policy certification.
+- Retain measured melee vertical slice: Varg/Vendetta/Ryth/Marcella/Heart;
+  legal resets and abilities, completed captures, Jungle Strength then Monster
+  Strength then Durability Health then Power Strength,150/300-gold safe shop
+  recall,40%HP retreat,98%spawn-heal wait,24-gem/near/winning/deadline tribute.
+  Ordinary damage does not cancel tribute; preserve active channels.
+- First draft encodes GA/version1/count16/xy8 static anchors, max509 groups,
+  <=1023/1024 bytes. Cache anchor coordinates before sorting to remove repeated
+  camp-member queries in the comparator. Live eight-byte memory remains unused.
+- Cache a static altar field once. Near-bank/deadline decisions use reachable
+  walking distance instead of Chebyshev distance; unreachable altars cannot
+  trigger the normal bank branch. Actual moves still exclude visible occupants.
+- Refresh a private source-rooted static distance field after4 topological tiles
+  or12 rounds, only with>=65k fuel. Cache one distance per anchor; nearest-eight
+  shortlist and route scoring use topology. A lower bound combines geometric
+  distance with old distance minus topological displacement. Disconnected routes
+  stay excluded only while in the same component; recall/respawn component
+  changes invalidate the cache. Missing cache falls back to geometry.
+- Existing45k planning floor and18k movement entry floor remain. No new all-map
+  group scans in gameplay. Preserve a valid committed target if planning runs
+  out of headroom. With no reachable work, deliver a small reachable bag before
+  recovery. Bounded100-turn logs now include position and route-cache age.
+- Regression assertions cover unreachable preservation, uninitialized fallback,
+  topological displacement and geometric lower bounds, alongside prior memory,
+  tribute and value invariants. Reviewed actual SDK DistanceField contracts.
+  Documentation unchanged; no full unchanged export reread required. Engine3.0.5,
+  lockac2b5ad2, suitepublished-40-release-305-v1; SDK894229e17d886358.
+  RESEARCH/organizer ledger limits remain; download hub is not full policy review.
 
-## Checks and next action
+## Validation and next action
 
 - Final bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json
-  PASSED exit0; source7762c7e20f4bc127d2f4d165123a4d2fd950fb0cc132f544433c977fb6c8c89f.
-  Report .agent/check-task-423449f15111476db311d689ef85b218.json.
-  Compile-time assertions cover draft capacity, tribute boundary ticks and value/
-  travel monotonicity. Initial source243fdff2 passed too; its report is archived
-  in foundation-initial-check.json, not evidence of the final source.
-- Final smoke7222a6ae, sideA: completed round967,1016 vs52 tribute, zero faults
-  and suspensions both sides. Final smoke2baa5da6, sideB: completed round881,
- 1006 vs12 tribute, zero faults/suspensions both sides. Both map hash6e3c6795,
-  41x41, engine1.0.3/fcb6c3e8. Map name and opponent revision unknown in summary.
-  Full summaries saved foundation-final-smoke-a.json and -b.json.
-- git diff --check PASSED. Final file hashes and decision: foundation-evidence.json.
-  No source changes after the final trusted check. No commits/push/submissions.
-- Risks: geometric travel misranks obstructed routes; no live claims means
-  duplicate clearing; soft exposure can still start unsafe fights; recovery can
-  abandon near-finished camps; max509 plan truncation and larger maps untested.
-  Wards and teleport-crystal island routing remain unused. Broad strength and
-  current-boss performance are unmeasured. No claims of production parity.
-- Next: supervisor compares final source to9e804e3e on matched development maps,
-  sides and frozen opponents under unchanged gates, then full champion gate.
-  Inspect tribute, early economy, duplicate camp work, deaths and fuel on large
-  maps. Next useful experiment: measured claims or reachable-distance ranking,
-  choosing whichever actual losses identify as the larger throughput bottleneck.
+  PASSED exit0; exact source54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6.
+  Report .agent/check-task-93a56bca32614c11b13bb0bc448670dd.json;
+  check-report saved reachable-final-diagnostics.json. Initial97049a68 also
+  passed; reachable-initial-check.json preserves that superseded report.
+- Final smoke0c7c1562, sideA: completed round977, tribute1008/52.
+  Final smoke0dcbf59c, sideB: completed round940, tribute1001/12.
+  Both sides zero faults and suspensions in both games; same41x41 map hash
+  6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620.
+  Engine1.0.3/fcb6c3e8. Map name and opponent revision unknown. Saved full
+  summaries reachable-final-smoke-a.json and-b.json. Validity, not broad strength.
+- git diff --check PASSED. No source edits after final trusted check.
+  Exact file hashes, provenance and final diagnostics: reachable-evidence.json.
+- Risks: static distances ignore congestion; stale estimates can misrank nearby
+  camps; extra fields need large-map fuel coverage; no crystal island routing;
+  no live claims; existing safety/PvP and hostile-lock detours remain imperfect.
+  Smoke does not test all these conditions or isolate routing's causal gain.
+- Next: supervisor evaluates exact checked source against edit base and previous
+  candidate on matched maps/sides/opponents, retaining all promotion gates.
+  Prioritize corridors/islands/obstructed routes, submitted gems and suspensions;
+  inspect actual route logs before deciding on claims, crystal travel or safety.

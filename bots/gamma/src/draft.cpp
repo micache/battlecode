@@ -13,19 +13,19 @@ void play_draft() {
     if (chosen.empty()) {
         // Spend the large FIRST draft budget on layout, rather than loading the
         // whole map separately in every champion's 100k-fuel gameplay turn.
-        auto groups = bc::map::camp_groups();
         const auto home = bc::map::spawn_region(bc::team::ally).positions().front();
-        std::stable_sort(groups.begin(), groups.end(), [&](const auto& a, const auto& b) {
-            return home.chebyshev_distance(a.camps().front().spawn_position())
-                 < home.chebyshev_distance(b.camps().front().spawn_position());
+        std::vector<bc::vec2> anchors;
+        for (const auto& g : bc::map::camp_groups())
+            anchors.push_back(g.camps().front().spawn_position());
+        std::stable_sort(anchors.begin(), anchors.end(), [&](auto a, auto b) {
+            return home.chebyshev_distance(a) < home.chebyshev_distance(b);
         });
-        const auto n = std::min(groups.size(), policy::max_groups);
+        const auto n = std::min(anchors.size(), policy::max_groups);
         std::vector<std::uint8_t> bytes(policy::plan_header + 2*n);
         bytes[0] = 'G'; bytes[1] = 'A'; bytes[2] = 1;
         bytes[3] = n & 255; bytes[4] = n >> 8;
         for (std::size_t i = 0; i < n; ++i) {
-            const auto p = groups[i].camps().front().spawn_position();
-            bytes[5+2*i] = p.x; bytes[6+2*i] = p.y;
+            bytes[5+2*i] = anchors[i].x; bytes[6+2*i] = anchors[i].y;
         }
         bc::draft_memory = bytes;
     }
