@@ -1,0 +1,14 @@
+{
+  "task_id": "task-2fce257a4fde404bb76f9cf9e3c2ec2f",
+  "scope": "source contracts, not runtime proof",
+  "checks": {
+    "portfolio_selector_integrated": true,
+    "all_family_passives_checked": true,
+    "full_bundle_legality_checked": true,
+    "fresh_power_budget": true,
+    "non_shop_behavior_preserved": true,
+    "power_model_preserved": true,
+    "other_base_sources_preserved": true
+  },
+  "passed": true
+}

@@ -4,7 +4,7 @@
 #include "altar_control.h"
 #include "camp_rotation.h"
 #include "equipment_policy.h"
-#include "equipment_model.h"
+#include "equipment_portfolio.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -76,10 +76,79 @@ void Bot::buy_items() {
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto cost = items[0].cost();
     if (!cost || me.gold_count() < cost || cambc::fuel_remaining() < equipment_policy::entry_fuel_reserve) return;
-    const auto estimate = equipment_model::estimate(me, me.max_health(), me.strength(), me.focus());
+    const auto stats = me.base_stats();
+    equipment_policy::model estimate{me.max_health(), me.strength(), me.focus(),
+        {stats.strength_growth, stats.focus_growth, stats.health_growth}};
+    const auto passive = me.passive();
+    if (passive == cambc::passive_type::health_strength)
+        estimate.health_to_strength = cambc::constants::passive_abilities::ryth_health_strength_ratio;
+    if (passive == cambc::passive_type::splash_attack)
+        estimate.basic_rate = equipment_policy::area_targets;
+    if (passive == cambc::passive_type::retaliation)
+        estimate.focus_rate = cambc::constants::passive_abilities::ren_retaliation_focus_ratio; // one incoming basic/round, uncertain workload
+    for (const auto& ability : me.abilities()) {
+        if (!ability.info()) continue;
+        std::visit([&](const auto& info) {
+            using T = std::decay_t<decltype(info)>;
+            const float cooldown = static_cast<float>(std::max(1, info.max_cooldown));
+            if constexpr (std::is_same_v<T, cambc::ability_attack_reset>)
+                estimate.basic_rate += estimate.basic_rate / cooldown;
+            if constexpr (std::is_same_v<T, cambc::ability_damage>
+                          || std::is_same_v<T, cambc::ability_cc>) {
+                if (ability.can_target_camps()) estimate.focus_rate += info.modifier / cooldown;
+            }
+            if constexpr (std::is_same_v<T, cambc::ability_aoe_damage>)
+                estimate.focus_rate += equipment_policy::area_targets * info.modifier / cooldown;
+            if constexpr (std::is_same_v<T, cambc::ability_shield>) {
+                if (ability.can_target_self())
+                    estimate.shield_scale = equipment_policy::shield_credit * info.modifier;
+            }
+            // Do not price unused dash damage or another champion's healing.
+        }, *ability.info());
+    }
+    using I = cambc::item_type;
+    const std::array<std::array<I, 3>, equipment_portfolio::family_count> family_shards{{
+        {I::jungle_shard_of_strength, I::jungle_shard_of_focus, I::jungle_shard_of_health},
+        {I::monster_shard_of_strength, I::monster_shard_of_focus, I::monster_shard_of_health}}};
+    const std::array<std::array<I, 3>, equipment_portfolio::family_count> family_emblems{{
+        {I::jungle_emblem_of_strength, I::jungle_emblem_of_focus, I::jungle_emblem_of_health},
+        {I::monster_emblem_of_strength, I::monster_emblem_of_focus, I::monster_emblem_of_health}}};
+    unsigned purchased = 0;
+    // Replan after each immediately completed passive. Never buy partial family
+    // progress or spend twice for a passive already supplied by another stat.
+    for (unsigned pass = 0; pass < equipment_portfolio::family_count; ++pass) {
+        if (cambc::fuel_remaining() < equipment_portfolio::family_fuel_reserve) break;
+        const auto inventory = me.item_count();
+        const std::array<unsigned, 3> residues{inventory[items[0]], inventory[items[1]], inventory[items[2]]};
+        std::array<equipment_portfolio::offer, equipment_portfolio::family_count> offers{};
+        for (unsigned family = 0; family < offers.size(); ++family) {
+            auto& offer = offers[family];
+            offer.cost = family_shards[family][0].cost();
+            offer.combine = family_shards[family][0].combine_count();
+            const float magnitude = family_emblems[family][0].passive_magnitude();
+            offer.value_multiplier = family == 0 ? equipment_portfolio::jungle_value(magnitude)
+                                                : equipment_portfolio::monster_value(magnitude);
+            for (const auto emblem : family_emblems[family])
+                offer.owned |= inventory[emblem] != 0;
+            for (unsigned stat = 0; stat < 3; ++stat)
+                offer.residues[stat] = inventory[family_shards[family][stat]];
+        }
+        const auto choice = equipment_portfolio::choose(estimate, me.gold_count(), cost,
+            items[0].combine_count(), residues, offers, static_cast<unsigned>(chosen_stat),
+            equipment_policy::purchase_limit - purchased);
+        if (!choice.count || cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) break;
+        const auto shard = family_shards[choice.family][choice.stat];
+        if (!me.can_buy(shard, choice.count)) break;
+        me.buy(shard, choice.count);
+        purchased += choice.count;
+        estimate.add(choice.stat, choice.count);
+    }
+    // Refresh gold and inventory after the family buys; preserve original Power
+    // growth allocation for the rest, including each fifth-shard completion bonus.
     const auto inventory = me.item_count();
     const std::array<unsigned, 3> residues{inventory[items[0]], inventory[items[1]], inventory[items[2]]};
-    const auto counts = equipment_policy::plan(estimate, me.gold_count() / cost,
+    const auto counts = equipment_policy::plan(estimate,
+        std::min(me.gold_count() / cost, equipment_policy::purchase_limit - purchased),
         residues, items[0].combine_count(), static_cast<unsigned>(chosen_stat));
     for (unsigned stat = 0; stat < items.size(); ++stat) {
         if (cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) break;
