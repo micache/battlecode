@@ -1,0 +1,16 @@
+{
+  "task_id": "task-e3b7eed54c39451bb7054367309cf8ad",
+  "bot_id": "alpha",
+  "source_hash": "2e89c0a1fce65655924e3194ffc79afc3d99226f61ce9132431b115cdb87af4e",
+  "state": "PASSED",
+  "exit_code": 0,
+  "report_reference": "check:task-e3b7eed54c39451bb7054367309cf8ad:2e89c0a1fce65655924e3194ffc79afc3d99226f61ce9132431b115cdb87af4e",
+  "matches": [
+    "8a2b76f54d0f0b3e47c5acee5cc5942d6496cd6cb60a7d43de890a273dac3b08",
+    "4489f986ea8157bd140afadd58939dc18ec973c52f85c47316141880568b82c0"
+  ],
+  "started": 1792801844.8003328,
+  "finished": 1792801878.266033,
+  "original_report_path": ".agent/check-task-e3b7eed54c39451bb7054367309cf8ad.json",
+  "provenance": "Trusted wrapper output retained after the next check replaced its local report."
+}

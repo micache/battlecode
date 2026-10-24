@@ -1,0 +1,139 @@
+{
+  "task_id": "task-e3b7eed54c39451bb7054367309cf8ad",
+  "bot_id": "alpha",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "input_revision": "3dcf8559f994e64bdbe383448fdd6e4c6677e11a",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "phase": "foundation",
+  "experiment_context_mode": "exploration",
+  "hypothesis": "A fixed Strength farming composition with committed, risk-priced whole-group clearing and capture will increase matched development wins over edit base ba646c6e. Unchanged or lower win rate falsifies the prediction.",
+  "bottleneck": "Random stats and incidental nearest-monster attacks do not price whole-group work or reliably complete a productive clear/capture/upgrade cycle.",
+  "policy": "Vendetta/Varg/Marcella/Tavi/Vesper; finish one Jungle Strength emblem then Power Strength; bounded whole-group throughput scoring with current reward/cooldown observations; commit after damage until reward/recovery/blockage; hold capture; bank promptly; shop and heal on recovery.",
+  "expected_change": "Higher matched win rate and submitted gems; collected gems and monster deaths diagnose throughput and sustain. No isolated component gain claimed.",
+  "falsifier": "Matched win rate no higher than the exact edit base. New faults or persistent fuel suspension are validity regressions.",
+  "risk": "Static full-health work overprices partially damaged groups; risk is a heuristic, not damage prediction. No shared live reservations or split opening roles; duplicates remain possible. Route scoring ignores temporary occupants, and large groups use bounded geometry samples. Capture campers may defer banking; PvP remains basic and no travel dash/crystal policy is added.",
+  "alternatives": "Deferred PvP disengagement threshold changes (latest evaluated variant regressed against its development base); deferred another narrow banking/target-focus tweak because this older foundation base lacks the integrated economy loop. Boss-inspired value/work routing is adapted with soft risk pricing and personal observations, not copied wholesale.",
+  "source_audit": {
+    "edit_files_byte_match_before_edits": true,
+    "prior_missing_recovery_and_skirmish_headers": "Trusted edit preparation, not this task deletions",
+    "pending_candidate": false,
+    "opponent_manifest": {
+      "count": 6,
+      "manifest": "/srv/battlecode/public/strategy/task-e3b7eed54c39451bb7054367309cf8ad/manifest.json",
+      "sha256": "562c68fec656e206a674da6028f7cd8dc30af9ee95108e33bd44c1dea6373fee"
+    },
+    "manifest_and_all_frozen_file_hashes_verified": true,
+    "checked_source_hash": "a309a76d56574ef4e5ac1c8d3ff06865710e0d280967f9a2cea3a940c23cc000",
+    "final_file_sha256": {
+      "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+      "bots/alpha/src/bot.cpp": "8a7d4cba662c386fa1db4117a32a803b0d52e444e3c97f2a229cff7b132a9bf9",
+      "bots/alpha/src/bot.h": "acacebe3b9f4acb296bd23a9ef0d47a014face338787fc36e5038d932496609c",
+      "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+      "bots/alpha/src/draft.cpp": "daa12fe695d9138709b9a4b3128f2e555cb8d7149bf32d42284cbff90c266bf5",
+      "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+      "bots/alpha/src/group_farming.h": "ec3298a27c6b6babce00ba78452e8be34d7f7f4b4e02b9b4da488e3a523e1d79",
+      "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+      "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+    }
+  },
+  "rules": {
+    "engine_version": "3.0.5",
+    "engine_lock_hash": "ac2b5ad200d0df54380e94f82b1a327dd0407202533325808c8bf3af26c56136",
+    "sdk": {
+      "cpp_header": "/var/lib/battlecode-volume/arena/toolchains/cambc-305/template/sdk/cpp/cambc.h",
+      "cpp_header_sha256": "894229e17d886358719abb70cac9ab5993263a0c05bf7df14fc48fa04a8336d3",
+      "engine_lock_hash": "ac2b5ad200d0df54380e94f82b1a327dd0407202533325808c8bf3af26c56136"
+    },
+    "documentation_sha256": {
+      "AGENTS.md": "f92a4f298e67fc6e896cea4431f782c53975eabc05844650c583d3f42395ecca",
+      "BOT_REFERENCE.md": "dfb77704ac56c7ecdfac4cb1d58d0668368dbb9decc2b03062f7e8a99c136b31",
+      "PLAYBOOKS.md": "2eee6a72d7022322a303b845cafb67dbdec2774d8b31bfa4f808efc43552fe77",
+      "RESEARCH.md": "b94d8d01d97c5aef7753f33b0d29ecb7b63c7603148b331fd458fefcebbd6620",
+      "docs/rules/organizer-agents.md": "1a74425ef971512eb33293915714d40283a106ceb481edb548efb57d90bc7e5b",
+      "docs/rules/verified.md": "2832bde1f87e8ced91da5b14982156a71e0802b0cc3b341bd95a66d21e4c2ee6",
+      "skills/battlecode-strategy/SKILL.md": "8ad82743e7038f270c3783621a7f403a75b4aeeed95c185769e343e408010bda",
+      "sources/BotAPICpp.md": "59c88e086a713cc80eb414f31b25e4ed5ff1be6dbcf311822eeab687cbb2d71a",
+      "sources/BotAPIPython.live-20261017.md": "e8738c065a85c8e52e5b864a9710457f2939d91ddde8ad60a53f355e4a8539a8",
+      "sources/BotAPIPython.md": "3013fde86080e89ebf109357d4b8ca913babcb4592be542d92df0fadd542772f",
+      "sources/EngineErrors.md": "51a505e5e7868525608b5665fb27b199f4151b7250cda33d5c14d0ae7d41a8b5",
+      "sources/GameRules.md": "d0ffc1267709acc546a3ad54c9861aca1ae2707f2a7196cdb804392955d13f94"
+    },
+    "review": "Changed-document bootstrap: current rules, reference, C++ export declarations/contracts/examples with deduplicated audit views, installed matching header, playbooks A/C/D/E/F/G, RESEARCH and organizer reconciliation. No Python re-review. SDK header and supplied current document hashes verified.",
+    "material_findings": [
+      "CLI 3.0.5 adds Golem and Heart of Ruin; roster has 12 picks/13 bodies, five-hit locks, revised damage/reward/passive values and changed move_towards blocked-target semantics.",
+      "First to 1000 tributed gems; at 2000 rounds use tribute, lifetime gold, kills, Team B. Uses SDK camp stats, rewards, spawn and altar masks, range and allowance queries. No replacement objective.",
+      "Capture must maintain uncontested spawn occupancy; ordinary damage does not cancel tribute; recall arrival needs a turn-end heal.",
+      "No live shared memory or draft-memory layout is used. All added state is private and observations expire.",
+      "Organizer page is a Markdown hub; production settings parity and complete event policy review remain unverified."
+    ]
+  },
+  "evidence": [
+    {
+      "kind": "evaluation",
+      "reference": "2baf2f1969777cf9a03f8ae009bc728a363a5c500e7a18d2148bd575846507f8",
+      "claim": "Measures 3dcf8559 / 9b5dc610, not edit base. Full protected-champion 206W/194L; development 191W/179L and matched base delta -0.059459 over 185 side pairs. Contrasting 00stampede candidate fraction 1.0, five pairs, aggregate only."
+    },
+    {
+      "kind": "match",
+      "reference": "61a5b3589842afc0a7ad73c9a515f226e74b656348d692603bfd84597d366039",
+      "claim": "Latest evaluated source, side A 01fracture: completed round 1638, submitted 288 vs 1024, collected 358 vs 1054, deaths 29 vs 11, monster damage taken 53350 vs champion damage taken 700; zero own faults/suspensions. Final aggregates do not identify causal turns or evaluate this edit base."
+    },
+    {
+      "kind": "match",
+      "reference": "391ad9d1b7874df3f227d83124455ac531db23ae3066ee1f27a4587bcac670e3",
+      "claim": "Latest evaluated source, side B 01fracture: completed round 2000, submitted 846 vs 984, collected 897 vs 1073, deaths 24 vs 14, zero faults/suspensions. This is another older-source example, not the candidate."
+    },
+    {
+      "kind": "source",
+      "reference": "/srv/battlecode/public/strategy/task-e3b7eed54c39451bb7054367309cf8ad/manifest.json",
+      "claim": "Frozen current boss ea15ef0f / f4b4f65e uses Vendetta/Varg/Ryth, value/work group selection, claims, farming emblems, banking at 30 or nearby, and local-power fights. Frozen beta 7cab9b0f / fd5e2554 uses Varg/Tavi/Ryth, group economy penalties and travel dashes. Comments with old five/three-hit or visibility claims are not authoritative. No private worker state read."
+    }
+  ],
+  "checks": {
+    "initial": {
+      "task_id": "task-e3b7eed54c39451bb7054367309cf8ad",
+      "bot_id": "alpha",
+      "source_hash": "2e89c0a1fce65655924e3194ffc79afc3d99226f61ce9132431b115cdb87af4e",
+      "state": "PASSED",
+      "exit_code": 0,
+      "report_reference": "check:task-e3b7eed54c39451bb7054367309cf8ad:2e89c0a1fce65655924e3194ffc79afc3d99226f61ce9132431b115cdb87af4e",
+      "matches": [
+        "8a2b76f54d0f0b3e47c5acee5cc5942d6496cd6cb60a7d43de890a273dac3b08",
+        "4489f986ea8157bd140afadd58939dc18ec973c52f85c47316141880568b82c0"
+      ],
+      "started": 1792801844.8003328,
+      "finished": 1792801878.266033,
+      "original_report_path": ".agent/check-task-e3b7eed54c39451bb7054367309cf8ad.json",
+      "provenance": "Trusted wrapper output retained after the next check replaced its local report."
+    },
+    "final": {
+      "bot_id": "alpha",
+      "exit_code": 0,
+      "finished": 1792802003.8585732,
+      "matches": [
+        "ab4eacb6033c3c4174b39bf7b7ae7733adef013aa03c5c2c91de57bade933372",
+        "e5b22e37e04c54bc99c8373d7c82a9f9034b94b8776a7d0ea2e6958b76a68bfa"
+      ],
+      "report_path": ".agent/check-task-e3b7eed54c39451bb7054367309cf8ad.json",
+      "report_reference": "check:task-e3b7eed54c39451bb7054367309cf8ad:a309a76d56574ef4e5ac1c8d3ff06865710e0d280967f9a2cea3a940c23cc000",
+      "source_hash": "a309a76d56574ef4e5ac1c8d3ff06865710e0d280967f9a2cea3a940c23cc000",
+      "started": 1792801970.48876,
+      "state": "PASSED",
+      "task_id": "task-e3b7eed54c39451bb7054367309cf8ad"
+    },
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json",
+    "final_smoke_summaries": [
+      "experiments/alpha/task-e3b7eed54c39451bb7054367309cf8ad-final-smoke-0.json",
+      "experiments/alpha/task-e3b7eed54c39451bb7054367309cf8ad-final-smoke-1.json"
+    ],
+    "constexpr_regressions": "Throughput value/work/risk ordering and inherited expiring cooldown exact-expiry contracts compile via wrapper.",
+    "diff_check": {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "status": "PASSED"
+    },
+    "final_identity_check": "All final bot-file SHA256 values still match the checked snapshot; branch and HEAD match trusted entry; both saved final-smoke records link the final checked source."
+  },
+  "next_action": "Supervisor evaluates final checked source against exact edit base and protected champion across matched maps/both sides, monitoring submissions, collection, camp mortality, faults and fuel. No promotion claim."
+}
