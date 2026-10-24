@@ -1,0 +1,7 @@
+# Frontier scheduling experiment
+Bottleneck: latest e44d887e has complete zero-activity losses on 00ambush; source runs full terrain ranking and fuel-gated scans before action. Causality is inferred, not traced.
+Alternatives: cooperative monster claims address boss squad behavior but not zero activity; tactical combat addresses deaths but not this loss; bounded local frontier search removes the global ranking prerequisite. Choose the latter.
+Policy: reuse own complete e44d887e farming/combat/economy; replace full terrain-field ranking with cheap geometric reward ranking and rotating additional candidates. Carry candidates across turns; commitment checks at most one group, planning checks at most six. Route pathfinding remains terrain/occupancy aware. Never clear commitment merely because scan fuel is exhausted. Add bounded stage diagnostics.
+Expected: nonzero collection on prior zero-activity maps, higher matched wins and submitted gems over e44d887e and edit starter; no faults and no increase in own suspensions. Any opposite result falsifies the hypothesis.
+Risk: geometric ranking takes long detours around walls; incomplete batches delay better opportunities. Retry inaccessible goals and rotate beyond shortlist; future topology estimates can be added only if justified by evaluation.
+Validation: source contract regression red/green; compile-time scheduler invariants; exact-source trusted bot-check compilation and smoke; git diff --check. Supervisor owns comparative evaluation.

@@ -15,15 +15,17 @@ class Bot {
         int count = 0;
     };
     std::vector<Group> groups;
-    // Private terrain estimates; current visibility is checked independently.
+    // Private geometric estimates; current visibility is checked independently.
     std::vector<std::size_t> plan_order;
-    std::vector<unsigned> plan_distance;
+    std::size_t rank_cursor = 0; // bounded static ranking, independent from live checks
+    std::size_t scan_cursor = 0; // rotating exploration beyond the local shortlist
     unsigned plan_round = 0;
     cambc::vec2 plan_origin{};
     bool plan_valid = false;
     int target_group = -1;
     bool initialized = false;
     bool recovering = false;
+    void diagnostic(const char* stage) const;
     void initialize();
     void buy_items();
     bool hold_capture();

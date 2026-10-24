@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <array>
 #include <limits>
-#include <numeric>
+#include <iostream>
 #include <optional>
 #include <type_traits>
 #include <variant>
@@ -16,9 +16,9 @@ constexpr float retreat_fraction = 0.45f;
 constexpr unsigned shopping_gold = 300;
 constexpr unsigned retry_delay = 12;
 constexpr std::uint64_t planning_reserve = 18000;
-constexpr std::uint64_t scan_reserve = 55000;
+constexpr std::uint64_t scan_reserve = 45000;
 constexpr std::uint64_t search_reserve = 45000;
-constexpr std::size_t max_group_checks = 12;
+
 constexpr std::uint64_t lock_reserve = 30000;
 constexpr int lock_placement_range = 2; // Pinned SDK consumable contract.
 constexpr std::uint64_t dash_reserve = 45000;
@@ -29,6 +29,13 @@ cambc::bitboard around(vec2 p, int range) {
     cambc::bitboard result;
     result.draw_chebyshev(p, range);
     return result;
+}
+
+// Avoid allocating/intersecting a map-sized board just to test group visibility.
+bool group_seen(const cambc::map::camp_group& group, const cambc::bitboard& visible) {
+    for (const auto& member : group.camps())
+        if (visible.is_set(member.spawn_position())) return true;
+    return false;
 }
 
 // Spend inventory along our normal route, never detour or interrupt a channel.
@@ -356,73 +363,84 @@ void Bot::farm_camps() {
     const auto items = me.item_count();
     const float mitigation = items[cambc::item_type::jungle_emblem_of_strength] ? 0.7f : 1.0f;
 
-    // Rebuild global travel/ranking only when its timestamp or origin expires.
-    // This cache contains estimates, never hidden group state or live health.
-    const int moved = plan_valid ? distance(position, plan_origin) : 0;
-    const bool refresh = policy::refresh_plan(plan_valid, round, plan_round, moved);
-    if (refresh) {
-        if (cambc::fuel_remaining() < search_reserve) return;
-        auto terrain = cambc::map::walls() | cambc::map::holes() | cambc::map::altars()
-            | cambc::map::spawn_region(team::enemy);
-        cambc::distance_field travel;
-        cambc::bitboard visited;
-        travel.compute(terrain, around(position, 0), visited);
-        plan_order.resize(groups.size());
-        plan_distance.resize(groups.size());
-        std::iota(plan_order.begin(), plan_order.end(), 0);
-        std::vector<float> rank(groups.size());
-        for (std::size_t i = 0; i < groups.size(); ++i) {
-            const auto& g = groups[i];
-            const auto d = travel.get(g.anchor);
-            plan_distance[i] = d;
-            if (d == cambc::distance_field::unreachable || round < g.retry_round) {
-                rank[i] = -1; continue;
-            }
-            const float walk = std::max(0, static_cast<int>(d) - attack_range);
-            const float wait = g.ready_round > round + walk ? g.ready_round - round - walk : 0;
-            const float value = g.gems + policy::gold_value(cash) * g.gold;
-            rank[i] = value / (walk + wait + g.initial_health / (strength * 1.125f) + 6.0f);
-        }
-        const auto shortlist = std::min(max_group_checks, plan_order.size());
-        std::partial_sort(plan_order.begin(), plan_order.begin() + shortlist, plan_order.end(), [&](auto a, auto b) {
-            const auto va = rank[a], vb = rank[b];
-            return va != vb ? va > vb : a < b;
-        });
-        plan_origin = position;
-        plan_round = round;
-        plan_valid = true;
-    }
-    // During a commitment, inspect only that group. Its visible lifecycle and
-    // risk are still checked below; invalidation triggers a full scan next turn.
+    // Geometry is only a ranking estimate. Actual movement uses the cached
+    // terrain/occupancy-aware route. Never require a whole-map field before
+    // selecting an actionable local frontier.
+    const bool committed = target_group >= 0;
     std::vector<std::size_t> order;
-    const bool committed = !refresh && target_group >= 0;
-    if (committed) order.push_back(static_cast<std::size_t>(target_group));
-    else {
-        const auto n = std::min(max_group_checks, plan_order.size());
-        order.assign(plan_order.begin(), plan_order.begin() + n);
-        if (target_group >= 0 && std::find(order.begin(), order.end(), target_group) == order.end())
-            order.insert(order.begin(), static_cast<std::size_t>(target_group));
+    if (committed) {
+        order.push_back(static_cast<std::size_t>(target_group));
+    } else {
+        const int moved = plan_valid ? distance(position, plan_origin) : 0;
+        if (policy::refresh_plan(plan_valid, round, plan_round, moved)) {
+            const auto rank = [&](std::size_t i) {
+                const auto& g = groups[i];
+                const float walk = std::max(0, distance(position, g.anchor) - attack_range);
+                const float wait = g.ready_round > round + walk ? g.ready_round - round - walk : 0;
+                const float value = g.gems + policy::gold_value(cash) * g.gold;
+                return round < g.retry_round ? -1.0f
+                    : value / (walk + wait + g.initial_health / (strength * 1.125f) + 6.0f);
+            };
+            const auto better = [&](auto a, auto b) {
+                const auto ra = rank(a), rb = rank(b);
+                return ra != rb ? ra > rb : a < b;
+            };
+            // Retain good frontiers, but refresh their estimates at this origin.
+            // Inspect at most 32 new static records. Ranking itself must not
+            // become the next whole-map prerequisite on dense 100x100 maps.
+            std::erase_if(plan_order, [&](auto i) { return rank(i) <= 0; });
+            std::sort(plan_order.begin(), plan_order.end(), better);
+            const auto count = std::min<std::size_t>(policy::ranking_batch, groups.size());
+            for (std::size_t k = 0; k < count; ++k) {
+                if (cambc::fuel_remaining() < scan_reserve + 10000) break;
+                const auto i = rank_cursor;
+                rank_cursor = policy::next_frontier(rank_cursor, groups.size());
+                if (rank(i) <= 0 || std::find(plan_order.begin(), plan_order.end(), i) != plan_order.end()) continue;
+                plan_order.push_back(i);
+                std::sort(plan_order.begin(), plan_order.end(), better);
+                if (plan_order.size() > policy::local_candidates) plan_order.pop_back();
+            }
+            plan_origin = position;
+            plan_round = round;
+            plan_valid = true;
+        }
+        // Put rotating work first so a fuel-limited local shortlist cannot
+        // starve exploration. Advance the persistent cursor only after a check
+        // actually starts, never merely because it was queued.
+        auto cursor = scan_cursor;
+        const auto rotate = std::min<std::size_t>(policy::exploration_candidates, groups.size());
+        for (std::size_t k = 0; k < rotate; ++k) {
+            order.push_back(cursor);
+            cursor = policy::next_frontier(cursor, groups.size());
+        }
+        const auto n = std::min<std::size_t>(policy::local_candidates, plan_order.size());
+        for (std::size_t k = 0; k < n; ++k)
+            if (std::find(order.begin(), order.end(), plan_order[k]) == order.end()) order.push_back(plan_order[k]);
     }
-    const auto checked = order.size();
+    const auto checked = std::min<std::size_t>(order.size(), policy::frontier_batch);
+    bool scan_complete = true;
 
     int chosen = -1, rally = -1;
     float best_score = -1, rally_score = -1;
     bool reward = false;
     for (std::size_t n = 0; n < checked; ++n) {
-        if (cambc::fuel_remaining() < scan_reserve) break;
+        if (cambc::fuel_remaining() < scan_reserve) { scan_complete = false; break; }
         const auto i = order[n];
+        if (!committed && i == scan_cursor)
+            scan_cursor = policy::next_frontier(scan_cursor, groups.size());
         auto& g = groups[i];
         if (round < g.retry_round) continue;
-        const auto path = plan_distance[i];
-        if (path == cambc::distance_field::unreachable) continue;
-        const int walk = std::max(0, static_cast<int>(path) - distance(position, plan_origin) - me.attack_range());
+        const int walk = std::max(0, distance(position, g.anchor) - attack_range);
         bool available = false;
-        const bool seen = !(g.spawns & visible).is_empty();
+        const bool seen = group_seen(g.group, visible);
         if (seen) {
             const auto state = g.group.state();
             if (const auto* respawn = std::get_if<cambc::map::camp_group_respawning>(&state)) {
                 g.ready_round = round + std::max(1, respawn->timer);
-                if (respawn->timer > walk + 5) continue;
+                if (respawn->timer > walk + 5) {
+                    g.retry_round = std::min(g.ready_round, round + retry_delay);
+                    continue;
+                }
             } else {
                 g.ready_round = 0;
                 available = std::holds_alternative<cambc::map::camp_group_reward_available>(state);
@@ -476,6 +494,9 @@ void Bot::farm_camps() {
         if (score > best_score) { chosen = i; best_score = score; reward = available; }
     }
     if (chosen < 0) {
+        // Fuel deferral is not evidence that this target is invalid. Preserve
+        // intent for a fresh turn rather than repeatedly rebuilding the planner.
+        if (!scan_complete) return;
         if (committed) {
             // Distinguish an invalid commitment from having searched all goals.
             target_group = -1;
@@ -538,6 +559,14 @@ void Bot::farm_camps() {
     }
 }
 
+void Bot::diagnostic(const char* stage) const {
+    if (cambc::round_number() % 100 != 0) return;
+    const auto pos = cambc::self().position();
+    std::cout << "frontier round=" << cambc::round_number() << " pos=" << pos.x << ',' << pos.y
+        << " stage=" << stage << " fuel=" << cambc::fuel_remaining()
+        << " target=" << target_group << " groups=" << groups.size() << '\n';
+}
+
 void Bot::play_turn() {
     auto& me = cambc::self();
     if (me.is_alive() && (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting())) return;
@@ -559,6 +588,7 @@ void Bot::play_turn() {
         return;
     }
     if (!initialized) initialize();
+    diagnostic("ready");
     if (cambc::fuel_remaining() < scan_reserve) return;
     if (hold_capture()) return;
 
@@ -580,5 +610,7 @@ void Bot::play_turn() {
         && me.gem_count() == 0 && !spawn.is_set(me.position()) && !exposed(me.position())) {
         recovering = true; target_group = -1; me.recall(); return;
     }
+    diagnostic("farm");
     farm_camps();
+    diagnostic("yield");
 }

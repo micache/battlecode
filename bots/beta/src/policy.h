@@ -6,14 +6,26 @@ constexpr float risk_fraction = 0.65f;
 constexpr unsigned bank_bag = 30;
 constexpr int near_altar = 7;
 constexpr unsigned end_margin = 20;
-constexpr unsigned plan_lifetime = 6;
+constexpr unsigned plan_lifetime = 8;
+constexpr unsigned frontier_batch = 6;
+constexpr unsigned ranking_batch = 32;
+constexpr unsigned local_candidates = 4;
+constexpr unsigned exploration_candidates = frontier_batch - local_candidates;
+constexpr unsigned next_frontier(unsigned cursor, unsigned count) {
+    return count == 0 ? 0 : (cursor + 1) % count;
+}
+static_assert(exploration_candidates == 2);
+static_assert(next_frontier(0, 0) == 0);
+static_assert(next_frontier(0, 1) == 0);
+static_assert(next_frontier(16, 17) == 0);
+static_assert(next_frontier(7, 17) == 8);
 constexpr int plan_radius = 6;
 constexpr bool refresh_plan(bool valid, unsigned now, unsigned observed, int moved) {
     return !valid || now < observed || now - observed >= plan_lifetime || moved > plan_radius;
 }
 static_assert(refresh_plan(false, 100, 100, 0));
 static_assert(!refresh_plan(true, 105, 100, 6));
-static_assert(refresh_plan(true, 106, 100, 0));
+static_assert(refresh_plan(true, 100 + plan_lifetime, 100, 0));
 static_assert(refresh_plan(true, 101, 100, 7));
 static_assert(refresh_plan(true, 99, 100, 0));
 constexpr bool exclude_target(bool could_move, bool deferred, bool at_goal) {
