@@ -1,0 +1,60 @@
+{
+  "task_id": "task-423449f15111476db311d689ef85b218",
+  "bot_id": "gamma",
+  "base_source_hash": "9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f",
+  "checked_source_hash": "7762c7e20f4bc127d2f4d165123a4d2fd950fb0cc132f544433c977fb6c8c89f",
+  "files": {
+    "bot.cpp": "37d3dbcafd98652dc9f9a249d222117d6449bfa7b6d23c5304eecc8d81cbf5d8",
+    "bot.h": "1f9cffcd947d7660af07821af72a1d983a9f0a40c6a0cac66aee8d3784aa2e2c",
+    "draft.cpp": "9829ccd85b70f1b53db2703fc3c51b7a6a13bc4a9dae031545b97ee42b659ec7",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "plan.h": "5906ef3b634728450acd6aa72cc968d6e8d6c9294f41831551a70d440544405c",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "hypothesis": "Deliberate melee farming with draft-cached layout, ability sequencing, completed capture, deterministic reinvestment and timely tribute will increase matched win rate and mean submitted gems over the trusted starter without introducing bot faults.",
+  "falsifier": "Non-positive matched win change, non-increasing mean submitted gems, or a new own bot fault.",
+  "decision": {
+    "bottleneck": "Starter has random draft/stat choice, no spells or deliberate reinvestment, nearest-only farming and unsafe repeated recall.",
+    "evidence": "Source-grounded foundation deduction; recent rejected experiments evaluate different revisions.",
+    "chosen": "Independent melee objective farmers with soft exposure cost and bounded shortlisted route scans.",
+    "risks": [
+      "Static shortlist and Chebyshev route ranking can miss a superior reachable camp.",
+      "No live shared claims; visible ally penalties can still permit duplicate clears.",
+      "Soft exposure model underestimates incoming damage; retreat may interrupt a nearly complete clear.",
+      "Draft memory keeps nearest 509 group anchors if a map exceeds capacity.",
+      "100x100 and 4/5-pick coverage remains unmeasured by this smoke."
+    ]
+  },
+  "check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792803861.9335804,
+    "matches": [
+      "7222a6aef86bbbea6429bff6a5f98925fa2be61f84cccdd2a5c7b1a598aee8bf",
+      "2baa5da68241e8c83c78853b5c5dbcc6b9e6e1c1c0ac220c89bafcac5f4963a2"
+    ],
+    "report_path": ".agent/check-task-423449f15111476db311d689ef85b218.json",
+    "report_reference": "check:task-423449f15111476db311d689ef85b218:7762c7e20f4bc127d2f4d165123a4d2fd950fb0cc132f544433c977fb6c8c89f",
+    "source_hash": "7762c7e20f4bc127d2f4d165123a4d2fd950fb0cc132f544433c977fb6c8c89f",
+    "started": 1792803826.0372815,
+    "state": "PASSED",
+    "task_id": "task-423449f15111476db311d689ef85b218"
+  },
+  "smoke_matches": [
+    {
+      "match_id": "7222a6aef86bbbea6429bff6a5f98925fa2be61f84cccdd2a5c7b1a598aee8bf",
+      "side": "A",
+      "summary": "experiments/gamma/foundation-final-smoke-a.json",
+      "map_name": "unknown",
+      "opponent_revision": "unknown"
+    },
+    {
+      "match_id": "2baa5da68241e8c83c78853b5c5dbcc6b9e6e1c1c0ac220c89bafcac5f4963a2",
+      "side": "B",
+      "summary": "experiments/gamma/foundation-final-smoke-b.json",
+      "map_name": "unknown",
+      "opponent_revision": "unknown"
+    }
+  ]
+}
