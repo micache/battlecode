@@ -1,10 +1,10 @@
 #pragma once
 
-// Per-champion state survives between turns. Pick one stat and keep buying it.
+// Per-champion state survives between turns. RNG breaks equal shop scores.
 class Bot {
     int chosen_stat = -1;
 
-    // Spend only on power shards of the randomly chosen stat.
+    // Allocate Power shards using current stats and usable kit scaling.
     void buy_items();
 
 public:

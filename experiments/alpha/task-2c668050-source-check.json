@@ -1,0 +1,23 @@
+{
+  "task_id": "task-2c668050ea8e4ce6a76d25efac1c863d",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "changed_source_paths": [
+    "bots/alpha/src/bot.cpp",
+    "bots/alpha/src/bot.h",
+    "bots/alpha/src/equipment_policy.h"
+  ],
+  "other_executable_policy_identical": true,
+  "source_file_sha256": {
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/bot.cpp": "34c8e6d26b4546c6e923ca7dcfbdc897fd14ccd06aae4f283227164a037044bd",
+    "bots/alpha/src/bot.h": "c89e51dc769abbdd346f2fd833f5ece92514a7d4e2eda0c88b2d24f411a14c24",
+    "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/equipment_policy.h": "bcd0d850bc558af1d0dd268c1e5f9437bf82a4fe74703f26fc5a2b72faa07729",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "git_diff_check": "PASSED",
+  "checked_source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599"
+}

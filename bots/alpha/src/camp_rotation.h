@@ -1,6 +1,5 @@
 #pragma once
 #include <cambc.h>
-#include "camp_navigation.h"
 #include <algorithm>
 #include <cstdint>
 #include <vector>
@@ -50,8 +49,6 @@ struct tracked_group {
     cambc::map::camp_group group;
     cambc::bitboard spawns;
     respawn_observation cooldown;
-    bool observed_alive = false;
-    std::uint32_t state_round = 0;
 };
 
 class rotation {
@@ -82,8 +79,6 @@ public:
             if ((entry.spawns & visible).is_empty()) continue;
             ++queried;
             const auto state = entry.group.state();
-            entry.observed_alive = std::holds_alternative<cambc::map::camp_group_alive>(state);
-            entry.state_round = now;
             if (const auto* respawn = std::get_if<cambc::map::camp_group_respawning>(&state))
                 entry.cooldown.record(now, respawn->timer);
             else
@@ -98,50 +93,7 @@ public:
         const auto now = cambc::round_number();
         for (const auto& entry : groups)
             if (!entry.cooldown.excludes(now)) result |= entry.spawns;
-
-        // No extra planning when observation/combat already consumed the budget.
-        // Retain the original exploration/capture goals on every bounded fallback.
-        if (cambc::fuel_remaining() < observation_fuel_reserve) return result;
-        const auto occupied = cambc::vision::camp_tiles();
-        const auto targets = occupied.positions();
-        if (targets.empty() || targets.size() > observation_limit) return result;
-
-        cambc::bitboard live_spawns;
-        cambc::bitboard approaches;
-        const auto range = cambc::self().attack_range();
-        for (const auto position : targets) {
-            if (cambc::fuel_remaining() < observation_fuel_reserve) return result;
-            // This mask contains current personal-vision camps, not cached units.
-            // Only immutable spawn metadata is read; position comes from the mask.
-            const auto camp = cambc::vision::camp_at(position);
-            if (!result.is_set(camp.spawn_position())) continue;
-            live_spawns.set(camp.spawn_position());
-            approaches.draw_chebyshev(position, range);
-        }
-        if (live_spawns.is_empty()) return result;
-
-        const auto visible = cambc::vision::visible_tiles();
-        cambc::bitboard revised;
-        for (const auto& entry : groups) {
-            if (entry.cooldown.excludes(now)) continue;
-            // Reward tiles remain capture destinations. Stale/unknown observations
-            // and groups without a positively observed member keep the base goals.
-            const bool pursue = entry.observed_alive && entry.state_round == now
-                && !(entry.spawns & live_spawns).is_empty();
-            revised |= camp_navigation::exploration_spawns(entry.spawns, visible, pursue);
-        }
-        // A camp/ally/terrain square is never an approach destination. Do not let
-        // occupied monsters seed a path through a wall of other occupied camps.
-        const auto blocked = cambc::map::walls() | cambc::map::holes()
-            | cambc::map::altars() | cambc::map::spawn_region(cambc::team::enemy)
-            | cambc::vision::champion_tiles() | occupied | cambc::vision::teleport_tiles();
-        auto free_approaches = approaches & ~blocked;
-        // Self is a legal goal when already in range (combat tried before routing).
-        const auto here = cambc::self().position();
-        if (approaches.is_set(here)) free_approaches.set(here);
-        // No reachable/free attack approach must not erase the exploration fallback.
-        if (free_approaches.is_empty()) return result;
-        return revised | free_approaches;
+        return result;
     }
 };
 
