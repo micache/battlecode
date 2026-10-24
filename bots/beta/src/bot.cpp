@@ -1,6 +1,7 @@
 #include <cambc.h>
 #include "bot.h"
 #include "policy.h"
+#include "harvest_test.h"
 #include <algorithm>
 #include <array>
 #include <limits>
@@ -422,7 +423,6 @@ void Bot::farm_camps() {
 
     int chosen = -1, rally = -1;
     float best_score = -1, rally_score = -1;
-    bool reward = false;
     for (std::size_t n = 0; n < checked; ++n) {
         if (cambc::fuel_remaining() < scan_reserve) { scan_complete = false; break; }
         const auto i = order[n];
@@ -491,7 +491,7 @@ void Bot::farm_camps() {
             if (score > rally_score) { rally = i; rally_score = score; }
             continue;
         }
-        if (score > best_score) { chosen = i; best_score = score; reward = available; }
+        if (score > best_score) { chosen = i; best_score = score; }
     }
     if (chosen < 0) {
         // Fuel deferral is not evidence that this target is invalid. Preserve
@@ -524,39 +524,61 @@ void Bot::farm_camps() {
     }
     target_group = chosen;
     auto& g = groups[chosen];
-    if (!reward) {
-        // Lowest-health in-range member first: reduce incoming attacks quickly.
+    // Keep the chosen objective, but consume restored allowances instead of
+    // ending the turn after the first kill. Visibility, position, life state and
+    // reward state are observed again after every attack, cast and movement.
+    bool walked = false;
+    const auto ready = [&] {
+        return me.is_alive() && cambc::fuel_remaining() >= lock_reserve;
+    };
+    const auto reward_ready = [&] {
+        if (!group_seen(g.group, cambc::vision::visible_tiles())) return false;
+        return std::holds_alternative<cambc::map::camp_group_reward_available>(g.group.state());
+    };
+    const auto strike = [&] {
+        if (!me.can_attack() && !me.can_cast()) return false;
         std::optional<cambc::camp> target;
         float hp = std::numeric_limits<float>::max();
-        for (const auto& c : camps)
-            if (g.spawns.is_set(c.spawn_position()) && c.is_visible() && c.health() > 0
-                && distance(position, c.position()) <= me.attack_range() && c.health() < hp) {
+        for (const auto& c : g.group.camps()) {
+            if (!ready()) return false;
+            if (c.is_visible() && c.health() > 0
+                && distance(me.position(), c.position()) <= me.attack_range() && c.health() < hp) {
                 target = c; hp = c.health();
             }
-        if (target && fight(*target)) return;
-        for (const auto& c : camps)
-            if (g.spawns.is_set(c.spawn_position()) && fight(c)) return;
-    }
-    auto goals = g.spawns;
-    if (!reward) {
-        cambc::bitboard approaches;
-        for (const auto& c : camps)
-            if (g.spawns.is_set(c.spawn_position()) && c.is_visible() && c.health() > 0)
-                approaches |= around(c.position(), me.attack_range());
-        if (!approaches.is_empty()) goals = std::move(approaches);
-        else if (g.ready_round > round) goals = around(g.anchor, 2) & ~g.spawns;
-    }
-    if (cambc::fuel_remaining() < planning_reserve) return;
-    const bool could_move = me.can_move();
-    bool deferred = false;
-    if (move_to(goals, &deferred)) {
-        for (const auto& c : cambc::vision::camps())
-            if (g.spawns.is_set(c.spawn_position()) && fight(c, true)) return;
-    } else if (policy::exclude_target(could_move, deferred, goals.is_set(me.position()))) {
-        g.retry_round = round + retry_delay;
-        target_group = -1;
-        plan_valid = false;
-    }
+        }
+        if (target && fight(*target, walked)) return true;
+        // A ranged spell can make progress before walking. No stale camp list
+        // or target state from before the preceding action authorizes this call.
+        for (const auto& c : g.group.camps()) {
+            if (!ready()) return false;
+            if (fight(c, walked)) return true;
+        }
+        return false;
+    };
+    const auto advance = [&](bool capture) {
+        auto goals = g.spawns;
+        if (!capture) {
+            cambc::bitboard approaches;
+            for (const auto& c : g.group.camps()) {
+                if (!ready()) return;
+                if (c.is_visible() && c.health() > 0)
+                    approaches |= around(c.position(), me.attack_range());
+            }
+            if (!approaches.is_empty()) goals = std::move(approaches);
+            else if (g.ready_round > round) goals = around(g.anchor, 2) & ~g.spawns;
+        }
+        const auto origin = me.position();
+        const bool could_move = me.can_move();
+        bool deferred = false;
+        if (move_to(goals, &deferred)) {
+            walked = walked || me.position() != origin;
+        } else if (policy::exclude_target(could_move, deferred, goals.is_set(me.position()))) {
+            g.retry_round = round + retry_delay;
+            target_group = -1;
+            plan_valid = false;
+        }
+    };
+    policy::harvest_turn(ready, reward_ready, strike, advance);
 }
 
 void Bot::diagnostic(const char* stage) const {

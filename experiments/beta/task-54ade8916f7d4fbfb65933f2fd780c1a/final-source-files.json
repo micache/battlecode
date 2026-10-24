@@ -1,0 +1,11 @@
+{
+  "bot.cpp": "d40fdc83fa685c5fcb8dfd3462010e994eb6b98d6bc6ee7a51d87fefa2dd53b0",
+  "bot.h": "ca2acaa6e8b5ed5f97b59ba47c8da6e055e84d518f28ea5be86036ec0e3bfaaf",
+  "draft.cpp": "aa62db98abada2358aa5c3859eef3589d39e362d9a23c36b3ca7bcb382e0659a",
+  "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+  "harvest.h": "d19fbba80b12e5db8abbbb2e2a4e87f0e85953f2303eb692882fac774d17f677",
+  "harvest_test.h": "09471e431ce4102714f4bb3f25549a9aefe6fa9b62186617ca38e6e288635b73",
+  "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+  "policy.h": "b9a0f6eead8ad50e7dbe443ccf4d238e1a73b5d109a668b14e817c79e0203d0e",
+  "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+}
