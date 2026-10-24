@@ -70,23 +70,11 @@ bool move_towards_closest(cambc::bitboard goals) {
 
 void Bot::buy_items() {
     auto& me = cambc::self();
-    using I = cambc::item_type;
-    // Ryth converts bonus Health to Strength; other reset/splash farmers grow
-    // Strength directly. Only a finished Jungle emblem gives camp protection.
-    const bool health = me.champion_name() == cambc::champion_type::ryth;
-    const auto shard = health ? I::jungle_shard_of_health : I::jungle_shard_of_strength;
-    const auto emblem = health ? I::jungle_emblem_of_health : I::jungle_emblem_of_strength;
-    const auto counts = me.item_count();
-    if (!counts[emblem]) {
-        const auto n = sortie_policy::jungle_purchase(me.gold_count(), shard.cost(),
-            counts[shard], shard.combine_count(), false);
-        if (n && me.can_buy(shard, n)) me.buy(shard, n);
-        // A partial emblem should be completed on the next shopping visit.
-        if (counts[shard] + n < shard.combine_count()) return;
-    }
-    const auto power = I::power_shard_of_strength;
-    const auto n = me.gold_count() / power.cost();
-    if (n && me.can_buy(power, n)) me.buy(power, n);
+    const std::array items{cambc::item_type::power_shard_of_strength,
+        cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
+    const auto item = items[chosen_stat];
+    const unsigned count = me.gold_count() / item.cost();
+    if (count && me.can_buy(item, count)) me.buy(item, count);
 }
 
 // Bound extra combat work; this is a planning reserve, not measured fuel headroom.
@@ -259,13 +247,24 @@ void farm_camps() {
 }
 
 void Bot::play_turn() {
+    // Initialise this champion's build and read the draft message once.
+    if (chosen_stat < 0) {
+        chosen_stat = random_number(3);
+        std::cout << "draft: " << std::string(reinterpret_cast<const char*>(cambc::draft_memory.data()), 11) << '\n';
+    }
+
+    // Read before writing: little-endian u32 at shared-memory byte offset zero.
+    std::uint32_t round = 0;
+    cambc::shared_memory.read(0, std::span{&round, 1});
+    std::cout << "shared round: " << round << '\n';
+    round = cambc::round_number();
+    cambc::shared_memory.write(0, std::span{&round, 1});
+
     auto& me = cambc::self();
 
     // Refill control tools while dead so the next sortie can deny an altar.
     if (!me.is_alive()) {
-        recovery.update(false, false, 0.f, false);
         altar_control::buy_lock();
-        buy_items();
         return;
     }
 
@@ -274,23 +273,22 @@ void Bot::play_turn() {
         || (!me.can_move() && !me.can_attack() && !me.can_cast()))
         return;
 
-    const auto spawn = cambc::map::spawn_region(team::ally);
-    const bool at_spawn = spawn.is_set(me.position());
-    if (at_spawn) altar_control::buy_lock();
-    if (at_spawn || me.champion_name() == cambc::champion_type::tavi)
-        buy_items(); // can_buy validates spawn/death/Tavi location contracts.
-
-    const auto recover = recovery.update(true, at_spawn,
-        me.health() / me.max_health(), false);
-    if (recover == sortie_policy::recovery_action::wait_for_heal) return;
+    // Shop before leaving spawn.
+    const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
+    if (at_spawn) {
+        // Ten gold buys persistent denial; remaining gold follows the base build.
+        altar_control::buy_lock();
+        buy_items();
+    }
 
     altar_control::place_lock();
-    if (recover == sortie_policy::recovery_action::return_home) {
-        // Walk on every interrupted recall turn; never abandon the return just
-        // because health rose above the entry threshold.
+
+    // Retreat before recall so repeated damage interruptions still allow progress.
+    if (!at_spawn && me.health() < me.max_health() * 0.35f) {
+        const auto spawn = cambc::map::spawn_region(team::ally);
         move_towards_closest(spawn);
-        if (!spawn.is_set(me.position())
-            && !me.restrictions().contains(cambc::buff_restrictions::move))
+        // Arrival by walking can heal at turn end without starting a channel.
+        if (!spawn.is_set(me.position()))
             me.recall();
         return;
     }
@@ -320,19 +318,6 @@ void Bot::play_turn() {
         // If all altars are visibly hostile, approach one and clear it next turn.
         if (goals.is_empty()) goals = locked_goals;
         move_towards_closest(goals);
-        return;
-    }
-
-    // Couple reinvestment to recovery rather than a healthy, profitable sortie.
-    // These masks expose only personal vision. Tavi can already buy in place.
-    if (me.champion_name() != cambc::champion_type::tavi
-        && me.gold_count() >= sortie_policy::resupply_gold
-        && me.health() < me.max_health() * sortie_policy::resupply_health_fraction
-        && cambc::vision::champion_tiles(team::enemy).is_empty()
-        && cambc::vision::awake_camp_tiles().is_empty()
-        && !me.restrictions().contains(cambc::buff_restrictions::move)) {
-        recovery.update(true, false, me.health() / me.max_health(), true);
-        me.recall();
         return;
     }
 

@@ -1,0 +1,146 @@
+{
+  "evaluation_id": "7d86274f3b03e33bd3a2944323aaac8b5f4f66fa07acf0c6464cfc268f624ef7",
+  "candidate": {
+    "build_id": "249aa7034219aeb1dfe42d2a41b8e8648d234a2100b6033996b57493836e6692",
+    "commit": "22dd72afb8f8c8f0c5f18b6c33cfd5e709995d05",
+    "revision_id": "3aba30cf43acd2b12ab3681155ad570fe8f1c19ed850c2905572dc3fc9cdd6b2",
+    "source_hash": "64b2bce6becad2db579f134d576e8d62b53061b3658cb612338884bb142d7e1e"
+  },
+  "decision": "REJECTED",
+  "development_comparison": {
+    "commit_sha": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+    "common_opponent_delta": 0.0972972972972973,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 185,
+    "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+    "unknown_reliability": []
+  },
+  "selected_development_maps": {
+    "00ambush": {
+      "candidate": 0.5,
+      "incumbent": 0.4,
+      "pairs": 5
+    },
+    "00collision": {
+      "candidate": 0.8,
+      "incumbent": 0.6,
+      "pairs": 5
+    },
+    "01shortcut": {
+      "candidate": 0.0,
+      "incumbent": 0.1,
+      "pairs": 5
+    },
+    "00gem-fields": {
+      "candidate": 1.0,
+      "incumbent": 0.8,
+      "pairs": 5
+    },
+    "01the-farm": {
+      "candidate": 0.4,
+      "incumbent": 0.6,
+      "pairs": 5
+    }
+  },
+  "representative_failures": [
+    {
+      "map": "00ambush",
+      "match_id": "41b870d249abaf4cff7ccb5c68ed112233ffd6cebbe568fc71eb2da9881a3375",
+      "raw_available": true,
+      "round": 1587,
+      "side": "A",
+      "trace": null,
+      "metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 11,
+            "B": 2
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 827,
+            "B": 1047
+          }
+        },
+        "fuel_suspensions_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 8
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 1587
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 827,
+            "B": 1022
+          }
+        }
+      }
+    },
+    {
+      "map": "00ambush",
+      "match_id": "961899b1846d6872bf4a59aacc7d04785fbb3504cc08b0f9891bc9f194dff6d9",
+      "raw_available": true,
+      "round": 1725,
+      "side": "A",
+      "trace": null,
+      "metrics": {
+        "bot_faults_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 0
+          }
+        },
+        "champion_deaths": {
+          "available": true,
+          "value": {
+            "A": 9,
+            "B": 13
+          }
+        },
+        "collected_gems": {
+          "available": true,
+          "value": {
+            "A": 865,
+            "B": 1026
+          }
+        },
+        "fuel_suspensions_by_side": {
+          "available": true,
+          "value": {
+            "A": 0,
+            "B": 28
+          }
+        },
+        "round": {
+          "available": true,
+          "value": 1725
+        },
+        "submitted_gems": {
+          "available": true,
+          "value": {
+            "A": 730,
+            "B": 1015
+          }
+        }
+      }
+    }
+  ]
+}

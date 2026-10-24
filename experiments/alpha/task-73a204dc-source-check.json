@@ -1,0 +1,10 @@
+{
+  "task_id": "task-73a204dcf7c2439ba03fc9f074bb101f",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "changed_source_paths": [
+    "bots/alpha/src/camp_navigation.h",
+    "bots/alpha/src/camp_rotation.h"
+  ],
+  "other_source_files_unchanged": true,
+  "frozen_manifest_sha256": "39ad1fc06fda33101fb570ef7537471261bad818e26d5161c53a640d6564ea65"
+}

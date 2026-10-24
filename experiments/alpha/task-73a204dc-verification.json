@@ -1,0 +1,38 @@
+{
+  "task_id": "task-73a204dcf7c2439ba03fc9f074bb101f",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "checked_source_hash": "a665435f20163d6019b89f2d9194b12130610dbbb7a978472162f765f5667875",
+  "source_files": {
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/bot.cpp": "639c77d8b3038c6210bd373cb2092b2e62d18db79b383a6ac39b420ca8a1143b",
+    "bots/alpha/src/bot.h": "eecd001cbe86eba692d3d9d41fa0637bbf14258f2c257688bb8dfeedcd3bb9bf",
+    "bots/alpha/src/camp_navigation.h": "aef79559624bcc7a02b9bc298a258bea9aa95064863ef66f7ff72b3b210b9e6c",
+    "bots/alpha/src/camp_rotation.h": "12a73eb982bbcd1de68e3008b3d569a44a373253d008d128803430a4c0671d80",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "smoke_matches": [
+    {
+      "match_id": "300b76ba53599343fc5c9979b073e6b908befbd00b9c2e075cf0b28d8dfdeb33",
+      "report_path": "experiments/alpha/task-73a204dc-300b76ba-smoke-summary.json",
+      "state": "COMPLETED",
+      "bot_faults": 0,
+      "fuel_suspensions": 0,
+      "map_hash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+      "candidate_side": "unknown",
+      "opponent_revision": "unknown"
+    },
+    {
+      "match_id": "6bfbc221752607e37a03f556a7cb4283265dba941b8fe453bae58ee6ab1b3468",
+      "report_path": "experiments/alpha/task-73a204dc-6bfbc221-smoke-summary.json",
+      "state": "COMPLETED",
+      "bot_faults": 0,
+      "fuel_suspensions": 0,
+      "map_hash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+      "candidate_side": "unknown",
+      "opponent_revision": "unknown"
+    }
+  ]
+}

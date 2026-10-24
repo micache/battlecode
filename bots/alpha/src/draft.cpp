@@ -1,18 +1,20 @@
 #include <cambc.h>
 #include "draft.h"
 #include <algorithm>
-#include <array>
+#include <string_view>
+#include <vector>
+#include "random.h"
 
 void play_draft() {
-    using D = cambc::champion_draft;
-    // Four melee reset farmers can walk and attack; Tavi reinvests in the field.
-    constexpr std::array order{D::varg, D::vendetta, D::marcella, D::ryth, D::tavi};
+    // Choose randomly from the champions our team has not picked.
     const auto chosen = cambc::draft::current_draft(cambc::team::ally);
-    if (chosen.size() >= cambc::draft::team_size()) return;
-    for (const auto pick : order) {
-        if (std::find(chosen.begin(), chosen.end(), pick) == chosen.end()) {
-            cambc::draft::pick(pick);
-            return;
-        }
+    std::vector<cambc::champion_draft> available;
+    for (int i = 0; i < 11; ++i) { // Released champions only.
+        auto pick = static_cast<cambc::champion_draft>(i);
+        if (std::find(chosen.begin(), chosen.end(), pick) == chosen.end()) available.push_back(pick);
     }
+
+    // Draft memory starts at byte zero and is copied to each champion.
+    cambc::draft_memory = std::string_view("hello world");
+    cambc::draft::pick(available.at(random_number(available.size())));
 }

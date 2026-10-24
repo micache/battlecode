@@ -1,0 +1,15 @@
+{
+  "bot_id": "alpha",
+  "exit_code": 0,
+  "finished": 1792824898.5394826,
+  "matches": [
+    "300b76ba53599343fc5c9979b073e6b908befbd00b9c2e075cf0b28d8dfdeb33",
+    "6bfbc221752607e37a03f556a7cb4283265dba941b8fe453bae58ee6ab1b3468"
+  ],
+  "report_path": ".agent/check-task-73a204dcf7c2439ba03fc9f074bb101f.json",
+  "report_reference": "check:task-73a204dcf7c2439ba03fc9f074bb101f:a665435f20163d6019b89f2d9194b12130610dbbb7a978472162f765f5667875",
+  "source_hash": "a665435f20163d6019b89f2d9194b12130610dbbb7a978472162f765f5667875",
+  "started": 1792824863.6703064,
+  "state": "PASSED",
+  "task_id": "task-73a204dcf7c2439ba03fc9f074bb101f"
+}
