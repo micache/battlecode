@@ -16,7 +16,8 @@ constexpr float retreat_fraction = 0.45f;
 constexpr unsigned shopping_gold = 300;
 constexpr unsigned retry_delay = 12;
 constexpr std::uint64_t planning_reserve = 18000;
-constexpr std::uint64_t scan_reserve = 45000;
+constexpr std::uint64_t scan_reserve = 55000;
+constexpr std::uint64_t search_reserve = 45000;
 constexpr std::size_t max_group_checks = 12;
 constexpr std::uint64_t lock_reserve = 30000;
 constexpr int lock_placement_range = 2; // Pinned SDK consumable contract.
@@ -128,28 +129,66 @@ void dash_along_route(const cambc::distance_field& field) {
     }
 }
 
-// Every root is a free approach tile. Retry once after a hidden obstruction.
-bool move_to(cambc::bitboard goals) {
+// Cache route geometry, never observations used to authorize an action. Current
+// occupancy is read afresh for every step and a blocked route is repaired using
+// current blockers, including after a hidden-blocker reveal. A field computed
+// to the current tile contains the entire downhill route to its roots.
+bool move_to(cambc::bitboard goals, bool* deferred = nullptr) {
+    if (deferred) *deferred = false;
+    const auto defer = [&] { if (deferred) *deferred = true; return false; };
     auto& me = cambc::self();
     if (!me.can_move()) return false;
-    for (int attempt = 0; attempt < 2; ++attempt) {
-        const auto blocked = blocked_tiles();
-        goals &= ~blocked;
-        if (goals.is_empty() || goals.is_set(me.position())) return false;
+    const auto terrain = cambc::map::walls() | cambc::map::holes() | cambc::map::altars()
+        | cambc::map::spawn_region(team::enemy);
+    goals &= ~terrain;
+    if (goals.is_empty() || goals.is_set(me.position())) return false;
+    struct Route {
+        cambc::bitboard goals;
         cambc::distance_field field;
+    };
+    static std::optional<Route> route;
+    if (!route || route->goals != goals
+        || route->field.get(me.position()) == cambc::distance_field::unreachable) {
+        // Do not start a nontrivial search after the planner spent our reserve.
+        if (cambc::fuel_remaining() < search_reserve) return defer();
+        const auto blocked = blocked_tiles();
+        const auto free_goals = goals & ~blocked;
+        if (free_goals.is_empty()) return false;
+        route.emplace();
+        route->goals = goals;
         cambc::bitboard visited;
-        field.compute_to(blocked, goals, around(me.position(), 0), visited);
-        auto best = me.position();
-        auto value = field.get(best);
-        for (auto tile : blocked.reachable_tiles(me.position(), me.base_stats().base_move_speed).positions())
-            if (field.get(tile) < value) { best = tile; value = field.get(tile); }
-        if (best == me.position()) return false;
+        route->field.compute_to(blocked, free_goals, around(me.position(), 0), visited);
+    }
+    for (int attempt = 0; attempt < 2; ++attempt) {
+        if (cambc::fuel_remaining() < planning_reserve) return defer();
+        const auto origin = me.position();
+        const auto blocked = blocked_tiles();
+        const auto free_goals = goals & ~blocked;
+        auto best = origin;
+        auto value = route->field.get(origin);
+        const auto steps = blocked.reachable_tiles(origin, me.base_stats().base_move_speed);
+        for (auto tile : steps.positions())
+            if (route->field.get(tile) < value) { best = tile; value = route->field.get(tile); }
+        if (best == origin) {
+            // A corridor detour can initially move away from every local
+            // downhill waypoint. Rebuild the route rather than declaring that
+            // valid objective unreachable after a radius-limited repair.
+            if (cambc::fuel_remaining() < search_reserve) return defer();
+            if (free_goals.is_empty()) return false;
+            cambc::bitboard visited;
+            route->field.compute_to(blocked, free_goals, around(origin, 0), visited);
+            value = route->field.get(origin);
+            for (auto tile : steps.positions())
+                if (route->field.get(tile) < value) { best = tile; value = route->field.get(tile); }
+        }
+        if (best == origin) return false;
         if (me.move_absolute(best)) {
-            lock_nearby_altar(); // Refresh visibility after walking into placement range.
-            dash_along_route(field);
+            lock_nearby_altar();
+            dash_along_route(route->field);
             return true;
         }
-        if (cambc::fuel_remaining() < planning_reserve) return false;
+        // False revealed an obstruction. Rebuild only the live masks; cached
+        // terrain remains valid, but never retry a known occupied step.
     }
     return false;
 }
@@ -284,7 +323,10 @@ void Bot::initialize() {
             incoming += stats.base_strength;
         }
         const auto anchor = group.camps().front().spawn_position();
-        groups.push_back({std::move(group), std::move(spawns), anchor, hp, incoming});
+        const auto gems = group.gem_value(), gold = group.gold_value();
+        const auto count = static_cast<int>(group.camps().size());
+        groups.push_back({std::move(group), std::move(spawns), anchor, hp, incoming,
+            0, 0, gems, gold, count});
     }
     initialized = true;
 }
@@ -314,35 +356,54 @@ void Bot::farm_camps() {
     const auto items = me.item_count();
     const float mitigation = items[cambc::item_type::jungle_emblem_of_strength] ? 0.7f : 1.0f;
 
-    // One native search gives terrain-aware travel for all candidates. Monsters
-    // are passable only in this cost estimate; actual movement uses free roots.
-    auto terrain = cambc::map::walls() | cambc::map::holes() | cambc::map::altars()
-        | cambc::map::spawn_region(team::enemy);
-    cambc::distance_field travel;
-    cambc::bitboard visited;
-    travel.compute(terrain, around(position, 0), visited);
-
-    // Cheap value/time shortlist across the entire layout before live queries.
-    std::vector<std::size_t> order(groups.size());
-    std::iota(order.begin(), order.end(), 0);
-    const auto utility = [&](std::size_t i) {
-        const auto& g = groups[i];
-        const auto d = travel.get(g.anchor);
-        if (d == cambc::distance_field::unreachable || round < g.retry_round) return -1.0f;
-        const float walk = std::max(0, static_cast<int>(d) - attack_range);
-        const float wait = g.ready_round > round + walk ? g.ready_round - round - walk : 0;
-        const float value = g.group.gem_value() + policy::gold_value(cash) * g.group.gold_value();
-        return value / (walk + wait + g.initial_health / (strength * 1.125f) + 6.0f);
-    };
-    std::vector<float> rank(groups.size());
-    for (std::size_t i = 0; i < groups.size(); ++i) rank[i] = utility(i);
-    const auto checked = std::min(max_group_checks, order.size());
-    std::partial_sort(order.begin(), order.begin() + checked, order.end(), [&](auto a, auto b) {
-        if (static_cast<int>(a) == target_group) return static_cast<int>(b) != target_group;
-        if (static_cast<int>(b) == target_group) return false;
-        const auto va = rank[a], vb = rank[b];
-        return va != vb ? va > vb : a < b;
-    });
+    // Rebuild global travel/ranking only when its timestamp or origin expires.
+    // This cache contains estimates, never hidden group state or live health.
+    const int moved = plan_valid ? distance(position, plan_origin) : 0;
+    const bool refresh = policy::refresh_plan(plan_valid, round, plan_round, moved);
+    if (refresh) {
+        if (cambc::fuel_remaining() < search_reserve) return;
+        auto terrain = cambc::map::walls() | cambc::map::holes() | cambc::map::altars()
+            | cambc::map::spawn_region(team::enemy);
+        cambc::distance_field travel;
+        cambc::bitboard visited;
+        travel.compute(terrain, around(position, 0), visited);
+        plan_order.resize(groups.size());
+        plan_distance.resize(groups.size());
+        std::iota(plan_order.begin(), plan_order.end(), 0);
+        std::vector<float> rank(groups.size());
+        for (std::size_t i = 0; i < groups.size(); ++i) {
+            const auto& g = groups[i];
+            const auto d = travel.get(g.anchor);
+            plan_distance[i] = d;
+            if (d == cambc::distance_field::unreachable || round < g.retry_round) {
+                rank[i] = -1; continue;
+            }
+            const float walk = std::max(0, static_cast<int>(d) - attack_range);
+            const float wait = g.ready_round > round + walk ? g.ready_round - round - walk : 0;
+            const float value = g.gems + policy::gold_value(cash) * g.gold;
+            rank[i] = value / (walk + wait + g.initial_health / (strength * 1.125f) + 6.0f);
+        }
+        const auto shortlist = std::min(max_group_checks, plan_order.size());
+        std::partial_sort(plan_order.begin(), plan_order.begin() + shortlist, plan_order.end(), [&](auto a, auto b) {
+            const auto va = rank[a], vb = rank[b];
+            return va != vb ? va > vb : a < b;
+        });
+        plan_origin = position;
+        plan_round = round;
+        plan_valid = true;
+    }
+    // During a commitment, inspect only that group. Its visible lifecycle and
+    // risk are still checked below; invalidation triggers a full scan next turn.
+    std::vector<std::size_t> order;
+    const bool committed = !refresh && target_group >= 0;
+    if (committed) order.push_back(static_cast<std::size_t>(target_group));
+    else {
+        const auto n = std::min(max_group_checks, plan_order.size());
+        order.assign(plan_order.begin(), plan_order.begin() + n);
+        if (target_group >= 0 && std::find(order.begin(), order.end(), target_group) == order.end())
+            order.insert(order.begin(), static_cast<std::size_t>(target_group));
+    }
+    const auto checked = order.size();
 
     int chosen = -1, rally = -1;
     float best_score = -1, rally_score = -1;
@@ -352,9 +413,9 @@ void Bot::farm_camps() {
         const auto i = order[n];
         auto& g = groups[i];
         if (round < g.retry_round) continue;
-        const auto path = travel.get(g.anchor);
+        const auto path = plan_distance[i];
         if (path == cambc::distance_field::unreachable) continue;
-        const int walk = std::max(0, static_cast<int>(path) - me.attack_range());
+        const int walk = std::max(0, static_cast<int>(path) - distance(position, plan_origin) - me.attack_range());
         bool available = false;
         const bool seen = !(g.spawns & visible).is_empty();
         if (seen) {
@@ -394,14 +455,14 @@ void Bot::farm_camps() {
             }
         }
         if (available) hp = incoming = 0;
-        if (me.passive() == cambc::passive_type::splash_attack && g.group.camps().size() > 1)
+        if (me.passive() == cambc::passive_type::splash_attack && g.count > 1)
             team_dps += strength * 0.6f;
         const float clear = hp / std::max(1.0f, team_dps);
         // A single monster deals full damage until dead. Groups lose attackers
         // progressively; price half their combined damage across the clear.
         const float loss = clear * incoming * mitigation
-            * (g.group.camps().size() == 1 ? 1.0f : 0.65f);
-        const float value = g.group.gem_value() + policy::gold_value(cash) * g.group.gold_value();
+            * (g.count == 1 ? 1.0f : 0.65f);
+        const float value = g.gems + policy::gold_value(cash) * g.gold;
         const float wait = g.ready_round > round + walk ? g.ready_round - round - walk : 0;
         float score = value / (walk + wait + clear + 6.0f);
         // Soft dispersion preserves help on monsters but avoids cluster sharing.
@@ -415,6 +476,12 @@ void Bot::farm_camps() {
         if (score > best_score) { chosen = i; best_score = score; reward = available; }
     }
     if (chosen < 0) {
+        if (committed) {
+            // Distinguish an invalid commitment from having searched all goals.
+            target_group = -1;
+            plan_valid = false;
+            return;
+        }
         if (me.gem_count()) { bank(); return; }
         if (rally >= 0) {
             // On monster-only maps gather outside attack range before pulling.
@@ -459,12 +526,15 @@ void Bot::farm_camps() {
         else if (g.ready_round > round) goals = around(g.anchor, 2) & ~g.spawns;
     }
     if (cambc::fuel_remaining() < planning_reserve) return;
-    if (move_to(goals)) {
+    const bool could_move = me.can_move();
+    bool deferred = false;
+    if (move_to(goals, &deferred)) {
         for (const auto& c : cambc::vision::camps())
             if (g.spawns.is_set(c.spawn_position()) && fight(c, true)) return;
-    } else if (!goals.is_set(me.position())) {
+    } else if (policy::exclude_target(could_move, deferred, goals.is_set(me.position()))) {
         g.retry_round = round + retry_delay;
         target_group = -1;
+        plan_valid = false;
     }
 }
 

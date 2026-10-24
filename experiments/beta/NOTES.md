@@ -1,109 +1,115 @@
 # Operational summary
 
-## task-465e00389d2243759d3832a5f24e20f5 — complete farming foundation
+## task-04a6a36aad2a41859e4b099bab70dc30 — amortized objective routing
 
-Hypothesis: a deliberate farming roster plus a complete, risk-budgeted
-clear/capture/invest/tribute policy will improve matched wins and mean submitted
-gems over starter source 9e804e3e, without new bot faults or fuel suspensions.
-No positive matched win gain, lower submissions, or increased faults/suspensions
-falsifies it. Strategic gain is unmeasured; smoke validity is established below.
+Identity: beta, bot/beta; input/HEAD c6bdbe58ecdcf31c181b48bcba2a0460c65da7d9.
+Actual edit base and protected accepted commit: 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9;
+base source 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
+Trusted preparation reset all six starter files to that commit; independently
+verified each file and branch. This was not incomplete worker work. Latest beta
+candidate c6bdbe58 / cc05fd9d was evaluated REJECTED; no pending beta candidate.
+Accepted source remains preserved in Git. Prior detailed notes remain in Git at
+c6bdbe58:experiments/beta/NOTES.md and task-465e00389d2243759d3832a5f24e20f5/.
 
-Identity: beta / bot/beta. HEAD/input 237c010e8e8b2a2d7e176ee1f160abf7380d056a;
-actual edit and protected accepted commit 0ca5c04ecf26a8fa677ef2ac2b9af249b688a5d9;
-edit hash 9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-All six on-disk starter files matched that edit commit before editing.
-Preparation's Git diff against HEAD is the trusted source reset, not unfinished
-worker work. Prior task was evaluated REJECTED; no pending beta candidate found.
-Accepted source remains preserved in Git and trusted snapshot 81aa2616.
-Task strategy.phase is foundation; brief's final mode label says refinement.
-The actual starter capabilities and trusted strategy.phase guided this candidate.
-Previous operational summary is archived in this experiment's previous-notes.md.
+Hypothesis: reuse terrain routes and amortize global objective ranking within
+our previous complete farming policy to improve matched wins and submitted gems
+over starter 9e804e3e, with fewer fuel suspensions than measured cc05fd9d.
+No matched win gain, lower submissions, or unchanged/increased suspensions
+falsifies the prediction. Strength and broad fuel improvement are unmeasured.
 
-Bottleneck / rules deduction: the actual starter uses random draft/builds, no
-abilities, no committed whole-group clearing, no clear safety estimate and no
-reliable spawn-healing hold. Nearest-camp attacks can fragment clearing; kills
-alone never award capture rewards. Capture needs uncontested occupancy through
-five countdown rounds; extra allies do not accelerate it. Carried gems do not
-score. Tribute is not cancelled by ordinary damage; recall is. Unmeasured causal
-claim, not an interpretation of older candidate scores.
+Evidence: evaluation 47319140264e1dc54b6d3c460c7d439d624673e2c61e617d64416c4eb7f0d57e,
+source c6bdbe58 / cc05fd9d: full-pool 234W/166L, rejected; development subset
+214W/156L, 370 observations, mean own fuel suspensions 3.618919, no bot faults.
+Do not attribute those scores to the starter edit base or today's candidate.
+00ambush/B loss 2b2c02f418758a0d84ad5d997b665ceafbf1835453a28d5a74735722d000b3bd:
+947:1011 submitted, 21 own suspensions, four deaths, no bag loss or bot faults.
+00collision/A loss 69d69c7688b27c5e7308d489be254ed28e56b0e19935a0c80ff9eff0e0a82c01:
+505:1013 submitted, 26 deaths, 214 bag loss, zero own suspensions or faults.
+00elk-arena/A loss 02d462af56c98ce1daf92bf0f03da16ec66ae636cf7b180c64d4ce919f64d222:
+240:1020 submitted, three own suspensions; gold/kills alone did not win.
+Full compact summaries are saved in this task's experiment directory. These
+final statistics support investigation; they do not prove a per-turn cause.
 
-Implementation:
-- Draft Varg/Vendetta/Tavi/Ryth/Marcella, truncated to actual map draft size.
-  Varg supplies splash, Vendetta resets, Tavi invests without travel; later picks
-  add durable AoE and stun-immune tributes. No linked-death pick in normal roster.
-- Reuse our input revision's reviewed movement/combat/item helpers, updating
-  asleep/awake threat semantics and five-hit lock comment for SDK 3.0.5.
-  This is an explicit transfer of working systems, not a claim that input scores
-  evaluate this newly constructed foundation.
-- Load static groups once. Native terrain distance search ranks all groups by
-  gems plus discounted gold per travel/clear/capture time. Inspect at most 12
-  with a 45k fuel scan reserve; maintain 25% target commitment bonus.
-- Estimate current remaining HP/damage only from visible camps, with full static
-  design values for hidden members. Use visible nearby ally Strength, Varg
-  splash estimate and Jungle mitigation. Predicted clear loss must fit 65% of
-  current HP. Otherwise rally outside monster range on monster-only layouts.
-- Hold occupied available rewards before banking. Skip another visible collector;
-  discount duplicate cluster work. Store timestamp-derived respawn predictions,
-  expire retry exclusions after 12 rounds, and vacate spent regions.
-- Basic attacks, resets, damaging casts, AoE and shields; refresh after movement.
-  Free approach roots, two bounded reveal retries and conservative route dashes.
-  Main dispatch still catches invalid actions and always calls official yield.
-- Bank at 30 gems, within seven geometric approach steps of an altar, for a
-  winning bag or near SDK round limit. No feasible farm also banks small bags.
-  Hostile locks are attacked; friendly locks allow tribute. Preserve channels.
-- Retreat below 45% HP, escape awake monsters before recall, remain on spawn
-  through turn end to heal. Empty-bag safe recall at 300 cash permits healthy
-  reinvestment. Tavi shops remotely. Build Jungle Strength, Monster Strength,
-  Durability Health, then Power Strength; opportunistic ten-gold altar locks.
-- No draft/live memory protocol or per-turn logging. All state is private.
-  policy.h compile-time assertions cover empty bags, bag/range boundaries,
-  winning bags and round-limit banking.
+Source mechanism: cc05fd9d builds a terrain field and globally ranks all camp
+groups every farming turn, then rebuilds a dynamic route field for movement.
+The chosen change amortizes that work rather than repeating the previous
+foundation experiment unchanged. Explicitly reuse our own c6bdbe58 draft,
+combat/build/recovery/bank helpers as the coherent starting policy upgrade from
+the trusted starter. No opponent source is copied wholesale.
 
-Frozen manifest 2414fd9b inspected shared boss 4feab379 / ea15ef0f / f4b4f65e:
-fixed reset/splash farmers; value/(travel+clear+wait) routing, claims/helpers,
-clear-risk estimates, 30-gem banking, Jungle/Monster builds and 150-gold recall.
-Relevant source: config.h, draft.cpp, bot.h and bot.cpp targeting/farm/tribute/
-play sections. Frozen beta 054bc346 / 7cab9b0f drafts Varg/Tavi/Ryth/Vendetta/
-Marcella. Transfer these mechanics selectively while retaining private,
-visibility-based coordination and a more conservative health budget.
-Arena source does not establish official private-opponent behavior.
+Changes / current policy:
+- Deliberate Varg/Vendetta/Tavi/Ryth/Marcella roster, truncated to actual picks;
+  clear/capture/rotate, visible-state risk checks, Jungle/Monster/Durability then
+  Power equipment, field Tavi shopping, healing hold and 30-gem/near-altar bank.
+- Cache static camp rewards/counts and terrain-aware shortlist/travel estimates.
+  Expire after six turns or displacement over six tiles. During commitment,
+  evaluate only the active group's current state, visible health and occupants.
+  Otherwise examine the best 12 plus a committed target if absent (max 13).
+- Cache a route for the exact goal mask; refresh on changed goals
+  or an unreached current position. Build with current observed blockers, then
+  choose actual movement from freshly read blockers. New hidden obstructions
+  refresh masks, at most two movement attempts.
+- If descending is blocked, rebuild to current free goals with current blockers.
+  A radius-limited repair was legal but harmed smoke throughput; corridor
+  detours can require initially increasing the old field distance. Reuse the
+  repaired route on subsequent turns. Searches retain explicit fuel guards.
+- Do not begin searches below 45k remaining fuel; live scans stop below 55k;
+  basic movement loop retains 18k. Insufficient-budget movement is deferred,
+  not converted into a 12-round camp exclusion. Unavailable movement also does
+  not invalidate a target. Main dispatch always reaches official end_turn.
+- Compile-time regressions cover plan validity/age/displacement/time reversal,
+  deferral versus blocked/arrived/unavailable movement, and prior bank/dash edges.
+- All state is private. No live/draft memory writes and no per-turn logging.
 
-Negative findings retained: later candidate 237c010e / 6145b56e was REJECTED,
-276W/124L on the full pool; this is not evidence for today's starter edit base.
-Do not repeat its strict 150-cash zero-gem eligibility cap: this candidate uses
-soft cash-dependent gold value plus actual reinvestment. Older draft-only and
-combat experiments do not isolate the effects of this integrated foundation.
+Frozen opponents: manifest b939207e, six sources. Inspected shared boss
+4feab379 / ea15ef0f / f4b4f65e config, draft, targeting, farm and turn dispatch:
+fixed melee-reset/AoE roster, periodic travel refresh/retargeting, helper claims,
+30-gem banks and 150-gold reinvestment. Transfer periodic geometry reuse while
+retaining our own conservative clear budget and private coordination. Frozen
+beta 054bc346 likewise bounds live shortlist checks; gamma ecdee203 is the
+same starter hash as our edit base. Arena source is not official private code.
+Rejected alternatives: shared rally protocol would not fix repeated route work;
+combat avoidance addresses collision deaths but not large-map planning cost.
+Do not repeat rejected strict 150-cash zero-gem camp caps or draft-only tweaks.
 
-Rules/SDK: CLI 3.0.5, engine lock ac2b5ad200d0df54380e94f82b1a327dd0407202533325808c8bf3af26c56136;
-suite published-40-release-305-v1. Reviewed current GameRules, C++ API, matching
-SDK, compact reference, research/organizer ledger and playbooks A–G. Material
-updates: Golem, Heart of Ruin, five-hit locks, ten-turn wards, awake/asleep queries
-and blocked-target move_towards behavior. Winning gems, round limit and tribute
-range use SDK settings, with handbook profile 1000/2000/range 1. Static design
-queries supply camp HP/Strength/range. SDK SHA256 894229e17d886358719abb70cac9ab5993263a0c05bf7df14fc48fa04a8336d3.
-Organizer download hub does not certify all event policies or production parity.
+Rules/SDK unchanged since task-465e0038 full review. Consulted compact reference,
+playbooks B/C/D/E/F/G, research and organizer ledger, relevant C++ SDK contracts.
+CLI 3.0.5; engine lock ac2b5ad200d0df54380e94f82b1a327dd0407202533325808c8bf3af26c56136;
+suite published-40-release-305-v1. Installed header independently matches
+894229e17d886358719abb70cac9ab5993263a0c05bf7df14fc48fa04a8336d3.
+Organizer Markdown hub does not establish all policies or production parity.
 
-Validation: first bot-check FAILED/1, source 2d715761, on an out-of-scope `seen`
-variable; saved check-build-failed.json. Repaired before final check.
-Final `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
-PASSED/0 for source cc05fd9d169d4956603c3f9fafde4d88901fc70217218384b775fc195c715079.
-Report .agent/check-task-465e00389d2243759d3832a5f24e20f5.json, preserved in
-this experiment/check-report.json. Exact-source check-report PASSED/0, saved as
-exact-source-check.json. No source changes after that trusted check.
-Smoke 56f48721a68c7464ded4e1c7673239410a9cff3ec04cefed844376b4b8c5c8ca:
-our A roster, COMPLETED at round 964, 1000:4 submitted, zero own deaths, bag loss,
-faults and suspensions. Smoke 4dafb8c8be03d3ff96974479fd61b1f2c93da4d17c04e10fa89323341648b470:
-our B roster, COMPLETED at round 945, 1017:4 submitted, same zero own failures.
-Both: 41x41 map hash 6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620,
-map name and opponent revision unknown. These are wrapper smoke fixtures, not
-controlled broad strength evidence. Saved summary slices include A's tail.
-`git diff --check` PASSED/0; saved diff-check.txt.
+Validation: bot-check --owner-config /var/lib/battlecode-volume/config/beta.json
+initial PASSED/0 for 5831f61f; saved task directory/check-initial.json.
+Second check PASSED/0 for 4d72f980, but legal navigation regressed: A smoke
+9a653d95 ended at round 2000 with 406:55 submitted; B smoke 6631b051 won
+1003:4 at 1228. Both had zero own faults/suspensions. Preserved as
+check-local-repair.json and local-repair-smoke-{a,b}.json. Do not mistake that
+passing check for evidence of good objective throughput. Replaced static-only
+routing/local repairs with reusable occupancy-aware routes and full repair
+when blocked. Final `bot-check --owner-config /var/lib/battlecode-volume/config/beta.json`
+PASSED/0 for source
+4fcc082c28cb06bcac21ee3c5e27638a1111b80db1fdffa25664fc2e1dcc331a.
+Saved task directory/check-final.json and exact-source-check.json; exact-source
+check-report independently PASSED/0. No source changes after the final check.
+Final A smoke 42dfd6946de7c177e53e07d94cfbb2f2f2a3a7295ebdf2c18806634cd0d23f8e:
+COMPLETED at 925, 1008:4 submissions. Final B smoke
+0bf340e099fe53d9836317415efa3da8e4b789464af3468504ca5f2d07f3f492:
+COMPLETED at 1031, 1002:22 submissions. Both: zero own faults, suspensions,
+deaths and bag loss. Both 41x41 fixtures, map hash
+6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620;
+map name/opponent revision unknown. Saved full smoke-{a,b}-summary.json.
+Earlier cc05fd9d fixture wins (964/A, 945/B) establish that this smoke comparison
+is mixed on speed, not proof of a competitive gain or independent repeats.
+Final git diff --check PASSED/0; task directory/diff-check.txt.
 
-Risks: partial vision/remote allies can distort clear-risk estimates; no shared
-reservations; near-altar decision uses geometric distance; contested capture can
-stall; shortlisting may omit a feasible choice. Rally coordination and dense-map
-fuel headroom are unmeasured outside smoke. No measured advantage over boss.
-Next: supervisor evaluates exact checked source against edit base/champion on
-matched maps/sides/frozen opponents. Inspect submissions, deaths and suspension
-counts, with monster-only and dense maps as critical contrasts. Full promotion
-gate remains mandatory. No agents, publication, official actions or eval polling.
+Remaining uncertainty: cached occupancy can leave a suboptimal detour until
+the next repair; six-turn ranks can miss new opportunities. Full ranking and
+initialization are still nontrivial phases; dense-map headroom is not certified
+by smoke. Collision deaths, cooperative monster rally and camp value bias remain
+separate limitations. No competitive improvement is claimed from wrapper wins.
+Next: supervisor evaluates exact checked source against edit base, prior cc05fd9d
+and protected champion on matched maps/sides/opponents under unchanged gates;
+compare submitted gems, wins, fuel suspension and dense-map nonprogress. If fuel
+improves but wins do not, investigate collision combat and monster-only rally.
+No agents, commits, publication, official actions or tournament polling.

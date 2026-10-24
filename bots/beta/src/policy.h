@@ -6,6 +6,23 @@ constexpr float risk_fraction = 0.65f;
 constexpr unsigned bank_bag = 30;
 constexpr int near_altar = 7;
 constexpr unsigned end_margin = 20;
+constexpr unsigned plan_lifetime = 6;
+constexpr int plan_radius = 6;
+constexpr bool refresh_plan(bool valid, unsigned now, unsigned observed, int moved) {
+    return !valid || now < observed || now - observed >= plan_lifetime || moved > plan_radius;
+}
+static_assert(refresh_plan(false, 100, 100, 0));
+static_assert(!refresh_plan(true, 105, 100, 6));
+static_assert(refresh_plan(true, 106, 100, 0));
+static_assert(refresh_plan(true, 101, 100, 7));
+static_assert(refresh_plan(true, 99, 100, 0));
+constexpr bool exclude_target(bool could_move, bool deferred, bool at_goal) {
+    return could_move && !deferred && !at_goal;
+}
+static_assert(exclude_target(true, false, false));
+static_assert(!exclude_target(true, true, false));
+static_assert(!exclude_target(false, false, false));
+static_assert(!exclude_target(true, false, true));
 constexpr float gold_value(unsigned cash) { return cash < 150 ? 0.18f : 0.04f; }
 constexpr bool bank_now(unsigned bag, int altar_steps, unsigned round,
                         unsigned limit, unsigned submitted, unsigned winning) {
