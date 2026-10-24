@@ -7,6 +7,17 @@ constexpr unsigned bank_bag = 30;
 constexpr int near_altar = 7;
 constexpr unsigned end_margin = 20;
 constexpr unsigned plan_lifetime = 8;
+constexpr unsigned target_lifetime = 16;
+constexpr int travel_horizon = 24;
+constexpr bool review_target(unsigned now, unsigned selected) {
+    return now < selected || now - selected >= target_lifetime;
+}
+// An unreached tile is outside this local search, not necessarily unreachable.
+// Adjust old-origin estimates conservatively toward geometric cost as we move.
+constexpr int travel_steps(int geometric, unsigned local, int moved, unsigned unreachable) {
+    const int estimate = (local == unreachable ? travel_horizon + 1 : static_cast<int>(local)) - moved;
+    return estimate > geometric ? estimate : geometric;
+}
 constexpr unsigned frontier_batch = 6;
 constexpr unsigned ranking_batch = 32;
 constexpr unsigned local_candidates = 4;
