@@ -10,12 +10,12 @@ class Bot {
         int ready_at = 0, observed_at = -1, state = 0;
         float hp = 0, strength = 0;
         int travel = -1; // Static distance observation from travel_origin.
+        bool has_gems = true; // Immutable draft metadata; unknown stays eligible.
     };
     bool initialized = false;
     bool recovering = false;
     int target = -1, slot = 0, now = 0, cursor = 0;
     int last_log = -100, stuck = 0;
-    int bank_best = 1000000, bank_progress_at = -1;
     std::vector<Route> routes;
     cambc::bitboard terrain, spawn, altar_goals;
     std::vector<cambc::vec2> altars;
@@ -31,9 +31,7 @@ class Bot {
     bool walk(cambc::bitboard goals, bool dash = false);
     bool threatened(cambc::vec2 p);
     bool bank();
-    bool clear_bank_path();
-    bool fight(bool moved, bool champions_only = false,
-        const std::optional<cambc::camp>& obstacle = std::nullopt);
+    bool fight(bool moved, bool champions_only = false);
     void shield();
     void recover();
     void farm();

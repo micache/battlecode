@@ -45,13 +45,20 @@ void Bot::initialize() {
     altar_field->compute(terrain, altar_goals, visited);
     const auto& bytes = bc::draft_memory;
     if (bytes.size() >= policy::plan_header && std::to_integer<int>(bytes[0]) == 'G'
-        && std::to_integer<int>(bytes[1]) == 'A' && std::to_integer<int>(bytes[2]) == 1) {
+        && std::to_integer<int>(bytes[1]) == 'A'
+        && (std::to_integer<int>(bytes[2]) == 1 || std::to_integer<int>(bytes[2]) == 2)) {
         const auto n = std::to_integer<unsigned>(bytes[3]) + (std::to_integer<unsigned>(bytes[4]) << 8);
         if (n <= policy::max_groups && 5 + 2*n <= bytes.size()) {
             routes.reserve(n);
             for (unsigned i = 0; i < n; ++i) {
                 const vec2 p{std::to_integer<int>(bytes[5+2*i]), std::to_integer<int>(bytes[6+2*i])};
-                if (bc::map::is_in_bounds(p)) routes.push_back(Route{p});
+                if (bc::map::is_in_bounds(p)) {
+                    Route route{p};
+                    if (std::to_integer<int>(bytes[2]) == 2 && bytes.size() >= policy::reward_plan_size(n))
+                        route.has_gems = (std::to_integer<unsigned>(bytes[policy::reward_offset(n,i)])
+                            & policy::reward_bit(i)) != 0;
+                    routes.push_back(route);
+                }
             }
         }
     }
@@ -170,8 +177,8 @@ void Bot::shield() {
 bool Bot::bank() {
     auto& me = bc::self();
     if (!me.gem_count() || !me.can_move() || !me.can_attack()) return false;
-    // Keep every altar in the path goals. A global preference for unlocked
-    // altars can discard the only reachable bank; five lock hits are bounded.
+    // A hostile lock adds five hits; prefer an unlocked altar when available,
+    // but keep locked altars reachable if all local routes are locked.
     auto tribute_here = [&]() {
         for (auto a : altars) {
             if (dist(me.position(),a) > bc::constants::submit_gems_range) continue;
@@ -187,65 +194,24 @@ bool Bot::bank() {
             if (lock.count() && !bc::vision::altar_lock_tiles(team::ally).is_set(a)
                 && !me.restrictions().contains(bc::buff_restrictions::consumable)) lock.use(a);
             me.submit_gems(a);
-            bank_progress_at = -1;
-            bank_best = policy::unreachable;
             return true;
         }
         return false;
     };
     if (tribute_here()) return true;
-    const auto d = altar_field->get(me.position());
-    if (bank_progress_at < 0 || d < bank_best) {
-        bank_best = d;
-        bank_progress_at = now;
-    }
-    // Dynamic pathfinding cannot cross living monsters. After four rounds
-    // without net progress, open a static bank corridor rather than orbiting
-    // an impassable camp forever. Normal detours get the first opportunity.
-    if (now - bank_progress_at >= policy::bank_stall_rounds && clear_bank_path()) return true;
+    auto goals = altar_goals;
+    bc::bitboard unlocked;
+    const auto hostile = bc::vision::altar_lock_tiles(team::enemy);
+    for (auto a : altars) if (!hostile.is_set(a)) unlocked |= around(a, bc::constants::submit_gems_range);
+    if (!unlocked.is_empty()) goals &= unlocked;
     // Walking is compatible with melee tribute. Refresh position and locks on
     // arrival, and start the channel immediately rather than wasting a round.
-    walk(altar_goals, true);
+    walk(goals, true);
     tribute_here();
     return true;
 }
 
-bool Bot::clear_bank_path() {
-    auto& me = bc::self();
-    if (bc::fuel_remaining() < policy::planning_floor) return false;
-    const int origin = altar_field->get(me.position());
-    if (origin == bc::distance_field::unreachable) return false;
-    std::optional<bc::camp> obstacle;
-    int closest = policy::bank_clear_radius + 1;
-    auto accessible = blockers(terrain).reachable_tiles(me.position(),policy::bank_clear_radius);
-    accessible.set(me.position());
-    const auto candidates = bc::vision::camp_tiles() & around(me.position(),policy::bank_clear_radius);
-    for (auto p : candidates.positions()) {
-        if (bc::fuel_remaining() < policy::planning_floor) break;
-        const auto distance = altar_field->get(p);
-        const int separation = dist(me.position(),p);
-        if (distance == bc::distance_field::unreachable
-            || !policy::bank_obstacle(origin,distance,separation)) continue;
-        if ((around(p,me.attack_range()) & accessible).is_empty()) continue;
-        auto c = bc::vision::camp_at(p);
-        if (!usable(c)) continue;
-        if (separation < closest || (separation == closest && c.health() < obstacle->health())) {
-            obstacle = c; closest = separation;
-        }
-    }
-    if (!obstacle) {
-        // Enemy bodies can obstruct an approach too; never attack an ally.
-        return fight(false,true);
-    }
-    shield();
-    fight(false,false,obstacle);
-    if (!usable(*obstacle)) return true;
-    const bool moved = walk(around(obstacle->position(),me.attack_range()),true);
-    if (bc::fuel_remaining() > policy::action_floor && usable(*obstacle)) fight(moved,false,obstacle);
-    return true;
-}
-
-bool Bot::fight(bool moved, bool champions_only, const std::optional<bc::camp>& obstacle) {
+bool Bot::fight(bool moved, bool champions_only) {
     auto& me = bc::self();
     if (!me.can_attack() && !me.can_cast()) return false;
     std::optional<bc::champion> enemy;
@@ -254,8 +220,7 @@ bool Bot::fight(bool moved, bool champions_only, const std::optional<bc::camp>& 
         if (!enemy || e.health() < enemy->health()) enemy = e;
     }
     std::optional<bc::camp> camp;
-    if (!enemy && obstacle && usable(*obstacle)) camp = obstacle;
-    else if (!enemy && !champions_only && target >= 0 && routes[target].group) {
+    if (!enemy && !champions_only && target >= 0 && routes[target].group) {
         for (const auto& c : routes[target].group->camps()) {
             if (!c.is_visible() || c.health() <= 0) continue;
             if (dist(me.position(),c.position()) > std::max(4, me.attack_range())) continue;
@@ -301,6 +266,7 @@ bool Bot::load_route(int i) {
     if (r.group) return true;
     if (bc::fuel_remaining() < policy::planning_floor) return false;
     r.group = bc::map::camp(r.anchor).camp_group();
+    r.has_gems = r.group->gem_value() > 0;
     for (const auto& c : r.group->camps()) {
         const auto stats = c.base_stats();
         r.hp += stats.base_health; r.strength += stats.base_strength;
@@ -348,8 +314,12 @@ void Bot::farm() {
     }
     // Cheap global shortlist, then bounded live evaluation. Committed and
     // rotating probe slots prevent permanent exclusion by the shortlist.
-    std::vector<std::pair<int,int>> near;
+    const auto items = me.item_count();
+    const bool farming_core = items[bc::item_type::jungle_emblem_of_strength]
+        && items[bc::item_type::monster_emblem_of_strength];
+    std::vector<std::pair<int,int>> near, gem_near;
     near.reserve(policy::shortlist+2);
+    gem_near.reserve(policy::gem_shortlist+1);
     for (unsigned i = 0; i < routes.size(); ++i) {
         if (routes[i].ready_at > now) continue;
         const int d = route_distance(i);
@@ -357,7 +327,21 @@ void Bot::farm() {
         auto at = std::lower_bound(near.begin(), near.end(), std::pair{d,static_cast<int>(i)});
         near.insert(at,{d,static_cast<int>(i)});
         if (near.size() > policy::shortlist) near.pop_back();
+        if (farming_core && routes[i].has_gems) {
+            auto gem_at = std::lower_bound(gem_near.begin(), gem_near.end(), std::pair{d,static_cast<int>(i)});
+            gem_near.insert(gem_at,{d,static_cast<int>(i)});
+            if (gem_near.size() > policy::gem_shortlist) gem_near.pop_back();
+        }
         if (i % 32 == 0 && bc::fuel_remaining() < policy::planning_floor) break;
+    }
+    // Reserve half the SAME bounded evaluation slots for gem-bearing routes.
+    // Fill the rest with nearby work, including gold; retain target/probe below.
+    if (!gem_near.empty()) {
+        for (auto entry : near) {
+            if (gem_near.size() >= policy::shortlist) break;
+            if (std::find(gem_near.begin(),gem_near.end(),entry) == gem_near.end()) gem_near.push_back(entry);
+        }
+        near = std::move(gem_near);
     }
     if (target >= 0 && route_distance(target) < policy::unreachable) near.insert(near.begin(), {0,target});
     const int probe = cursor++ % routes.size();
@@ -367,7 +351,6 @@ void Bot::farm() {
     int best = target >= 0 && route_distance(target) < policy::unreachable
         && routes[target].ready_at <= now ? target : -1;
     const auto allies = bc::vision::champions(team::ally);
-    const auto items = me.item_count();
     const float mitigation = (items[bc::item_type::jungle_emblem_of_strength] ? 0.7f : 1.0f)
         * (items[bc::item_type::durability_emblem_of_health] ? 0.9f : 1.0f);
     for (auto [unused,i] : near) {
@@ -397,7 +380,7 @@ void Bot::farm() {
         const float exposure = 0.45f * clear * r.strength * mitigation;
         // Soft recovery cost rather than an absolute risk veto: hard exclusions
         // previously regressed on another edit base. Large camps are penalized.
-        float score = policy::route_score(policy::value(g.gem_value(),g.gold_value(),now),
+        float score = policy::route_score(policy::value(g.gem_value(),g.gold_value(),now,farming_core),
             route_distance(i), clear + 20.0f*exposure/std::max(1.0f,me.health()), bc::constants::capture_time);
         if (exposure > me.health()) score *= 0.15f;
         if (i == target) score *= 1.30f;
@@ -447,14 +430,13 @@ void Bot::log(const char* mode) {
         << " hp=" << static_cast<int>(me.health()) << " gems=" << me.gem_count()
         << " xy=" << me.position().x << "," << me.position().y
         << " route_age=" << (travel_round < 0 ? -1 : now-travel_round)
-        << " bank_stall=" << (bank_progress_at < 0 ? 0 : now-bank_progress_at)
         << " fuel=" << bc::fuel_remaining() << '\n';
 }
 
 void Bot::play_turn() {
     auto& me = bc::self();
     now = bc::round_number();
-    if (!me.is_alive()) { buy_items(); target = -1; recovering = false; bank_progress_at = -1; bank_best = policy::unreachable; return; }
+    if (!me.is_alive()) { buy_items(); target = -1; recovering = false; return; }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
     if (!initialized) initialize();
     if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
@@ -484,8 +466,6 @@ void Bot::play_turn() {
         || now + altar_distance + policy::tribute_ticks(gems)+25 >= static_cast<int>(bc::constants::max_rounds))) {
         bank(); log("bank"); return;
     }
-    bank_progress_at = -1;
-    bank_best = policy::unreachable;
     // Do not let empty-bag farming devolve into unwinnable PvP. Visible local
     // power is a policy estimate, not knowledge of unseen reinforcements.
     float ours = me.health()*me.strength(), theirs = 0;

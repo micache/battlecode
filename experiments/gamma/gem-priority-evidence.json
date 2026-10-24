@@ -1,0 +1,186 @@
+{
+  "task_id": "task-6acb6427618146c2a60cd1af13ff649f",
+  "bot_id": "gamma",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "edit_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+  "input_revision": "3849da5ee90f759b23b4369a46efeda8e7ace430",
+  "accepted_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "hypothesis": "After both farming emblems, reducing gold route value and reserving gem shortlist slots increases matched wins and mean tribute over source54c19acf without new faults or fuel suspensions.",
+  "falsifier": "Non-positive matched win/tribute gains or a new reliability failure.",
+  "basis": "Unmeasured rules/source deduction; supplied game totals do not establish gold overfarming as their cause.",
+  "expected_observation": "Fewer post-core gold-only captures; more collected gems per round.",
+  "parameters": {
+    "gold_multiplier_after_jungle_and_monster_strength_emblems": 0.2,
+    "reserved_gem_slots": 4,
+    "ordinary_shortlist": 8,
+    "draft_protocol_version": 2,
+    "live_shared_bytes_written": 0
+  },
+  "risks": [
+    "Slower gold scaling",
+    "Longer or more contested gem travel",
+    "Extra shortlist bookkeeping fuel",
+    "Missing draft metadata conservatively weakens specialization"
+  ],
+  "source_file_sha256": {
+    "bots/gamma/src/bot.cpp": "5b7f4f2a6bc44d2888d869089b33410d46ec4f2072378f9cf246e761ff8f9e8b",
+    "bots/gamma/src/plan.h": "8faa59b78e09ad86fe20ed468560eedb96b9a48c29f7587e238dad6b9251a949",
+    "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/gamma/src/bot.h": "d4a590e8a662441e166e6232e53f5505dd45f3c25becd3f880722c3ce484e2d1",
+    "bots/gamma/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/gamma/src/draft.cpp": "8ad9855b97604d0f914e0bd1581533ffd734637baef45c05de8b43903c0436e4"
+  },
+  "frozen_manifest_sha256": "d9427d98db1aaa3244d0d5f4fec9b8d25139b44867bbde5b058a3710a7e9f099",
+  "frozen_sources": [
+    {
+      "revision_id": "4feab379bdef0293965a0ea0bff1a4ae8c613829d0d50f1cb08a484d67e62249",
+      "source_hash": "f4b4f65eeee02988088b4240606d64563285404fb1393d297e9be931f4ced27c",
+      "files_verified": true
+    },
+    {
+      "revision_id": "7c9eeed05ee2f49e158fac56eaeb6dc7b773a8200ab1f1e0101e224082411ec7",
+      "source_hash": "6e362fd7cce836975fa615bc8b936109235fd320def63703761366586efabc25",
+      "files_verified": true
+    },
+    {
+      "revision_id": "054bc3462f9efd4daade4987117fa944cf9019a12cc901a7a05b53e538d7f2fa",
+      "source_hash": "fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa",
+      "files_verified": true
+    },
+    {
+      "revision_id": "094eeb0ac50f681dc33b87f0627c51455367507187f01a33f3a0b7b026adb6c1",
+      "source_hash": "d10ae8b4f9c10760ef6660efa6e12336d64e90b46f458330067b915d4139ee02",
+      "files_verified": true
+    },
+    {
+      "revision_id": "2bd9aa09821265ac4c2da4507ba6581fce4fff3cea5e7dda550b94ffc30af31c",
+      "source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+      "files_verified": true
+    },
+    {
+      "revision_id": "c20c69faf1f1e4e752deb09e3af57f65d031caf6132cf79dd0a5a1111a2f7a38",
+      "source_hash": "c9c933a21b50bd9e01ca1dfdaca7bd290b0259e8cd51bc7c59ad340853232c11",
+      "files_verified": true
+    }
+  ],
+  "latest_evaluation": {
+    "evaluation_id": "b7769b1c29e5607c02daebd88b15b8afc17aefa63a013817117b641e17e581bd",
+    "candidate": {
+      "build_id": "9e0092f561885fce080e10529cb620a33de8cb9af5f92ec5e237ab397e82013e",
+      "commit": "3849da5ee90f759b23b4369a46efeda8e7ace430",
+      "revision_id": "a0d3caf87a675bcefbcae48d610f0c87c5474dd428f52c2715c586e8cf0a2570",
+      "source_hash": "e17f373d5623d1494442e9eea12816db00487a9b50e1f6d4b5f846de4c16065b"
+    },
+    "decision": "INCONCLUSIVE",
+    "development_metrics": {
+      "bag_loss": {
+        "available": true,
+        "mean": 69.15405405405406,
+        "observations": 370
+      },
+      "bot_faults_by_side": {
+        "available": true,
+        "mean": 0.0,
+        "observations": 370
+      },
+      "carried_gems": {
+        "available": true,
+        "mean": 30.535135135135135,
+        "observations": 370
+      },
+      "champion_damage_done": {
+        "available": true,
+        "mean": 14335.4438140199,
+        "observations": 370
+      },
+      "champion_damage_taken": {
+        "available": true,
+        "mean": 19317.89091672124,
+        "observations": 370
+      },
+      "champion_deaths": {
+        "available": true,
+        "mean": 8.618918918918919,
+        "observations": 370
+      },
+      "champion_kills": {
+        "available": true,
+        "mean": 6.472972972972973,
+        "observations": 370
+      },
+      "collected_gems": {
+        "available": true,
+        "mean": 940.8837837837838,
+        "observations": 370
+      },
+      "fuel_suspensions_by_side": {
+        "available": true,
+        "mean": 0.01891891891891892,
+        "observations": 370
+      },
+      "lifetime_earned_gold": {
+        "available": true,
+        "mean": 6031.794594594595,
+        "observations": 370
+      },
+      "monster_damage_done": {
+        "available": true,
+        "mean": 118495.4772215972,
+        "observations": 370
+      },
+      "monster_damage_taken": {
+        "available": true,
+        "mean": 29604.282759426736,
+        "observations": 370
+      },
+      "round": {
+        "available": true,
+        "mean": 1354.6513513513514,
+        "observations": 370
+      },
+      "sale_refunds": {
+        "available": true,
+        "mean": 0.0,
+        "observations": 370
+      },
+      "spent_gold": {
+        "available": true,
+        "mean": 5519.243243243243,
+        "observations": 370
+      },
+      "submitted_gems": {
+        "available": true,
+        "mean": 841.1945945945946,
+        "observations": 370
+      },
+      "unspent_gold": {
+        "available": true,
+        "mean": 512.5513513513514,
+        "observations": 370
+      }
+    },
+    "note": "Different source from edit base and candidate produced here."
+  },
+  "trusted_check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792841524.6066442,
+    "matches": [
+      "4be4021020bf694f92e7253b589bc16fedef3740839e93143c6e0ac7a30a3e53",
+      "03b723e04cae5ab719e5f9e0eba8aa14151fb32993d7d234cd9fc93f554075c7"
+    ],
+    "report_reference": "check:task-6acb6427618146c2a60cd1af13ff649f:286bac8e6473584f8a5c3a3ab581f7f2045e3c2062a6a96e2bf8d3b0160e5b81",
+    "source_hash": "286bac8e6473584f8a5c3a3ab581f7f2045e3c2062a6a96e2bf8d3b0160e5b81",
+    "started": 1792841489.5335934,
+    "state": "PASSED",
+    "task_id": "task-6acb6427618146c2a60cd1af13ff649f"
+  },
+  "git_diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0,
+    "output": ""
+  },
+  "smoke_limits": "Two completed validity games, no strategic superiority claim. Summary candidate sides/map names/opponent revisions not independently identified.",
+  "tests_scope": "Trusted build compiles policy and memory assertions; wrapper runs smoke. No comparative evaluation by worker."
+}
