@@ -4,6 +4,7 @@
 #include "altar_control.h"
 #include "camp_rotation.h"
 #include "equipment_policy.h"
+#include "equipment_model.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -75,63 +76,10 @@ void Bot::buy_items() {
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto cost = items[0].cost();
     if (!cost || me.gold_count() < cost || cambc::fuel_remaining() < equipment_policy::entry_fuel_reserve) return;
-    const auto stats = me.base_stats();
-    equipment_policy::model estimate{me.max_health(), me.strength(), me.focus(),
-        {stats.strength_growth, stats.focus_growth, stats.health_growth}};
-    const auto passive = me.passive();
-    if (passive == cambc::passive_type::health_strength)
-        estimate.health_to_strength = cambc::constants::passive_abilities::ryth_health_strength_ratio;
-    if (passive == cambc::passive_type::splash_attack)
-        estimate.basic_rate = equipment_policy::area_targets;
-    if (passive == cambc::passive_type::retaliation)
-        estimate.focus_rate = cambc::constants::passive_abilities::ren_retaliation_focus_ratio; // one incoming basic/round, uncertain workload
-    for (const auto& ability : me.abilities()) {
-        if (!ability.info()) continue;
-        std::visit([&](const auto& info) {
-            using T = std::decay_t<decltype(info)>;
-            const float cooldown = static_cast<float>(std::max(1, info.max_cooldown));
-            if constexpr (std::is_same_v<T, cambc::ability_attack_reset>)
-                estimate.basic_rate += estimate.basic_rate / cooldown;
-            if constexpr (std::is_same_v<T, cambc::ability_damage>
-                          || std::is_same_v<T, cambc::ability_cc>) {
-                if (ability.can_target_camps()) estimate.focus_rate += info.modifier / cooldown;
-            }
-            if constexpr (std::is_same_v<T, cambc::ability_aoe_damage>)
-                estimate.focus_rate += equipment_policy::area_targets * info.modifier / cooldown;
-            if constexpr (std::is_same_v<T, cambc::ability_shield>) {
-                if (ability.can_target_self())
-                    estimate.shield_scale = equipment_policy::shield_credit * info.modifier;
-            }
-            // Do not price unused dash damage or another champion's healing.
-        }, *ability.info());
-    }
-    auto inventory = me.item_count();
-    const std::array jungle{cambc::item_type::jungle_shard_of_strength,
-        cambc::item_type::jungle_shard_of_focus, cambc::item_type::jungle_shard_of_health};
-    const std::array jungle_emblems{cambc::item_type::jungle_emblem_of_strength,
-        cambc::item_type::jungle_emblem_of_focus, cambc::item_type::jungle_emblem_of_health};
-    const bool owns_jungle = inventory[jungle_emblems[0]] || inventory[jungle_emblems[1]]
-        || inventory[jungle_emblems[2]];
-    unsigned bundle_spent = 0;
-    if (!owns_jungle && cambc::fuel_remaining() >= equipment_policy::entry_fuel_reserve) {
-        std::array<equipment_policy::bundle, 3> bundles{};
-        for (unsigned stat = 0; stat < 3; ++stat)
-            bundles[stat] = {jungle[stat].cost(), jungle[stat].combine_count(), inventory[jungle[stat]]};
-        const auto choice = equipment_policy::choose_jungle(estimate, me.gold_count(), cost,
-            {inventory[items[0]], inventory[items[1]], inventory[items[2]]},
-            items[0].combine_count(), bundles, owns_jungle, static_cast<unsigned>(chosen_stat));
-        if (choice.count && cambc::fuel_remaining() >= equipment_policy::purchase_fuel_reserve
-            && me.can_buy(jungle[choice.stat], choice.count)) {
-            me.buy(jungle[choice.stat], choice.count);
-            estimate.add(choice.stat, choice.count);
-            bundle_spent = choice.count;
-            inventory = me.item_count(); // refresh after the full bundle; no stale Power budget
-        }
-    }
-    if (cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) return;
+    const auto estimate = equipment_model::estimate(me, me.max_health(), me.strength(), me.focus());
+    const auto inventory = me.item_count();
     const std::array<unsigned, 3> residues{inventory[items[0]], inventory[items[1]], inventory[items[2]]};
-    const auto counts = equipment_policy::plan(estimate,
-        std::min(me.gold_count() / cost, equipment_policy::purchase_limit - bundle_spent),
+    const auto counts = equipment_policy::plan(estimate, me.gold_count() / cost,
         residues, items[0].combine_count(), static_cast<unsigned>(chosen_stat));
     for (unsigned stat = 0; stat < items.size(); ++stat) {
         if (cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) break;

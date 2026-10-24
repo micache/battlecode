@@ -1,0 +1,26 @@
+{
+  "checks": {
+    "main.cpp": true,
+    "bot.h": true,
+    "camp_rotation.h": true,
+    "altar_control.h": true,
+    "equipment_policy.h": true,
+    "random.h": true,
+    "draft.h": true,
+    "bot_only_model_extraction": true,
+    "model_body_unchanged": true
+  },
+  "hashes": {
+    "bots/alpha/src/bot.cpp": "a56930b0eaba652dc41a6e6657676eda4af184c423faacb9fd16b6cba83e2fc5",
+    "bots/alpha/src/equipment_policy.h": "bcd0d850bc558af1d0dd268c1e5f9437bf82a4fe74703f26fc5a2b72faa07729",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/alpha/src/bot.h": "c89e51dc769abbdd346f2fd833f5ece92514a7d4e2eda0c88b2d24f411a14c24",
+    "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/draft_policy.h": "8385ddf9eb87f2afa38fb19687f2be292541495eb8b5063d953b438be8ce4292",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/equipment_model.h": "08f839a9c199cde74433fb64d936c5419af00367238d43c3da89491774d56203",
+    "bots/alpha/src/draft.cpp": "ae13fd0af5e7d1ff76f0c6cba3394e26f7a1f48a8dd1fe2cb96678c110cc6860"
+  }
+}

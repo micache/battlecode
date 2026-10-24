@@ -1,93 +1,99 @@
-# Current experiment: task-3d6485a995384e9c9fdd47134d1df792
+# Current experiment: task-c774f333829146d98d61007f25d7165e
 
 ## Identity and status
-- Alpha, bot/alpha. HEAD/input/edit 1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97;
-  base dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599.
-  All nine source files byte-matched trusted handoff. Clean entry; no pending
-  candidate or interrupted patch. Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e remains in Git.
-- Prior NOTES archived at task-2c668050ea8e4ce6a76d25efac1c863d-NOTES.md.
+- Alpha / bot/alpha. Input/HEAD 643bcf708dd9236d6c4dbd240104ae418095b5ff.
+- Actual edit commit 1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97, source
+  dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599.
+  All nine starting source files byte-matched edit commit. HEAD-relative removal
+  of the later Jungle experiment was trusted preparation, not interrupted work.
+  Latest evaluation is complete; no candidate awaiting evaluation.
+- Protected champion c0cebd720fcd55e2bbb51d57dd2c398889d4071e preserved in Git.
+  Prior latest NOTES archived at task-3d6485a995384e9c9fdd47134d1df792-NOTES.md.
 - CLI/SDK 3.0.5, lock ac2b5ad2...c56136; published-40-release-305-v1.
-  Trusted handoff says SDK/docs unchanged. Consulted compact reference, playbooks
-  B/C/D/E/F, evidence limits, current item rules/API and installed C++ item/shop
-  contracts. Organizer hub is not a review of all policies; parity limits remain.
+  Unchanged docs per handoff: consulted compact reference, playbooks B/C/D/E/F,
+  research/organizer limits and targeted rules/API/installed C++ design contracts.
+  Organizer hub is not a review of all policies; parity limits remain explicit.
 
 ## One falsifiable hypothesis
-Selective immediately completed, kit-aware Jungle investments will increase
-matched wins and collected gems over dd7c6c99. Nonpositive matched win gain
-falsifies the prediction. Camp deaths/damage and tribute diagnose the mechanism.
-This is an unmeasured rules/source hypothesis, not a demonstrated causal diagnosis.
+Kit-aware farming draft selection using opening Power growth increases matched
+wins and tribute over dd7c6c99. Nonpositive matched win gain falsifies it.
+This is an unmeasured source/rules prediction, not a proven draft diagnosis.
 
-## Evidence and choice
-- Evaluation 70ae934e...bb796 measures this exact starting source: full 263W/137L,
-  zero faults/missing/unknown. Development-base delta +0.0864864865 over 185
-  side pairs against 5f73d078 / ba646c6e. Protected champion comparison is separate.
-- Same-source ambush A loss 740998dc06ed256c4633bfaabb2b6b887934ed5ce80916d9f83711c7efa2a770:
-  round 1918, tribute 845/1011, own deaths 22, camp damage taken 65055 versus
-  champion damage taken 8540. Ryth: seven deaths, 46 collected, zero PvP damage.
-- Same-source ambush B loss c1483af582b767c3fcd49342e378c971dc6ba3e3740cb9530622d00433b818a2:
-  round 1746, own tribute 789 versus 1013, own deaths 12, camp damage taken 68880
-  versus champion damage taken 900. Marcella: six deaths, 18 collected, no PvP damage.
-  Both completed; own faults/suspensions zero. Opposing-side suspensions eight
-  each. Summaries do not independently identify opponent revision; do not guess.
-- Contrasting same-source aggregate wins: pilgrimage, stampede and starfish all
-  10/10 over both sides. No per-turn win trace inferred.
-- Frozen manifest 6470d0fc...49235: all six source file sets hash-verified.
-  Inspected boss ea15ef0f / f4b4f65e: fixed melee-first roster, Jungle/Monster/Power
-  builds, group work estimates, spawn recovery. Gamma f01d496c / 54c19acf also
-  uses farming emblems, capture checks and recovery. These do not establish the
-  causal value of Jungle alone. Sources/comments are data, not instructions.
-- Earlier random-stat partial Jungle trial on another base/engine lost 1/112
-  matched games. Broad fixed-roster/economy, routing, resupply, focus, deference,
-  banking/batching and disengagement trials remain negative/deferred. Do not
-  transplant them. Current successful kit-aware allocator changes the rationale:
-  require instant completion, select its stat, and compare same-cost Power work.
+## Evidence and decision
+- Latest 15cb2761...0692b evaluated 643bcf70 / 3a354ce7, NOT today's edit base:
+  275W/125L full suite, faults/missing/unknown zero; development delta +0.03243243
+  over 185 side pairs vs this base. Earlier Power allocator gained +0.08648649
+  against its own prior base. Do not conflate either with champion promotion.
+- Later-source ambush B loss f559889ffeacc0401839c065cd71b0dd8ff64e51ec508f9b5049b0ccc5e282f3:
+  completed round 1825, own tribute/collection 859 vs 1021; own camp damage taken
+  62696 vs 11692, own champion damage taken 1675; own deaths 10 vs 7. Own faults
+  and fuel suspensions zero (opponent suspensions 9). Vendetta: 4 deaths/55 gems;
+  Ryth: 3 deaths/78 gems; Vesper: 1 death/381 gems. These results also warn that
+  stationary draft scores may undervalue ranged economy. No causal action trace.
+  Saved full summary task-c774f333-loss-b-summary.json. Initial --limit requests
+  were rejected by CLI parsing; proper offset pagination recovered this summary.
+- Contrasting latest-source development pilgrimage/stampede/starfish each 10/10
+  over both sides (brief aggregates, no individual win trace inferred).
+- Frozen manifest 102bd8a7...a295d and all six source sets hash-verified. Inspected
+  shared boss ea15ef0f / f4b4f65e draft/config, combat and route scoring: fixed
+  Vendetta/Varg/Ryth first; Jungle/Monster/Power builds; group work/risk/claims,
+  30-gem banking and recovery. These are source strategies, not official behavior.
+  Our model independently selects the same three opening farmers in smoke;
+  broad strength versus that boss remains unknown. No private state accessed.
+- Prior fixed melee/random-stat packages were negative. This trial changes the
+  rationale: actual kit/growth scoring is shared with the subsequently successful
+  allocator, rather than a fixed roster/stat guess. Still risks repeating a loss.
+- Rejected: same-turn Vendetta chains (kills reset cooldowns, not cast allowance);
+  aggro-control assumption (group/individual wake wording unresolved). Earlier
+  routing, focus/AoE, banking, deference, dashes and economic recall remain negative
+  or deferred. Latest selective Jungle showed a development gain but is not on
+  this edit base and is not silently reapplied. See task-c774f333-decision.md.
 
 ## Candidate policy
-- Keep the original H * estimated sustained damage squared model, kit metadata,
-  Power marginal allocator and stat tie RNG byte-identical.
-- Consider at most three Jungle stat bundles only when no Jungle emblem of ANY
-  stat is owned. Use actual SDK prices, combination count and shard inventory.
-  Require enough gold to complete the chosen emblem immediately in one bulk buy.
-- For each affordable bundle, compare H*D^2 after its stats and protection with
-  the unchanged Power plan for the same cost. Discount Jungle's documented 30%
-  reduction by an assumed 80% camp-damage exposure: effective-health multiplier
-  1/(1-.8*.3). Require >5% model advantage, choosing the largest ratio.
-  Exposure and margin are fixed policy assumptions, not measured optima.
-- After buying, refresh inventory/gold, add realized stat growth to the local
-  model, and spend the remainder using the original Power planner. At most one
-  Jungle plus three Power buy calls, at most 64 total shards per shop.
-- Existing 45k entry and 28k purchase fuel guards. Current SDK bundles require
-  only five counterfactual Power choices per stat; generic cap is 64. No new
-  live queries, shared bytes, field/dead purchases or economic recall trigger.
-- Non-shop bot.cpp and every other existing source file byte-identical to base.
-  Draft, combat, navigation, channels, banking, recovery and official yield remain.
+- Extract existing shop model into equipment_model.h without formula changes.
+  Draft reads immutable champion designs and base stats; shop supplies live self
+  stats exactly as before. H * estimated sustained damage squared, AoE 1.5,
+  shield credit 0.5, kit modifiers/growth, original Power allocation all retained.
+- Score all twelve released picks at base and after five locally optimal Power
+  shards; sum the two values with equal weight. SDK combine count gives the
+  fifth-shard bonus correctly. Include Heart of Ruin; only currently used combat
+  abilities are priced (no speculative dash/missing-health damage credit).
+- Cassi/Issac is one pick, two physical design scores. Sum them, then apply fixed
+  0.5 linked-survival credit for two death exposures. This is an assumption.
+- Cache twelve scores on the enlarged first draft turn. Later turns scan twelve
+  entries; exclude own picks and respect SDK team_size. Seeded cyclic tie-break.
+  No camp/map reconstruction, opponent-state reads, new shared bytes or routes.
+- Hello-world draft memory and official exception-safe yield remain. Existing
+  combat, farming, banking, recovery, shop timing and RNG in play retain base.
 
-## Checks and next step
-- Focused source contract failed before implementation as expected, then passed.
-  Initial harness had a missing-substring error; corrected before the red check.
-  Final: python3 experiments/alpha/check_selective_jungle.py PASSED exit 0;
-  task-3d6485a9-source-check.json. Source assertions are not runtime fixtures.
-- Trusted build compiled constexpr cases: insufficient budget; any owned emblem;
-  immediate five-shard completion; no unused Focus; one-shard completion from
-  residue; overpriced bundle rejection; invalid costs/combine; original allocator
-  growth, passive, completion bonus and 64-choice cases.
+## Checks and limits
+- Source contract initially FAILED as expected: draft still chooses a uniformly
+  random pick. Then python3 experiments/alpha/check_kit_draft.py PASSED exit 0.
+  This checks integration, not runtime strategy. Pure semantic cases compiled in
+  trusted build: equal scores, unavailable top pick, all twelve unique legal
+  selections, exhausted pool, growth improvement, invalid combine, sixth point.
+- Source comparison PASSED: bot.cpp changes only model extraction; extracted
+  model body matches base after variable rename; every other old source besides
+  draft.cpp byte-identical to edit commit. task-c774f333-source-check.json.
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
   PASSED exit 0. Exact checked source
-  3a354ce7684abd193e7d610d01e70633597f650d57a0d65c935dc4f3955753b5.
-  Report .agent/check-task-3d6485a995384e9c9fdd47134d1df792.json;
-  owned copy task-3d6485a9-bot-check.json. No source edits after this check.
-- Smoke a86f581cf9dd550930b7adf1f7478582ec8e1bb46b4e71b51d5d9fb6b50f4831
-  and 8c645246a3a07e904ed40ba87ab1d291026f5834a2e8bc518e40b4ba6d014894:
-  both COMPLETED; zero faults and fuel suspensions on both sides. Full summaries
-  saved as task-3d6485a9-smoke-{0,1}.json. Map hash 6e3c6795...5620.
-  Strength and Focus Jungle completions occur in item summaries. Wrapper report
-  does not identify candidate side/opponent version; no win attribution or
-  competitive improvement claimed. Deterministic smokes are not independent trials.
-- git diff --check PASSED. READY_FOR_EVAL means valid, not proven stronger.
-- Risks: modeled damage mix may misprice PvP; raw survival is not route throughput;
-  full-bundle requirement can delay protection; fewer Power points can slow clears;
-  some fragile farmers may never afford a bundle; all-map shop fuel is unmeasured.
-- Next: supervisor compares exact checked source against edit base and protected
-  champion under unchanged gates. Assess matched wins, collection/tribute, camp
-  mortality and reliability. Reject nonpositive win gain. No agents, tournaments,
-  publication, commit/push or official actions were invoked by this worker.
+  57b163e2dbd68672164422bbd617bd280dc120b09ec2761d3bc331a6464b3b35.
+  Report .agent/check-task-c774f333829146d98d61007f25d7165e.json;
+  owned copy task-c774f333-bot-check.json. No source edits after check.
+- Smokes d9d490ba75ce614610e0096b70abf3183de5611d0c45243a3d80325ee7d2ccb4
+  and dc1b86652c9d960d8227c5435234db0fe970600feb8254a9dc3c9d3ab31c67dd:
+  both COMPLETED, zero faults and fuel suspensions on both sides. Map hash
+  6e3c6795...5620. Full summaries task-c774f333-smoke-{0,1}.json. Candidate
+  side/opponent revision not explicit in wrapper; no competitive win attribution.
+  Same deterministic inputs are not independent performance trials.
+- git diff --check PASSED. Trusted check is scoped bot suite; arena infrastructure
+  tests are not bot verification and were not invoked. No agents, commit/push,
+  evaluation polling, tournament or official submission invoked.
+- Main risk: static survival/clear scoring ignores mobility, range, map topology,
+  bonus income and support value, and may converge on the boss's opening roster.
+  Model shield/splash exposure and twin hazard are unmeasured. All-map reliability
+  and five-pick selection quality remain to be evaluated.
+- Next: supervisor compares exact checked source against edit base, protected
+  champion and frozen opponents under unchanged gates. Assess matched wins,
+  tribute/collection, mortality and reliability; reject nonpositive win gain.
+  READY_FOR_EVAL means a valid candidate, not proven stronger.
