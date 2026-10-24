@@ -1,0 +1,20 @@
+{
+  "match_id": "245b563b5622d696b382c74bd6ab4dabe64ccd23e424c57e23f41816c0e7cb1c",
+  "file": "bot-b.stdout.log",
+  "offset": 0,
+  "total_bytes": 82647,
+  "slice_length": 8192,
+  "lines": [
+    "r=1 mode=farm target=4 hp=1000 gems=0 xy=95,95 route_age=0 fuel=37475",
+    "r=1 mode=farm target=4 hp=1000 gems=0 xy=93,94 route_age=0 fuel=34828",
+    "r=1 mode=farm target=4 hp=1200 gems=0 xy=93,95 route_age=0 fuel=37605",
+    "r=1 mode=farm target=4 hp=1200 gems=0 xy=92,95 route_age=0 fuel=37695",
+    "r=1 mode=farm target=4 hp=1000 gems=0 xy=94,93 route_age=0 fuel=34829",
+    "r=101 mode=farm target=10 hp=1000 gems=0 xy=39,53 route_age=2 fuel=44414",
+    "r=101 mode=farm target=5 hp=1000 gems=0 xy=34,57 route_age=1 fuel=50677",
+    "r=101 mode=farm target=2 hp=1200 gems=0 xy=49,43 route_age=2 fuel=35058",
+    "r=101 mode=farm target=2 hp=1200 gems=0 xy=49,44 route_age=0 fuel=18215",
+    "r=101 mode=farm target=10 hp=1000 gems=0 xy=38,55 route_age=1 fuel=40780"
+  ],
+  "interpretation": "First8192-byte slice only. Later-source observations, not the edit base; no complete log absence claim."
+}

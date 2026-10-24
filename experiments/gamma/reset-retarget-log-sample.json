@@ -1,0 +1,19 @@
+{
+  "match_id": "2c244df62bd937734913798754a36f0f57a9f53db5330510314c608d9d5b393a",
+  "file": "bot-a.stdout.log",
+  "offset": 0,
+  "total_bytes": 25601,
+  "slice_length": 8192,
+  "lines": [
+    "r=1 mode=farm target=5 hp=1000 gems=0 xy=4,0 route_age=0 reset_next=0 fuel=102394",
+    "r=1 mode=farm target=5 hp=1000 gems=0 xy=6,0 route_age=0 reset_next=0 fuel=99810",
+    "r=1 mode=farm target=7 hp=1200 gems=0 xy=6,2 route_age=0 reset_next=0 fuel=101339",
+    "r=101 mode=farm target=11 hp=840 gems=18 xy=16,0 route_age=1 reset_next=0 fuel=52239",
+    "r=101 mode=farm target=5 hp=1000 gems=23 xy=13,4 route_age=1 reset_next=0 fuel=49233",
+    "r=101 mode=capture target=3 hp=1120 gems=11 xy=17,11 route_age=11 reset_next=0 fuel=84647",
+    "r=201 mode=farm target=11 hp=630 gems=20 xy=28,2 route_age=9 reset_next=0 fuel=49851",
+    "r=201 mode=farm target=8 hp=566 gems=0 xy=24,21 route_age=9 reset_next=1 fuel=34548",
+    "r=201 mode=farm target=11 hp=1200 gems=2 xy=28,3 route_age=8 reset_next=0 fuel=50305"
+  ],
+  "interpretation": "Only first diagnostic slice; sample shows reset_next=1 by round201. No whole-log absence claim."
+}

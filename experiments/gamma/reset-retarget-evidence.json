@@ -1,0 +1,120 @@
+{
+  "task_id": "task-f57942a5503040efa4477ebddc903be6",
+  "bot_id": "gamma",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "edit_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+  "input_revision": "69f2a534c35f14f3c30c7bd09c756b369f209f21",
+  "hypothesis": "Bounded reset retargeting after camp kills increases matched wins and mean collected and submitted gems over the edit base, without new own faults or fuel suspensions. Nonpositive win/collection/tribute gains or new reliability failures falsify it.",
+  "mechanism_status": "Unmeasured rules/source deduction; finals do not demonstrate missed resets.",
+  "decision": "Preserve camp attack allowance accounting across pre/post-move combat; after a kill use fresh local vision to select an in-range survivor of the same group for an available reset. Limit camp basics to two per owner turn.",
+  "latest_evaluated": {
+    "commit": "69f2a534c35f14f3c30c7bd09c756b369f209f21",
+    "source_hash": "8fb6844e3453e6ba8ff2b811355d8283689f8f02153dabe0ae825a9b148c424d",
+    "evaluation_id": "4cb6d06550c6cd1641723c03596e494e5ccd2bd20e993bc75a1857f463e746f7",
+    "state": "INCONCLUSIVE",
+    "wins": 299,
+    "losses": 101,
+    "development_delta_vs_edit_base": -0.043243243243243246,
+    "side_pairs": 185
+  },
+  "opponent_manifest": {
+    "count": 6,
+    "manifest": "/srv/battlecode/public/strategy/task-f57942a5503040efa4477ebddc903be6/manifest.json",
+    "sha256": "2b2111ecb3e3de1c029d92da15da49712c8a2cef0451d4e3f353ee8f079a2706"
+  },
+  "opponent_file_sets_verified": 6,
+  "opponent_policy": "Frozen shared boss ea15ef0f/f4b4f65e drafts Vendetta/Varg/Ryth, uses shared claims, risk-budgeted clears, local-power PvP and 30-gem banking. Its attack_with_reset checks survival of the original target and does not retarget the reset. This is a source deduction, not observed actions in supplied losses.",
+  "alternatives_deferred": [
+    "Repeat combat transit after latest matched regression",
+    "Blanket claims after historical regression",
+    "Generic gem reweighting or cooldown routing after their negative/inconclusive comparisons",
+    "Item/draft changes without isolating a causal bottleneck"
+  ],
+  "rules_references": [
+    ".agent/knowledge/BOT_REFERENCE.md sections 3-7",
+    ".agent/knowledge/PLAYBOOKS.md B/C/D/F",
+    ".agent/knowledge/sources/GameRules.md Vendetta passive and reset kit",
+    ".agent/knowledge/sources/BotAPICpp.md ability readiness, target masks, champion allowances, attack and camp views"
+  ],
+  "sdk_header_sha256": "894229e17d886358719abb70cac9ab5993263a0c05bf7df14fc48fa04a8336d3",
+  "risks": [
+    "Spending a reset on a weak survivor may delay a later burst or shield",
+    "More local live queries can consume fuel",
+    "Static same-group membership cannot solve travel, contested capture or bag loss"
+  ],
+  "check_status": "PASSED",
+  "checked_source_hash": "3a93b2177ef5ea3edb74d9c8b15a68724ecd7f35637c802ad3db4b222c20e5b7",
+  "check_command": "bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json",
+  "check_exit_code": 0,
+  "check_report_path": ".agent/check-task-f57942a5503040efa4477ebddc903be6.json",
+  "source_file_sha256": {
+    "bot.cpp": "94c320cbc7d443710a824ed84e01b164d9fbae632ff375f952acf5e25e20ff7e",
+    "bot.h": "17f9590b0f8c71e04b6895f7efc9af82bfeb75aabc3d2e98be31cbc6d4053789",
+    "draft.cpp": "e1d34874501d74d17bdbfbcc763918421cca7f775c34bb6eab482d7ad29c07b1",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "plan.h": "1d2e3e374861fd89e4b7c121fa93a01ad4f33f1c2c208025c72f344fa042a150",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "smoke_matches": [
+    {
+      "match_id": "2c244df62bd937734913798754a36f0f57a9f53db5330510314c608d9d5b393a",
+      "completed": true,
+      "winner": "A",
+      "round": 974,
+      "submitted_gems": {
+        "A": 1008,
+        "B": 52
+      },
+      "faults": {
+        "A": 0,
+        "B": 0
+      },
+      "suspensions": {
+        "A": 0,
+        "B": 0
+      }
+    },
+    {
+      "match_id": "3c83f3f21e9391f470dfe97d574c221c8285f73f9252f5af72f2d152dbd3ff29",
+      "completed": true,
+      "winner": "B",
+      "round": 932,
+      "submitted_gems": {
+        "A": 12,
+        "B": 1004
+      },
+      "faults": {
+        "A": 0,
+        "B": 0
+      },
+      "suspensions": {
+        "A": 0,
+        "B": 0
+      }
+    }
+  ],
+  "smoke_interpretation": "Both completed; map hash6e3c6795, engine1.0.3/fcb6c3e8,41x41. Candidate side and opponent source unknown in compact diagnostics; validity only, not improvement.",
+  "execution_evidence": "First smoke bot-a log sample contains reset_next=1 by r201; the changed follow-up branch executed. No causal speedup claimed.",
+  "loss_summaries": [
+    {
+      "reference": "experiments/gamma/refinement-loss-a.json",
+      "candidate_side": "A",
+      "map_name": "00ambush",
+      "candidate_source_hash": "8fb6844e3453e6ba8ff2b811355d8283689f8f02153dabe0ae825a9b148c424d",
+      "opponent_revision": null
+    },
+    {
+      "reference": "experiments/gamma/refinement-loss-b.json",
+      "candidate_side": "B",
+      "map_name": "00ambush",
+      "candidate_source_hash": "8fb6844e3453e6ba8ff2b811355d8283689f8f02153dabe0ae825a9b148c424d",
+      "opponent_revision": null
+    }
+  ],
+  "source_edits_after_trusted_check": false,
+  "git_diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0
+  }
+}

@@ -126,31 +126,9 @@ bool Bot::walk(bc::bitboard goals, bool dash) {
         auto free_goals = goals & ~blocked;
         const auto origin = me.position();
         if (free_goals.is_empty() || free_goals.is_set(origin)) return false;
-        // Snapshot only currently visible enemies. This is a one-move tie
-        // breaker, not a forecast of hidden reinforcements or shared vision.
-        struct Contact { vec2 position; int range; float strength; };
-        std::array<Contact,6> contacts;
-        unsigned contact_count = 0;
-        if (bc::fuel_remaining() > 28000) {
-            for (const auto& e : bc::vision::champions(team::enemy)) {
-                if (contact_count == contacts.size()) break;
-                if (!e.is_visible() || e.health() <= 0) continue;
-                contacts[contact_count++] = {e.position(), e.attack_range(), e.strength()};
-            }
-        }
-        auto pressure = [&](vec2 p) {
-            float result = 0;
-            for (unsigned i = 0; i < contact_count; ++i) {
-                const auto& c = contacts[i];
-                const int d = dist(p,c.position);
-                result += c.strength * (d <= c.range ? 2.0f : d <= c.range+1 ? 1.0f : 0.0f);
-            }
-            return result;
-        };
         bc::distance_field f;
         bc::bitboard visited;
         f.compute_to(blocked, free_goals, around(origin, 0), visited);
-        const int origin_distance = f.get(origin);
         if (dash && me.can_cast() && bc::fuel_remaining() > 27000) {
             for (const auto& a : me.abilities()) {
                 if (!a.is_dash() || !a.is_ready()) continue;
@@ -158,28 +136,13 @@ bool Bot::walk(bc::bitboard goals, bool dash) {
                 // tiles only. This forgoes hole crossing rather than guessing.
                 auto candidates = blocked.reachable_tiles(origin, 2) & a.valid_tiles() & ~blocked;
                 auto best = origin;
-                int best_distance = origin_distance;
-                float best_pressure = pressure(origin);
-                for (auto p : candidates.positions()) {
-                    const int d = f.get(p);
-                    const float risk = pressure(p);
-                    if (policy::prefer_step(d,best_distance,origin_distance,risk,best_pressure)) {
-                        best = p; best_distance = d; best_pressure = risk;
-                    }
-                }
+                for (auto p : candidates.positions()) if (f.get(p) < f.get(best)) best = p;
                 if (dist(origin, best) == 2 && f.get(best) + 1 < f.get(origin) && a.use(best)) return true;
             }
         }
         auto best = origin;
-        int best_distance = origin_distance;
-        float best_pressure = pressure(origin);
-        for (auto p : blocked.reachable_tiles(origin, me.base_stats().base_move_speed).positions()) {
-            const int d = f.get(p);
-            const float risk = pressure(p);
-            if (policy::prefer_step(d,best_distance,origin_distance,risk,best_pressure)) {
-                best = p; best_distance = d; best_pressure = risk;
-            }
-        }
+        for (auto p : blocked.reachable_tiles(origin, me.base_stats().base_move_speed).positions())
+            if (f.get(p) < f.get(best)) best = p;
         if (best == origin) { ++stuck; return false; }
         if (me.move_absolute(best)) { stuck = 0; return true; }
         ++stuck;
@@ -241,7 +204,7 @@ bool Bot::bank() {
     return true;
 }
 
-bool Bot::fight(bool moved, bool champions_only, bool keep_walking) {
+bool Bot::fight(bool moved, bool champions_only) {
     auto& me = bc::self();
     if (!me.can_attack() && !me.can_cast()) return false;
     std::optional<bc::champion> enemy;
@@ -265,7 +228,7 @@ bool Bot::fight(bool moved, bool champions_only, bool keep_walking) {
     bool acted = false;
     auto cast_damage = [&]() {
         for (const auto& a : me.abilities()) {
-            if (!me.can_cast() || !a.is_ready() || (exclusive(a) && (moved || keep_walking))) continue;
+            if (!me.can_cast() || !a.is_ready() || (exclusive(a) && moved)) continue;
             if (!(a.is_damage() || a.is_cc() || a.is_aoe_damage())) continue;
             if (dist(me.position(),t->position()) > cast_range(a)) continue;
             if (a.is_aoe_damage() && a.can_target_ground()) return a.use(t->position());
@@ -274,15 +237,54 @@ bool Bot::fight(bool moved, bool champions_only, bool keep_walking) {
         }
         return false;
     };
-    // Reset after a real attack. Re-check the target after each action: a basic,
-    // Varg splash, or spell can kill it, and Vendetta can refresh cooldowns.
-    if (me.can_attack() && dist(me.position(),t->position()) <= me.attack_range()) {
+    // A camp kill may leave another survivor in range. Refresh from this body's
+    // current vision only, bounded to the basic-attack neighbourhood. Do not
+    // chase, switch groups, or change champion target selection.
+    auto next_camp = [&]() {
+        if (bc::fuel_remaining() < policy::retarget_floor || !me.can_cast()) return false;
+        bool ready_reset = false;
+        for (const auto& a : me.abilities())
+            if (a.is_attack_reset() && a.can_target_self() && a.is_ready()) ready_reset = true;
+        if (!ready_reset) return false;
+        const auto tiles = routes[target].group->spawn_tiles();
+        std::optional<bc::camp> next;
+        const auto local = bc::vision::camp_tiles() & around(me.position(), me.attack_range());
+        for (auto p : local.positions()) {
+            auto c = bc::vision::camp_at(p);
+            if (!c.is_visible() || c.health() <= 0 || !tiles.is_set(c.spawn_position())) continue;
+            if (!next || c.health() < next->health()) next = c;
+        }
+        if (!next) return false;
+        camp = next;
+        t = &*camp;
+        return true;
+    };
+    bool did_basic = false, retargeted = false;
+    if (me.can_attack() && (enemy || camp_basics < policy::camp_basic_limit)
+        && dist(me.position(),t->position()) <= me.attack_range()) {
         me.attack(*t); acted = true;
-        if (!usable(*t)) return true;
+        did_basic = true;
+        if (camp) ++camp_basics;
+        if (!usable(*t)) {
+            // Preserve the previous PvP policy. A complete camp clear likewise
+            // saves the reset and lets farm() enter capture this same turn.
+            if (enemy || !next_camp()) return true;
+            retargeted = true;
+        }
+    }
+    const bool reset_window = enemy ? did_basic : policy::camp_reset_window(
+        camp_basics, usable(*t), dist(me.position(),t->position()) <= me.attack_range());
+    if (reset_window && !me.can_attack() && me.can_cast()) {
         for (const auto& a : me.abilities()) {
             if (a.is_attack_reset() && a.is_ready() && a.can_target_self()) {
                 if (a.use() && me.can_attack() && usable(*t)
-                    && dist(me.position(),t->position()) <= me.attack_range()) me.attack(*t);
+                    && dist(me.position(),t->position()) <= me.attack_range()) {
+                    me.attack(*t); acted = true;
+                    if (camp) {
+                        ++camp_basics;
+                        if (retargeted || !did_basic) ++retarget_resets;
+                    }
+                }
                 break;
             }
         }
@@ -329,7 +331,7 @@ void Bot::recover() {
     else fight(true, true);
 }
 
-void Bot::farm(bool keep_walking) {
+void Bot::farm() {
     auto& me = bc::self();
     if (routes.empty()) { fight(false); return; }
     refresh_travel();
@@ -416,7 +418,7 @@ void Bot::farm(bool keep_walking) {
     if (r.state == 2 && r.observed_at == now) {
         walk(r.group->spawn_tiles(),true); return;
     }
-    fight(false,false,keep_walking);
+    fight(false);
     if (bc::fuel_remaining() < policy::action_floor) return;
     // A kill may expose the now-empty capture tile during the same turn.
     observe(target,bc::vision::visible_tiles());
@@ -442,12 +444,14 @@ void Bot::log(const char* mode) {
         << " hp=" << static_cast<int>(me.health()) << " gems=" << me.gem_count()
         << " xy=" << me.position().x << "," << me.position().y
         << " route_age=" << (travel_round < 0 ? -1 : now-travel_round)
+        << " reset_next=" << retarget_resets
         << " fuel=" << bc::fuel_remaining() << '\n';
 }
 
 void Bot::play_turn() {
     auto& me = bc::self();
     now = bc::round_number();
+    camp_basics = 0;
     if (!me.is_alive()) { buy_items(); target = -1; recovering = false; return; }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
     if (!initialized) initialize();
@@ -489,15 +493,11 @@ void Bot::play_turn() {
     if (enemy_near && theirs > 1.2f*ours && !home) {
         shield(); walk(spawn,true); fight(true,true); log("evade"); return;
     }
-    // Melee defense does not consume walking. Take compatible hits/resets,
-    // then keep the objective turn; stationary spells remain a fallback after
-    // failed movement. Do not chase a champion or start a new camp while dead.
-    const bool defended = enemy_near && fight(false,true,true);
-    if (defended && (!me.is_alive() || !me.can_move())) { log("defend"); return; }
+    if (enemy_near && fight(false,true)) { log("defend"); return; }
     const int shop_gold = me.item_count()[bc::item_type::jungle_emblem_of_strength] ? 300 : 150;
     if (!home && gems == 0 && me.gold_count() >= static_cast<unsigned>(shop_gold) && !threatened(me.position())
         && me.can_move() && me.can_attack()) { me.recall(); target = -1; log("shop"); return; }
     if (me.health() < 0.85f*me.max_health() && threatened(me.position())) shield();
-    farm(defended);
-    log(defended ? "contact-farm" : "farm");
+    farm();
+    log("farm");
 }
