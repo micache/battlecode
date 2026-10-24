@@ -1,0 +1,132 @@
+{
+  "task_id": "task-fb147fa32a584508b58c80f102eede3a",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "edit_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+  "input_revision": "3bbf4cb62bc4761935aad24fcd8248a145f6841d",
+  "branch": "bot/gamma",
+  "initial_files_match_edit_base": true,
+  "latest_candidate": {
+    "build_id": "eccc52f0137cf3a83fad28930cc75713e75724cc4eee4111f6420300297be0bb",
+    "commit": "3bbf4cb62bc4761935aad24fcd8248a145f6841d",
+    "revision_id": "b72d7d8364f5f44001a14063de8fdf126ef1c562086fb6e0aa27755ee6f36366",
+    "source_hash": "6c10372302c4821019cd43306b3b195c896f7e2f33dded12e6b38103f8cc85ad"
+  },
+  "hypothesis": "Preserving melee movement after defensive hits, with lower visible contact pressure as a shortest-path tie breaker, increases matched wins and mean tribute over the edit base without new own faults or fuel suspensions. Nonpositive win or tribute gain, or new reliability failures, falsifies this prediction.",
+  "mechanism_status": "Unmeasured rules/source deduction; supplied final scores do not establish a per-turn cause.",
+  "source_mechanism": {
+    "before": "play_turn returns immediately after successful fight(false,true), even when melee can still walk.",
+    "after": "Compatible defensive hits and resets precede farm planning; optional exclusive damage spells wait until after attempted movement. Walk and dash choose lower visible basic-attack pressure only among equal shortest advancing steps.",
+    "pressure": "sum enemy strength * (2 if in current basic range, 1 if within range+1, else 0); at most six fresh visible enemy contacts; no hidden predictions.",
+    "fallback": "Below 28k movement fuel, pressure is zero and original strict-distance choice applies. Existing 45k planning/18k action floors remain. Current captures, channels, retreat, banking priority and roster retained."
+  },
+  "frozen_manifest": {
+    "path": "/srv/battlecode/public/strategy/task-fb147fa32a584508b58c80f102eede3a/manifest.json",
+    "sha256": "26e69a47ee54db9a477a0f3f457927bd92829aca74aa7402d1a4d54b70536d0a",
+    "opponents": [
+      {
+        "bot_id": "boss",
+        "revision_id": "4feab379bdef0293965a0ea0bff1a4ae8c613829d0d50f1cb08a484d67e62249",
+        "commit": "ea15ef0f172c932f6d0a6bab7f35f233f131323f",
+        "source_hash": "f4b4f65eeee02988088b4240606d64563285404fb1393d297e9be931f4ced27c",
+        "verified_all_files": true
+      },
+      {
+        "bot_id": "alpha",
+        "revision_id": "7c9eeed05ee2f49e158fac56eaeb6dc7b773a8200ab1f1e0101e224082411ec7",
+        "commit": "82a14a04f0e6b68aac8a7e879d305b1a886b857c",
+        "source_hash": "6e362fd7cce836975fa615bc8b936109235fd320def63703761366586efabc25",
+        "verified_all_files": true
+      },
+      {
+        "bot_id": "beta",
+        "revision_id": "054bc3462f9efd4daade4987117fa944cf9019a12cc901a7a05b53e538d7f2fa",
+        "commit": "7cab9b0f6b948b0ea0b3b284425a3501c564d16b",
+        "source_hash": "fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa",
+        "verified_all_files": true
+      },
+      {
+        "bot_id": "boss",
+        "revision_id": "094eeb0ac50f681dc33b87f0627c51455367507187f01a33f3a0b7b026adb6c1",
+        "commit": "192daa8efb38fac4ea23765878987fd23d0d58ed",
+        "source_hash": "d10ae8b4f9c10760ef6660efa6e12336d64e90b46f458330067b915d4139ee02",
+        "verified_all_files": true
+      },
+      {
+        "bot_id": "alpha",
+        "revision_id": "07694b79f1401ccc85e201c493f9c5310ca73d9fb8e9383b6fe3cf66fa5b4745",
+        "commit": "1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97",
+        "source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+        "verified_all_files": true
+      },
+      {
+        "bot_id": "beta",
+        "revision_id": "c20c69faf1f1e4e752deb09e3af57f65d031caf6132cf79dd0a5a1111a2f7a38",
+        "commit": "863825b744eb21ee366370c9b1919ce73210d9d4",
+        "source_hash": "c9c933a21b50bd9e01ca1dfdaca7bd290b0259e8cd51bc7c59ad340853232c11",
+        "verified_all_files": true
+      }
+    ]
+  },
+  "opponent_source_findings": {
+    "boss": "ea15ef0f/f4b4f65e skirmish chases favorable targets to radius 4, trades in range, and retreats below local-power parity. Its pressure makes stationary equal trades a plausible opportunity cost, not a demonstrated trace cause.",
+    "others": "Alpha 82a14a04 uses timed camp rotation; beta 7cab9b0f uses reset farming and capital-aware gold valuation; these route systems were not transferred."
+  },
+  "losses": [
+    {
+      "match_id": "698315752a09be3d2524f6544263e6601f7f5ad7dd7d0c43ea60a80eb8559da8",
+      "side": "A",
+      "map": "00ambush",
+      "source_commit": "3bbf4cb62bc4761935aad24fcd8248a145f6841d",
+      "source_hash": "6c10372302c4821019cd43306b3b195c896f7e2f33dded12e6b38103f8cc85ad",
+      "opponent_revision": "unknown",
+      "artifact": "continuation-loss-69831575.json"
+    },
+    {
+      "match_id": "3ca1274b2dd61bb3f7ea4f2a2a4a93b0ab7b7cd36a82a5f6fc7b34ff15296033",
+      "side": "B",
+      "map": "00collision",
+      "source_commit": "3bbf4cb62bc4761935aad24fcd8248a145f6841d",
+      "source_hash": "6c10372302c4821019cd43306b3b195c896f7e2f33dded12e6b38103f8cc85ad",
+      "opponent_revision": "unknown",
+      "artifact": "continuation-loss-3ca1274b.json"
+    }
+  ],
+  "negative_findings": [
+    "Latest arrival-aware return candidate matched development delta -0.002702702702702703 over 185 side pairs; not the source being edited.",
+    "Previous target-aware combat ranking, live camp claims and protected transit were not selected on earlier bases. This candidate changes defensive turn continuation rather than reintroducing those systems."
+  ],
+  "risks": [
+    "Moving off a favorable trade may forgo a kill or allow enemy captures.",
+    "Exclusive spell deferral can reduce burst while moving.",
+    "Tied-step risk sees current basic range only, not hidden units, dash spells or future reinforcements.",
+    "Extra visible-contact snapshots cost fuel; normal-budget smoke validates only supplied maps."
+  ],
+  "checks": [
+    {
+      "command": "bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json",
+      "status": "PASSED",
+      "exit_code": 0,
+      "report_path": ".agent/check-task-fb147fa32a584508b58c80f102eede3a.json",
+      "source_hash": "8fb6844e3453e6ba8ff2b811355d8283689f8f02153dabe0ae825a9b148c424d",
+      "canonical_report": "continuation-check.json",
+      "compiled_regressions": "Six strict-progress and contact tie-breaking static_assert checks in plan.h."
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASSED",
+      "exit_code": 0
+    }
+  ],
+  "final_file_sha256": {
+    "bots/gamma/src/bot.cpp": "4f3e7c28a28cb51fe235a2d5221e2ad182ac26ef520a561786e2df855b57c3c7",
+    "bots/gamma/src/bot.h": "3f8d1460f6a58fb369eaa2e2b9cfb4f9c1d859b0af1a0174e079e1842f571ada",
+    "bots/gamma/src/draft.cpp": "e1d34874501d74d17bdbfbcc763918421cca7f775c34bb6eab482d7ad29c07b1",
+    "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/gamma/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/gamma/src/plan.h": "f9fcd83ba3f1365009d7525593f0bbce2f53185bf045f15317ca823d5e641e21",
+    "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "smoke_artifact": "continuation-smoke.json",
+  "smoke_interpretation": "Two completed games, both sides zero faults/suspensions; map name, opponent revision and candidate-side attribution unknown in compact report. Validity only, not comparative strength.",
+  "regression_risk": "No claim that contact pressure prevents damage or that favorable trades should always be abandoned; comparative evaluation required."
+}

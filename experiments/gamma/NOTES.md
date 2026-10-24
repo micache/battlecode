@@ -1,107 +1,90 @@
 # Gamma operational notes
 
-## task-597c76cda1d44b5ca7f812f13fc7a5e3 — arrival-aware camp returns
+## task-fb147fa32a584508b58c80f102eede3a — keep farming after melee defense
 
-- Refinement; task/bot/branch/input verified from task and entry. All seven
-  starting files matched edit commit f01d496cbc5028475ceda1b5ac558e10056b2175,
-  source 54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6.
-  HEAD/input802263ae differs deliberately; the prepared four-file restoration
-  was trusted edit-base preparation, not unfinished work. Latest candidate was
-  evaluated, not pending. Protected champion1a0675ca untouched.
-- Hypothesis: arrival-aware return planning with nonblocking staging increases
-  matched wins AND mean submitted gems over source54c19acf without new own
-  faults or fuel suspensions. Non-positive win gain, non-increasing tribute or
-  new reliability failures falsifies it. Unmeasured rules/source deduction.
-- Bottleneck: farm excluded every remembered respawning group until ready_at,
-  even when travel exceeded the remaining cooldown. With no ready work it
-  banked/recovered instead of positioning for a return. This source behavior
-  is established; the supplied losses do not prove its cost in those games.
+- Exploration; bot/gamma, input3bbf4cb6, actual edit f01d496c / source
+  54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6.
+  All seven starting files matched edit commit. Prepared three-file restoration
+  was intentional; no incomplete worker patch. Latest own candidate evaluated,
+  not pending. Accepted champion1a0675ca remains outside this edit transaction.
+- Hypothesis: preserving melee movement after defensive hits, with lower visible
+  contact pressure as a shortest-path tie breaker, increases matched wins AND
+  mean tribute over this edit base without new own faults or fuel suspensions.
+  Nonpositive win/tribute gain or new reliability failures falsifies it.
+  This is an UNMEASURED rules/source deduction, not a replay-proven cause.
 
 ## Evidence and decision
 
-- Evaluation029ae127, commit802263ae/source286bac8e, INCONCLUSIVE:311W/89L,
-  zero faults. Matched development delta versus today's edit base -0.0081081
-  over185 side pairs. Development mean collection888.28, tribute792.99,
-  deaths8.23, bag loss65.33, suspensions0.0135. This evaluates the gem-priority
-  experiment, NOT the restored source or this new candidate.
-- Supplied completed losses: cf913e89, A/00ambush, source286bac8e: collection
-  966/1072, tribute933/1035, deaths11/4, own faults/suspensions0. 1cad4a7f,
-  B/00ambush, same source: collection1026/989, tribute746/938, bag loss229,
-  own deaths8, faults/suspensions0. Full compact summaries retained under
-  rotation-loss-<prefix>.json; opponent revision unknown in these summaries.
-- Exact edit-base historical loss f1b420d7, A/00ambush, source54c19acf:
-  tribute651/1009, collection837/1034, own faults/suspensions0. Contrasting
-  completed archived win79a0887b has tribute782/759, but candidate side/source
-  are UNKNOWN in the compact provenance; do not attribute it to the edit base.
-  Existing routing-summary artifacts and bank-corridor-evidence.json retain
-  these limits. Totals alone cannot diagnose cooldown-related missed turns.
-- All six frozen file sets verified against manifest1405e3a0. Boss ea15ef0f /
-  f4b4f65e prices cooldown after travel, uses claims, Vendetta/Varg/Ryth and
-  30-gem banking. Alpha82a14a04/6e362fd7 uses group bounds and arrival-aware
-  respawn eligibility. Transfer that timing principle with gamma's own route
-  scoring and explicit off-spawn staging; do not clone composition or claims.
-- Beta7cab9b0f/fd5e2554 soft-penalizes gold-only work after300 capital; current
-  gem-priority experiment did not improve this base, so do not bundle it.
-  Beta863825b7/c9c933a2 bounds frontier planning and caches plans. No roster,
-  combat or search architecture transferred. Sources predict policies, not
-  measured success. No opponent private worker state accessed.
-- Alternatives deferred: repeat gem reweighting after its matched regression;
-  target-aware combat previously unselected; another harder risk veto without
-  new trace evidence. Arrival-aware staging was an explicit untried follow-up
-  in archive/task-ff42f1f4a5724e2a898c2cea340c1a75.md.
+- Latest evaluation fdd951e7, source6c103723/commit3bbf4cb6: INCONCLUSIVE,
+  319W/81L overall, no faults. Matched development delta vs edit base -0.0027027
+  over185 side pairs; development292W/78L, bag loss65.91, deaths8.06. These
+  scores evaluate arrival-aware returns, NOT today's restored source/candidate.
+- Completed supplied loss69831575, A/00ambush, that later source: tribute393
+  vs1020, collection581 vs1036, own deaths6, bag loss151, faults/suspensions0.
+  Loss3ca1274b, B/00collision, same source: tribute916 vs1093, collection1246
+  vs1196, deaths14 vs3, own bag loss330, faults/suspensions0. Opponent revisions
+  UNKNOWN. Full compact summaries saved as continuation-loss-<prefix>.json.
+  Finals distinguish collection and conversion losses, not their per-turn causes.
+- Contrasting exact-base completed smoke wins0c7c1562(A) and0dcbf59c(B) from
+  reachable-final-smoke-{a,b}.json: tribute1008/52 and1001/12, both sides zero
+  faults/suspensions. Map hash6e3c6795; opponent revisions/map names UNKNOWN.
+  These show legal throughput on the base, not a controlled strategy contrast.
+- Source bottleneck: successful defensive fight returned from play_turn even
+  when a melee champion still had its move. Frozen boss ea15ef0f/f4b4f65e
+  actively chases favorable contacts (radius4), trades in range and retreats
+  below local-power parity. Constantly stopping to trade can cost farm turns.
+- All six frozen source file sets match manifest26e69a47. Relevant boss combat
+  inspected; alpha82a14a04 uses timed rotations, beta7cab9b0f reset farming and
+  capital-aware gold valuation. No opponent private state read. Source policies
+  are deductions, not evidence of their exact actions in the supplied losses.
+- Deferred: repeat arrival/cooldown timing after near-zero matched regression;
+  generic gem reweighting, harder camp vetoes, live claims or damage ranking
+  after earlier negative findings. Prior notes preserved in archive/task-597*.
 
 ## Candidate policy and contracts
 
-- Retain Varg/Vendetta/Ryth/Marcella/Heart, current resets/shields, capture
-  completion, Jungle Strength -> Monster Strength -> Durability Health -> Power
-  Strength,40% retreat,98% spawn healing and24-gem/near/winning/deadline banking.
-- Separate hard stuck deferral from uncertain respawn deadlines. Admit cooling
-  routes with <=3 predicted wait rounds after arrival at attack approach.
-  First move is THIS round after respawn phase: arrival delay=max(0,moves-1).
-  Cached spawn bounding rectangles give a conservative distance lower bound;
-  walls/congestion can only lengthen travel. No new distance fields or live
-  shared bytes; retain GA/v1 immutable draft packet and existing route cache.
-- Price residual wait in shortlist and route scores. Cooling groups use full
-  design HP/strength, never the previous clear's dead handles as free reward.
-  Fresh visible alive/reward observations clear the remembered deadline.
-- For still-cooling groups, approach the outer one-tile ring. Block the entire
-  group's spawn mask in pathfinding, including intermediate movement; allow
-  leaving an occupied origin. Disable dash while staging. Reobserve after
-  moving; require fresh visible alive/reward state before normal clearing or
-  capture entry. Remembered deadline expiry alone never grants hidden state.
-- Waiting on the ring increments existing stuck counter;8 stalled turns defer
-  that route12 rounds. This bounds zero-timer waiting when another occupant
-  blocks respawn. Never depart an existing uncontested capture for staging.
-- Preserve moved status into combat after staging reveals a live camp, so an
-  exclusive spell cannot follow walking. Planning floor45k/action18k remain;
-  check shortlist fuel every16 entries even on excluded routes. Read self
-  range/speed once per planning pass; route wait calculations are arithmetic.
-- Relevant playbooks B/C/E/F, compact reference, installed C++ state/spawn-mask,
-  movement, shift and stats contracts consulted. Seven compiled temporal
-  assertions cover first-move/expiry/speed/zero-timer/immobile boundaries.
-  SDK894229e17d886358, CLI3.0.5/lockac2b5ad2, published-40-release-305-v1.
-  Unchanged-document handoff retains prior full review. Organizer download hub
-  is not full policy review; official runtime/source parity remains unverified.
+- Keep Varg/Vendetta/Ryth/Marcella/Heart, existing items,24-gem/near/winning/
+  deadline banking,40% retreat,98% spawn healing, capture completion and channels.
+- Defensive hit/reset is opportunistic: keep walking available, then continue
+  normal farm selection. Return if dead or movement unavailable. Suppress
+  movement-exclusive damage spells in the pre-walk defensive sequence and its
+  pre-walk farm call; normal post-walk fight may cast if no movement happened.
+  Read actual allowances/readiness after actions. No chase or new pursuit goal.
+- Walk and dash retain strict distance progress and shortest-distance priority.
+  Among ties only, minimize fresh visible basic pressure: strength*2 in attack
+  range, strength*1 within range+1, else0. Snapshot <=6 contacts after visibility
+  and health checks; recompute after hidden obstruction retry. No cached enemy
+  positions or allied vision. A safer but longer step cannot override progress.
+- Below28k fuel at movement entry, omit optional contact snapshots; zero risk
+  recovers the original deterministic distance tie order. Planning45k/action18k
+  and distance65k reserves unchanged. No new field or live shared-memory writes;
+  GA/v1 draft layout remains bounded. Main always calls official end_turn.
+- Six compiled helper assertions cover distance priority, safer/worse ties,
+  nonprogress rejection, longer-safe rejection and unreachable rejection.
+  New sparse log mode contact-farm marks continued defense turns for evaluation.
+- Compact reference, playbooks B/C/D/F, relevant melee/movement/ability API and
+  installed C++ contracts consulted. SDK894229e1; CLI3.0.5/engine1.0.3,
+  lockac2b5ad2, suitepublished-40-release-305-v1. Unchanged full-review handoff.
+  Organizer download hub is not full event-policy or production-parity review.
 
-## Validation, risks and continuation
+## Validation, risks and next action
 
 - bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json PASSED,
-  exit0, final source6c10372302c4821019cd43306b3b195c896f7e2f33dded12e6b38103f8cc85ad.
-  Report.agent/check-task-597c76cda1d44b5ca7f812f13fc7a5e3.json; canonical
-  check-report saved in rotation-check.json. No source edits after final check.
-- Initial check also passed on source43c5762b; reports retained as
-  rotation-check-initial*.json. Final rerun validates the later cached-stat
-  and skip-independent fuel guard optimization. Assertions compiled in both.
-- Final smoke21ec1370: completed round949, tribute A1006/B70;47b8f6fb:
-  completed round889, tribute A23/B1007. BOTH sides zero faults/suspensions
-  in both. Engine1.0.3/fcb6c3e8;41x41/hash6e3c6795. Map name/opponent revision
-  unknown; candidate A/B follows wrapper ordering, not independent summary
-  attribution. Full summaries: rotation-smoke.json. Validity only, no strength
-  claim. git diff --check passed; exact source identities in rotation-evidence.json.
-- Risks: waiting can displace immediately available work; other occupants can
-  delay respawn; conservative geometric bounds omit useful topological returns;
-  extra arithmetic/masks cost fuel. Large-map comparative performance unmeasured.
-- Next: supervisor evaluates exact checked candidate versus edit base and
-  protected champion under unchanged gates. Prioritize wins/tribute, collection
-  rate, off-spawn waiting, repeated zero timers, deaths and fuel. If unsupported,
-  inspect bounded return-choice traces before tuning wait allowance.
+  exit0, exact source8fb6844e3453e6ba8ff2b811355d8283689f8f02153dabe0ae825a9b148c424d.
+  Report.agent/check-task-fb147fa32a584508b58c80f102eede3a.json; canonical
+  check-report saved in continuation-check.json. No source edits after check.
+- Smoke a0fd1a1a: completed round1015, tribute A1007/B81. Smoke07428179:
+  completed round939, tribute A8/B1041. Both sides zero faults/suspensions
+  in both games. Engine1.0.3/fcb6c3e8,41x41/map hash6e3c6795. Map name,
+  opponent revision and candidate-side attribution UNKNOWN in compact report;
+  these are validity checks only. Full summaries in continuation-smoke.json.
+- git diff --check PASSED. Six helper assertions compiled in the checked build.
+  Per-file final hashes, check identities and decision: continuation-evidence.json.
+- Risks: leaving a favorable trade can forgo kills/camp denial; deferring an
+  exclusive spell lowers burst. Basic-range pressure omits enemy spells and
+  hidden reinforcement, and extra snapshot calls may consume fuel. Equal-path
+  ties cannot solve long detours. Comparative strength remains unmeasured.
+- Next: supervisor evaluates exact checked source against edit base, protected
+  champion and frozen opponents under unchanged gates; compare wins/tribute,
+  collection, deaths, bag loss and reliability. Inspect contact-farm progress
+  before adjusting combat or pursuit. No publication/submission by this worker.

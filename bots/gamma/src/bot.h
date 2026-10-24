@@ -7,8 +7,7 @@ class Bot {
     struct Route {
         cambc::vec2 anchor;
         std::optional<cambc::map::camp_group> group;
-        int ready_at = 0, observed_at = -1, state = 0, defer_until = 0;
-        cambc::vec2 min_spawn{}, max_spawn{};
+        int ready_at = 0, observed_at = -1, state = 0;
         float hp = 0, strength = 0;
         int travel = -1; // Static distance observation from travel_origin.
     };
@@ -26,16 +25,15 @@ class Bot {
     int travel_round = -1;
     void refresh_travel();
     int route_distance(int index) const;
-    int route_wait(int index, int range, int speed) const;
     void initialize();
     void buy_items();
-    bool walk(cambc::bitboard goals, bool dash = false, const cambc::bitboard* avoid = nullptr);
+    bool walk(cambc::bitboard goals, bool dash = false);
     bool threatened(cambc::vec2 p);
     bool bank();
-    bool fight(bool moved, bool champions_only = false);
+    bool fight(bool moved, bool champions_only = false, bool keep_walking = false);
     void shield();
     void recover();
-    void farm();
+    void farm(bool keep_walking = false);
     bool load_route(int index);
     void observe(int index, const cambc::bitboard& visible);
     void log(const char* mode);

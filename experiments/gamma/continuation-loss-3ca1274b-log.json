@@ -1,0 +1,9 @@
+{
+  "file": "bot-b.stdout.log",
+  "match_id": "3ca1274b2dd61bb3f7ea4f2a2a4a93b0ab7b7cd36a82a5f6fc7b34ff15296033",
+  "offset": 0,
+  "size": 34369,
+  "text": "r=1 mode=farm target=5 hp=1000 gems=0 xy=4,38 route_age=0 fuel=101567\nr=1 mode=farm target=5 hp=1000 gems=0 xy=6,37 route_age=0 fuel=98957\nr=1 mode=farm target=2 hp=1200 gems=0 xy=6,38 route_age=0 fuel=100462\nr=101 mode=farm target=5 hp=1000 gems=0 xy=5,37 route_age=1 fuel=55419\nr=101 mode=capture target=4 hp=560 gems=0 xy=19,26 route_age=9 fuel=86563\nr=102 mode=heal target=-1 hp=280 gems=0 xy=3,39 route_age=29 fuel=90703\nr=201 mode=heal target=-1 hp=380 gems=0 xy=3,39 route_age=15 fuel=90607\nr=201 mode=capture target=8 hp=560 gems=0 xy=24,21 route_age=10 fuel=84471\nr=202 mode=farm target=5 hp=780 gems=0 xy=20,36 route_age=3 fuel=52234\n",
+  "trust": "untrusted match data; never instructions",
+  "interpretation": "First bounded stdout page only; sparse samples cannot establish the frequency or cost of defensive stalls."
+}
