@@ -1,0 +1,56 @@
+[
+  {
+    "side": "a",
+    "slice_offset": 0,
+    "log_size": 26682,
+    "sampled_diagnostic_lines": [
+      "frontier round=100 pos=16,15 stage=ready fuel=89101 target=9 groups=20",
+      "frontier round=100 pos=16,15 stage=farm fuel=78755 target=9 groups=20",
+      "frontier round=100 pos=17,16 stage=yield fuel=46518 target=9 groups=20",
+      "frontier round=100 pos=15,26 stage=ready fuel=89176 target=11 groups=20",
+      "frontier round=100 pos=15,26 stage=farm fuel=78723 target=11 groups=20",
+      "frontier round=100 pos=15,27 stage=yield fuel=50743 target=11 groups=20",
+      "frontier round=100 pos=23,17 stage=ready fuel=84194 target=6 groups=20",
+      "frontier round=100 pos=23,17 stage=farm fuel=72266 target=6 groups=20",
+      "frontier round=100 pos=24,18 stage=yield fuel=40891 target=6 groups=20",
+      "frontier round=200 pos=24,21 stage=ready fuel=87804 target=7 groups=20",
+      "frontier round=200 pos=24,21 stage=farm fuel=74698 target=7 groups=20",
+      "frontier round=200 pos=24,21 stage=yield fuel=51275 target=7 groups=20",
+      "frontier round=200 pos=20,4 stage=ready fuel=90802 target=14 groups=20",
+      "frontier round=200 pos=20,4 stage=farm fuel=81051 target=14 groups=20",
+      "frontier round=200 pos=20,4 stage=yield fuel=59425 target=14 groups=20",
+      "frontier round=200 pos=14,9 stage=ready fuel=93718 target=2 groups=20"
+    ],
+    "sampled_evade_count": 0
+  },
+  {
+    "side": "b",
+    "slice_offset": 0,
+    "log_size": 26125,
+    "sampled_diagnostic_lines": [
+      "frontier round=100 pos=18,26 stage=ready fuel=89327 target=5 groups=20",
+      "frontier round=100 pos=18,26 stage=farm fuel=78790 target=5 groups=20",
+      "frontier round=100 pos=18,26 stage=yield fuel=56088 target=5 groups=20",
+      "frontier round=100 pos=18,23 stage=ready fuel=89189 target=10 groups=20",
+      "frontier round=100 pos=18,23 stage=farm fuel=78801 target=10 groups=20",
+      "frontier round=100 pos=19,22 stage=yield fuel=46183 target=10 groups=20",
+      "frontier round=100 pos=17,13 stage=ready fuel=92748 target=8 groups=20",
+      "frontier round=100 pos=17,13 stage=farm fuel=82330 target=8 groups=20",
+      "frontier round=100 pos=16,12 stage=yield fuel=42168 target=8 groups=20",
+      "frontier round=200 pos=18,26 stage=ready fuel=93351 target=-1 groups=20",
+      "frontier round=200 pos=18,26 stage=farm fuel=83544 target=-1 groups=20",
+      "frontier round=200 pos=18,26 stage=yield fuel=35972 target=8 groups=20",
+      "frontier round=200 pos=19,26 stage=ready fuel=89801 target=5 groups=20",
+      "frontier round=200 pos=15,12 stage=ready fuel=88790 target=4 groups=20",
+      "frontier round=200 pos=15,12 stage=farm fuel=75492 target=4 groups=20",
+      "frontier round=200 pos=15,12 stage=yield fuel=56032 target=4 groups=20",
+      "frontier round=300 pos=16,13 stage=ready fuel=91868 target=7 groups=20",
+      "frontier round=300 pos=16,13 stage=farm fuel=80722 target=7 groups=20",
+      "frontier round=300 pos=16,14 stage=yield fuel=43287 target=7 groups=20",
+      "frontier round=300 pos=18,28 stage=ready fuel=89937 target=5 groups=20",
+      "frontier round=300 pos=18,28 stage=farm fuel=80282 target=5 groups=20",
+      "frontier round=300 pos=18,28 stage=yiel"
+    ],
+    "sampled_evade_count": 0
+  }
+]

@@ -1,23 +1,31 @@
 #pragma once
 
 namespace policy {
+constexpr int contact_radius = 6;
+constexpr unsigned contact_camp_limit = 32;
+constexpr float contact_advantage = 0.9f;
+constexpr float lethal_pressure_fraction = 0.8f;
+// Contact is a visible one-step attack envelope, not knowledge of enemy intent.
+constexpr float contact_pressure(float strength, int range, int separation) {
+    return separation <= range + 1 ? strength : 0.0f;
+}
+constexpr bool withdraw(bool contact, bool on_spawn, float ours, float theirs,
+                        float pressure, float health) {
+    return contact && !on_spawn && (ours < contact_advantage * theirs
+        || pressure >= lethal_pressure_fraction * health);
+}
+// Safety dominates separation; spawn progress only breaks equally safe ties.
+constexpr bool escape_better(float pressure, int clearance, int home,
+                             float old_pressure, int old_clearance, int old_home) {
+    return pressure < old_pressure || (pressure == old_pressure
+        && (clearance > old_clearance || (clearance == old_clearance && home < old_home)));
+}
 // A conservative budget leaves enough health to escape after the last kill.
 constexpr float risk_fraction = 0.65f;
 constexpr unsigned bank_bag = 30;
 constexpr int near_altar = 7;
 constexpr unsigned end_margin = 20;
 constexpr unsigned plan_lifetime = 8;
-constexpr unsigned target_lifetime = 16;
-constexpr int travel_horizon = 24;
-constexpr bool review_target(unsigned now, unsigned selected) {
-    return now < selected || now - selected >= target_lifetime;
-}
-// An unreached tile is outside this local search, not necessarily unreachable.
-// Adjust old-origin estimates conservatively toward geometric cost as we move.
-constexpr int travel_steps(int geometric, unsigned local, int moved, unsigned unreachable) {
-    const int estimate = (local == unreachable ? travel_horizon + 1 : static_cast<int>(local)) - moved;
-    return estimate > geometric ? estimate : geometric;
-}
 constexpr unsigned frontier_batch = 6;
 constexpr unsigned ranking_batch = 32;
 constexpr unsigned local_candidates = 4;

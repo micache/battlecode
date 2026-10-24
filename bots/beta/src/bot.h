@@ -22,12 +22,6 @@ class Bot {
     unsigned plan_round = 0;
     cambc::vec2 plan_origin{};
     bool plan_valid = false;
-    // Advisory static terrain distances; never used to authorize movement.
-    cambc::distance_field travel_field;
-    cambc::vec2 travel_origin{};
-    unsigned travel_round = 0;
-    bool travel_valid = false;
-    unsigned target_round = 0;
     int target_group = -1;
     bool initialized = false;
     bool recovering = false;

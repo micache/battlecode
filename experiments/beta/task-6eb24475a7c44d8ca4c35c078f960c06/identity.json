@@ -1,0 +1,34 @@
+{
+  "entry": {
+    "accepted_source_verified": true,
+    "attempts_root": "/var/lib/battlecode-volume/homes/bc-beta/attempts",
+    "bot_id": "beta",
+    "branch": "bot/beta",
+    "edit_commit": "863825b744eb21ee366370c9b1919ce73210d9d4",
+    "edit_source_verified": true,
+    "head": "df9fd0288ecd167dd55ca844da034580c58837ab",
+    "note": "Trusted preparation verified these identities. Do not search private central state.",
+    "preparation_sha256": {
+      ".agents/skills/battlecode-strategy/SKILL.md": "8ad82743e7038f270c3783621a7f403a75b4aeeed95c185769e343e408010bda",
+      "AGENTS.override.md": "f92a4f298e67fc6e896cea4431f782c53975eabc05844650c583d3f42395ecca"
+    },
+    "source_hash": "c9c933a21b50bd9e01ca1dfdaca7bd290b0259e8cd51bc7c59ad340853232c11",
+    "task_id": "task-6eb24475a7c44d8ca4c35c078f960c06"
+  },
+  "edit_start": {
+    "commit": "863825b744eb21ee366370c9b1919ce73210d9d4",
+    "source_file_sha256": {
+      "bot.cpp": "0db83008ba1cdbfbfbcd32d9df306b8c8d71c21e9b35dcc70ccc9fa6e49da0ae",
+      "bot.h": "ca2acaa6e8b5ed5f97b59ba47c8da6e055e84d518f28ea5be86036ec0e3bfaaf",
+      "draft.cpp": "aa62db98abada2358aa5c3859eef3589d39e362d9a23c36b3ca7bcb382e0659a",
+      "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+      "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+      "policy.h": "b9a0f6eead8ad50e7dbe443ccf4d238e1a73b5d109a668b14e817c79e0203d0e",
+      "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+    },
+    "source_hash": "c9c933a21b50bd9e01ca1dfdaca7bd290b0259e8cd51bc7c59ad340853232c11"
+  },
+  "verified_before_edit": true,
+  "latest_evaluated_commit": "df9fd0288ecd167dd55ca844da034580c58837ab",
+  "latest_evaluation": "5e88fdea2c0fcc1099930ecfaacc5a7957c2fc93692b363ac64d0ca254b2c3c9"
+}
