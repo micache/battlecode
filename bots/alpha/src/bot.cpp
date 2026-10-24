@@ -2,7 +2,7 @@
 #include <cambc.h>
 #include "bot.h"
 #include "altar_control.h"
-#include "group_farming.h"
+#include "camp_rotation.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -38,60 +38,66 @@ cambc::bitboard blocked_tiles() {
 
 bool move_towards_closest(cambc::bitboard goals) {
     auto& me = cambc::self();
-    if (!me.can_move() || me.restrictions().contains(cambc::buff_restrictions::move)
-        || goals.is_set(me.position()) || cambc::fuel_remaining() < 22000) return false;
-    // Goals are free approach/capture tiles, never occupied monster/altar tiles.
-    auto blocked = blocked_tiles();
-    goals &= ~blocked;
-    if (goals.is_empty()) return false;
+    if (!me.can_move() || goals.is_set(me.position()))
+        return false;
+
+    // Only free goals or occupied camp tiles can seed the field.
+    const auto blocked = blocked_tiles();
+    goals &= ~blocked | cambc::vision::camp_tiles();
+    if (goals.is_empty())
+        return false;
+    if (goals.count() == 1 && !blocked.is_set(goals.positions()[0])) {
+        const bool moved = me.move_towards(goals.positions()[0]);
+        if (moved) altar_control::place_lock();
+        return moved;
+    }
+
+    // Expand from the goals until our current tile is reached.
+    const auto path_walls = blocked & ~goals;
     cambc::distance_field field;
     cambc::bitboard visited;
-    field.compute_to(blocked, goals, tiles_around(me.position(), 0), visited);
-    for (unsigned retry = 0; retry < 2; ++retry) {
-        auto step = me.position();
-        for (auto tile : blocked.reachable_tiles(step, me.base_stats().base_move_speed).positions())
-            if (field.get(tile) < field.get(step)) step = tile;
-        if (step == me.position()) return false;
-        if (me.move_absolute(step)) { altar_control::place_lock(); return true; }
-        // False may reveal an occupant. Refresh before the bounded alternative.
-        blocked = blocked_tiles();
-        if (cambc::fuel_remaining() < 22000) break;
-    }
-    return false;
+    field.compute_to(path_walls, goals, tiles_around(me.position(), 0), visited);
+
+    // Choose a reachable step with a smaller distance to the goal.
+    auto step = me.position();
+    for (auto tile : blocked.reachable_tiles(step, me.base_stats().base_move_speed).positions())
+        if (field.get(tile) < field.get(step)) step = tile;
+
+    const bool moved = step != me.position() && me.move_absolute(step);
+    if (moved) altar_control::place_lock();
+    return moved;
 }
 
 void Bot::buy_items() {
     auto& me = cambc::self();
     using I = cambc::item_type;
-    const auto items = me.item_count();
-    if (!items[I::jungle_emblem_of_strength]) {
-        const unsigned needed = 5 - std::min(5u, items[I::jungle_shard_of_strength]);
-        const unsigned count = std::min(needed, me.gold_count() / I::jungle_shard_of_strength.cost());
-        if (count && me.can_buy(I::jungle_shard_of_strength, count)) me.buy(I::jungle_shard_of_strength, count);
+    // Ryth converts bonus Health to Strength; other reset/splash farmers grow
+    // Strength directly. Only a finished Jungle emblem gives camp protection.
+    const bool health = me.champion_name() == cambc::champion_type::ryth;
+    const auto shard = health ? I::jungle_shard_of_health : I::jungle_shard_of_strength;
+    const auto emblem = health ? I::jungle_emblem_of_health : I::jungle_emblem_of_strength;
+    const auto counts = me.item_count();
+    if (!counts[emblem]) {
+        const auto n = sortie_policy::jungle_purchase(me.gold_count(), shard.cost(),
+            counts[shard], shard.combine_count(), false);
+        if (n && me.can_buy(shard, n)) me.buy(shard, n);
+        // A partial emblem should be completed on the next shopping visit.
+        if (counts[shard] + n < shard.combine_count()) return;
     }
-    const unsigned count = me.gold_count() / I::power_shard_of_strength.cost();
-    // Finish Jungle before starting a second family.
-    if (me.item_count()[I::jungle_emblem_of_strength] && count && me.can_buy(I::power_shard_of_strength, count))
-        me.buy(I::power_shard_of_strength, count);
+    const auto power = I::power_shard_of_strength;
+    const auto n = me.gold_count() / power.cost();
+    if (n && me.can_buy(power, n)) me.buy(power, n);
 }
 
 // Bound extra combat work; this is a planning reserve, not measured fuel headroom.
 constexpr std::uint64_t combat_fuel_reserve = 18000;
 constexpr unsigned combat_target_limit = 16;
 
-// Turn-local group filter. Reset before any champion combat or new target choice.
-std::optional<cambc::bitboard> farming_tiles;
-
 // Handles are refreshed through vision on every action, never cached across turns.
 template<class Target>
 auto combat_targets() {
-    if constexpr (std::is_same_v<Target, cambc::camp>) {
-        auto camps = cambc::vision::camps();
-        if (farming_tiles) std::erase_if(camps, [](const auto& c) {
-            return !farming_tiles->is_set(c.spawn_position());
-        });
-        return camps;
-    }
+    if constexpr (std::is_same_v<Target, cambc::camp>)
+        return cambc::vision::camps();
     else
         return cambc::vision::champions(team::enemy);
 }
@@ -238,100 +244,99 @@ bool fight(bool walked = false) {
     return acted;
 }
 
-// Finish one selected physical group, then occupy its reward region.
+// Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
-    auto& plan = group_farming::memory();
-    const auto* target = plan.choose();
-    if (!target || cambc::fuel_remaining() < combat_fuel_reserve) return;
-    farming_tiles = target->spawns;
-    if (target->observed == static_cast<int>(cambc::round_number()) && target->reward) {
-        if (!target->spawns.is_set(cambc::self().position())) move_towards_closest(target->spawns);
-        return; // Preserve capture occupancy through round start.
-    }
-    if (fight<cambc::camp>()) { plan.engage(); return; }
-    if (cambc::fuel_remaining() < 28000) return;
-    auto& me = cambc::self();
-    const auto visible = cambc::vision::visible_tiles();
-    const auto occupied = cambc::vision::camp_tiles();
-    cambc::bitboard goals;
-    unsigned examined = 0;
-    for (const auto& camp : target->group) {
-        if (++examined > 128 || cambc::fuel_remaining() < 26000) break;
-        const auto spawn = camp.spawn_position();
-        if (!visible.is_set(spawn)) goals.set(spawn); // Explore, no live query.
-        else if (occupied.is_set(spawn)) goals |= tiles_around(spawn, me.attack_range());
-    }
-    if (goals.is_empty()) {
-        // Fresh lifecycle after a kill by us or an ally. state() is visibility-gated.
-        if (!(target->spawns & visible).is_empty()
-            && std::holds_alternative<cambc::map::camp_group_reward_available>(target->group.state()))
-            move_towards_closest(target->spawns);
-        else plan.blocked();
+    if (fight<cambc::camp>() || cambc::fuel_remaining() < combat_fuel_reserve)
         return;
-    }
-    if (move_towards_closest(goals)) {
-        if (fight<cambc::camp>(true)) plan.engage();
-    }
-    else if (!goals.is_set(me.position())) plan.blocked();
+
+    // Include unknown/expired groups, but do not revisit a personally observed
+    // cooldown early merely because its spawn tiles have left our vision.
+    auto goals = camp_rotation::memory().goals();
+
+    // Fresh vision after movement may reveal a camp already in range.
+    if (move_towards_closest(goals))
+        fight<cambc::camp>(true);
 }
 
 void Bot::play_turn() {
     auto& me = cambc::self();
-    auto& plan = group_farming::memory();
-    farming_tiles.reset();
+
+    // Refill control tools while dead so the next sortie can deny an altar.
     if (!me.is_alive()) {
-        recovering = false;
-        plan.reset_target();
+        recovery.update(false, false, 0.f, false);
         altar_control::buy_lock();
         buy_items();
         return;
     }
-    if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
-    if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
+
+    // Leave channels running and skip turns where we cannot act.
+    if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
+        || (!me.can_move() && !me.can_attack() && !me.can_cast()))
+        return;
+
     const auto spawn = cambc::map::spawn_region(team::ally);
     const bool at_spawn = spawn.is_set(me.position());
-    if (at_spawn || me.passive() == cambc::passive_type::remote_shop) buy_items();
-    if (at_spawn) {
-        altar_control::buy_lock();
-        // Recall resolves before this turn; healing only happens at its end.
-        if (me.health() < me.max_health() * .95f) return;
-        recovering = false;
-    }
+    if (at_spawn) altar_control::buy_lock();
+    if (at_spawn || me.champion_name() == cambc::champion_type::tavi)
+        buy_items(); // can_buy validates spawn/death/Tavi location contracts.
+
+    const auto recover = recovery.update(true, at_spawn,
+        me.health() / me.max_health(), false);
+    if (recover == sortie_policy::recovery_action::wait_for_heal) return;
+
     altar_control::place_lock();
-    if (!at_spawn && me.health() < me.max_health() * .35f) recovering = true;
-    if (recovering) {
-        plan.reset_target();
+    if (recover == sortie_policy::recovery_action::return_home) {
+        // Walk on every interrupted recall turn; never abandon the return just
+        // because health rose above the entry threshold.
         move_towards_closest(spawn);
-        if (!spawn.is_set(me.position())) me.recall();
+        if (!spawn.is_set(me.position())
+            && !me.restrictions().contains(cambc::buff_restrictions::move))
+            me.recall();
         return;
     }
-    plan.update();
-    if (plan.capture_here()) return;
-    // Adjacent tribute wins over incidental combat. Hostile locks use basics.
-    if (me.gem_count() && altar_control::bank_or_clear_lock()) return;
-    if (fight<cambc::champion>() || cambc::fuel_remaining() < combat_fuel_reserve) return;
-    // Keep safe, prompt banking. Route selection is the experiment's core change.
-    if (me.gem_count()) {
-        cambc::bitboard goals, locked_goals;
+
+    // Keep the enemy-first policy, spending independent combat allowances.
+    if (fight<cambc::champion>() || cambc::fuel_remaining() < combat_fuel_reserve)
+        return;
+
+    // Bank any carried gems before farming.
+    if (me.gem_count() > 0) {
+        // Capture resolves before this turn: remember the newly cooling group
+        // before leaving it with the reward. No movement or channel is started.
+        camp_rotation::memory().observe();
+        if (altar_control::bank_or_clear_lock()) return;
+        if (cambc::fuel_remaining() < combat_fuel_reserve) return;
+        // Union all altar approach tiles: the field chooses the nearest reachable altar.
+        cambc::bitboard goals;
+        goals.clear();
+        cambc::bitboard locked_goals;
+        locked_goals.clear();
         const auto hostile = cambc::vision::altar_lock_tiles(team::enemy);
         for (auto altar : cambc::map::altars().positions()) {
             const auto approach = tiles_around(altar, cambc::constants::submit_gems_range);
             if (hostile.is_set(altar)) locked_goals |= approach;
-            else goals |= approach;
+            else goals |= approach; // Friendly locks permit our tribute.
         }
+        // If all altars are visibly hostile, approach one and clear it next turn.
         if (goals.is_empty()) goals = locked_goals;
         move_towards_closest(goals);
-        // Fresh postmove range/lock state: begin tribute without an idle turn.
-        if (cambc::fuel_remaining() >= combat_fuel_reserve) altar_control::bank_or_clear_lock();
         return;
     }
-    // Turn earned gold into clear speed; Tavi already shops remotely.
-    if (!at_spawn && me.passive() != cambc::passive_type::remote_shop && me.gold_count() >= 150
+
+    // Couple reinvestment to recovery rather than a healthy, profitable sortie.
+    // These masks expose only personal vision. Tavi can already buy in place.
+    if (me.champion_name() != cambc::champion_type::tavi
+        && me.gold_count() >= sortie_policy::resupply_gold
+        && me.health() < me.max_health() * sortie_policy::resupply_health_fraction
         && cambc::vision::champion_tiles(team::enemy).is_empty()
-        && cambc::vision::awake_camp_tiles().is_empty()) {
-        plan.reset_target();
+        && cambc::vision::awake_camp_tiles().is_empty()
+        && !me.restrictions().contains(cambc::buff_restrictions::move)) {
+        recovery.update(true, false, me.health() / me.max_health(), true);
         me.recall();
         return;
     }
+
     farm_camps();
+
+    me.set_priority(1 + random_number(100));
 }

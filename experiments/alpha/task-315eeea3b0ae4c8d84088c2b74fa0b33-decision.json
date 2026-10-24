@@ -1,0 +1,39 @@
+{
+  "task_id": "task-315eeea3b0ae4c8d84088c2b74fa0b33",
+  "bot_id": "alpha",
+  "base_source_hash": "ba646c6e0b2f1259645b5eb6160f8b836c5ef8926cbbf777702b0dc3d8892a8f",
+  "checked_source_hash": "64b2bce6becad2db579f134d576e8d62b53061b3658cb612338884bb142d7e1e",
+  "edit_commit": "5f73d0787014e3f712d0eb6234f088fee489b4d8",
+  "input_revision": "2cb76e5dc2fea3032e450e80603c2f3613d107a6",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "engine_version": "3.0.5",
+  "engine_lock_hash": "ac2b5ad200d0df54380e94f82b1a327dd0407202533325808c8bf3af26c56136",
+  "evaluation_suite": "published-40-release-305-v1",
+  "checks": {
+    "identity": "PASSED",
+    "unchanged_navigation_combat_farming_channels_yield": "PASSED",
+    "scope": "only bots/alpha/src and experiments/alpha edited",
+    "final_file_sha256": {
+      "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+      "bots/alpha/src/bot.cpp": "6f4177bbcd098adedae0e3f43de3f0d665f5f6102f76f7521c6bc49e45cf8e29",
+      "bots/alpha/src/bot.h": "cd7a3239fed3841c219904cf7fa44355f00eda53020f2bbb746d43948ba5effb",
+      "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+      "bots/alpha/src/draft.cpp": "ad143993bb98a5a7ccc91e4e1e635b3983ad41275444ece8466bbb17de125388",
+      "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+      "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+      "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+      "bots/alpha/src/sortie_policy.h": "a9ebf64ebe491880dc02a385b702f1bdb8b4a85991c8fdfa0d54548bd2c59dd7"
+    }
+  },
+  "hypothesis": "A deliberate melee-reset roster with kit-matched Jungle/Strength purchases and completed recovery/reinvestment increases matched development wins over ba646c6e. Unchanged or lower win rate falsifies this prediction.",
+  "test_notes": {
+    "host_compile": "g++ unavailable, exit 127; standalone harness retained, not executed",
+    "red": "trusted wrapper FAILED as expected: three static assertions before implementation",
+    "final": "trusted wrapper PASSED; constexpr purchase/recovery scenarios compiled"
+  },
+  "limitations": [
+    "This is a focused composition/economy slice, not a test of the later full farming upgrade.",
+    "No per-turn trace establishes causes for the sampled older-source losses.",
+    "Exact-source strength and full-map fuel headroom require supervisor evaluation."
+  ]
+}

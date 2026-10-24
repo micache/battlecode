@@ -4,16 +4,15 @@
 #include <array>
 
 void play_draft() {
-    // Farming kits: high base Strength, splash, tribute income, field shopping.
-    using C = cambc::champion_draft;
-    constexpr std::array preference{C::vendetta, C::varg, C::marcella,
-        C::tavi, C::vesper_vale, C::ryth, C::heart_of_ruin, C::ren,
-        C::prism, C::stellar, C::willow, C::cassi_and_issac};
+    using D = cambc::champion_draft;
+    // Four melee reset farmers can walk and attack; Tavi reinvests in the field.
+    constexpr std::array order{D::varg, D::vendetta, D::marcella, D::ryth, D::tavi};
     const auto chosen = cambc::draft::current_draft(cambc::team::ally);
     if (chosen.size() >= cambc::draft::team_size()) return;
-    for (const auto pick : preference) {
-        if (std::find(chosen.begin(), chosen.end(), pick) != chosen.end()) continue;
-        cambc::draft::pick(pick);
-        return;
+    for (const auto pick : order) {
+        if (std::find(chosen.begin(), chosen.end(), pick) == chosen.end()) {
+            cambc::draft::pick(pick);
+            return;
+        }
     }
 }
