@@ -15,6 +15,7 @@ class Bot {
     bool recovering = false;
     int target = -1, slot = 0, now = 0, cursor = 0;
     int last_log = -100, stuck = 0;
+    int bank_best = 1000000, bank_progress_at = -1;
     std::vector<Route> routes;
     cambc::bitboard terrain, spawn, altar_goals;
     std::vector<cambc::vec2> altars;
@@ -30,7 +31,9 @@ class Bot {
     bool walk(cambc::bitboard goals, bool dash = false);
     bool threatened(cambc::vec2 p);
     bool bank();
-    bool fight(bool moved, bool champions_only = false);
+    bool clear_bank_path();
+    bool fight(bool moved, bool champions_only = false,
+        const std::optional<cambc::camp>& obstacle = std::nullopt);
     void shield();
     void recover();
     void farm();

@@ -1,99 +1,98 @@
 # Gamma operational notes
 
-## task-93a56bca32614c11b13bb0bc448670dd — reachable objective routing
+## task-79ea9383992346ad9b2f7d7b0474cc11 — banking through occupied corridors
 
-- Refinement; branch bot/gamma. Trusted edit base/protected champion
-  1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d, source
-  9e804e3e3e2d0c183cd5badd983c2bacea7679788942d22df764f785ff0e115f.
-  HEAD/input aae86b28b8ceb20dba746ddd8b597be83f69deea differs deliberately.
-  All six starting files matched the trusted base; prepared plan.h deletion was
-  intentional. Reused inspected own HEAD melee implementation explicitly as
-  part of this candidate, not as a change of edit base.
-- Prior task d684842d had QUOTA_WAIT, zero checks/evaluations, no publication.
-  Its exact source equals this trusted starter. Its checkpoint patch and notes
-  remain intact at the supplied recovery paths; no unfinished strategy found.
-- Hypothesis: topology-aware camp shortlisting and bank timing on the measured
-  melee economy increases matched wins AND mean tribute over aae86b28/source
-  7762c7e2, retains its gain over the trusted starter, without new own faults or
-  fuel suspensions. Non-positive win/tribute change or new reliability failures
-  falsifies it. Routing mechanism is an unmeasured rules/source deduction.
+- Refinement; branch bot/gamma; clean HEAD/input/edit commit f01d496cbc5028475ceda1b5ac558e10056b2175,
+  source54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6.
+  All seven edit files verified against feedback.handoff. Protected champion
+  1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d remains outside this edit transaction.
+- Prior task93a56bca is published and evaluated, not awaiting evaluation. Its
+  notes are archived under archive/task-93a56bca32614c11b13bb0bc448670dd.md.
+  Historical d684842d recovery remains preserved; no incomplete patch on entry.
+- Hypothesis: progress-aware banking that clears visible corridor camps and
+  retains reachable locked altars increases matched wins and mean tribute over
+  f01d496c, reduces extended banking stalls, and adds no faults/suspensions.
+  Non-positive win/tribute gains or new reliability failures falsify it.
 
 ## Evidence and decision
 
-- Evaluation43a38de3, source7762c7e2: REJECTED,270W/130L. Matched development
-  delta+0.5027027 versus starter over185 side-paired cases, not a near-zero delta.
-  Per-map candidate/base: islands0.1/0.4, corridors0.2/0.2, ambush0.5/0.3.
-  Development mean tribute705.37, collection785.29, bag loss55.05; zero own
-  faults/suspensions in370 observations. These statistics evaluate the previous
-  candidate, not today's source; rejection remains a negative finding.
-- Development loss29487e014d4ce38b92a30ba405f829a8f92ecfdfc6762bcf8191bc8c03f7f939,
-  A/00ambush, source7762c7e2: tribute695/1007, collection732/1007, deaths8/3,
-  no own bag loss. Ryth collected18, Marcella0; not proof of a pathfinding cause.
-- Loss2bcc768849540be3454ab4d05688cf0a97c1577f4ffb229e6b8a2c1d2002f233,
-  A/00ambush, same source: tribute583/1013, collection915/1101, own bag loss207,
-  carried125. Multiple bottlenecks remain; kills15/5 did not win the objective.
-  Full compact summaries saved under29487e01-summary.json and2bcc7688-summary.json.
-- All six frozen opponent file sets verified against manifest9ef7d19b. Relevant
-  boss ea15ef0f/sourcef4b4f65e uses reachable distances, risk budgets, shared claims,
-  Vendetta/Varg/Ryth, local-power combat and30-gem banking. Beta7cab9b0f uses
-  Varg/Tavi/Ryth, reset farming and staged defensive items. Imported the reachable
-  distance principle independently; retained our roster/soft-risk policy and
-  private routes. Opponent source predicts policy, not observed runtime events.
-- Alternatives deferred: repeating harder camp vetoes (prior negative finding),
-  delivery-cost ranking (prior inconclusive), or live claims without evidence of
-  duplicate work. Historical detail is in archive/task-423449f15111476db311d689ef85b218.md
-  and older archives. No claim that topology alone explains the measured losses.
+- Evaluation6cb05e4b, exact edit source54c19acf: INCONCLUSIVE,316W/84L across400
+  games. Development370 observations: collection882.09, bag loss68.19,
+  carried33.96, tribute779.94, deaths8.35, own faults0, suspensions0.0162.
+  Champion promotion is not established.
+- Boss lossfb29d6e2c7d1b3dfca5b270b748116204f47088c88bc0c9bc8ff9cb1ab7d2c62,
+  B/01the-farm, f01d496c/source54c19acf against boss ea15ef0f/sourcef4b4f65e:
+  completed2000, tribute92/229, collected216/338, carried95/109, deaths1/0.
+  Own faults0 and suspensions0; opposing suspensions9. Engine reports1.0.3/
+  fcb6c3e8; task CLI3.0.5/lockac2b5ad2. Preserve that version distinction.
+- Its bounded runtime logs show r1548 Vendetta bank37 at31,15; r1648/r1748
+  bank37 at29,15. Two other carriers log bank29 at29,14 and30,17 unchanged
+  r1601/r1701/r1801. This establishes long bank-mode stalls with retained bags,
+  not exact camp/lock causality. Saved initial/late log slices and summary.
+- Source deduction: bank() always returned after movement, never attacked a
+  blocking camp, and removed all locked altar goals whenever any unlocked
+  altar existed (without reachability validation). Dynamic movement cannot
+  pass through living camps. The proposed cause remains unmeasured.
+- All six frozen opponent file sets verified against manifest2d7f4a75.
+  Boss4feab379 uses Vendetta/Varg/Ryth,30-gem banking, nearest static altar
+  field, lock attacks, shared claims, local-power combat and bounded detours.
+  Alpha7c9eeed0 places locks and prefers unlocked goals; beta054bc346 softly
+  penalizes gold-only work after300 capital. Opponent source predicts policy,
+  not runtime events. Borrowed nearest-altar principle, not the whole strategy.
+- Rejected/deferred: changing roster/items or adding harder camp vetoes would
+  not directly address the observed bank loop. Prior hard camp veto regressions,
+  delivery-value inconclusive evidence and earlier failed candidates remain in
+  archived notes. Do not interpret those older results as tests of this patch.
 
-## Candidate policy and contracts
+## Candidate contracts
 
-- Retain measured melee vertical slice: Varg/Vendetta/Ryth/Marcella/Heart;
-  legal resets and abilities, completed captures, Jungle Strength then Monster
-  Strength then Durability Health then Power Strength,150/300-gold safe shop
-  recall,40%HP retreat,98%spawn-heal wait,24-gem/near/winning/deadline tribute.
-  Ordinary damage does not cancel tribute; preserve active channels.
-- First draft encodes GA/version1/count16/xy8 static anchors, max509 groups,
-  <=1023/1024 bytes. Cache anchor coordinates before sorting to remove repeated
-  camp-member queries in the comparator. Live eight-byte memory remains unused.
-- Cache a static altar field once. Near-bank/deadline decisions use reachable
-  walking distance instead of Chebyshev distance; unreachable altars cannot
-  trigger the normal bank branch. Actual moves still exclude visible occupants.
-- Refresh a private source-rooted static distance field after4 topological tiles
-  or12 rounds, only with>=65k fuel. Cache one distance per anchor; nearest-eight
-  shortlist and route scoring use topology. A lower bound combines geometric
-  distance with old distance minus topological displacement. Disconnected routes
-  stay excluded only while in the same component; recall/respawn component
-  changes invalidate the cache. Missing cache falls back to geometry.
-- Existing45k planning floor and18k movement entry floor remain. No new all-map
-  group scans in gameplay. Preserve a valid committed target if planning runs
-  out of headroom. With no reachable work, deliver a small reachable bag before
-  recovery. Bounded100-turn logs now include position and route-cache age.
-- Regression assertions cover unreachable preservation, uninitialized fallback,
-  topological displacement and geometric lower bounds, alongside prior memory,
-  tribute and value invariants. Reviewed actual SDK DistanceField contracts.
-  Documentation unchanged; no full unchanged export reread required. Engine3.0.5,
-  lockac2b5ad2, suitepublished-40-release-305-v1; SDK894229e17d886358.
-  RESEARCH/organizer ledger limits remain; download hub is not full policy review.
+- Retain measured Varg/Vendetta/Ryth/Marcella/Heart farming, draft v1 static
+  anchors, reachable camp shortlist, capture completion, items and recovery.
+  Live shared8 bytes remain unused; all new progress state is instance-private.
+- Bank toward the union of all static altar approach tiles, accepting five
+  hostile-lock hits instead of globally excluding a potentially reachable bank.
+  Existing fresh arrival tribute and active-channel preservation remain intact.
+- Track best static bank distance and last improving round. After4 rounds
+  without net improvement, inspect visible camps within5 tiles. Accept only
+  camps closer to a bank on a shortest corridor or one-step detour, with a free
+  attack approach reachable within5 under refreshed visible blockers. Select
+  nearest, then lowest HP. Never use hidden live state or allied bodies as targets.
+- Reuse existing attack/reset/spell handling with an explicit optional obstacle
+  target, refresh visibility/health after attacks and movement, and shield while
+  clearing. Ordinary farming still uses its own group target. If no eligible
+  obstacle exists, try in-range enemy defense, then normal bank navigation.
+- Progress resets after submission/death/nonbank work.100-round logs include
+  bank_stall. Existing45k planning and18k action fuel floors remain unchanged.
+  Static assertions cover corridor eligibility, behind/off-route camps and
+  unreachable origins; built with the trusted wrapper, not a host compiler.
+- Current docs/SDK unchanged according to trusted handoff. Consulted relevant
+  playbooksB/C/D/F, reference and installed C++ declarations. Prior full review
+  applies. RESEARCH/organizer ledger still does not establish full event policy
+  review or production parity; no official action authorized or performed.
 
-## Validation and next action
+## Validation and uncertainty
 
-- Final bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json
-  PASSED exit0; exact source54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6.
-  Report .agent/check-task-93a56bca32614c11b13bb0bc448670dd.json;
-  check-report saved reachable-final-diagnostics.json. Initial97049a68 also
-  passed; reachable-initial-check.json preserves that superseded report.
-- Final smoke0c7c1562, sideA: completed round977, tribute1008/52.
-  Final smoke0dcbf59c, sideB: completed round940, tribute1001/12.
-  Both sides zero faults and suspensions in both games; same41x41 map hash
-  6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620.
-  Engine1.0.3/fcb6c3e8. Map name and opponent revision unknown. Saved full
-  summaries reachable-final-smoke-a.json and-b.json. Validity, not broad strength.
-- git diff --check PASSED. No source edits after final trusted check.
-  Exact file hashes, provenance and final diagnostics: reachable-evidence.json.
-- Risks: static distances ignore congestion; stale estimates can misrank nearby
-  camps; extra fields need large-map fuel coverage; no crystal island routing;
-  no live claims; existing safety/PvP and hostile-lock detours remain imperfect.
-  Smoke does not test all these conditions or isolate routing's causal gain.
-- Next: supervisor evaluates exact checked source against edit base and previous
-  candidate on matched maps/sides/opponents, retaining all promotion gates.
-  Prioritize corridors/islands/obstructed routes, submitted gems and suspensions;
-  inspect actual route logs before deciding on claims, crystal travel or safety.
+- bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json PASSED
+  exit0, sourcee17f373d5623d1494442e9eea12816db00487a9b50e1f6d4b5f846de4c16065b.
+  Report.agent/check-task-79ea9383992346ad9b2f7d7b0474cc11.json; copied canonical
+  check-report into bank-corridor-check.json. No source edits after this check.
+- Smoke ccb23bea, sideA: completed valid terminal round987, tribute1053/52.
+  Smoke e8976a82, sideB: completed valid terminal round940, tribute1001/12.
+  Both sides have zero faults/suspensions in both games; map41x41/hash6e3c6795,
+  engine1.0.3/fcb6c3e8. Smoke map name/opponent source unknown; this is validity
+  evidence, not an evaluation against the boss or the-farm. Full summaries saved.
+- Static assertions compile in that check; git diff --check passed. Exact file
+  identities, decisions, evidence limits and provenance: bank-corridor-evidence.json.
+- Additional loss1fe09d55, A/00collision, source54c19acf: tribute2/1006,
+  collected213/1006, own carried118, bag loss93, no faults/suspensions.
+  Lossf1b420d7, A/00ambush, same source: tribute651/1009, bag loss186.
+  Contrasting win79a0887b: tribute782/759; exact candidate-side revision unknown
+  in compact record, so do not attribute it to this source. Raw summaries saved.
+  Multiple weaknesses remain; these totals alone do not explain individual turns.
+- Risks: clearing a large monster costs HP/time; static corridor eligibility is
+  approximate; allies or far blockers can still congest a bank; removing unlocked
+  preference can expose carriers to hostile locking. Low-health retreat remains.
+- Next: supervisor evaluates exact checked source against f01d496c and protected
+  champion under unchanged gates. Prioritize the-farm and other narrow routes,
+  bank_stall logs, submitted gems, deaths and fuel suspensions. Inspect actual
+  path blockers if long stalls persist before changing thresholds or adding roles.

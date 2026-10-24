@@ -1,0 +1,495 @@
+{
+  "task_id": "task-79ea9383992346ad9b2f7d7b0474cc11",
+  "bot_id": "gamma",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "candidate_source_hash": "e17f373d5623d1494442e9eea12816db00487a9b50e1f6d4b5f846de4c16065b",
+  "candidate_commit": null,
+  "source_file_sha256": {
+    "bot.cpp": "b278e8a6444958f224f43ed3b7affd8bc9399e90c69a6275f128c79d5eac3ea6",
+    "bot.h": "ef55ed5907c2d6a7c1abdc085af8931b793dc9efcd2ae4a4ca3e5a7575456c76",
+    "draft.cpp": "e1d34874501d74d17bdbfbcc763918421cca7f775c34bb6eab482d7ad29c07b1",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "plan.h": "198cfbc0ae6f49fe5b97ae9b60fbdcf4f380adcb5752ebdeb1b371a20a53d6bf",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "hypothesis": "Progress-aware banking that clears visible corridor camps and retains reachable locked altars increases matched wins and mean tribute over f01d496c, reduces extended banking stalls, and adds no faults/suspensions. Non-positive win/tribute gains or new reliability failures falsify it.",
+  "evidence_limits": [
+    "Long bank stalls are observed; exact camp or lock causality remains unmeasured.",
+    "Smoke legality is not comparative strength.",
+    "Runtime engine metadata 1.0.3/fcb6c3e8 differs in version label from task CLI 3.0.5; preserve both.",
+    "No official match, holdout trace, private arena storage, or credentials consulted."
+  ],
+  "decision": "Prioritize directly observed banking stalls over another roster/item or hard camp-risk change.",
+  "edit_base_evaluation": {
+    "id": "6cb05e4b7e88d8594e0dfc539a3012922c6d528453fd395fc03fda64b750efb2",
+    "candidate": {
+      "build_id": "d0d7ab970334fa79c21276dbceaea86bbc9ccab7f5305c2377dc5f709d0ca2b5",
+      "commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+      "revision_id": "01ae9e4116da36b412bda8355f00a7a26dfe8025796846d2f07aa5526de479eb",
+      "source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6"
+    },
+    "decision": "INCONCLUSIVE",
+    "development_metrics": {
+      "bag_loss": {
+        "available": true,
+        "mean": 68.19189189189188,
+        "observations": 370
+      },
+      "bot_faults_by_side": {
+        "available": true,
+        "mean": 0.0,
+        "observations": 370
+      },
+      "carried_gems": {
+        "available": true,
+        "mean": 33.95945945945946,
+        "observations": 370
+      },
+      "champion_damage_done": {
+        "available": true,
+        "mean": 13342.80687033679,
+        "observations": 370
+      },
+      "champion_damage_taken": {
+        "available": true,
+        "mean": 19751.383143548708,
+        "observations": 370
+      },
+      "champion_deaths": {
+        "available": true,
+        "mean": 8.348648648648648,
+        "observations": 370
+      },
+      "champion_kills": {
+        "available": true,
+        "mean": 6.097297297297297,
+        "observations": 370
+      },
+      "collected_gems": {
+        "available": true,
+        "mean": 882.0945945945946,
+        "observations": 370
+      },
+      "fuel_suspensions_by_side": {
+        "available": true,
+        "mean": 0.016216216216216217,
+        "observations": 370
+      },
+      "lifetime_earned_gold": {
+        "available": true,
+        "mean": 5698.2972972972975,
+        "observations": 370
+      },
+      "monster_damage_done": {
+        "available": true,
+        "mean": 110655.53718208107,
+        "observations": 370
+      },
+      "monster_damage_taken": {
+        "available": true,
+        "mean": 27606.729502806793,
+        "observations": 370
+      },
+      "round": {
+        "available": true,
+        "mean": 1381.291891891892,
+        "observations": 370
+      },
+      "sale_refunds": {
+        "available": true,
+        "mean": 0.0,
+        "observations": 370
+      },
+      "spent_gold": {
+        "available": true,
+        "mean": 5213.243243243243,
+        "observations": 370
+      },
+      "submitted_gems": {
+        "available": true,
+        "mean": 779.9432432432433,
+        "observations": 370
+      },
+      "unspent_gold": {
+        "available": true,
+        "mean": 485.05405405405406,
+        "observations": 370
+      }
+    }
+  },
+  "frozen_manifest": {
+    "count": 6,
+    "manifest": "/srv/battlecode/public/strategy/task-79ea9383992346ad9b2f7d7b0474cc11/manifest.json",
+    "sha256": "2d7f4a75d6f7d67008ec399519b2db9b858bcda54f1d7001f7b817b89687db6e"
+  },
+  "mechanism": {
+    "stall_rounds": 4,
+    "visible_clear_radius": 5,
+    "corridor_slack": 1,
+    "bank_goal_policy": "All static altar approaches; clear a local hostile lock instead of excluding every locked altar.",
+    "live_shared_bytes_written": 0,
+    "static_regressions": "plan.h static_asserts compiled by trusted bot-check"
+  },
+  "check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792829776.8310893,
+    "matches": [
+      "ccb23beafcfc09f5dd622844b622b5740f8d6b632a9faea95551495168772f01",
+      "e8976a8286ddbe03c85722736b8079a531bc6b14a8e8448781ecd3ecf52bf51e"
+    ],
+    "report_path": ".agent/check-task-79ea9383992346ad9b2f7d7b0474cc11.json",
+    "report_reference": "check:task-79ea9383992346ad9b2f7d7b0474cc11:e17f373d5623d1494442e9eea12816db00487a9b50e1f6d4b5f846de4c16065b",
+    "source_hash": "e17f373d5623d1494442e9eea12816db00487a9b50e1f6d4b5f846de4c16065b",
+    "started": 1792829741.1174705,
+    "state": "PASSED",
+    "task_id": "task-79ea9383992346ad9b2f7d7b0474cc11"
+  },
+  "match_provenance": [
+    {
+      "id": "fb29d6e2c7d1b3dfca5b270b748116204f47088c88bc0c9bc8ff9cb1ab7d2c62",
+      "side": "B",
+      "map": "01the-farm",
+      "source_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+      "source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+      "opponent_commit": "ea15ef0f172c932f6d0a6bab7f35f233f131323f",
+      "opponent_source_hash": "f4b4f65eeee02988088b4240606d64563285404fb1393d297e9be931f4ced27c",
+      "provenance": ".agent/brief.md shared boss progress"
+    },
+    {
+      "id": "f1b420d7a3e4db0bdca2d21e2430c9c69995d81d455057fb261eee5dc1b00364",
+      "side": "A",
+      "map": "00ambush",
+      "source_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+      "source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+      "provenance": ".agent/brief.md development loss"
+    },
+    {
+      "id": "1fe09d55ef784902d5dc59c9d133d3e9323f989b1c05fcd244897dcc61069d3c",
+      "side": "A",
+      "map": "00collision",
+      "source_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+      "source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+      "provenance": ".agent/brief.md development loss"
+    },
+    {
+      "id": "79a0887bebcf3b619ca3d3db8204c420f72d2f9f99b85a9db8c4c27750d87021",
+      "side": null,
+      "map": null,
+      "source_commit": null,
+      "source_hash": null,
+      "provenance": "development_selection advancement evidence; exact candidate side/revision not supplied in compact record; not attributed to edit source"
+    }
+  ],
+  "smoke": [
+    {
+      "id": "ccb23beafcfc09f5dd622844b622b5740f8d6b632a9faea95551495168772f01",
+      "candidate_side": "A",
+      "source_hash": "e17f373d5623d1494442e9eea12816db00487a9b50e1f6d4b5f846de4c16065b",
+      "map_name": null,
+      "opponent_revision": null,
+      "match": {
+        "engineBuildHash": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+        "engineVersion": "1.0.3",
+        "finalInput": 12509,
+        "finalRoundPartial": true,
+        "finalSubstep": 7,
+        "height": 41,
+        "mapHash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+        "metricSemanticsVersion": 1,
+        "outcome": "teamA",
+        "roundsCompleted": 986,
+        "roundsStarted": 987,
+        "seed": "17615240315955964814",
+        "width": 41
+      },
+      "normalized": {
+        "bot_faults": 0,
+        "completed": true,
+        "detail": null,
+        "fuel_suspensions": 0,
+        "metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 23
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 92,
+              "B": 9
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 5490.0,
+              "B": 3476.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 3476.0,
+              "B": 5490.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 19
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 6,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1145,
+              "B": 84
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 6030,
+              "B": 1380
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 149300.5005493164,
+              "B": 26039.5
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 23551.999663352966,
+              "B": 10205.0
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17615240315955964814"
+          },
+          "round": {
+            "available": true,
+            "value": 987
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 5530,
+              "B": 1110
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1053,
+              "B": 52
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 500,
+              "B": 270
+            }
+          }
+        },
+        "protocol_version": 1,
+        "state": "COMPLETED",
+        "terminal_reason": null,
+        "winner": "A"
+      }
+    },
+    {
+      "id": "e8976a8286ddbe03c85722736b8079a531bc6b14a8e8448781ecd3ecf52bf51e",
+      "candidate_side": "B",
+      "source_hash": "e17f373d5623d1494442e9eea12816db00487a9b50e1f6d4b5f846de4c16065b",
+      "map_name": null,
+      "opponent_revision": null,
+      "match": {
+        "engineBuildHash": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+        "engineVersion": "1.0.3",
+        "finalInput": 10635,
+        "finalRoundPartial": true,
+        "finalSubstep": 7,
+        "height": 41,
+        "mapHash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+        "metricSemanticsVersion": 1,
+        "outcome": "teamB",
+        "roundsCompleted": 939,
+        "roundsStarted": 940,
+        "seed": "17615240315955964814",
+        "width": 41
+      },
+      "normalized": {
+        "bot_faults": 0,
+        "completed": true,
+        "detail": null,
+        "fuel_suspensions": 0,
+        "metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 35,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 3114.0,
+              "B": 12475.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 12475.0,
+              "B": 3114.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 13,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 8
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 47,
+              "B": 1001
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 940,
+              "B": 5800
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 18630.0,
+              "B": 133330.00036621094
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 10320.0,
+              "B": 23777.999709129333
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17615240315955964814"
+          },
+          "round": {
+            "available": true,
+            "value": 940
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 930,
+              "B": 4960
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 12,
+              "B": 1001
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 10,
+              "B": 840
+            }
+          }
+        },
+        "protocol_version": 1,
+        "state": "COMPLETED",
+        "terminal_reason": null,
+        "winner": "B"
+      }
+    }
+  ]
+}
