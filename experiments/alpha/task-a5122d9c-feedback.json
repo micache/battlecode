@@ -1,0 +1,407 @@
+{
+  "evaluation_id": "75d4f10bb17a5965924089a1bc494ae542d9dab6fc80bdc37e1964131a5c0cb1",
+  "candidate": {
+    "build_id": "26f8879a71eb903197016890438d3800a50fd947cf27bde17e6abe593d08fd37",
+    "commit": "d94b461d54f92fb73c58943f38e2d852ebb05d68",
+    "revision_id": "460af7f40e6e53da4e47ecc15063fc75c7bafa76ecb83e554f2efd35cfd49735",
+    "source_hash": "f7e2d6b1ad87f9ea5a42e8c9e92d9f687d64a2b2afde8c8153126a0019dede01"
+  },
+  "decision": "INCONCLUSIVE",
+  "metrics": {
+    "losses": 133,
+    "paired_cases": 200,
+    "representative_failures": [
+      {
+        "final_metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 1338.0,
+              "B": 4300.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 4300.0,
+              "B": 1338.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 18,
+              "B": 2
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 5
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 585,
+              "B": 1011
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 8
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 4985,
+              "B": 6740
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 84599.99969482422,
+              "B": 135180.00033569336
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 50952.0,
+              "B": 17330.0
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17465944590158198232"
+          },
+          "round": {
+            "available": true,
+            "value": 1613
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 4890,
+              "B": 6420
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 585,
+              "B": 1011
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 95,
+              "B": 320
+            }
+          }
+        },
+        "map": "00ambush",
+        "match_id": "fbf8281b2408ed033956519cb12a0dc03a8744637ec20bde800389c5ccba84e6",
+        "raw_available": true,
+        "round": 1613,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 102,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 102,
+              "B": 0
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 21413.69969177246,
+              "B": 6079.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 6079.0,
+              "B": 21413.69969177246
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 14,
+              "B": 16
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 10,
+              "B": 5
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 892,
+              "B": 1024
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 49
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 7343,
+              "B": 4982
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 106169.50003051758,
+              "B": 116022.00035095215
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 49975.0,
+              "B": 49910.399788856506
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17465944590158198232"
+          },
+          "round": {
+            "available": true,
+            "value": 1918
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 5400,
+              "B": 4460
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 688,
+              "B": 1024
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 1943,
+              "B": 522
+            }
+          }
+        },
+        "map": "00ambush",
+        "match_id": "25b74d145525baf5ae4a5317899956285af8af0d33462d07c85ce085de172eb2",
+        "raw_available": true,
+        "round": 1918,
+        "side": "A",
+        "trace": null
+      },
+      {
+        "final_metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 51,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 153
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 2681.0,
+              "B": 28440.69557952881
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 28440.69557952881,
+              "B": 2681.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 32,
+              "B": 9
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 2,
+              "B": 24
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1075,
+              "B": 776
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 22,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 4782,
+              "B": 9544
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 101347.80028533936,
+              "B": 123832.20048522949
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 46365.69917678833,
+              "B": 53014.0
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17465944590158198232"
+          },
+          "round": {
+            "available": true,
+            "value": 1906
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 4340,
+              "B": 6700
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1024,
+              "B": 623
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 442,
+              "B": 2844
+            }
+          }
+        },
+        "map": "00ambush",
+        "match_id": "bbadcfb716f0a412d4135a29fd4c63ba6a6af692129324c50363913b71351153",
+        "raw_available": true,
+        "round": 1906,
+        "side": "B",
+        "trace": null
+      }
+    ],
+    "wins": 267
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "task_id": "task-a5122d9cf25141d1be9a54125ca913cc",
+  "base_source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+  "checked_source_hash": "aaa73e40bd670a517c874927769fc4a4bfb35fb1f24908ad69f10936bd684121",
+  "file_sha256": {
+    "bots/alpha/src/altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bots/alpha/src/bot.cpp": "e8abe90565583ab886ccc1037899250270540c9bdd193e1fab3e07566e83e8bf",
+    "bots/alpha/src/bot.h": "c89e51dc769abbdd346f2fd833f5ece92514a7d4e2eda0c88b2d24f411a14c24",
+    "bots/alpha/src/camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "bots/alpha/src/draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "bots/alpha/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/alpha/src/equipment_policy.h": "bcd0d850bc558af1d0dd268c1e5f9437bf82a4fe74703f26fc5a2b72faa07729",
+    "bots/alpha/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/alpha/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/alpha/src/support_policy.h": "acedc0318195665f5214c52ba48bc512a039abc9ef96685b07a6e44b2f2f8130"
+  },
+  "modified_vs_edit_base": [
+    "bots/alpha/src/bot.cpp",
+    "bots/alpha/src/support_policy.h"
+  ],
+  "preparation_changes": "bot.cpp restored and equipment_portfolio.h removed before worker invocation; all nine starting files byte-matched edit commit",
+  "docs_changed": false,
+  "sdk_changed": false
+}

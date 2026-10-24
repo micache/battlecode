@@ -4,7 +4,7 @@
 #include "altar_control.h"
 #include "camp_rotation.h"
 #include "equipment_policy.h"
-#include "equipment_portfolio.h"
+#include "support_policy.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -106,49 +106,9 @@ void Bot::buy_items() {
             // Do not price unused dash damage or another champion's healing.
         }, *ability.info());
     }
-    using I = cambc::item_type;
-    const std::array<std::array<I, 3>, equipment_portfolio::family_count> family_shards{{
-        {I::jungle_shard_of_strength, I::jungle_shard_of_focus, I::jungle_shard_of_health},
-        {I::monster_shard_of_strength, I::monster_shard_of_focus, I::monster_shard_of_health}}};
-    const std::array<std::array<I, 3>, equipment_portfolio::family_count> family_emblems{{
-        {I::jungle_emblem_of_strength, I::jungle_emblem_of_focus, I::jungle_emblem_of_health},
-        {I::monster_emblem_of_strength, I::monster_emblem_of_focus, I::monster_emblem_of_health}}};
-    unsigned purchased = 0;
-    // Replan after each immediately completed passive. Never buy partial family
-    // progress or spend twice for a passive already supplied by another stat.
-    for (unsigned pass = 0; pass < equipment_portfolio::family_count; ++pass) {
-        if (cambc::fuel_remaining() < equipment_portfolio::family_fuel_reserve) break;
-        const auto inventory = me.item_count();
-        const std::array<unsigned, 3> residues{inventory[items[0]], inventory[items[1]], inventory[items[2]]};
-        std::array<equipment_portfolio::offer, equipment_portfolio::family_count> offers{};
-        for (unsigned family = 0; family < offers.size(); ++family) {
-            auto& offer = offers[family];
-            offer.cost = family_shards[family][0].cost();
-            offer.combine = family_shards[family][0].combine_count();
-            const float magnitude = family_emblems[family][0].passive_magnitude();
-            offer.value_multiplier = family == 0 ? equipment_portfolio::jungle_value(magnitude)
-                                                : equipment_portfolio::monster_value(magnitude);
-            for (const auto emblem : family_emblems[family])
-                offer.owned |= inventory[emblem] != 0;
-            for (unsigned stat = 0; stat < 3; ++stat)
-                offer.residues[stat] = inventory[family_shards[family][stat]];
-        }
-        const auto choice = equipment_portfolio::choose(estimate, me.gold_count(), cost,
-            items[0].combine_count(), residues, offers, static_cast<unsigned>(chosen_stat),
-            equipment_policy::purchase_limit - purchased);
-        if (!choice.count || cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) break;
-        const auto shard = family_shards[choice.family][choice.stat];
-        if (!me.can_buy(shard, choice.count)) break;
-        me.buy(shard, choice.count);
-        purchased += choice.count;
-        estimate.add(choice.stat, choice.count);
-    }
-    // Refresh gold and inventory after the family buys; preserve original Power
-    // growth allocation for the rest, including each fifth-shard completion bonus.
     const auto inventory = me.item_count();
     const std::array<unsigned, 3> residues{inventory[items[0]], inventory[items[1]], inventory[items[2]]};
-    const auto counts = equipment_policy::plan(estimate,
-        std::min(me.gold_count() / cost, equipment_policy::purchase_limit - purchased),
+    const auto counts = equipment_policy::plan(estimate, me.gold_count() / cost,
         residues, items[0].combine_count(), static_cast<unsigned>(chosen_stat));
     for (unsigned stat = 0; stat < items.size(); ++stat) {
         if (cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) break;
@@ -194,6 +154,64 @@ bool cast_ready(const cambc::ability& ability, bool walked) {
     return !walked || !std::visit([](const auto& info) {
         return info.exclusive_with_movement;
     }, *ability.info());
+}
+
+// Support does not require an attack first. Only walking-compatible spells are
+// used here, so the existing movement/combat/channel decisions remain legal.
+void proactive_support() {
+    auto& me = cambc::self();
+    if (!me.can_cast() || cambc::fuel_remaining() < support_policy::entry_fuel_reserve)
+        return;
+    for (const auto& ability : me.abilities()) {
+        if ((!ability.is_shield() && !ability.is_heal()) || !cast_ready(ability, true)
+            || cambc::fuel_remaining() < support_policy::entry_fuel_reserve)
+            continue;
+        if (ability.is_shield() && ability.can_target_self()) {
+            if (me.buffs().has_shield()) continue;
+            const auto position = me.position();
+            float volley = 0;
+            unsigned examined = 0;
+            for (const auto& camp : cambc::vision::camps()) {
+                if (++examined > support_policy::observation_limit
+                    || cambc::fuel_remaining() < support_policy::scan_fuel_reserve) break;
+                if (!camp.is_visible() || !camp.is_awake()) continue;
+                if (distance(position, camp.position()) <= camp.attack_range())
+                    volley += camp.strength();
+            }
+            for (const auto& enemy : cambc::vision::champions(team::enemy)) {
+                if (++examined > support_policy::observation_limit
+                    || cambc::fuel_remaining() < support_policy::scan_fuel_reserve) break;
+                if (!enemy.is_visible() || !enemy.is_alive()) continue;
+                if (distance(position, enemy.position()) <= enemy.attack_range())
+                    volley += enemy.strength();
+            }
+            if (cambc::fuel_remaining() < support_policy::scan_fuel_reserve) return;
+            if (support_policy::shield_worthwhile(me.health(), me.max_health(),
+                ability.shield_amount(), ability.get<cambc::ability_shield>().duration,
+                volley, false) && ability.use()) return;
+        }
+        if (ability.is_heal() && ability.can_target_allies()) {
+            const auto range = ability.valid_tiles();
+            const auto spawn = cambc::map::spawn_region(team::ally);
+            const float amount = ability.heal_amount();
+            std::optional<cambc::champion> selected;
+            float best = 0;
+            unsigned examined = 0;
+            for (const auto& ally : cambc::vision::champions(team::ally)) {
+                if (++examined > support_policy::observation_limit
+                    || cambc::fuel_remaining() < support_policy::scan_fuel_reserve) break;
+                if (ally == me || !ally.is_visible() || !ally.is_alive()) continue;
+                const auto position = ally.position();
+                // Spawn heals at turn end for free. Willow cannot target herself.
+                if (!range.is_set(position) || spawn.is_set(position)) continue;
+                const float score = support_policy::heal_score(ally.health(), ally.max_health(), amount);
+                if (score > best) { best = score; selected = ally; }
+            }
+            if (cambc::fuel_remaining() < support_policy::scan_fuel_reserve) return;
+            if (selected && selected->is_visible() && selected->is_alive()
+                && ability.use(*selected)) return;
+        }
+    }
 }
 
 // Spend the separate basic and cast allowances. Never walk after this routine
@@ -284,30 +302,6 @@ bool fight(bool walked = false) {
         }
     }
 
-    // Use defensive kits when no damage/reset cast was chosen. No speculative dash.
-    if (acted && me.is_alive() && me.can_cast()) {
-        for (const auto& ability : abilities) {
-            if (cambc::fuel_remaining() < combat_fuel_reserve || !cast_ready(ability, walked))
-                continue;
-            if (ability.is_shield() && ability.can_target_self()
-                && me.health() < me.max_health() * 0.75f) {
-                if (ability.use()) break;
-            }
-            if (ability.is_heal() && ability.can_target_allies()) {
-                const auto range = ability.valid_tiles();
-                unsigned examined = 0;
-                for (const auto& ally : cambc::vision::champions(team::ally)) {
-                    if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
-                        break;
-                    if (ally == me || !ally.is_visible() || !ally.is_alive()
-                        || !range.is_set(ally.position())) continue;
-                    if (ally.max_health() - ally.health() < ability.heal_amount() * 0.5f)
-                        continue;
-                    if (ability.use(ally)) break;
-                }
-            }
-        }
-    }
     return acted;
 }
 
@@ -367,6 +361,8 @@ void Bot::play_turn() {
     }
 
     altar_control::place_lock();
+
+    proactive_support();
 
     // Retreat before recall so repeated damage interruptions still allow progress.
     if (!at_spawn && me.health() < me.max_health() * 0.35f) {

@@ -1,0 +1,12 @@
+{
+  "scope": "source contracts, not runtime proof",
+  "checks": {
+    "early_support": true,
+    "no_combat_support_gate": true,
+    "pure_policy_present": true,
+    "remaining_sources_preserved": true,
+    "draft_shop_and_navigation_preserved": true,
+    "ordinary_combat_preserved": true
+  },
+  "passed": true
+}
