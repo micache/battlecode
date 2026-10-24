@@ -45,20 +45,13 @@ void Bot::initialize() {
     altar_field->compute(terrain, altar_goals, visited);
     const auto& bytes = bc::draft_memory;
     if (bytes.size() >= policy::plan_header && std::to_integer<int>(bytes[0]) == 'G'
-        && std::to_integer<int>(bytes[1]) == 'A'
-        && (std::to_integer<int>(bytes[2]) == 1 || std::to_integer<int>(bytes[2]) == 2)) {
+        && std::to_integer<int>(bytes[1]) == 'A' && std::to_integer<int>(bytes[2]) == 1) {
         const auto n = std::to_integer<unsigned>(bytes[3]) + (std::to_integer<unsigned>(bytes[4]) << 8);
         if (n <= policy::max_groups && 5 + 2*n <= bytes.size()) {
             routes.reserve(n);
             for (unsigned i = 0; i < n; ++i) {
                 const vec2 p{std::to_integer<int>(bytes[5+2*i]), std::to_integer<int>(bytes[6+2*i])};
-                if (bc::map::is_in_bounds(p)) {
-                    Route route{p};
-                    if (std::to_integer<int>(bytes[2]) == 2 && bytes.size() >= policy::reward_plan_size(n))
-                        route.has_gems = (std::to_integer<unsigned>(bytes[policy::reward_offset(n,i)])
-                            & policy::reward_bit(i)) != 0;
-                    routes.push_back(route);
-                }
+                if (bc::map::is_in_bounds(p)) routes.push_back(Route{p});
             }
         }
     }
@@ -104,6 +97,17 @@ int Bot::route_distance(int i) const {
         dist(travel_position, routes[i].anchor));
 }
 
+int Bot::route_wait(int i, int range, int speed) const {
+    const auto& r = routes[i];
+    if (r.state != 3) return 0;
+    const auto p = travel_position; // Refreshed once at the start of planning.
+    // A rectangle lower bound handles large groups without mistaking a remote
+    // anchor for the nearest spawn. Walls/congestion can only lengthen travel.
+    const int d = std::max({0, r.min_spawn.x-p.x, p.x-r.max_spawn.x,
+        r.min_spawn.y-p.y, p.y-r.max_spawn.y});
+    return policy::return_wait(r.ready_at, now, std::max(0,d-range), speed);
+}
+
 void Bot::buy_items() {
     using I = bc::item_type;
     auto& me = bc::self();
@@ -123,13 +127,14 @@ void Bot::buy_items() {
     if (me.can_buy(bc::consumable_type::altar_lock)) me.buy(bc::consumable_type::altar_lock);
 }
 
-bool Bot::walk(bc::bitboard goals, bool dash) {
+bool Bot::walk(bc::bitboard goals, bool dash, const bc::bitboard* avoid) {
     auto& me = bc::self();
     if (!me.can_move() || bc::fuel_remaining() < policy::action_floor) return false;
     // At most two attempts: a hidden blocker can be revealed without consuming
     // an allowance. Rebuild occupants, never path onto a known blocked goal.
     for (int attempt = 0; attempt < 2 && bc::fuel_remaining() >= policy::action_floor; ++attempt) {
         auto blocked = blockers(terrain);
+        if (avoid) { blocked |= *avoid; blocked.set(me.position(),false); }
         auto free_goals = goals & ~blocked;
         const auto origin = me.position();
         if (free_goals.is_empty() || free_goals.is_set(origin)) return false;
@@ -266,10 +271,13 @@ bool Bot::load_route(int i) {
     if (r.group) return true;
     if (bc::fuel_remaining() < policy::planning_floor) return false;
     r.group = bc::map::camp(r.anchor).camp_group();
-    r.has_gems = r.group->gem_value() > 0;
+    r.min_spawn = r.max_spawn = r.anchor;
     for (const auto& c : r.group->camps()) {
         const auto stats = c.base_stats();
         r.hp += stats.base_health; r.strength += stats.base_strength;
+        const auto p = c.spawn_position();
+        r.min_spawn.x = std::min(r.min_spawn.x,p.x); r.max_spawn.x = std::max(r.max_spawn.x,p.x);
+        r.min_spawn.y = std::min(r.min_spawn.y,p.y); r.max_spawn.y = std::max(r.max_spawn.y,p.y);
     }
     return true;
 }
@@ -284,7 +292,10 @@ void Bot::observe(int i, const bc::bitboard& visible) {
     r.observed_at = now;
     if (auto* s = std::get_if<bc::map::camp_group_respawning>(&state)) {
         r.state = 3; r.ready_at = now + std::max(1,s->timer);
-    } else r.state = std::holds_alternative<bc::map::camp_group_reward_available>(state) ? 2 : 1;
+    } else {
+        r.state = std::holds_alternative<bc::map::camp_group_reward_available>(state) ? 2 : 1;
+        r.ready_at = 0; // A fresh alive/reward observation replaces a cooldown.
+    }
 }
 
 void Bot::recover() {
@@ -305,52 +316,41 @@ void Bot::farm() {
     if (routes.empty()) { fight(false); return; }
     refresh_travel();
     const auto visible = bc::vision::visible_tiles();
+    const int speed = me.base_stats().base_move_speed, range = me.attack_range();
+    const auto wait = [&](int i) { return route_wait(i,range,speed); };
+    const auto eligible = [&](int i) {
+        return routes[i].defer_until <= now && wait(i) <= policy::max_return_wait;
+    };
     if (target >= 0) {
         observe(target, visible);
         auto& r = routes[target];
         if (r.state == 2 && r.observed_at == now && r.group->spawn_tiles().is_set(me.position())) return;
-        if (stuck >= 8) { r.ready_at = now + 12; stuck = 0; }
-        if (r.ready_at > now) target = -1;
+        if (stuck >= 8) { r.defer_until = now + 12; stuck = 0; }
+        if (!eligible(target)) target = -1;
     }
     // Cheap global shortlist, then bounded live evaluation. Committed and
     // rotating probe slots prevent permanent exclusion by the shortlist.
-    const auto items = me.item_count();
-    const bool farming_core = items[bc::item_type::jungle_emblem_of_strength]
-        && items[bc::item_type::monster_emblem_of_strength];
-    std::vector<std::pair<int,int>> near, gem_near;
+    std::vector<std::pair<int,int>> near;
     near.reserve(policy::shortlist+2);
-    gem_near.reserve(policy::gem_shortlist+1);
     for (unsigned i = 0; i < routes.size(); ++i) {
-        if (routes[i].ready_at > now) continue;
+        if (i % 16 == 0 && bc::fuel_remaining() < policy::planning_floor) break;
+        if (!eligible(i)) continue;
         const int d = route_distance(i);
         if (d == policy::unreachable) continue;
-        auto at = std::lower_bound(near.begin(), near.end(), std::pair{d,static_cast<int>(i)});
-        near.insert(at,{d,static_cast<int>(i)});
+        const int cost = d + wait(i);
+        auto at = std::lower_bound(near.begin(), near.end(), std::pair{cost,static_cast<int>(i)});
+        near.insert(at,{cost,static_cast<int>(i)});
         if (near.size() > policy::shortlist) near.pop_back();
-        if (farming_core && routes[i].has_gems) {
-            auto gem_at = std::lower_bound(gem_near.begin(), gem_near.end(), std::pair{d,static_cast<int>(i)});
-            gem_near.insert(gem_at,{d,static_cast<int>(i)});
-            if (gem_near.size() > policy::gem_shortlist) gem_near.pop_back();
-        }
-        if (i % 32 == 0 && bc::fuel_remaining() < policy::planning_floor) break;
-    }
-    // Reserve half the SAME bounded evaluation slots for gem-bearing routes.
-    // Fill the rest with nearby work, including gold; retain target/probe below.
-    if (!gem_near.empty()) {
-        for (auto entry : near) {
-            if (gem_near.size() >= policy::shortlist) break;
-            if (std::find(gem_near.begin(),gem_near.end(),entry) == gem_near.end()) gem_near.push_back(entry);
-        }
-        near = std::move(gem_near);
     }
     if (target >= 0 && route_distance(target) < policy::unreachable) near.insert(near.begin(), {0,target});
     const int probe = cursor++ % routes.size();
-    if (routes[probe].ready_at <= now && route_distance(probe) < policy::unreachable)
+    if (eligible(probe) && route_distance(probe) < policy::unreachable)
         near.push_back({route_distance(probe),probe});
     float best_score = -1;
     int best = target >= 0 && route_distance(target) < policy::unreachable
-        && routes[target].ready_at <= now ? target : -1;
+        && eligible(target) ? target : -1;
     const auto allies = bc::vision::champions(team::ally);
+    const auto items = me.item_count();
     const float mitigation = (items[bc::item_type::jungle_emblem_of_strength] ? 0.7f : 1.0f)
         * (items[bc::item_type::durability_emblem_of_health] ? 0.9f : 1.0f);
     for (auto [unused,i] : near) {
@@ -358,7 +358,7 @@ void Bot::farm() {
         if (!load_route(i)) break;
         observe(i, visible);
         auto& r = routes[i];
-        if (r.ready_at > now) continue;
+        if (!eligible(i)) { if (best == i) best = -1; continue; }
         const auto& g = *r.group;
         if (r.state == 2 && r.observed_at == now) {
             bool collector = false;
@@ -369,7 +369,9 @@ void Bot::farm() {
         float hp = r.hp;
         // Use current HP only for visible members. Invisible members retain
         // their immutable design estimate, never cached live health.
-        for (const auto& c : g.camps()) {
+        // A cooling group will return at full health. Dead handles from the
+        // previous clear must not make that future work appear free.
+        if (r.state != 3) for (const auto& c : g.camps()) {
             if (c.is_visible()) hp += c.health() - c.base_stats().base_health;
             else if (visible.is_set(c.spawn_position()) && !bc::vision::has_camp(c.spawn_position())) hp -= c.base_stats().base_health;
         }
@@ -380,8 +382,9 @@ void Bot::farm() {
         const float exposure = 0.45f * clear * r.strength * mitigation;
         // Soft recovery cost rather than an absolute risk veto: hard exclusions
         // previously regressed on another edit base. Large camps are penalized.
-        float score = policy::route_score(policy::value(g.gem_value(),g.gold_value(),now,farming_core),
-            route_distance(i), clear + 20.0f*exposure/std::max(1.0f,me.health()), bc::constants::capture_time);
+        float score = policy::route_score(policy::value(g.gem_value(),g.gold_value(),now),
+            route_distance(i), clear + 20.0f*exposure/std::max(1.0f,me.health()),
+            bc::constants::capture_time + wait(i));
         if (exposure > me.health()) score *= 0.15f;
         if (i == target) score *= 1.30f;
         // Stable affinity spreads the opening; a visible nearer ally overrides
@@ -400,11 +403,25 @@ void Bot::farm() {
     }
     auto& r = routes[target];
     observe(target, bc::vision::visible_tiles());
-    if (r.state == 3 && r.observed_at == now) { target = -1; walk(around(me.position(),1) & ~r.group->spawn_tiles()); return; }
+    bool staged_move = false;
+    if (r.state == 3) {
+        // Observed deadlines are uncertain, never proof of a hidden respawn.
+        // Approach outside ALL spawn tiles and keep them blocked throughout
+        // pathfinding, including intermediate movement. Do not dash early.
+        const auto spawns = r.group->spawn_tiles();
+        auto edge = spawns | spawns.shift_right(1) | spawns.shift_right(-1);
+        edge |= edge.shift_up(1) | edge.shift_up(-1);
+        const auto goals = edge & ~spawns & ~terrain;
+        if (goals.is_set(me.position())) ++stuck; // Bound blocked-zero waiting.
+        else staged_move = walk(goals,false,&spawns);
+        observe(target,bc::vision::visible_tiles());
+        if (r.state == 3) return;
+        // A newly visible alive/reward state resumes the normal farm loop.
+    }
     if (r.state == 2 && r.observed_at == now) {
         walk(r.group->spawn_tiles(),true); return;
     }
-    fight(false);
+    fight(staged_move);
     if (bc::fuel_remaining() < policy::action_floor) return;
     // A kill may expose the now-empty capture tile during the same turn.
     observe(target,bc::vision::visible_tiles());
@@ -414,7 +431,7 @@ void Bot::farm() {
         if (c.is_visible() && c.health() > 0) goals |= around(c.position(),me.attack_range());
         else if (!bc::vision::in_vision(c.spawn_position())) goals |= around(c.spawn_position(),1);
     }
-    const bool moved = walk(goals,true);
+    const bool moved = walk(goals,true) || staged_move;
     if (bc::fuel_remaining() > policy::action_floor) fight(moved);
     if (bc::fuel_remaining() > policy::action_floor && me.can_move()) {
         observe(target,bc::vision::visible_tiles());

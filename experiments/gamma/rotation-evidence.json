@@ -1,0 +1,271 @@
+{
+  "task_id": "task-597c76cda1d44b5ca7f812f13fc7a5e3",
+  "bot_id": "gamma",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "edit_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+  "input_revision": "802263ae591c1ed6ead175d5849ab85e1f0031a5",
+  "accepted_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "hypothesis": "Arrival-aware return planning with nonblocking staging increases matched wins and mean submitted gems over source54c19acf without new own faults or fuel suspensions.",
+  "falsifier": "Non-positive matched win gain, non-increasing mean tribute, or new reliability failures.",
+  "basis": "Unmeasured rules/source deduction. Totals motivate objective-throughput work but do not prove cooldown exclusion caused losses.",
+  "mechanism": "Admit known cooling camps with at most three predicted wait rounds beyond travel; price remaining wait and full-health clearing; stage outside the full spawn mask until a fresh visible alive/reward observation; bound blocked-zero waiting.",
+  "parameters": {
+    "max_return_wait": 3,
+    "stuck_turns_before_deferral": 8,
+    "hard_deferral_rounds": 12,
+    "shortlist": 8,
+    "planning_floor": 45000,
+    "action_floor": 18000,
+    "live_shared_bytes_written": 0
+  },
+  "risks": [
+    "Waiting may displace immediately available work",
+    "Observed timers are uncertain when allies or enemies block spawns",
+    "Conservative geometric bounds can omit useful longer topological returns",
+    "Additional shortlist arithmetic and staging mask operations cost fuel"
+  ],
+  "latest_evaluation": {
+    "evaluation_id": "029ae1275c5467ffc2b4bc454dd91fec3db4350fde1cbe8b82eb50de667dd97a",
+    "candidate": {
+      "build_id": "80b22122958523459e616d5efdb558184c795715d4f213219e2679e00e976627",
+      "commit": "802263ae591c1ed6ead175d5849ab85e1f0031a5",
+      "revision_id": "c3d85444917f510bb06a746b63c0bd82a1db85209723b5847ef91ddbf22da6dc",
+      "source_hash": "286bac8e6473584f8a5c3a3ab581f7f2045e3c2062a6a96e2bf8d3b0160e5b81"
+    },
+    "decision": "INCONCLUSIVE",
+    "engine_lock_hash": "ac2b5ad200d0df54380e94f82b1a327dd0407202533325808c8bf3af26c56136"
+  },
+  "development_comparison": {
+    "commit_sha": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+    "common_opponent_delta": -0.008108108108108109,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 185,
+    "source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+    "unknown_reliability": []
+  },
+  "development_metrics": {
+    "bag_loss": {
+      "available": true,
+      "mean": 65.32702702702703,
+      "observations": 370
+    },
+    "bot_faults_by_side": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 370
+    },
+    "carried_gems": {
+      "available": true,
+      "mean": 29.95945945945946,
+      "observations": 370
+    },
+    "champion_damage_done": {
+      "available": true,
+      "mean": 11697.002835531492,
+      "observations": 370
+    },
+    "champion_damage_taken": {
+      "available": true,
+      "mean": 18150.21564365851,
+      "observations": 370
+    },
+    "champion_deaths": {
+      "available": true,
+      "mean": 8.227027027027027,
+      "observations": 370
+    },
+    "champion_kills": {
+      "available": true,
+      "mean": 5.248648648648649,
+      "observations": 370
+    },
+    "collected_gems": {
+      "available": true,
+      "mean": 888.2783783783784,
+      "observations": 370
+    },
+    "fuel_suspensions_by_side": {
+      "available": true,
+      "mean": 0.013513513513513514,
+      "observations": 370
+    },
+    "lifetime_earned_gold": {
+      "available": true,
+      "mean": 5202.3135135135135,
+      "observations": 370
+    },
+    "monster_damage_done": {
+      "available": true,
+      "mean": 107089.95357251038,
+      "observations": 370
+    },
+    "monster_damage_taken": {
+      "available": true,
+      "mean": 29001.567435310983,
+      "observations": 370
+    },
+    "round": {
+      "available": true,
+      "mean": 1375.627027027027,
+      "observations": 370
+    },
+    "sale_refunds": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 370
+    },
+    "spent_gold": {
+      "available": true,
+      "mean": 4696.540540540541,
+      "observations": 370
+    },
+    "submitted_gems": {
+      "available": true,
+      "mean": 792.9918918918919,
+      "observations": 370
+    },
+    "unspent_gold": {
+      "available": true,
+      "mean": 505.772972972973,
+      "observations": 370
+    }
+  },
+  "frozen_manifest_sha256": "1405e3a0a9fb11a635cb60ba3985077ba05f823d625550c6a4b315c9c9af1b9d",
+  "frozen_sources": [
+    {
+      "bot_id": "boss",
+      "commit": "ea15ef0f172c932f6d0a6bab7f35f233f131323f",
+      "source_hash": "f4b4f65eeee02988088b4240606d64563285404fb1393d297e9be931f4ced27c",
+      "revision_id": "4feab379bdef0293965a0ea0bff1a4ae8c613829d0d50f1cb08a484d67e62249",
+      "role": "shared-boss",
+      "all_file_hashes_verified": true
+    },
+    {
+      "bot_id": "alpha",
+      "commit": "82a14a04f0e6b68aac8a7e879d305b1a886b857c",
+      "source_hash": "6e362fd7cce836975fa615bc8b936109235fd320def63703761366586efabc25",
+      "revision_id": "7c9eeed05ee2f49e158fac56eaeb6dc7b773a8200ab1f1e0101e224082411ec7",
+      "role": "arena-opponent",
+      "all_file_hashes_verified": true
+    },
+    {
+      "bot_id": "beta",
+      "commit": "7cab9b0f6b948b0ea0b3b284425a3501c564d16b",
+      "source_hash": "fd5e25543653c9a8774346212b3f689927a9dd489b1ba2373a1edd0889bf63aa",
+      "revision_id": "054bc3462f9efd4daade4987117fa944cf9019a12cc901a7a05b53e538d7f2fa",
+      "role": "arena-opponent",
+      "all_file_hashes_verified": true
+    },
+    {
+      "bot_id": "boss",
+      "commit": "192daa8efb38fac4ea23765878987fd23d0d58ed",
+      "source_hash": "d10ae8b4f9c10760ef6660efa6e12336d64e90b46f458330067b915d4139ee02",
+      "revision_id": "094eeb0ac50f681dc33b87f0627c51455367507187f01a33f3a0b7b026adb6c1",
+      "role": "shared-boss-history",
+      "all_file_hashes_verified": true
+    },
+    {
+      "bot_id": "alpha",
+      "commit": "1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97",
+      "source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+      "revision_id": "07694b79f1401ccc85e201c493f9c5310ca73d9fb8e9383b6fe3cf66fa5b4745",
+      "role": "arena-opponent",
+      "all_file_hashes_verified": true
+    },
+    {
+      "bot_id": "beta",
+      "commit": "863825b744eb21ee366370c9b1919ce73210d9d4",
+      "source_hash": "c9c933a21b50bd9e01ca1dfdaca7bd290b0259e8cd51bc7c59ad340853232c11",
+      "revision_id": "c20c69faf1f1e4e752deb09e3af57f65d031caf6132cf79dd0a5a1111a2f7a38",
+      "role": "arena-opponent",
+      "all_file_hashes_verified": true
+    }
+  ],
+  "opponent_deductions": [
+    "Boss ea15ef0f/f4b4f65e prices remaining cooldown after travel in score(), uses shared claims, Vendetta/Varg/Ryth and 30-gem banking.",
+    "Alpha82a14a04/6e362fd7 admits positive-timer returns using arrival timing and group bounds. Transfer timing principle; gamma retains independent group-specific scoring and explicit nonblocking staging.",
+    "Beta7cab9b0f/fd5e2554 soft-penalizes gold-only routes after 300 capital; previous gamma gem-priority experiment regressed against this edit base, so do not combine.",
+    "Beta863825b7/c9c933a2 bounds frontier ranking and caches plans; no search architecture or roster transferred."
+  ],
+  "evidence_limits": "Source/comments predict policy, not measured runtime success. Official source/patch parity and full event-policy review remain unverified.",
+  "source_file_sha256": {
+    "bots/gamma/src/bot.cpp": "e4232c8993e2509ab33333d3ab909c1a7823bf54ba017e54d18ef2be48e68b76",
+    "bots/gamma/src/bot.h": "92277ca1505ba3317b1ad606c6b5c69d2d5cdabc9a647047b301ac6287c17af4",
+    "bots/gamma/src/draft.cpp": "e1d34874501d74d17bdbfbcc763918421cca7f775c34bb6eab482d7ad29c07b1",
+    "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/gamma/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/gamma/src/plan.h": "eba99d45e8005af190f0162e9c57de0f594eca0ade7b6962a5bf1c27b9eae39f",
+    "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "regressions": "Seven compiled temporal assertions cover first-move timing, exact deadline, speed rounding, zero-timer next-round retry, expired observations and immobile fallback. No host SDK execution.",
+  "trusted_check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792852323.156193,
+    "matches": [
+      "21ec1370a1dc9dd0bca99f910c114c435cbb6e13adaa83e92783d94447105f50",
+      "47b8f6fb1745e1256cc964835f8380d489f1616331cca25831ec94e62ec6e293"
+    ],
+    "report_reference": "check:task-597c76cda1d44b5ca7f812f13fc7a5e3:6c10372302c4821019cd43306b3b195c896f7e2f33dded12e6b38103f8cc85ad",
+    "source_hash": "6c10372302c4821019cd43306b3b195c896f7e2f33dded12e6b38103f8cc85ad",
+    "started": 1792852288.6338732,
+    "state": "PASSED",
+    "task_id": "task-597c76cda1d44b5ca7f812f13fc7a5e3"
+  },
+  "initial_check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792852237.0165036,
+    "matches": [
+      "b25dc8ff37dd738ef65338028dbac1a5506cfa9e3898aa0077db3c01b7e86e35",
+      "c39a4246029b6d9103021f398e9b64725ae015ec8c246bd2b9b48af13287980b"
+    ],
+    "report_reference": "check:task-597c76cda1d44b5ca7f812f13fc7a5e3:43c5762b1b45b3916c0d1f431562442c63f969d007d78a71f3c62ce4b40a33b0",
+    "source_hash": "43c5762b1b45b3916c0d1f431562442c63f969d007d78a71f3c62ce4b40a33b0",
+    "started": 1792852201.0574358,
+    "state": "PASSED",
+    "task_id": "task-597c76cda1d44b5ca7f812f13fc7a5e3"
+  },
+  "match_provenance": [
+    {
+      "match_id": "cf913e896e4d86a0e8ce5c446eea3014773bd065ffcdf2906c3295ae8e214ecf",
+      "side": "A",
+      "map": "00ambush",
+      "source_commit": "802263ae591c1ed6ead175d5849ab85e1f0031a5",
+      "source_hash": "286bac8e6473584f8a5c3a3ab581f7f2045e3c2062a6a96e2bf8d3b0160e5b81",
+      "opponent_revision": null
+    },
+    {
+      "match_id": "1cad4a7f68c6bb7121129731e0578663958c617eba1be72703f2e8150996a73f",
+      "side": "B",
+      "map": "00ambush",
+      "source_commit": "802263ae591c1ed6ead175d5849ab85e1f0031a5",
+      "source_hash": "286bac8e6473584f8a5c3a3ab581f7f2045e3c2062a6a96e2bf8d3b0160e5b81",
+      "opponent_revision": null
+    }
+  ],
+  "historical_contrasts": [
+    {
+      "id": "f1b420d7a3e4db0bdca2d21e2430c9c69995d81d455057fb261eee5dc1b00364",
+      "side": "A",
+      "map": "00ambush",
+      "source_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+      "source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+      "provenance": ".agent/brief.md development loss"
+    },
+    {
+      "id": "79a0887bebcf3b619ca3d3db8204c420f72d2f9f99b85a9db8c4c27750d87021",
+      "side": null,
+      "map": null,
+      "source_commit": null,
+      "source_hash": null,
+      "provenance": "development_selection advancement evidence; exact candidate side/revision not supplied in compact record; not attributed to edit source"
+    }
+  ],
+  "smoke_limits": "Both summaries completed with zero faults/suspensions on both sides. Map name/opponent revision unknown; candidate sides only suggested by wrapper ordering. Not comparative-strength evidence.",
+  "git_diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0
+  }
+}
