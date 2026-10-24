@@ -1,6 +1,6 @@
 #include <cambc.h>
 #include "bot.h"
-#include "economy_policy.h"
+#include "policy.h"
 #include <algorithm>
 #include <array>
 #include <limits>
@@ -13,7 +13,7 @@ using cambc::vec2;
 using cambc::team;
 namespace {
 constexpr float retreat_fraction = 0.45f;
-constexpr unsigned shopping_gold = 150;
+constexpr unsigned shopping_gold = 300;
 constexpr unsigned retry_delay = 12;
 constexpr std::uint64_t planning_reserve = 18000;
 constexpr std::uint64_t scan_reserve = 45000;
@@ -31,7 +31,7 @@ cambc::bitboard around(vec2 p, int range) {
 }
 
 // Spend inventory along our normal route, never detour or interrupt a channel.
-// Friendly locks permit our tribute and cost opponents three basic attacks.
+// Friendly locks permit our tribute and cost opponents five basic attacks.
 void lock_nearby_altar() {
     auto& me = cambc::self();
     if (cambc::fuel_remaining() < lock_reserve || !me.is_alive()
@@ -158,10 +158,9 @@ bool exposed(vec2 position) {
     for (const auto& enemy : cambc::vision::champions(team::enemy))
         if (enemy.is_visible() && enemy.health() > 0
             && distance(position, enemy.position()) <= enemy.attack_range() + 1) return true;
-    // Conservatively treat damaging camps in range as threats; wake state is not
-    // available in this pinned header, even though the newer export describes it.
+    // Sleeping camps are harmless until pulled. Recall must escape awake camps.
     for (const auto& camp : cambc::vision::camps())
-        if (camp.is_visible() && camp.health() > 0 && camp.strength() > 0
+        if (camp.is_visible() && camp.health() > 0 && camp.is_awake() && camp.strength() > 0
             && distance(position, camp.position()) <= camp.attack_range()) return true;
     return false;
 }
@@ -274,95 +273,195 @@ void Bot::buy_items() {
     if (n && me.can_buy(I::power_shard_of_strength, n)) me.buy(I::power_shard_of_strength, n);
 }
 
+void Bot::initialize() {
+    // Static map layout is loaded once; it is not a live observation.
+    for (auto group : cambc::map::camp_groups()) {
+        auto spawns = group.spawn_tiles();
+        float hp = 0, incoming = 0;
+        for (const auto& camp : group.camps()) {
+            const auto stats = camp.base_stats();
+            hp += stats.base_health;
+            incoming += stats.base_strength;
+        }
+        const auto anchor = group.camps().front().spawn_position();
+        groups.push_back({std::move(group), std::move(spawns), anchor, hp, incoming});
+    }
+    initialized = true;
+}
+
+bool Bot::hold_capture() {
+    const auto position = cambc::self().position();
+    for (const auto& g : groups) {
+        if (!g.spawns.is_set(position)) continue;
+        // Our occupied spawn tile is necessarily visible. Stay through completion,
+        // even if we already carry a small bag from a preceding group.
+        if (std::holds_alternative<cambc::map::camp_group_reward_available>(g.group.state()))
+            return true;
+    }
+    return false;
+}
+
 void Bot::farm_camps() {
     auto& me = cambc::self();
-    const auto visible = cambc::vision::visible_tiles();
-    const auto allies = cambc::vision::champion_tiles(team::ally);
-    const auto camps = cambc::vision::camps();
-    const auto round = cambc::round_number();
-    int chosen = -1;
-    float best_score = std::numeric_limits<float>::max();
-    bool reward = false;
     const auto position = me.position();
+    const auto round = cambc::round_number();
+    const auto visible = cambc::vision::visible_tiles();
+    const auto allies = cambc::vision::champions(team::ally);
+    const auto camps = cambc::vision::camps();
     const auto strength = std::max(1.0f, me.strength());
-    // Finish an occupied reward before applying economic eligibility. Only our
-    // own tile is queried, so this never reads a hidden group's live state.
-    for (const auto& g : groups)
-        if (g.spawns.is_set(position)
-            && std::holds_alternative<cambc::map::camp_group_reward_available>(g.group.state())) return;
-
-    // Filter BEFORE the bounded shortlist: nearby gold camps must not hide all
-    // gem sources when we already carry an emblem's worth of unspent cash.
-    // This is reversible after shopping, with no lifetime-income estimate.
-    std::vector<std::size_t> order;
-    order.reserve(groups.size());
+    const auto attack_range = me.attack_range();
     const auto cash = me.gold_count();
-    for (std::size_t i = 0; i < groups.size(); ++i)
-        if (economy_policy::eligible(groups[i].group.gem_value(), cash)) order.push_back(i);
-    // Rank with cached geometry before expensive visibility/state calls.
-    // A committed eligible group is still checked first.
+    const auto items = me.item_count();
+    const float mitigation = items[cambc::item_type::jungle_emblem_of_strength] ? 0.7f : 1.0f;
+
+    // One native search gives terrain-aware travel for all candidates. Monsters
+    // are passable only in this cost estimate; actual movement uses free roots.
+    auto terrain = cambc::map::walls() | cambc::map::holes() | cambc::map::altars()
+        | cambc::map::spawn_region(team::enemy);
+    cambc::distance_field travel;
+    cambc::bitboard visited;
+    travel.compute(terrain, around(position, 0), visited);
+
+    // Cheap value/time shortlist across the entire layout before live queries.
+    std::vector<std::size_t> order(groups.size());
+    std::iota(order.begin(), order.end(), 0);
+    const auto utility = [&](std::size_t i) {
+        const auto& g = groups[i];
+        const auto d = travel.get(g.anchor);
+        if (d == cambc::distance_field::unreachable || round < g.retry_round) return -1.0f;
+        const float walk = std::max(0, static_cast<int>(d) - attack_range);
+        const float wait = g.ready_round > round + walk ? g.ready_round - round - walk : 0;
+        const float value = g.group.gem_value() + policy::gold_value(cash) * g.group.gold_value();
+        return value / (walk + wait + g.initial_health / (strength * 1.125f) + 6.0f);
+    };
+    std::vector<float> rank(groups.size());
+    for (std::size_t i = 0; i < groups.size(); ++i) rank[i] = utility(i);
     const auto checked = std::min(max_group_checks, order.size());
     std::partial_sort(order.begin(), order.begin() + checked, order.end(), [&](auto a, auto b) {
         if (static_cast<int>(a) == target_group) return static_cast<int>(b) != target_group;
         if (static_cast<int>(b) == target_group) return false;
-        const auto rank = [&](auto i) {
-            return distance(position, groups[i].center) * 3.0f
-                + groups[i].initial_health / strength * 0.35f;
-        };
-        const auto ra = rank(a), rb = rank(b);
-        return ra != rb ? ra < rb : a < b;
+        const auto va = rank[a], vb = rank[b];
+        return va != vb ? va > vb : a < b;
     });
+
+    int chosen = -1, rally = -1;
+    float best_score = -1, rally_score = -1;
+    bool reward = false;
     for (std::size_t n = 0; n < checked; ++n) {
-        // Leave enough fuel to choose a legal step and yield, not only to stop scanning.
-        if (n > 0 && cambc::fuel_remaining() < scan_reserve) break;
+        if (cambc::fuel_remaining() < scan_reserve) break;
         const auto i = order[n];
         auto& g = groups[i];
         if (round < g.retry_round) continue;
-        const bool seen = !(g.spawns & visible).is_empty();
+        const auto path = travel.get(g.anchor);
+        if (path == cambc::distance_field::unreachable) continue;
+        const int walk = std::max(0, static_cast<int>(path) - me.attack_range());
         bool available = false;
+        const bool seen = !(g.spawns & visible).is_empty();
         if (seen) {
             const auto state = g.group.state();
-            if (std::holds_alternative<cambc::map::camp_group_respawning>(state)) continue;
-            available = std::holds_alternative<cambc::map::camp_group_reward_available>(state);
+            if (const auto* respawn = std::get_if<cambc::map::camp_group_respawning>(&state)) {
+                g.ready_round = round + std::max(1, respawn->timer);
+                if (respawn->timer > walk + 5) continue;
+            } else {
+                g.ready_round = 0;
+                available = std::holds_alternative<cambc::map::camp_group_reward_available>(state);
+            }
         }
-        if (available && g.spawns.is_set(me.position())) return; // Keep capture timer intact.
-        if (available && !(g.spawns & allies).is_empty()) continue; // One collector suffices.
-        float hp = g.initial_health;
-        if (seen) {
-            hp = 0;
-            for (const auto& c : g.group.camps())
-                hp += c.is_visible() ? std::max(0.0f, c.health()) : c.base_stats().base_health;
+        // Occupancy alone is enough to avoid duplicating a completed capture.
+        bool collector = false;
+        float team_dps = strength * 1.125f;
+        float ally_near = 0;
+        for (const auto& ally : allies) {
+            if (ally == me || !ally.is_visible() || !ally.is_alive()) continue;
+            const auto ap = ally.position();
+            if (g.spawns.is_set(ap)) collector = true;
+            if (distance(ap, g.anchor) <= 6) {
+                team_dps += ally.strength();
+                ally_near += 1;
+            }
         }
-        // Travel and expected clearing work, with a strong preference for free rewards.
-        float score = distance(position, g.center) * 3.0f
-            + (available ? -40.0f : hp / strength * 0.35f)
-            - std::min(40.0f, g.group.gem_value() * 0.15f);
-        if (static_cast<int>(i) == target_group) score -= 12; // Avoid route oscillation.
-        if (!available && !(around(g.center, 2) & allies).is_empty()
-            && !around(g.center, 2).is_set(me.position())) score += 8;
-        if (score < best_score) { best_score = score; chosen = i; reward = available; }
+        if (available && collector) continue;
+        float hp = g.initial_health, incoming = g.initial_strength;
+        if (seen && g.ready_round == 0) {
+            hp = 0; incoming = 0;
+            for (const auto& c : g.group.camps()) {
+                if (!visible.is_set(c.spawn_position())) {
+                    const auto s = c.base_stats();
+                    hp += s.base_health; incoming += s.base_strength;
+                } else if (c.is_visible() && c.health() > 0) {
+                    hp += c.health(); incoming += c.strength();
+                }
+            }
+        }
+        if (available) hp = incoming = 0;
+        if (me.passive() == cambc::passive_type::splash_attack && g.group.camps().size() > 1)
+            team_dps += strength * 0.6f;
+        const float clear = hp / std::max(1.0f, team_dps);
+        // A single monster deals full damage until dead. Groups lose attackers
+        // progressively; price half their combined damage across the clear.
+        const float loss = clear * incoming * mitigation
+            * (g.group.camps().size() == 1 ? 1.0f : 0.65f);
+        const float value = g.group.gem_value() + policy::gold_value(cash) * g.group.gold_value();
+        const float wait = g.ready_round > round + walk ? g.ready_round - round - walk : 0;
+        float score = value / (walk + wait + clear + 6.0f);
+        // Soft dispersion preserves help on monsters but avoids cluster sharing.
+        if (incoming == 0 && ally_near > 0 && target_group != static_cast<int>(i)) score *= 0.3f;
+        if (target_group == static_cast<int>(i)) score *= 1.25f;
+        if (available) score *= 2;
+        if (loss > policy::risk_fraction * me.health()) {
+            if (score > rally_score) { rally = i; rally_score = score; }
+            continue;
+        }
+        if (score > best_score) { chosen = i; best_score = score; reward = available; }
     }
-    if (chosen < 0) return;
+    if (chosen < 0) {
+        if (me.gem_count()) { bank(); return; }
+        if (rally >= 0) {
+            // On monster-only maps gather outside attack range before pulling.
+            auto& g = groups[rally];
+            target_group = rally;
+            int radius = 4;
+            for (const auto& c : g.group.camps()) radius = std::max(radius, c.attack_range() + 1);
+            if (distance(position, g.anchor) > radius)
+                move_to(around(g.anchor, radius) & ~around(g.anchor, radius - 1));
+            else if (me.health() < me.max_health() * 0.85f && !exposed(position)) {
+                recovering = true; me.recall();
+            }
+            return;
+        }
+        // In particular vacate an occupied respawn region, rather than waiting
+        // on the exact tile whose occupancy prevents the next crop.
+        if (me.can_move()) move_to(cambc::map::spawn_region(team::ally));
+        return;
+    }
     target_group = chosen;
     auto& g = groups[chosen];
     if (!reward) {
-        // Stay focused on one physical group; Varg splash and Ryth AoE clear it together.
-        for (const auto& camp : camps)
-            if (g.spawns.is_set(camp.spawn_position()) && fight(camp)) return;
+        // Lowest-health in-range member first: reduce incoming attacks quickly.
+        std::optional<cambc::camp> target;
+        float hp = std::numeric_limits<float>::max();
+        for (const auto& c : camps)
+            if (g.spawns.is_set(c.spawn_position()) && c.is_visible() && c.health() > 0
+                && distance(position, c.position()) <= me.attack_range() && c.health() < hp) {
+                target = c; hp = c.health();
+            }
+        if (target && fight(*target)) return;
+        for (const auto& c : camps)
+            if (g.spawns.is_set(c.spawn_position()) && fight(c)) return;
     }
     auto goals = g.spawns;
     if (!reward) {
         cambc::bitboard approaches;
-        for (const auto& camp : camps)
-            if (g.spawns.is_set(camp.spawn_position()) && camp.is_visible() && camp.health() > 0)
-                approaches |= around(camp.position(), me.attack_range());
+        for (const auto& c : camps)
+            if (g.spawns.is_set(c.spawn_position()) && c.is_visible() && c.health() > 0)
+                approaches |= around(c.position(), me.attack_range());
         if (!approaches.is_empty()) goals = std::move(approaches);
+        else if (g.ready_round > round) goals = around(g.anchor, 2) & ~g.spawns;
     }
     if (cambc::fuel_remaining() < planning_reserve) return;
     if (move_to(goals)) {
-        // Movement changes visibility. Rebuild handles and prohibit exclusive spells.
-        for (const auto& camp : cambc::vision::camps())
-            if (g.spawns.is_set(camp.spawn_position()) && fight(camp, true)) return;
+        for (const auto& c : cambc::vision::camps())
+            if (g.spawns.is_set(c.spawn_position()) && fight(c, true)) return;
     } else if (!goals.is_set(me.position())) {
         g.retry_round = round + retry_delay;
         target_group = -1;
@@ -371,16 +470,13 @@ void Bot::farm_camps() {
 
 void Bot::play_turn() {
     auto& me = cambc::self();
-    // can_buy handles dead shopping and Tavi's field exception without live position queries.
+    if (me.is_alive() && (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting())) return;
     buy_items();
     if (!me.is_alive()) { recovering = false; target_group = -1; return; }
-    if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
-    lock_nearby_altar();
     if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
-
+    lock_nearby_altar();
     const auto& spawn = cambc::map::spawn_region(team::ally);
     if (spawn.is_set(me.position())) {
-        // Recall resolves before this turn; healing happens only at its END.
         if (me.health() < me.max_health()) return;
         recovering = false;
     }
@@ -392,34 +488,27 @@ void Bot::play_turn() {
             && !me.restrictions().contains(cambc::buff_restrictions::move)) me.recall();
         return;
     }
-    // Secure bags before accepting unrelated fights.
-    if (bank()) return;
+    if (!initialized) initialize();
+    if (cambc::fuel_remaining() < scan_reserve) return;
+    if (hold_capture()) return;
+
+    int altar_distance = 10000;
+    for (auto altar : cambc::map::altars().positions())
+        altar_distance = std::min(altar_distance, std::max(0, distance(me.position(), altar) - cambc::constants::submit_gems_range));
+    if (policy::bank_now(me.gem_count(), altar_distance, cambc::round_number(),
+            cambc::constants::max_rounds, cambc::global_submitted_gems(team::ally), cambc::constants::winning_gems)) {
+        bank(); return;
+    }
+    // Take useful defensive exchanges, without chasing enemies off our route.
     for (const auto& enemy : cambc::vision::champions(team::enemy))
         if (enemy.is_visible() && enemy.health() > 0
             && distance(me.position(), enemy.position()) <= me.attack_range()
             && (enemy.health() <= me.strength() * 2
                 || distance(me.position(), enemy.position()) <= enemy.attack_range()))
             if (fight(enemy)) return;
-
-    if (!initialized) {
-        for (auto group : cambc::map::camp_groups()) {
-            auto spawns = group.spawn_tiles();
-            vec2 center{};
-            float hp = 0;
-            for (const auto& camp : group.camps()) {
-                center += camp.spawn_position(); hp += camp.base_stats().base_health;
-            }
-            center /= static_cast<int>(group.camps().size());
-            groups.push_back({std::move(group), std::move(spawns), center, hp});
-        }
-        initialized = true;
-    }
-    // Reinvest captured gold on safe empty-bag returns; field shoppers need no trip.
     if (me.gold_count() >= shopping_gold && me.champion_name() != cambc::champion_type::tavi
-        && me.health() < me.max_health() * 0.8f && !exposed(me.position())) {
-        recovering = true;
-        me.recall();
-        return;
+        && me.gem_count() == 0 && !spawn.is_set(me.position()) && !exposed(me.position())) {
+        recovering = true; target_group = -1; me.recall(); return;
     }
     farm_camps();
 }
