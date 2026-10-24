@@ -1,0 +1,14 @@
+{
+  "task_id": "task-3d6485a995384e9c9fdd47134d1df792",
+  "scope": "source contracts, not engine fixtures",
+  "checks": {
+    "bundle_selector_integrated": true,
+    "full_bundle_legality": true,
+    "all_stat_emblems_block_duplicate_passive": true,
+    "refresh_power_budget_after_bundle": true,
+    "original_model_and_power_allocator_byte_identical": true,
+    "non_shop_policy_byte_identical": true,
+    "other_sources_unchanged": true
+  },
+  "passed": true
+}

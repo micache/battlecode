@@ -1,0 +1,16 @@
+{
+  "task_id": "task-3d6485a995384e9c9fdd47134d1df792",
+  "source_hash": "3a354ce7684abd193e7d610d01e70633597f650d57a0d65c935dc4f3955753b5",
+  "files": {
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "bot.cpp": "1bf9fbd4e50ada3d7a357bd5313cedb0cba66b113970f37b378b907ba368efb8",
+    "bot.h": "c89e51dc769abbdd346f2fd833f5ece92514a7d4e2eda0c88b2d24f411a14c24",
+    "camp_rotation.h": "1bc74e3da9a9a3277a80b9231b55548c6feae712c058d4b48d7531cb1e526abf",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "equipment_policy.h": "0e911cf12c226531f222edc5b4d48f130d0debd37eaf042a3a08cc837e496b09",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "note": "No bot source edited after trusted bot-check. File hashes saved for supervisor revalidation."
+}

@@ -105,9 +105,33 @@ void Bot::buy_items() {
             // Do not price unused dash damage or another champion's healing.
         }, *ability.info());
     }
-    const auto inventory = me.item_count();
+    auto inventory = me.item_count();
+    const std::array jungle{cambc::item_type::jungle_shard_of_strength,
+        cambc::item_type::jungle_shard_of_focus, cambc::item_type::jungle_shard_of_health};
+    const std::array jungle_emblems{cambc::item_type::jungle_emblem_of_strength,
+        cambc::item_type::jungle_emblem_of_focus, cambc::item_type::jungle_emblem_of_health};
+    const bool owns_jungle = inventory[jungle_emblems[0]] || inventory[jungle_emblems[1]]
+        || inventory[jungle_emblems[2]];
+    unsigned bundle_spent = 0;
+    if (!owns_jungle && cambc::fuel_remaining() >= equipment_policy::entry_fuel_reserve) {
+        std::array<equipment_policy::bundle, 3> bundles{};
+        for (unsigned stat = 0; stat < 3; ++stat)
+            bundles[stat] = {jungle[stat].cost(), jungle[stat].combine_count(), inventory[jungle[stat]]};
+        const auto choice = equipment_policy::choose_jungle(estimate, me.gold_count(), cost,
+            {inventory[items[0]], inventory[items[1]], inventory[items[2]]},
+            items[0].combine_count(), bundles, owns_jungle, static_cast<unsigned>(chosen_stat));
+        if (choice.count && cambc::fuel_remaining() >= equipment_policy::purchase_fuel_reserve
+            && me.can_buy(jungle[choice.stat], choice.count)) {
+            me.buy(jungle[choice.stat], choice.count);
+            estimate.add(choice.stat, choice.count);
+            bundle_spent = choice.count;
+            inventory = me.item_count(); // refresh after the full bundle; no stale Power budget
+        }
+    }
+    if (cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) return;
     const std::array<unsigned, 3> residues{inventory[items[0]], inventory[items[1]], inventory[items[2]]};
-    const auto counts = equipment_policy::plan(estimate, me.gold_count() / cost,
+    const auto counts = equipment_policy::plan(estimate,
+        std::min(me.gold_count() / cost, equipment_policy::purchase_limit - bundle_spent),
         residues, items[0].combine_count(), static_cast<unsigned>(chosen_stat));
     for (unsigned stat = 0; stat < items.size(); ++stat) {
         if (cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) break;

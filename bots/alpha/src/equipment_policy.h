@@ -62,6 +62,78 @@ constexpr std::array<unsigned, 3> plan(model current, unsigned affordable,
     return counts;
 }
 
+// Jungle's documented 30% camp mitigation is discounted for mixed damage.
+// These are deterministic workload assumptions, not measured damage forecasts.
+constexpr float camp_exposure_fraction = 0.8f;
+constexpr float jungle_reduction = 0.3f;
+constexpr float bundle_advantage = 1.05f;
+
+struct bundle {
+    unsigned cost, combine, residue;
+};
+struct bundle_choice {
+    unsigned stat = 0, count = 0;
+};
+
+// Compare immediately completed protection with exactly the same gold in the
+// existing Power allocator. Never strand gold in an unfinished passive family.
+// Three alternatives, each with at most 64 local Power choices; normal bundles
+// cost only five choices. Existing emblems in ANY stat suppress the whole family.
+constexpr bundle_choice choose_jungle(model current, unsigned gold,
+        unsigned power_cost, std::array<unsigned, 3> power_residues,
+        unsigned power_combine, std::array<bundle, 3> bundles,
+        bool already_owned, unsigned tie_start) {
+    bundle_choice result;
+    if (already_owned || !power_cost || !power_combine) return result;
+    float best_ratio = bundle_advantage;
+    for (unsigned offset = 0; offset < 3; ++offset) {
+        const unsigned stat = (tie_start + offset) % 3;
+        const auto b = bundles[stat];
+        if (!b.cost || !b.combine || b.combine > purchase_limit) continue;
+        const unsigned needed = b.combine - b.residue % b.combine;
+        if (needed > gold / b.cost) continue;
+        const unsigned equivalent = needed * b.cost / power_cost;
+        if (equivalent > purchase_limit) continue;
+        auto power = current;
+        const auto counts = plan(current, equivalent, power_residues,
+                                 power_combine, tie_start);
+        for (unsigned s = 0; s < 3; ++s)
+            power.add(s, counts[s] + (power_residues[s] + counts[s]) / power_combine);
+        auto jungle = current;
+        jungle.add(stat, needed); // no Power-family extra stat point
+        const float denominator = power.value() * (1 - camp_exposure_fraction * jungle_reduction);
+        if (denominator <= 0) continue;
+        const float ratio = jungle.value() / denominator;
+        if (ratio > best_ratio) {
+            best_ratio = ratio;
+            result = {stat, needed};
+        }
+    }
+    return result;
+}
+
+static_assert([] {
+    const model fighter{1000, 100, 50, {6, 0, 60}};
+    const std::array<bundle, 3> full{{{30, 5, 0}, {30, 5, 0}, {30, 5, 0}}};
+    const auto choose = [&](unsigned gold, bool owned = false) {
+        return choose_jungle(fighter, gold, 30, {}, 5, full, owned, 1);
+    };
+    if (choose(149).count || choose(150, true).count) return false;
+    const auto ready = choose(150);
+    if (ready.count != 5 || ready.stat == 1) return false; // no unused Focus
+    auto partial = full;
+    partial[ready.stat].residue = 4;
+    const auto finish = choose_jungle(fighter, 30, 30, {}, 5, partial, false, 1);
+    if (finish.count != 1 || finish.stat != ready.stat) return false;
+    auto expensive = full;
+    for (auto& b : expensive) b.cost = 300;
+    if (choose_jungle(fighter, 1500, 30, {}, 5, expensive, false, 0).count) return false;
+    auto invalid = full;
+    for (auto& b : invalid) b.combine = 0;
+    return !choose_jungle(fighter, 10000, 30, {}, 5, invalid, false, 0).count
+        && !choose_jungle(fighter, 10000, 0, {}, 5, full, false, 0).count;
+}());
+
 static_assert([] {
     model reset{1000, 50, 80, {6, 10, 80}, 1.125f};
     const auto early = plan(reset, 1, {}, 5, 1);
