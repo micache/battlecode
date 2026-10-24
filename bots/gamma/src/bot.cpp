@@ -119,35 +119,52 @@ void Bot::buy_items() {
 bool Bot::walk(bc::bitboard goals, bool dash) {
     auto& me = bc::self();
     if (!me.can_move() || bc::fuel_remaining() < policy::action_floor) return false;
-    // At most two attempts: a hidden blocker can be revealed without consuming
-    // an allowance. Rebuild occupants, never path onto a known blocked goal.
-    for (int attempt = 0; attempt < 2 && bc::fuel_remaining() >= policy::action_floor; ++attempt) {
+    bool advanced = false, dash_attempted = false;
+    // At most two fields/actions: after a dash or hidden-blocker reveal, rebuild
+    // observations before using the retained ordinary walk. Never chain dashes.
+    for (int attempt = 0; attempt < 2 && me.can_move()
+        && bc::fuel_remaining() >= policy::action_floor; ++attempt) {
+        if (dash_attempted && bc::fuel_remaining() < policy::dash_walk_floor) break;
         auto blocked = blockers(terrain);
         auto free_goals = goals & ~blocked;
         const auto origin = me.position();
-        if (free_goals.is_empty() || free_goals.is_set(origin)) return false;
+        if (free_goals.is_empty() || free_goals.is_set(origin)) return advanced;
         bc::distance_field f;
         bc::bitboard visited;
         f.compute_to(blocked, free_goals, around(origin, 0), visited);
-        if (dash && me.can_cast() && bc::fuel_remaining() > 27000) {
+        if (advanced && bc::fuel_remaining() < policy::action_floor) break;
+        bool refresh = false;
+        if (dash && !dash_attempted && me.can_cast() && bc::fuel_remaining() > 27000) {
             for (const auto& a : me.abilities()) {
-                if (!a.is_dash() || !a.is_ready()) continue;
+                if (!a.is_dash() || !a.is_ready() || !a.can_target_ground() || exclusive(a)) continue;
                 // Conservative legal dash path: ordinary passable intermediate
                 // tiles only. This forgoes hole crossing rather than guessing.
                 auto candidates = blocked.reachable_tiles(origin, 2) & a.valid_tiles() & ~blocked;
                 auto best = origin;
                 for (auto p : candidates.positions()) if (f.get(p) < f.get(best)) best = p;
-                if (dist(origin, best) == 2 && f.get(best) + 1 < f.get(origin) && a.use(best)) return true;
+                if (dist(origin, best) == 2 && f.get(best) + 1 < f.get(origin)) {
+                    dash_attempted = true;
+                    advanced = a.use(best);
+                    if (advanced) stuck = 0;
+                    // Success can reveal new units; False reveals an obstruction.
+                    // Either outcome invalidates this field and occupancy mask.
+                    refresh = true;
+                    break;
+                }
             }
         }
+        if (refresh) continue;
         auto best = origin;
         for (auto p : blocked.reachable_tiles(origin, me.base_stats().base_move_speed).positions())
             if (f.get(p) < f.get(best)) best = p;
-        if (best == origin) { ++stuck; return false; }
-        if (me.move_absolute(best)) { stuck = 0; return true; }
+        if (best == origin) { if (!advanced) ++stuck; return advanced; }
+        if (me.move_absolute(best)) {
+            if (advanced) ++dash_walks;
+            stuck = 0; return true;
+        }
         ++stuck;
     }
-    return false;
+    return advanced;
 }
 
 bool Bot::threatened(vec2 p) {
@@ -237,54 +254,15 @@ bool Bot::fight(bool moved, bool champions_only) {
         }
         return false;
     };
-    // A camp kill may leave another survivor in range. Refresh from this body's
-    // current vision only, bounded to the basic-attack neighbourhood. Do not
-    // chase, switch groups, or change champion target selection.
-    auto next_camp = [&]() {
-        if (bc::fuel_remaining() < policy::retarget_floor || !me.can_cast()) return false;
-        bool ready_reset = false;
-        for (const auto& a : me.abilities())
-            if (a.is_attack_reset() && a.can_target_self() && a.is_ready()) ready_reset = true;
-        if (!ready_reset) return false;
-        const auto tiles = routes[target].group->spawn_tiles();
-        std::optional<bc::camp> next;
-        const auto local = bc::vision::camp_tiles() & around(me.position(), me.attack_range());
-        for (auto p : local.positions()) {
-            auto c = bc::vision::camp_at(p);
-            if (!c.is_visible() || c.health() <= 0 || !tiles.is_set(c.spawn_position())) continue;
-            if (!next || c.health() < next->health()) next = c;
-        }
-        if (!next) return false;
-        camp = next;
-        t = &*camp;
-        return true;
-    };
-    bool did_basic = false, retargeted = false;
-    if (me.can_attack() && (enemy || camp_basics < policy::camp_basic_limit)
-        && dist(me.position(),t->position()) <= me.attack_range()) {
+    // Reset after a real attack. Re-check the target after each action: a basic,
+    // Varg splash, or spell can kill it, and Vendetta can refresh cooldowns.
+    if (me.can_attack() && dist(me.position(),t->position()) <= me.attack_range()) {
         me.attack(*t); acted = true;
-        did_basic = true;
-        if (camp) ++camp_basics;
-        if (!usable(*t)) {
-            // Preserve the previous PvP policy. A complete camp clear likewise
-            // saves the reset and lets farm() enter capture this same turn.
-            if (enemy || !next_camp()) return true;
-            retargeted = true;
-        }
-    }
-    const bool reset_window = enemy ? did_basic : policy::camp_reset_window(
-        camp_basics, usable(*t), dist(me.position(),t->position()) <= me.attack_range());
-    if (reset_window && !me.can_attack() && me.can_cast()) {
+        if (!usable(*t)) return true;
         for (const auto& a : me.abilities()) {
             if (a.is_attack_reset() && a.is_ready() && a.can_target_self()) {
                 if (a.use() && me.can_attack() && usable(*t)
-                    && dist(me.position(),t->position()) <= me.attack_range()) {
-                    me.attack(*t); acted = true;
-                    if (camp) {
-                        ++camp_basics;
-                        if (retargeted || !did_basic) ++retarget_resets;
-                    }
-                }
+                    && dist(me.position(),t->position()) <= me.attack_range()) me.attack(*t);
                 break;
             }
         }
@@ -444,14 +422,13 @@ void Bot::log(const char* mode) {
         << " hp=" << static_cast<int>(me.health()) << " gems=" << me.gem_count()
         << " xy=" << me.position().x << "," << me.position().y
         << " route_age=" << (travel_round < 0 ? -1 : now-travel_round)
-        << " reset_next=" << retarget_resets
+        << " dash_walk=" << dash_walks
         << " fuel=" << bc::fuel_remaining() << '\n';
 }
 
 void Bot::play_turn() {
     auto& me = bc::self();
     now = bc::round_number();
-    camp_basics = 0;
     if (!me.is_alive()) { buy_items(); target = -1; recovering = false; return; }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
     if (!initialized) initialize();

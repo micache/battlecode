@@ -1,0 +1,354 @@
+{
+  "task_id": "task-41dc196439b045f6aeb4f903bbf275a8",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "hypothesis": "Fresh-observation walking after a compatible dash increases matched wins and mean submitted gems over the edit base without new faults or fuel suspensions. Nonpositive gains or new reliability failures falsify this prediction.",
+  "decision": "Use a retained legal walk to reduce objective travel; do not repeat broad carrier protection or corridor clearing.",
+  "mechanism_status": "Unmeasured rules/source deduction, not a replay-proven missed walk.",
+  "risks": [
+    "Extra movement field may cost fuel",
+    "A dash landing can reveal new obstacles; refresh before walking",
+    "Earlier protection plus dash experiment on a different base was not selected; this candidate changes only navigation continuation on the current base"
+  ],
+  "frozen_manifest_sha256": "7a21621e9faf1be4d5f6b228c1de1a255baf38621c4b654899dc91efd5b85b5e",
+  "candidate_source_hash": "36bf1ed341143e0c06c611f9baf5667266e28ee84a3cc1e590f18547436b789c",
+  "source_file_sha256": {
+    "bots/gamma/src/bot.cpp": "9388d4df851cccd818ece8e3f6fbce121e5ceced456680249939f1172669f37f",
+    "bots/gamma/src/plan.h": "d44fc2c7a97f9d0b3fae71ee8a72d71c1b5ebd3ced0799bc01f8931df1a860b4",
+    "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/gamma/src/bot.h": "47853e0f4e39ec650ade3bf5fb286026d1cd98092207aaf5a71ff9abcd93bbf3",
+    "bots/gamma/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/gamma/src/draft.cpp": "e1d34874501d74d17bdbfbcc763918421cca7f775c34bb6eab482d7ad29c07b1"
+  },
+  "trusted_check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792882210.9488504,
+    "matches": [
+      "7c2d35c50b80e9a560c51a39218702a0dea8ccbc77f6c9550d2ba8db7ee9e063",
+      "95a6464c0d6af8c24a4cda334e6f68b08be026d4a4f0f6445104513f95ed31fd"
+    ],
+    "report_reference": "check:task-41dc196439b045f6aeb4f903bbf275a8:36bf1ed341143e0c06c611f9baf5667266e28ee84a3cc1e590f18547436b789c",
+    "source_hash": "36bf1ed341143e0c06c611f9baf5667266e28ee84a3cc1e590f18547436b789c",
+    "started": 1792882175.1794758,
+    "state": "PASSED",
+    "task_id": "task-41dc196439b045f6aeb4f903bbf275a8"
+  },
+  "policy": {
+    "max_fields_per_call": 2,
+    "max_dash_attempts_per_call": 1,
+    "continuation_field_floor": 45000,
+    "continuation_action_floor": 18000,
+    "live_shared_bytes_written": 0
+  },
+  "smoke": [
+    {
+      "match_id": "7c2d35c50b80e9a560c51a39218702a0dea8ccbc77f6c9550d2ba8db7ee9e063",
+      "match": {
+        "engineBuildHash": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+        "engineVersion": "1.0.3",
+        "finalInput": 11190,
+        "finalRoundPartial": true,
+        "finalSubstep": 7,
+        "height": 41,
+        "mapHash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+        "metricSemanticsVersion": 1,
+        "outcome": "teamA",
+        "roundsCompleted": 876,
+        "roundsStarted": 877,
+        "seed": "17615240315955964814",
+        "width": 41
+      },
+      "normalized": {
+        "bot_faults": 0,
+        "completed": true,
+        "detail": null,
+        "fuel_suspensions": 0,
+        "metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 16
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 8
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 4505.0,
+              "B": 3701.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 3701.0,
+              "B": 4505.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 16
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 8,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1022,
+              "B": 76
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 5770,
+              "B": 1140
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 127860.00024414062,
+              "B": 25130.0
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 21802.39973258972,
+              "B": 8155.0
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17615240315955964814"
+          },
+          "round": {
+            "available": true,
+            "value": 877
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 5080,
+              "B": 870
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1022,
+              "B": 52
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 690,
+              "B": 270
+            }
+          }
+        },
+        "protocol_version": 1,
+        "state": "COMPLETED",
+        "terminal_reason": null,
+        "winner": "A"
+      }
+    },
+    {
+      "match_id": "95a6464c0d6af8c24a4cda334e6f68b08be026d4a4f0f6445104513f95ed31fd",
+      "match": {
+        "engineBuildHash": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+        "engineVersion": "1.0.3",
+        "finalInput": 9928,
+        "finalRoundPartial": true,
+        "finalSubstep": 7,
+        "height": 41,
+        "mapHash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+        "metricSemanticsVersion": 1,
+        "outcome": "teamB",
+        "roundsCompleted": 892,
+        "roundsStarted": 893,
+        "seed": "17615240315955964814",
+        "width": 41
+      },
+      "normalized": {
+        "bot_faults": 0,
+        "completed": true,
+        "detail": null,
+        "fuel_suspensions": 0,
+        "metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 18,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 8,
+              "B": 22
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 3585.0,
+              "B": 10168.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 10168.0,
+              "B": 3585.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 16,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 9
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 75,
+              "B": 1044
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 812,
+              "B": 6090
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 18695.0,
+              "B": 135492.49975585938
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 9232.0,
+              "B": 20783.59973335266
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17615240315955964814"
+          },
+          "round": {
+            "available": true,
+            "value": 893
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 660,
+              "B": 5830
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 49,
+              "B": 1022
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 152,
+              "B": 260
+            }
+          }
+        },
+        "protocol_version": 1,
+        "state": "COMPLETED",
+        "terminal_reason": null,
+        "winner": "B"
+      }
+    }
+  ],
+  "limits": [
+    "Smoke does not establish broad strength or candidate-side/opponent revision attribution",
+    "Missed dash-walk mechanism is a rules/source deduction; loss logs show stalls without establishing blocker causality"
+  ],
+  "git_diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0
+  }
+}

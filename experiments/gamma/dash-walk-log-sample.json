@@ -1,0 +1,28 @@
+[
+  {
+    "match_id": "7c2d35c50b80e9a560c51a39218702a0dea8ccbc77f6c9550d2ba8db7ee9e063",
+    "file": "bot-a.stdout.log",
+    "offset": 0,
+    "total_size": 23227,
+    "sampled_bytes": 8192,
+    "lines": [
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=4,0 route_age=0 dash_walk=0 fuel=102356",
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=7,0 route_age=0 dash_walk=1 fuel=93688",
+      "r=1 mode=farm target=7 hp=1200 gems=0 xy=6,2 route_age=0 dash_walk=0 fuel=101219",
+      "r=101 mode=farm target=5 hp=820 gems=4 xy=20,2 route_age=1 dash_walk=0 fuel=43389",
+      "r=101 mode=farm target=7 hp=1200 gems=11 xy=6,2 route_age=2 dash_walk=0 fuel=55749",
+      "r=104 mode=heal target=-1 hp=340 gems=0 xy=3,1 route_age=17 dash_walk=10 fuel=89885",
+      "r=201 mode=farm target=5 hp=832 gems=0 xy=21,3 route_age=3 dash_walk=0 fuel=43407",
+      "r=202 mode=heal target=-1 hp=360 gems=15 xy=3,1 route_age=15 dash_walk=0 fuel=89716",
+      "r=204 mode=farm target=11 hp=1000 gems=0 xy=22,0 route_age=2 dash_walk=17 fuel=47337"
+    ]
+  },
+  {
+    "match_id": "7c2d35c50b80e9a560c51a39218702a0dea8ccbc77f6c9550d2ba8db7ee9e063",
+    "file": "bot-b.stdout.log",
+    "offset": 0,
+    "total_size": 85128,
+    "sampled_bytes": 8192,
+    "lines": []
+  }
+]
