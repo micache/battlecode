@@ -1,0 +1,313 @@
+{
+  "task_id": "task-4a9b803aa850407e9f95fe4001ff478b",
+  "edit_commit": "1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97",
+  "base_source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+  "input_revision": "b6350143c24d2079e690cb622416ccfe14de5289",
+  "latest_evaluated_candidate": {
+    "build_id": "f620c7706e20e994fef899da10851d4b86fe28581ecbbab44af490fbdb503c88",
+    "commit": "b6350143c24d2079e690cb622416ccfe14de5289",
+    "revision_id": "50c2b55e3e7f644d22742ec7d1904e334fba8ef6c55ed8f8b270be0d154221fa",
+    "source_hash": "aaa73e40bd670a517c874927769fc4a4bfb35fb1f24908ad69f10936bd684121"
+  },
+  "evaluation_id": "adeb13b345ab3ed3e93f30ced9d7bfae96507839296425b2f141f2e274ea6800",
+  "decision": "INCONCLUSIVE",
+  "development_comparison": {
+    "commit_sha": "1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97",
+    "common_opponent_delta": 0.0,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 185,
+    "per_map": {
+      "00ambush": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "00collision": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00contest": {
+        "candidate": 0.6,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "00corners": {
+        "candidate": 0.8,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "00eight": {
+        "candidate": 0.8,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00elkring": {
+        "candidate": 0.6,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00expanse": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00fragment": {
+        "candidate": 0.9,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00gem-fields": {
+        "candidate": 0.8,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00gemfight": {
+        "candidate": 0.9,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00great-wall": {
+        "candidate": 0.9,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00interlock": {
+        "candidate": 0.6,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00lanes": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00lost-world": {
+        "candidate": 0.3,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00pilgrimage": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "00quadrants": {
+        "candidate": 0.6,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00reverse-spiral": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00road-of-riches": {
+        "candidate": 1.0,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00rushbait-v2": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00split": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00stampede": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "00swirl": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01big-world": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01boss-battle": {
+        "candidate": 0.2,
+        "incumbent": 0.2,
+        "pairs": 5
+      },
+      "01broken-curve": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "01concentrated-wealth": {
+        "candidate": 0.9,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "01corridors": {
+        "candidate": 0.8,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01elk-arena": {
+        "candidate": 0.6,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01fracture": {
+        "candidate": 0.6,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01gold-rush": {
+        "candidate": 0.6,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "01hooks": {
+        "candidate": 0.7,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01islands": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01shortcut": {
+        "candidate": 0.1,
+        "incumbent": 0.1,
+        "pairs": 5
+      },
+      "01starfish": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "01starvation": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "01the-farm": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "01yellow-brick-road": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      }
+    },
+    "source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+    "unknown_reliability": []
+  },
+  "development_metrics": {
+    "bag_loss": {
+      "available": true,
+      "mean": 38.056756756756755,
+      "observations": 370
+    },
+    "bot_faults_by_side": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 370
+    },
+    "carried_gems": {
+      "available": true,
+      "mean": 31.445945945945947,
+      "observations": 370
+    },
+    "champion_damage_done": {
+      "available": true,
+      "mean": 30128.131023675043,
+      "observations": 370
+    },
+    "champion_damage_taken": {
+      "available": true,
+      "mean": 16271.518500848719,
+      "observations": 370
+    },
+    "champion_deaths": {
+      "available": true,
+      "mean": 18.975675675675674,
+      "observations": 370
+    },
+    "champion_kills": {
+      "available": true,
+      "mean": 9.58108108108108,
+      "observations": 370
+    },
+    "collected_gems": {
+      "available": true,
+      "mean": 763.8351351351351,
+      "observations": 370
+    },
+    "fuel_suspensions_by_side": {
+      "available": true,
+      "mean": 0.14864864864864866,
+      "observations": 370
+    },
+    "lifetime_earned_gold": {
+      "available": true,
+      "mean": 6264.316216216216,
+      "observations": 370
+    },
+    "monster_damage_done": {
+      "available": true,
+      "mean": 109311.0753098359,
+      "observations": 370
+    },
+    "monster_damage_taken": {
+      "available": true,
+      "mean": 42132.18851367848,
+      "observations": 370
+    },
+    "round": {
+      "available": true,
+      "mean": 1579.2135135135136,
+      "observations": 370
+    },
+    "sale_refunds": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 370
+    },
+    "spent_gold": {
+      "available": true,
+      "mean": 4984.0,
+      "observations": 370
+    },
+    "submitted_gems": {
+      "available": true,
+      "mean": 694.3324324324325,
+      "observations": 370
+    },
+    "unspent_gold": {
+      "available": true,
+      "mean": 1280.3162162162162,
+      "observations": 370
+    }
+  },
+  "development_wins_losses": {
+    "wins": 247,
+    "losses": 123,
+    "completed": 370
+  },
+  "manifest_hash": "cd19ca2b5c6171b989b8e08e77914efb026086b1d7fe69405ded171bcff7d59b",
+  "base_files_verified": 9,
+  "source_contract_red": {
+    "exit_code": 1,
+    "failed": [
+      "field_shop_after_channel_and_death_guards",
+      "field_shop_requires_remote_permission",
+      "field_health_excluded",
+      "spawn_default_health_retained"
+    ]
+  }
+}

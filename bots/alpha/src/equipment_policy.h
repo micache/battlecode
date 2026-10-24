@@ -39,7 +39,8 @@ struct model {
 // Matching fifth Power shard contributes two growth points (six for five).
 constexpr std::array<unsigned, 3> plan(model current, unsigned affordable,
                                       std::array<unsigned, 3> residues,
-                                      unsigned combine, unsigned tie_start) {
+                                      unsigned combine, unsigned tie_start,
+                                      bool allow_health = true) {
     std::array<unsigned, 3> counts{};
     if (!combine) return counts;
     for (unsigned n = 0; n < std::min(affordable, purchase_limit); ++n) {
@@ -47,6 +48,7 @@ constexpr std::array<unsigned, 3> plan(model current, unsigned affordable,
         float best_value = current.value();
         for (unsigned offset = 0; offset < 3; ++offset) {
             const unsigned stat = (tie_start + offset) % 3;
+            if (!allow_health && stat == 2) continue;
             auto next = current;
             next.add(stat, (residues[stat] + 1) % combine == 0 ? 2 : 1);
             if (next.value() > best_value) {
@@ -82,5 +84,23 @@ static_assert([] {
     return bounded[0] + bounded[1] + bounded[2] == purchase_limit
         && plan(caster, 0, {}, 5, 0) == std::array<unsigned, 3>{}
         && plan(caster, 10, {}, 0, 0) == std::array<unsigned, 3>{};
+}());
+
+// Field purchases must improve offense without assuming a Health purchase heals.
+// Keep spawn planning exactly equivalent to the original default eligibility.
+static_assert([] {
+    model tavi{900, 4500, 110, {5, 10, 75}, 1.125f, 0.175f};
+    if (plan(tavi, 1, {}, 5, 2)[2] != 1) return false; // spawn favors Health
+    const auto field = plan(tavi, 64, {}, 5, 2, false);
+    if (field[2] || field[0] + field[1] != 64) return false;
+    model focus{900, 45, 110, {0, 10, 75}, 1.125f, 0.175f};
+    if (plan(focus, 1, {}, 5, 2, false)[1] != 1) return false;
+    model finish{900, 45, 110, {5, 10, 75}, 1.125f, 0.175f};
+    if (plan(finish, 1, {4, 0, 0}, 5, 2, false)[0] != 1) return false;
+    model no_offense{900, 45, 110, {0, 0, 75}};
+    if (plan(no_offense, 5, {}, 5, 2, false) != std::array<unsigned, 3>{}) return false;
+    if (plan(tavi, 0, {}, 5, 0, false) != std::array<unsigned, 3>{}) return false;
+    if (plan(tavi, 5, {}, 0, 0, false) != std::array<unsigned, 3>{}) return false;
+    return plan(finish, 12, {2, 1, 4}, 5, 1) == plan(finish, 12, {2, 1, 4}, 5, 1, true);
 }());
 } // namespace equipment_policy

@@ -1,0 +1,12 @@
+{
+  "checks": {
+    "field_shop_after_channel_and_death_guards": true,
+    "field_shop_requires_remote_permission": true,
+    "field_health_excluded": true,
+    "spawn_default_health_retained": true,
+    "nonshop_combat_navigation_preserved": true,
+    "bank_farm_recovery_preserved": true
+  },
+  "passed": true,
+  "scope": "source contracts, not runtime proof"
+}
