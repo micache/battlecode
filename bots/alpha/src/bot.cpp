@@ -4,6 +4,7 @@
 #include "altar_control.h"
 #include "camp_rotation.h"
 #include "equipment_policy.h"
+#include "tribute_denial.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -159,6 +160,9 @@ bool cast_ready(const cambc::ability& ability, bool walked) {
 // acts: a spell may exclude movement even when can_move() still reports true.
 template<class Target>
 bool fight(bool walked = false) {
+    if constexpr (std::is_same_v<Target, cambc::champion>) {
+        if (tribute_denial::attempt(walked)) return true;
+    }
     auto& me = cambc::self();
     bool acted = false;
     if (const auto target = basic_target<Target>()) {
@@ -302,7 +306,6 @@ void Bot::play_turn() {
 
     // Refill control tools while dead so the next sortie can deny an altar.
     if (!me.is_alive()) {
-        prism_bank.commit();
         altar_control::buy_lock();
         return;
     }
@@ -311,16 +314,6 @@ void Bot::play_turn() {
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
         || (!me.can_move() && !me.can_attack() && !me.can_cast()))
         return;
-
-    // Prism's bag is also temporary Focus. Bound retention and latch any bank
-    // trigger; recovery/combat below still keep their existing precedence.
-    bool bank_bag = true;
-    if (me.passive() == cambc::passive_type::gem_focus) {
-        bank_bag = prism_bank.update(me.gem_count(), cambc::round_number(),
-            cambc::global_submitted_gems(team::ally), cambc::constants::winning_gems,
-            cambc::constants::max_rounds, me.health(), me.max_health(),
-            !cambc::vision::champion_tiles(team::enemy).is_empty());
-    }
 
     // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
@@ -352,8 +345,8 @@ void Bot::play_turn() {
     if (fight<cambc::champion>() || cambc::fuel_remaining() < combat_fuel_reserve)
         return;
 
-    // Other kits bank any bag; Prism can retain a small, healthy, quiet bag.
-    if (me.gem_count() > 0 && bank_bag) {
+    // Bank any carried gems before farming.
+    if (me.gem_count() > 0) {
         // Capture resolves before this turn: remember the newly cooling group
         // before leaving it with the reward. No movement or channel is started.
         camp_rotation::memory().observe();

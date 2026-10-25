@@ -1,0 +1,23 @@
+{
+  "task_id": "task-06ab5dbab30646c8ac71c5203398808c",
+  "base_source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+  "all_entry_files_matched_edit_base": true,
+  "source_changes_from_edit_base": {
+    "bot.cpp": "8c51f16c7454443f845bf9db014ea2eaaa037e8a5d5e279c608432a0f5a698c0",
+    "tribute_denial.h": "55deabaabc9d06d081060016bd463058dc4736f6d2ea56657ef5828f5c14208a"
+  },
+  "exact_recovery_of_unpublished_prior_source": true,
+  "bot_cpp_minus_include_and_hook_equals_edit_base": true,
+  "regression_red": {
+    "command": "python3 experiments/alpha/check_tribute_denial.py",
+    "exit_code": 1,
+    "diagnostic": "AssertionError: missing tribute-denial policy"
+  },
+  "regression_green": {
+    "command": "python3 experiments/alpha/check_tribute_denial.py",
+    "exit_code": 0
+  },
+  "frozen_manifest_sha256": "22a58a304d172ef8acac2985899c4b5621c5d881b34f2abba036754b29624c70",
+  "all_six_frozen_source_sets_hash_verified": true,
+  "documentation_review_required": false
+}

@@ -1,0 +1,313 @@
+{
+  "evaluation_id": "3d7c788a0c845ef76ae16654ae25754fe986c073010010d7fabb0f43f1f6b467",
+  "candidate": {
+    "build_id": "67435e404b12cd53ddae55ec76c70218af755862f258869b00f45c0d1a92c629",
+    "commit": "d5b01ab9820633177eb3480e8e16db2836fb31e9",
+    "revision_id": "2aeb2603b3f56c0cad0bd5509dc5a09392afc24bec43f5fa59ea39b7b4458376",
+    "source_hash": "30b8872907cc2222da221a55522cc98db6c0e7a124c288da1e4bd045ed160f17"
+  },
+  "decision": "INCONCLUSIVE",
+  "development_comparison": {
+    "commit_sha": "1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97",
+    "common_opponent_delta": -0.005405405405405406,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 185,
+    "per_map": {
+      "00ambush": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "00collision": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00contest": {
+        "candidate": 0.7,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "00corners": {
+        "candidate": 0.6,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "00eight": {
+        "candidate": 0.9,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00elkring": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00expanse": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00fragment": {
+        "candidate": 0.9,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00gem-fields": {
+        "candidate": 0.7,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00gemfight": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00great-wall": {
+        "candidate": 0.9,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00interlock": {
+        "candidate": 0.6,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00lanes": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00lost-world": {
+        "candidate": 0.5,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00pilgrimage": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "00quadrants": {
+        "candidate": 0.5,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00reverse-spiral": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00road-of-riches": {
+        "candidate": 1.0,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00rushbait-v2": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00split": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00stampede": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "00swirl": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01big-world": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01boss-battle": {
+        "candidate": 0.2,
+        "incumbent": 0.2,
+        "pairs": 5
+      },
+      "01broken-curve": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "01concentrated-wealth": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "01corridors": {
+        "candidate": 0.7,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01elk-arena": {
+        "candidate": 0.7,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01fracture": {
+        "candidate": 0.8,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01gold-rush": {
+        "candidate": 0.5,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "01hooks": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01islands": {
+        "candidate": 0.7,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01shortcut": {
+        "candidate": 0.1,
+        "incumbent": 0.1,
+        "pairs": 5
+      },
+      "01starfish": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "01starvation": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "01the-farm": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "01yellow-brick-road": {
+        "candidate": 0.3,
+        "incumbent": 0.4,
+        "pairs": 5
+      }
+    },
+    "source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+    "unknown_reliability": []
+  },
+  "contrast_maps": {
+    "00ambush": {
+      "candidate": 0.4,
+      "incumbent": 0.3,
+      "pairs": 5
+    },
+    "00pilgrimage": {
+      "candidate": 1.0,
+      "incumbent": 0.4,
+      "pairs": 5
+    },
+    "00stampede": {
+      "candidate": 1.0,
+      "incumbent": 0.1,
+      "pairs": 5
+    }
+  },
+  "development_metrics": {
+    "bag_loss": {
+      "available": true,
+      "mean": 41.964864864864865,
+      "observations": 370
+    },
+    "bot_faults_by_side": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 370
+    },
+    "carried_gems": {
+      "available": true,
+      "mean": 29.87027027027027,
+      "observations": 370
+    },
+    "champion_damage_done": {
+      "available": true,
+      "mean": 31171.316996762558,
+      "observations": 370
+    },
+    "champion_damage_taken": {
+      "available": true,
+      "mean": 15394.074450482549,
+      "observations": 370
+    },
+    "champion_deaths": {
+      "available": true,
+      "mean": 19.056756756756755,
+      "observations": 370
+    },
+    "champion_kills": {
+      "available": true,
+      "mean": 9.97027027027027,
+      "observations": 370
+    },
+    "collected_gems": {
+      "available": true,
+      "mean": 763.4918918918919,
+      "observations": 370
+    },
+    "fuel_suspensions_by_side": {
+      "available": true,
+      "mean": 0.13513513513513514,
+      "observations": 370
+    },
+    "lifetime_earned_gold": {
+      "available": true,
+      "mean": 6356.483783783784,
+      "observations": 370
+    },
+    "monster_damage_done": {
+      "available": true,
+      "mean": 109449.59932774724,
+      "observations": 370
+    },
+    "monster_damage_taken": {
+      "available": true,
+      "mean": 42654.208243169014,
+      "observations": 370
+    },
+    "round": {
+      "available": true,
+      "mean": 1591.6810810810812,
+      "observations": 370
+    },
+    "sale_refunds": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 370
+    },
+    "spent_gold": {
+      "available": true,
+      "mean": 5172.7027027027025,
+      "observations": 370
+    },
+    "submitted_gems": {
+      "available": true,
+      "mean": 691.6567567567567,
+      "observations": 370
+    },
+    "unspent_gold": {
+      "available": true,
+      "mean": 1183.781081081081,
+      "observations": 370
+    }
+  },
+  "prior_task_state": "QUOTA_WAIT",
+  "prior_result_available": false,
+  "smokes_are_same_cached_ids_as_prior_check": true
+}
