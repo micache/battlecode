@@ -1,0 +1,948 @@
+{
+  "champions": [
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 0,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "2"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "6"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "32"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "6"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "2",
+        "championDamageDone": 7498.6995849609375,
+        "championDamageTaken": 5920.0,
+        "collectedGems": "181",
+        "deaths": "4",
+        "earnedGold": "1366",
+        "gems": "0",
+        "gold": "106",
+        "healingDone": 0.0,
+        "healingReceived": 4640.0,
+        "kills": "6",
+        "monsterDamageDone": 14068.299987792969,
+        "monsterDamageTaken": 2846.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "1260",
+        "submittedGems": "181"
+      },
+      "name": "Vendetta",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 1,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "3"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "7"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "38"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "7"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "6",
+        "championDamageDone": 5035.5,
+        "championDamageTaken": 5562.460983276367,
+        "collectedGems": "255",
+        "deaths": "4",
+        "earnedGold": "1461",
+        "gems": "0",
+        "gold": "21",
+        "healingDone": 0.0,
+        "healingReceived": 891.6943969726562,
+        "kills": "1",
+        "monsterDamageDone": 17681.200561523438,
+        "monsterDamageTaken": 2508.0,
+        "saleRefunds": "0",
+        "shieldingDone": 8750.0,
+        "spentGold": "1440",
+        "submittedGems": "220"
+      },
+      "name": "Varg",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 2,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "3"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Emblem of Health",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "8"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Shard of Health",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Health",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "3",
+        "championDamageDone": 2038.3004150390625,
+        "championDamageTaken": 7550.827560424805,
+        "collectedGems": "93",
+        "deaths": "4",
+        "earnedGold": "551",
+        "gems": "0",
+        "gold": "11",
+        "healingDone": 0.0,
+        "healingReceived": 2580.8275146484375,
+        "kills": "1",
+        "monsterDamageDone": 12086.0,
+        "monsterDamageTaken": 1372.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "540",
+        "submittedGems": "93"
+      },
+      "name": "Ryth",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 3,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "4"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "2"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "14"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "2"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "8",
+        "championDamageDone": 5465.699935913086,
+        "championDamageTaken": 2571.8302001953125,
+        "collectedGems": "157",
+        "deaths": "3",
+        "earnedGold": "726",
+        "gems": "0",
+        "gold": "6",
+        "healingDone": 0.0,
+        "healingReceived": 1383.8302001953125,
+        "kills": "0",
+        "monsterDamageDone": 10139.0,
+        "monsterDamageTaken": 1512.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "720",
+        "submittedGems": "121"
+      },
+      "name": "Tavi",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 4,
+      "items": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "2"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "15"
+        },
+        {
+          "item": "Treasure Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "77"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "15"
+        },
+        {
+          "item": "Treasure Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Treasure Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "1",
+        "championDamageDone": 5342.9002685546875,
+        "championDamageTaken": 1092.140396118164,
+        "collectedGems": "291",
+        "deaths": "1",
+        "earnedGold": "2783",
+        "gems": "15",
+        "gold": "173",
+        "healingDone": 0.0,
+        "healingReceived": 172.140380859375,
+        "kills": "5",
+        "monsterDamageDone": 17061.20004272461,
+        "monsterDamageTaken": 80.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "2610",
+        "submittedGems": "276"
+      },
+      "name": "Vesper Vale",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "id": 5,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Durability Shard of Health",
+          "quantity": "5"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "2",
+        "championDamageDone": 520.0,
+        "championDamageTaken": 4821.599563598633,
+        "collectedGems": "111",
+        "deaths": "4",
+        "earnedGold": "715",
+        "gems": "15",
+        "gold": "225",
+        "healingDone": 0.0,
+        "healingReceived": 4062.0,
+        "kills": "0",
+        "monsterDamageDone": 28307.348678588867,
+        "monsterDamageTaken": 11367.19996547699,
+        "saleRefunds": "0",
+        "shieldingDone": 14500.0,
+        "spentGold": "490",
+        "submittedGems": "85"
+      },
+      "name": "Varg",
+      "team": "teamB"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "5"
+        }
+      ],
+      "id": 6,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "17"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "85"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "17"
+        },
+        {
+          "item": "Durability Shard of Health",
+          "quantity": "5"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "1",
+        "championDamageDone": 11821.12939453125,
+        "championDamageTaken": 1518.8996887207031,
+        "collectedGems": "401",
+        "deaths": "1",
+        "earnedGold": "3160",
+        "gems": "22",
+        "gold": "110",
+        "healingDone": 0.0,
+        "healingReceived": 4599.501403808594,
+        "kills": "10",
+        "monsterDamageDone": 39389.33239746094,
+        "monsterDamageTaken": 4193.999955177307,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "3050",
+        "submittedGems": "379"
+      },
+      "name": "Vendetta",
+      "team": "teamB"
+    },
+    {
+      "consumables": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "id": 7,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Durability Shard of Health",
+          "quantity": "5"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "2",
+        "championDamageDone": 1434.0,
+        "championDamageTaken": 5874.000015258789,
+        "collectedGems": "28",
+        "deaths": "4",
+        "earnedGold": "500",
+        "gems": "0",
+        "gold": "10",
+        "healingDone": 0.0,
+        "healingReceived": 6424.0,
+        "kills": "1",
+        "monsterDamageDone": 20133.949989318848,
+        "monsterDamageTaken": 5350.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "490",
+        "submittedGems": "28"
+      },
+      "name": "Ryth",
+      "team": "teamB"
+    },
+    {
+      "consumables": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "2"
+        }
+      ],
+      "id": 8,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "11"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "56"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "11"
+        },
+        {
+          "item": "Durability Shard of Health",
+          "quantity": "5"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "4",
+        "championDamageDone": 6644.0,
+        "championDamageTaken": 4557.800003051758,
+        "collectedGems": "276",
+        "deaths": "2",
+        "earnedGold": "2162",
+        "gems": "0",
+        "gold": "12",
+        "healingDone": 0.0,
+        "healingReceived": 6105.6002197265625,
+        "kills": "4",
+        "monsterDamageDone": 24639.0,
+        "monsterDamageTaken": 4447.799962043762,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "2150",
+        "submittedGems": "241"
+      },
+      "name": "Marcella",
+      "team": "teamB"
+    },
+    {
+      "consumables": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "4"
+        }
+      ],
+      "id": 9,
+      "items": [
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Monster Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Monster Emblem of Strength",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "25"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Durability Shard of Health",
+          "quantity": "5"
+        },
+        {
+          "item": "Durability Emblem of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Jungle Shard of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Jungle Emblem of Strength",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "5",
+        "championDamageDone": 2278.1297454833984,
+        "championDamageTaken": 8608.80093383789,
+        "collectedGems": "165",
+        "deaths": "4",
+        "earnedGold": "1245",
+        "gems": "0",
+        "gold": "5",
+        "healingDone": 0.0,
+        "healingReceived": 5613.3997802734375,
+        "kills": "1",
+        "monsterDamageDone": 30417.819467544556,
+        "monsterDamageTaken": 7604.999931335449,
+        "saleRefunds": "0",
+        "shieldingDone": 10350.0,
+        "spentGold": "1240",
+        "submittedGems": "150"
+      },
+      "name": "Heart of Ruin",
+      "team": "teamB"
+    }
+  ],
+  "diagnostics": {
+    "botFaults": {
+      "teamA": 0,
+      "teamB": 0
+    },
+    "codes": [],
+    "detailedCaptureComplete": true
+  },
+  "match": {
+    "engineBuildHash": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+    "engineVersion": "1.0.3",
+    "finalInput": 36888,
+    "finalRoundPartial": false,
+    "finalSubstep": 6,
+    "height": 61,
+    "mapHash": "dc09c386d5e9dec3cec8bc4575c19d43233e08790e138ccd02be4644f2808c65",
+    "metricSemanticsVersion": 1,
+    "outcome": "teamA",
+    "roundsCompleted": 2000,
+    "roundsStarted": 2000,
+    "seed": "17101657514075302670",
+    "width": 61
+  },
+  "normalized": {
+    "bot_faults": 0,
+    "completed": true,
+    "detail": null,
+    "fuel_suspensions": 4,
+    "metrics": {
+      "bag_loss": {
+        "available": true,
+        "value": {
+          "A": 71,
+          "B": 61
+        }
+      },
+      "bot_faults_by_side": {
+        "available": true,
+        "value": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      "carried_gems": {
+        "available": true,
+        "value": {
+          "A": 15,
+          "B": 37
+        }
+      },
+      "champion_damage_done": {
+        "available": true,
+        "value": {
+          "A": 25381.100204467773,
+          "B": 22697.25914001465
+        }
+      },
+      "champion_damage_taken": {
+        "available": true,
+        "value": {
+          "A": 22697.25914001465,
+          "B": 25381.100204467773
+        }
+      },
+      "champion_deaths": {
+        "available": true,
+        "value": {
+          "A": 16,
+          "B": 15
+        }
+      },
+      "champion_kills": {
+        "available": true,
+        "value": {
+          "A": 13,
+          "B": 16
+        }
+      },
+      "collected_gems": {
+        "available": true,
+        "value": {
+          "A": 977,
+          "B": 981
+        }
+      },
+      "fuel_suspensions_by_side": {
+        "available": true,
+        "value": {
+          "A": 3,
+          "B": 1
+        }
+      },
+      "lifetime_earned_gold": {
+        "available": true,
+        "value": {
+          "A": 6887,
+          "B": 7782
+        }
+      },
+      "monster_damage_done": {
+        "available": true,
+        "value": {
+          "A": 71035.70059204102,
+          "B": 142887.4505329132
+        }
+      },
+      "monster_damage_taken": {
+        "available": true,
+        "value": {
+          "A": 8318.0,
+          "B": 32963.99981403351
+        }
+      },
+      "observed_engine_seed": {
+        "available": true,
+        "value": "17101657514075302670"
+      },
+      "round": {
+        "available": true,
+        "value": 2000
+      },
+      "sale_refunds": {
+        "available": true,
+        "value": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      "spent_gold": {
+        "available": true,
+        "value": {
+          "A": 6570,
+          "B": 7420
+        }
+      },
+      "submitted_gems": {
+        "available": true,
+        "value": {
+          "A": 891,
+          "B": 883
+        }
+      },
+      "unspent_gold": {
+        "available": true,
+        "value": {
+          "A": 317,
+          "B": 362
+        }
+      }
+    },
+    "protocol_version": 1,
+    "state": "COMPLETED",
+    "terminal_reason": null,
+    "winner": "A"
+  },
+  "omitted": "Full timelines/events/heatmaps remain in unchanged final.json.",
+  "source_file": "final.json",
+  "source_sha256": "bb221aa3e63ad0b0284f73205685b73ef42b120f8dfcd803a57859466b49b93f",
+  "teams": [
+    {
+      "submittedGems": "891",
+      "team": "teamA"
+    },
+    {
+      "submittedGems": "883",
+      "team": "teamB"
+    }
+  ]
+}

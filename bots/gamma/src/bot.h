@@ -15,7 +15,7 @@ class Bot {
     bool recovering = false;
     int target = -1, slot = 0, now = 0, cursor = 0;
     int last_log = -100, stuck = 0;
-    unsigned dash_walks = 0;
+    unsigned field_gold_spent = 0;
     std::vector<Route> routes;
     cambc::bitboard terrain, spawn, altar_goals;
     std::vector<cambc::vec2> altars;

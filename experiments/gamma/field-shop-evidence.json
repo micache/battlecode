@@ -1,0 +1,88 @@
+{
+  "task_id": "task-0500e89ad682455e88f990b59ecd33a9",
+  "bot_id": "gamma",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "edit_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+  "decision": {
+    "bottleneck": "Third-pick Ryth has low farming contribution in supplied development losses; source only spends gold at spawn/death.",
+    "policy": "Replace Ryth with third-pick Tavi; buy the existing staged farming build on ordinary field turns as gold permits; exclude Tavi from gold-only shopping recall, retaining health recovery.",
+    "hypothesis": "A third-pick Tavi with immediate field reinvestment increases matched wins and mean submitted gems over the edit base without new faults or fuel suspensions.",
+    "falsifier": "Nonpositive matched win or tribute gain, or new reliability failures.",
+    "mechanism_status": "Unmeasured rules/source deduction. Loss totals do not establish why Ryth underperformed.",
+    "risk": "Ranged attack/movement share an allowance, potentially slowing capture entry; Tavi has less starting HP and field Health does not heal. Changed draft may weaken frontline control.",
+    "alternatives": "Do not repeat unsuccessful generic combat ranking, dash continuation, contact farming, corridor banking or live claims without new causal evidence."
+  },
+  "source_verification": "All seven entry files equalled trusted edit commit before editing; prepared differences from HEAD were restoration, not unfinished work.",
+  "opponent_manifest_sha256": "f397e84aa292d5aa86c8faea47580df548a24ea1b69e35cde8d3a458e04811d9",
+  "opponent_review": {
+    "beta": "7cab9b0f/fd5e2554: Varg/Tavi/Ryth; buy_items each turn, staged Jungle/Monster/Durability and Power Strength; Tavi excluded from shop recall. Adapt field-shopping role, preserve our strongest two picks and macro.",
+    "boss": "ea15ef0f/f4b4f65e: melee farming, risk budgets, shared claims, local-power combat and 30-gem bank. All six manifest file sets verified."
+  },
+  "evidence_revision": "ad033b46b172d4c9619952ac9357b264b91904d9/source36bf1ed341143e0c06c611f9baf5667266e28ee84a3cc1e590f18547436b789c; NOT current edit base.",
+  "matches": [
+    {
+      "match_id": "03e08648cc24bc73e8e6f9f62b38ef1ad4e30317ac45a9b3d89808f89c1dc9cb",
+      "side": "B",
+      "map": "01corridors",
+      "opponent_commit": "6af1685b849ad23ee9eaadb1a8de18742318d87b",
+      "reference": "experiments/gamma/refinement-corridors-summary.json"
+    },
+    {
+      "match_id": "0ad1e1cdc0ab06fdad56990a9596bcdea275a52ee189d401c376d90507f1b20f",
+      "side": "B",
+      "map": "01concentrated-wealth",
+      "opponent_commit": "ea15ef0f172c932f6d0a6bab7f35f233f131323f",
+      "reference": "experiments/gamma/refinement-wealth-summary.json"
+    }
+  ],
+  "rules": "Unchanged gameplay review per feedback handoff. Consulted compact reference, playbooks B/C/D/E/F/G, Tavi kit/items and installed C++ can_buy/buy contracts. SDK894229e1/CLI3.0.5, lockac2b5ad2. Organizer hub is not a complete policy review; no official parity claim.",
+  "source_file_sha256": {
+    "bots/gamma/src/bot.cpp": "1a6a5f5f532a070bc4b285f14503407e49b581db5e539b491cc5d4ccc02d6708",
+    "bots/gamma/src/plan.h": "bf03438f229115bbb81009a03a995c1d23b70b7d47d1b754a8f4c4a7dfa183c8",
+    "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bots/gamma/src/bot.h": "6e671d076be2c7c00cb47b4935cc785b24049a991fd1b14c0eb99fae2afe3b3f",
+    "bots/gamma/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/gamma/src/draft.cpp": "6f6bc0f11146d51eaef09da185b25468bc8d6e1fababd65b4c419dfa57e5519e"
+  },
+  "contrasting_base_wins": [
+    {
+      "reference": "experiments/gamma/reachable-final-smoke-a.json",
+      "side": "A",
+      "Ryth_collected": 353,
+      "Ryth_submitted": 327
+    },
+    {
+      "reference": "experiments/gamma/reachable-final-smoke-b.json",
+      "side": "B",
+      "Ryth_collected": 364,
+      "Ryth_submitted": 364
+    }
+  ],
+  "check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792889595.2763119,
+    "matches": [
+      "20f3d8fcd319feb29497d0be5db056e12c30f27ea0f2879d11e1e09d458cb3a8",
+      "e9bc02e0f461df3a4849d30fa2948433e65d0f907bfa0dc4e10646de6161ee28"
+    ],
+    "report_reference": "check:task-0500e89ad682455e88f990b59ecd33a9:6b27b8a760a54cc853439416e4a3b34fa930a36ee860f1506f883dbe28898ddb",
+    "source_hash": "6b27b8a760a54cc853439416e4a3b34fa930a36ee860f1506f883dbe28898ddb",
+    "started": 1792889560.6090758,
+    "state": "PASSED",
+    "task_id": "task-0500e89ad682455e88f990b59ecd33a9"
+  },
+  "validation": {
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json",
+    "exit_code": 0,
+    "local_report": ".agent/check-task-0500e89ad682455e88f990b59ecd33a9.json",
+    "smoke_summary_paths": [
+      "experiments/gamma/field-shop-smoke-a.json",
+      "experiments/gamma/field-shop-smoke-b.json"
+    ],
+    "smoke_log": "experiments/gamma/field-shop-smoke-log.json",
+    "observed_field_spent_at_round201": 120,
+    "limits": "Smoke validity only, not comparative tournament strength; all-map fuel headroom unknown."
+  }
+}

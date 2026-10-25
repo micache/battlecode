@@ -119,52 +119,35 @@ void Bot::buy_items() {
 bool Bot::walk(bc::bitboard goals, bool dash) {
     auto& me = bc::self();
     if (!me.can_move() || bc::fuel_remaining() < policy::action_floor) return false;
-    bool advanced = false, dash_attempted = false;
-    // At most two fields/actions: after a dash or hidden-blocker reveal, rebuild
-    // observations before using the retained ordinary walk. Never chain dashes.
-    for (int attempt = 0; attempt < 2 && me.can_move()
-        && bc::fuel_remaining() >= policy::action_floor; ++attempt) {
-        if (dash_attempted && bc::fuel_remaining() < policy::dash_walk_floor) break;
+    // At most two attempts: a hidden blocker can be revealed without consuming
+    // an allowance. Rebuild occupants, never path onto a known blocked goal.
+    for (int attempt = 0; attempt < 2 && bc::fuel_remaining() >= policy::action_floor; ++attempt) {
         auto blocked = blockers(terrain);
         auto free_goals = goals & ~blocked;
         const auto origin = me.position();
-        if (free_goals.is_empty() || free_goals.is_set(origin)) return advanced;
+        if (free_goals.is_empty() || free_goals.is_set(origin)) return false;
         bc::distance_field f;
         bc::bitboard visited;
         f.compute_to(blocked, free_goals, around(origin, 0), visited);
-        if (advanced && bc::fuel_remaining() < policy::action_floor) break;
-        bool refresh = false;
-        if (dash && !dash_attempted && me.can_cast() && bc::fuel_remaining() > 27000) {
+        if (dash && me.can_cast() && bc::fuel_remaining() > 27000) {
             for (const auto& a : me.abilities()) {
-                if (!a.is_dash() || !a.is_ready() || !a.can_target_ground() || exclusive(a)) continue;
+                if (!a.is_dash() || !a.is_ready()) continue;
                 // Conservative legal dash path: ordinary passable intermediate
                 // tiles only. This forgoes hole crossing rather than guessing.
                 auto candidates = blocked.reachable_tiles(origin, 2) & a.valid_tiles() & ~blocked;
                 auto best = origin;
                 for (auto p : candidates.positions()) if (f.get(p) < f.get(best)) best = p;
-                if (dist(origin, best) == 2 && f.get(best) + 1 < f.get(origin)) {
-                    dash_attempted = true;
-                    advanced = a.use(best);
-                    if (advanced) stuck = 0;
-                    // Success can reveal new units; False reveals an obstruction.
-                    // Either outcome invalidates this field and occupancy mask.
-                    refresh = true;
-                    break;
-                }
+                if (dist(origin, best) == 2 && f.get(best) + 1 < f.get(origin) && a.use(best)) return true;
             }
         }
-        if (refresh) continue;
         auto best = origin;
         for (auto p : blocked.reachable_tiles(origin, me.base_stats().base_move_speed).positions())
             if (f.get(p) < f.get(best)) best = p;
-        if (best == origin) { if (!advanced) ++stuck; return advanced; }
-        if (me.move_absolute(best)) {
-            if (advanced) ++dash_walks;
-            stuck = 0; return true;
-        }
+        if (best == origin) { ++stuck; return false; }
+        if (me.move_absolute(best)) { stuck = 0; return true; }
         ++stuck;
     }
-    return advanced;
+    return false;
 }
 
 bool Bot::threatened(vec2 p) {
@@ -422,7 +405,7 @@ void Bot::log(const char* mode) {
         << " hp=" << static_cast<int>(me.health()) << " gems=" << me.gem_count()
         << " xy=" << me.position().x << "," << me.position().y
         << " route_age=" << (travel_round < 0 ? -1 : now-travel_round)
-        << " dash_walk=" << dash_walks
+        << " field_spent=" << field_gold_spent
         << " fuel=" << bc::fuel_remaining() << '\n';
 }
 
@@ -432,8 +415,16 @@ void Bot::play_turn() {
     if (!me.is_alive()) { buy_items(); target = -1; recovering = false; return; }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
     if (!initialized) initialize();
-    if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
     const bool home = spawn.is_set(me.position());
+    const bool field_shopper = me.champion_name() == bc::champion_type::tavi;
+    if (field_shopper && !home && me.gold_count() >= bc::item_type::jungle_shard_of_strength.cost()) {
+        const auto gold_before = me.gold_count();
+        // Each purchase still uses can_buy. Consumables remain spawn/dead-only;
+        // field Health raises max HP without healing, so recovery runs afterward.
+        buy_items();
+        field_gold_spent += gold_before - me.gold_count();
+    }
+    if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
     if (home) {
         buy_items();
         if (me.health() < policy::leave_spawn_fraction*me.max_health()) { log("heal"); return; }
@@ -472,7 +463,7 @@ void Bot::play_turn() {
     }
     if (enemy_near && fight(false,true)) { log("defend"); return; }
     const int shop_gold = me.item_count()[bc::item_type::jungle_emblem_of_strength] ? 300 : 150;
-    if (!home && gems == 0 && me.gold_count() >= static_cast<unsigned>(shop_gold) && !threatened(me.position())
+    if (!home && gems == 0 && policy::needs_shop_trip(field_shopper, me.gold_count(), shop_gold) && !threatened(me.position())
         && me.can_move() && me.can_attack()) { me.recall(); target = -1; log("shop"); return; }
     if (me.health() < 0.85f*me.max_health() && threatened(me.position())) shield();
     farm();

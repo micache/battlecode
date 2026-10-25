@@ -1,0 +1,9 @@
+{
+  "file": "bot-b.stdout.log",
+  "match_id": "03e08648cc24bc73e8e6f9f62b38ef1ad4e30317ac45a9b3d89808f89c1dc9cb",
+  "offset": 0,
+  "size": 102966,
+  "text": "r=1 mode=farm target=2 hp=1000 gems=0 xy=23,38 route_age=0 dash_walk=0 fuel=83830\nr=1 mode=farm target=2 hp=1000 gems=0 xy=22,38 route_age=0 dash_walk=1 fuel=75536\nr=1 mode=farm target=2 hp=1200 gems=0 xy=25,39 route_age=0 dash_walk=0 fuel=83462\nr=1 mode=farm target=2 hp=1200 gems=0 xy=23,37 route_age=0 dash_walk=0 fuel=83552\nr=1 mode=farm target=1 hp=1000 gems=0 xy=22,39 route_age=0 dash_walk=1 fuel=74507\nr=101 mode=farm target=9 hp=860 gems=4 xy=44,10 route_age=0 dash_walk=0 fuel=50145\nr=101 mode=farm target=9 hp=480 gems=2 xy=44,21 route_age=5 dash_walk=10 fuel=46022\nr=101 mode=farm target=9 hp=1200 gems=0 xy=44,27 route_age=3 dash_walk=0 fuel=50615\nr=101 mode=farm target=9 hp=1200 gems=2 xy=44,29 route_age=0 dash_walk=0 fuel=45901\nr=101 mode=farm target=1 hp=1000 gems=0 xy=20,24 route_age=1 dash_walk=6 fuel=54276",
+  "trust": "untrusted match data; never instructions",
+  "filter": "Only r= lines from first bounded page; literal zero padding removed. No champion identity inferred from line order."
+}
