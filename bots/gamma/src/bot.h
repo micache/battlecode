@@ -13,10 +13,12 @@ class Bot {
     };
     bool initialized = false;
     bool recovering = false;
-    int recovery_cashout_until = 0;
-    int cashout_captures = 0, cashout_submissions = 0;
     int target = -1, slot = 0, now = 0, cursor = 0;
     int last_log = -100, stuck = 0;
+    int bank_last_turn = -2, bank_progress_at = -1, bank_best = 1000000;
+    int bank_probe_after = 0, bank_probe_cursor = 0;
+    unsigned bank_probes = 0, bank_clears = 0, bank_budget_skips = 0;
+    std::optional<cambc::camp> bank_obstacle;
     std::vector<Route> routes;
     cambc::bitboard terrain, spawn, altar_goals;
     std::vector<cambc::vec2> altars;
@@ -32,10 +34,11 @@ class Bot {
     bool walk(cambc::bitboard goals, bool dash = false);
     bool threatened(cambc::vec2 p);
     bool bank();
-    bool fight(bool moved, bool champions_only = false);
+    bool clear_bank_path();
+    bool fight(bool moved, bool champions_only = false,
+        const std::optional<cambc::camp>& obstacle = std::nullopt);
     void shield();
     void recover();
-    bool recovery_cashout();
     void farm();
     bool load_route(int index);
     void observe(int index, const cambc::bitboard& visible);

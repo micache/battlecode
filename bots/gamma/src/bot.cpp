@@ -170,8 +170,13 @@ void Bot::shield() {
 bool Bot::bank() {
     auto& me = bc::self();
     if (!me.gem_count() || !me.can_move() || !me.can_attack()) return false;
-    // A hostile lock adds five hits; prefer an unlocked altar when available,
-    // but keep locked altars reachable if all local routes are locked.
+    if (bank_last_turn < now - 1) {
+        bank_progress_at = -1; bank_best = policy::unreachable;
+        bank_probe_after = now; bank_obstacle.reset();
+    }
+    bank_last_turn = now;
+    // Keep all static altar approaches. An unlocked altar in another component
+    // must not hide a reachable locked bank; a local lock costs five basics.
     auto tribute_here = [&]() {
         for (auto a : altars) {
             if (dist(me.position(),a) > bc::constants::submit_gems_range) continue;
@@ -187,24 +192,88 @@ bool Bot::bank() {
             if (lock.count() && !bc::vision::altar_lock_tiles(team::ally).is_set(a)
                 && !me.restrictions().contains(bc::buff_restrictions::consumable)) lock.use(a);
             me.submit_gems(a);
+            bank_obstacle.reset(); bank_progress_at = -1;
             return true;
         }
         return false;
     };
     if (tribute_here()) return true;
-    auto goals = altar_goals;
-    bc::bitboard unlocked;
-    const auto hostile = bc::vision::altar_lock_tiles(team::enemy);
-    for (auto a : altars) if (!hostile.is_set(a)) unlocked |= around(a, bc::constants::submit_gems_range);
-    if (!unlocked.is_empty()) goals &= unlocked;
+    const auto d = altar_field->get(me.position());
+    if (bank_progress_at < 0 || d < bank_best) {
+        bank_best = d; bank_progress_at = now;
+    }
+    if (now - bank_progress_at >= policy::bank_stall_rounds && clear_bank_path()) return true;
     // Walking is compatible with melee tribute. Refresh position and locks on
     // arrival, and start the channel immediately rather than wasting a round.
-    walk(goals, true);
+    walk(altar_goals, true);
     tribute_here();
     return true;
 }
 
-bool Bot::fight(bool moved, bool champions_only) {
+bool Bot::clear_bank_path() {
+    auto& me = bc::self();
+    if (bc::fuel_remaining() < policy::bank_probe_floor) {
+        ++bank_budget_skips; return false;
+    }
+    const auto origin = me.position();
+    const auto remaining = altar_field->get(origin);
+    if (remaining == bc::distance_field::unreachable) return false;
+    auto eligible = [&](const bc::camp& c) {
+        // Retained handles are only hints. Visibility always precedes live reads.
+        return usable(c) && policy::bank_obstacle(remaining,
+            altar_field->get(c.position()), dist(origin,c.position()));
+    };
+    if (bank_obstacle && (now >= bank_probe_after || !eligible(*bank_obstacle))) bank_obstacle.reset();
+    if (!bank_obstacle) {
+        if (now < bank_probe_after) return false;
+        bank_probe_after = now + policy::bank_probe_interval;
+        ++bank_probes;
+        // One local flood, not one field per candidate. Only a camp with an
+        // actually reachable free attack approach may become a clearing target.
+        auto accessible = blockers(terrain).reachable_tiles(origin,policy::bank_clear_radius);
+        accessible.set(origin);
+        const auto candidates = (bc::vision::camp_tiles()
+            & around(origin,policy::bank_clear_radius)).positions();
+        int closest = policy::bank_clear_radius + 1;
+        float lowest_hp = std::numeric_limits<float>::max();
+        const int count = static_cast<int>(candidates.size());
+        const int inspected = std::min(count,policy::bank_probe_limit);
+        for (int j = 0; j < inspected; ++j) {
+            if (bc::fuel_remaining() < policy::planning_floor) break;
+            const auto p = candidates[(bank_probe_cursor + j) % count];
+            if (!policy::bank_obstacle(remaining,altar_field->get(p),dist(origin,p))) continue;
+            if ((around(p,me.attack_range()) & accessible).is_empty()) continue;
+            const auto c = bc::vision::camp_at(p);
+            if (!usable(c)) continue;
+            const int separation = dist(origin,p);
+            const float hp = c.health();
+            if (separation < closest || (separation == closest && hp < lowest_hp)) {
+                bank_obstacle = c; closest = separation; lowest_hp = hp;
+            }
+        }
+        // Rotate bounded samples, so a crowded visible region cannot starve the
+        // same later candidates forever. No hidden state or shared writes.
+        bank_probe_cursor = count ? (bank_probe_cursor + inspected) % count : 0;
+    }
+    if (!bank_obstacle) return false;
+    // A retained obstacle can lose its approach to a new visible occupant.
+    // walk() rebuilds blockers and fails legally; discard on the next probe.
+    const auto c = *bank_obstacle;
+    shield();
+    if (bc::fuel_remaining() < policy::action_floor) return true;
+    const bool acted = fight(false,false,c);
+    if (acted) ++bank_clears;
+    if (!usable(c)) { bank_obstacle.reset(); return true; }
+    if (bc::fuel_remaining() < policy::bank_move_floor) return true;
+    const bool moved = walk(around(c.position(),me.attack_range()),true);
+    // Refresh the obstacle after movement; it may have become hidden or died.
+    if (bc::fuel_remaining() >= policy::action_floor && usable(c)) {
+        if (fight(moved,false,c)) ++bank_clears;
+    }
+    return true;
+}
+
+bool Bot::fight(bool moved, bool champions_only, const std::optional<bc::camp>& obstacle) {
     auto& me = bc::self();
     if (!me.can_attack() && !me.can_cast()) return false;
     std::optional<bc::champion> enemy;
@@ -213,7 +282,8 @@ bool Bot::fight(bool moved, bool champions_only) {
         if (!enemy || e.health() < enemy->health()) enemy = e;
     }
     std::optional<bc::camp> camp;
-    if (!enemy && !champions_only && target >= 0 && routes[target].group) {
+    if (!enemy && obstacle && usable(*obstacle)) camp = obstacle;
+    else if (!enemy && !champions_only && target >= 0 && routes[target].group) {
         for (const auto& c : routes[target].group->camps()) {
             if (!c.is_visible() || c.health() <= 0) continue;
             if (dist(me.position(),c.position()) > std::max(4, me.attack_range())) continue;
@@ -279,95 +349,8 @@ void Bot::observe(int i, const bc::bitboard& visible) {
     } else r.state = std::holds_alternative<bc::map::camp_group_reward_available>(state) ? 2 : 1;
 }
 
-bool Bot::recovery_cashout() {
-    auto& me = bc::self();
-    if (now >= recovery_cashout_until || !policy::cashout_healthy(me.health(), me.max_health())
-        || !me.can_move() || !me.can_attack()
-        || bc::fuel_remaining() < policy::cashout_fuel_floor) return false;
-    const auto visible = bc::vision::visible_tiles();
-    // Current visible observations only. The safety mask is a conservative
-    // one-step threat estimate, not a claim that unseen reinforcements are absent.
-    const auto observed_danger = [&](bc::bitboard& danger, std::uint64_t reserve) {
-        for (const auto& e : bc::vision::champions(team::enemy)) {
-            if (bc::fuel_remaining() < reserve) return false;
-            if (e.is_visible() && e.health() > 0)
-                danger |= around(e.position(), std::max(5, e.attack_range() + e.base_stats().base_move_speed));
-        }
-        int inspected = 0;
-        for (auto p : bc::vision::awake_camp_tiles().positions()) {
-            if (++inspected > 16 || bc::fuel_remaining() < reserve) return false;
-            const auto c = bc::vision::camp_at(p);
-            if (c.is_visible() && c.health() > 0)
-                danger |= around(c.position(), c.attack_range() + c.base_stats().base_move_speed);
-        }
-        return bc::fuel_remaining() >= reserve;
-    };
-    bc::bitboard danger;
-    if (!observed_danger(danger, 35000)) return false;
-    if (danger.is_set(me.position())) return false;
-    // Finish an already occupied, cleared camp before healing. Never start a
-    // new clear or travel to a capture here; each extra turn consumes the same
-    // episode deadline, and new danger aborts this opportunity permanently.
-    if (target >= 0 && routes[target].group) {
-        observe(target, visible);
-        const auto& r = routes[target];
-        if (r.state == 2 && r.observed_at == now && r.group->spawn_tiles().is_set(me.position())) {
-            ++cashout_captures;
-            return true;
-        }
-    }
-    if (!me.gem_count()) return false;
-    auto blocked = blockers(terrain) | danger | ~visible;
-    bc::bitboard goals;
-    const auto hostile = bc::vision::altar_lock_tiles(team::enemy);
-    for (auto a : altars)
-        if (visible.is_set(a) && !hostile.is_set(a))
-            goals |= around(a, bc::constants::submit_gems_range);
-    goals &= ~blocked;
-    if (goals.is_empty()) return false;
-    // The whole approach must be currently visible and free of modeled danger.
-    // Unlike the ordinary bank route this never detours toward a hidden altar.
-    bc::distance_field field;
-    bc::bitboard visited;
-    field.compute_to(blocked, goals, around(me.position(), 0), visited);
-    const auto d = field.get(me.position());
-    if (d == bc::distance_field::unreachable
-        || !policy::cashout_fits(d, me.gem_count(), recovery_cashout_until - now)
-        || bc::fuel_remaining() < policy::action_floor) return false;
-    if (d > 0) {
-        auto best = me.position();
-        for (auto p : blocked.reachable_tiles(best, me.base_stats().base_move_speed).positions())
-            if (field.get(p) < field.get(best)) best = p;
-        if (best == me.position()) return false;
-        // A newly revealed blocker is not a failed submission. Replan next turn
-        // within the fixed deadline; no stale path or mask is retained.
-        if (!me.move_absolute(best)) return true;
-    }
-    // Movement can reveal an enemy or lock. Refresh before starting tribute;
-    // a fresh threat aborts further cash-out attempts in this recovery episode.
-    bc::bitboard fresh_danger;
-    if (!observed_danger(fresh_danger, 24000) || fresh_danger.is_set(me.position())) {
-        recovery_cashout_until = 0;
-        return true;
-    }
-    const auto fresh_visible = bc::vision::visible_tiles();
-    const auto fresh_hostile = bc::vision::altar_lock_tiles(team::enemy);
-    if (me.can_attack()) for (auto a : altars)
-        if (fresh_visible.is_set(a) && !fresh_hostile.is_set(a)
-            && dist(me.position(), a) <= bc::constants::submit_gems_range) {
-            me.submit_gems(a);
-            ++cashout_submissions;
-            break;
-        }
-    return true;
-}
-
 void Bot::recover() {
     auto& me = bc::self();
-    if (recovery_cashout()) return;
-    // No safe, short conversion remains. Do not retry or renew the deadline
-    // until this body has actually recovered at spawn (or died).
-    recovery_cashout_until = 0;
     target = -1;
     if (spawn.is_set(me.position())) { recovering = false; return; }
     if (!threatened(me.position()) && me.can_move() && me.can_attack()) { me.recall(); return; }
@@ -492,14 +475,19 @@ void Bot::log(const char* mode) {
         << " hp=" << static_cast<int>(me.health()) << " gems=" << me.gem_count()
         << " xy=" << me.position().x << "," << me.position().y
         << " route_age=" << (travel_round < 0 ? -1 : now-travel_round)
-        << " cashout=" << cashout_captures << "," << cashout_submissions
+        << " bank_stall=" << (bank_last_turn == now && bank_progress_at >= 0 ? now-bank_progress_at : 0)
+        << " bank_probe=" << bank_probes << " bank_clear=" << bank_clears
+        << " bank_budget=" << bank_budget_skips
         << " fuel=" << bc::fuel_remaining() << '\n';
 }
 
 void Bot::play_turn() {
     auto& me = bc::self();
     now = bc::round_number();
-    if (!me.is_alive()) { buy_items(); target = -1; recovering = false; recovery_cashout_until = 0; return; }
+    if (!me.is_alive()) {
+        buy_items(); target = -1; recovering = false;
+        bank_last_turn = -2; bank_obstacle.reset(); return;
+    }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
     if (!initialized) initialize();
     if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
@@ -508,12 +496,8 @@ void Bot::play_turn() {
         buy_items();
         if (me.health() < policy::leave_spawn_fraction*me.max_health()) { log("heal"); return; }
         recovering = false;
-        recovery_cashout_until = 0;
     }
-    if (me.health() < policy::retreat_fraction*me.max_health() && !home && !recovering) {
-        recovering = true;
-        recovery_cashout_until = now + policy::recovery_cashout_rounds;
-    }
+    if (me.health() < policy::retreat_fraction*me.max_health() && !home) recovering = true;
     if (recovering) { recover(); log("recover"); return; }
     // Preserve uncontested capture even when carrying an earlier small bag.
     if (target >= 0 && routes[target].group) {

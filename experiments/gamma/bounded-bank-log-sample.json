@@ -1,0 +1,40 @@
+[
+  {
+    "match_id": "6ed9277f3704bae5d2fc66d925bd53550f791b061ef0a169c22bbf242c157f80",
+    "file": "bot-a.stdout.log",
+    "offset": 0,
+    "total_size": 26830,
+    "sample_size": 8192,
+    "sample_text_sha256": "a1605d852bce7ff758755220da0830e91b1944843281a25d45d981efe7ebb7a5",
+    "lines": [
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=4,0 route_age=0 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=98702",
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=6,0 route_age=0 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=96118",
+      "r=1 mode=farm target=7 hp=1200 gems=0 xy=6,2 route_age=0 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=97649",
+      "r=101 mode=farm target=11 hp=840 gems=18 xy=16,0 route_age=1 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=49241",
+      "r=101 mode=farm target=5 hp=1000 gems=23 xy=13,4 route_age=1 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=46237",
+      "r=101 mode=capture target=3 hp=1120 gems=11 xy=17,11 route_age=11 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=81695",
+      "r=201 mode=farm target=11 hp=630 gems=20 xy=28,2 route_age=9 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=47384",
+      "r=201 mode=farm target=8 hp=566 gems=0 xy=24,21 route_age=9 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=32786",
+      "r=201 mode=farm target=11 hp=1200 gems=2 xy=28,3 route_age=8 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=48554"
+    ]
+  },
+  {
+    "match_id": "5e7008bf8884839882140cec04d43c0ebeb84238277d874c08e04c95ded7d869",
+    "file": "bot-b.stdout.log",
+    "offset": 0,
+    "total_size": 24194,
+    "sample_size": 8192,
+    "sample_text_sha256": "7495d7b6983783ab1e7b876688f582bfb32384180a9c4ece92267c2891f44e2e",
+    "lines": [
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=4,38 route_age=0 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=98659",
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=6,37 route_age=0 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=96046",
+      "r=1 mode=farm target=2 hp=1200 gems=0 xy=6,38 route_age=0 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=97553",
+      "r=101 mode=farm target=5 hp=720 gems=4 xy=16,32 route_age=1 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=41851",
+      "r=101 mode=farm target=4 hp=960 gems=0 xy=18,26 route_age=4 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=37378",
+      "r=103 mode=farm target=5 hp=1180 gems=0 xy=4,38 route_age=0 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=51769",
+      "r=201 mode=farm target=5 hp=832 gems=0 xy=20,36 route_age=9 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=44443",
+      "r=201 mode=evade target=10 hp=440 gems=0 xy=19,22 route_age=1 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=70531",
+      "r=203 mode=capture target=12 hp=906 gems=4 xy=28,37 route_age=9 bank_stall=0 bank_probe=0 bank_clear=0 bank_budget=0 fuel=83091"
+    ]
+  }
+]

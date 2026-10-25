@@ -1,0 +1,363 @@
+{
+  "task_id": "task-030af596030548ff86a766ff488f5dbc",
+  "bot_id": "gamma",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "candidate_source_hash": "1f400f14832378d2cf97c61a9047def2e61aafdae1d74b742c266e1dca81a90b",
+  "hypothesis": "Bounded corridor clearing with all reachable altar approaches increases matched wins and mean submitted gems over the edit base, without increased own faults or fuel suspensions. Nonpositive gains or either reliability regression falsifies it.",
+  "source_file_sha256": {
+    "bots/gamma/src/bot.cpp": "d834332e6e891123e87c6d09e43aa57bd08ecb5c1c2b973c0265b50d4a6b8b40",
+    "bots/gamma/src/bot.h": "b3ce40b9a7f39313f6c075b2c57c198cbe28709eee2686250ccee48777cc5cfa",
+    "bots/gamma/src/draft.cpp": "e1d34874501d74d17bdbfbcc763918421cca7f775c34bb6eab482d7ad29c07b1",
+    "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/gamma/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/gamma/src/plan.h": "02458971573cc1809d30cfd7ef602660969aed014775d4bf21be298efb444e04",
+    "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "frozen_manifest": {
+    "path": "/srv/battlecode/public/strategy/task-030af596030548ff86a766ff488f5dbc/manifest.json",
+    "sha256": "49ffc37999f7d884b95123128430e8bf8d4e41701f8e321394967ffbe6ae8e40",
+    "all_six_file_sets_verified": true
+  },
+  "check": {
+    "command": "bot-check --owner-config /var/lib/battlecode-volume/config/gamma.json",
+    "exit_code": 0,
+    "report_path": ".agent/check-task-030af596030548ff86a766ff488f5dbc.json",
+    "response": {
+      "bot_id": "gamma",
+      "exit_code": 0,
+      "finished": 1792909065.7127697,
+      "matches": [
+        "6ed9277f3704bae5d2fc66d925bd53550f791b061ef0a169c22bbf242c157f80",
+        "5e7008bf8884839882140cec04d43c0ebeb84238277d874c08e04c95ded7d869"
+      ],
+      "report_reference": "check:task-030af596030548ff86a766ff488f5dbc:1f400f14832378d2cf97c61a9047def2e61aafdae1d74b742c266e1dca81a90b",
+      "source_hash": "1f400f14832378d2cf97c61a9047def2e61aafdae1d74b742c266e1dca81a90b",
+      "started": 1792909031.243885,
+      "state": "PASSED",
+      "task_id": "task-030af596030548ff86a766ff488f5dbc"
+    }
+  },
+  "decision": "Revisit the measured promising e17f373d banking mechanism with capped and spaced local probes; avoid attributing its rare suspensions to a branch without traces.",
+  "evidence_references": [
+    ".agent/task.json feedback e5de5a88; development-base delta -0.0054054 for def166c7, not current edit",
+    "experiments/gamma/bank-corridor-evidence.json: exact-base the-farm B fb29d6e2 bank stalls",
+    "experiments/gamma/archive/task-6acb6427618146c2a60cd1af13ff649f.md: e17f373d development delta +0.0486486, not promoted",
+    "experiments/gamma/refine-ambush-loss-full.json: supplied latest-source A loss04303c9c",
+    "experiments/gamma/reachable-final-smoke-a.json and -b.json: exact-base validity contrasts"
+  ],
+  "evidence_limits": [
+    "Current clearing policy is an unmeasured rules/source deduction, not a replay-proven causal repair.",
+    "No comparative evaluation run by worker.",
+    "Smoke map name and opponent source revisions unknown.",
+    "Positive clearing-branch coverage not established; sampled log counters are zero.",
+    "No broad-map fuel guarantee or official-engine parity claim."
+  ],
+  "smoke": [
+    {
+      "match_id": "6ed9277f3704bae5d2fc66d925bd53550f791b061ef0a169c22bbf242c157f80",
+      "side": "A",
+      "summary": "experiments/gamma/bounded-bank-smoke-a.json",
+      "match": {
+        "engineBuildHash": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+        "engineVersion": "1.0.3",
+        "finalInput": 12434,
+        "finalRoundPartial": true,
+        "finalSubstep": 7,
+        "height": 41,
+        "mapHash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+        "metricSemanticsVersion": 1,
+        "outcome": "teamA",
+        "roundsCompleted": 976,
+        "roundsStarted": 977,
+        "seed": "17615240315955964814",
+        "width": 41
+      },
+      "normalized": {
+        "bot_faults": 0,
+        "completed": true,
+        "detail": null,
+        "fuel_suspensions": 0,
+        "metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 20
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 93,
+              "B": 12
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 5130.0,
+              "B": 4175.75
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 4175.75,
+              "B": 5130.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 19
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 6,
+              "B": 0
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 1101,
+              "B": 84
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 5790,
+              "B": 1380
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 139048.5004272461,
+              "B": 26039.5
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 22833.799681663513,
+              "B": 10105.0
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17615240315955964814"
+          },
+          "round": {
+            "available": true,
+            "value": 977
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 5260,
+              "B": 1140
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 1008,
+              "B": 52
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 530,
+              "B": 240
+            }
+          }
+        },
+        "protocol_version": 1,
+        "state": "COMPLETED",
+        "terminal_reason": null,
+        "winner": "A"
+      },
+      "interpretation": "Trusted wrapper validity smoke only; no causal strength inference."
+    },
+    {
+      "match_id": "5e7008bf8884839882140cec04d43c0ebeb84238277d874c08e04c95ded7d869",
+      "side": "B",
+      "summary": "experiments/gamma/bounded-bank-smoke-b.json",
+      "match": {
+        "engineBuildHash": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+        "engineVersion": "1.0.3",
+        "finalInput": 10635,
+        "finalRoundPartial": true,
+        "finalSubstep": 7,
+        "height": 41,
+        "mapHash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+        "metricSemanticsVersion": 1,
+        "outcome": "teamB",
+        "roundsCompleted": 939,
+        "roundsStarted": 940,
+        "seed": "17615240315955964814",
+        "width": 41
+      },
+      "normalized": {
+        "bot_faults": 0,
+        "completed": true,
+        "detail": null,
+        "fuel_suspensions": 0,
+        "metrics": {
+          "bag_loss": {
+            "available": true,
+            "value": {
+              "A": 35,
+              "B": 0
+            }
+          },
+          "bot_faults_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "carried_gems": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "champion_damage_done": {
+            "available": true,
+            "value": {
+              "A": 3114.0,
+              "B": 12475.0
+            }
+          },
+          "champion_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 12475.0,
+              "B": 3114.0
+            }
+          },
+          "champion_deaths": {
+            "available": true,
+            "value": {
+              "A": 13,
+              "B": 0
+            }
+          },
+          "champion_kills": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 8
+            }
+          },
+          "collected_gems": {
+            "available": true,
+            "value": {
+              "A": 47,
+              "B": 1001
+            }
+          },
+          "fuel_suspensions_by_side": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "lifetime_earned_gold": {
+            "available": true,
+            "value": {
+              "A": 940,
+              "B": 5800
+            }
+          },
+          "monster_damage_done": {
+            "available": true,
+            "value": {
+              "A": 18630.0,
+              "B": 133330.00036621094
+            }
+          },
+          "monster_damage_taken": {
+            "available": true,
+            "value": {
+              "A": 10320.0,
+              "B": 23777.999709129333
+            }
+          },
+          "observed_engine_seed": {
+            "available": true,
+            "value": "17615240315955964814"
+          },
+          "round": {
+            "available": true,
+            "value": 940
+          },
+          "sale_refunds": {
+            "available": true,
+            "value": {
+              "A": 0,
+              "B": 0
+            }
+          },
+          "spent_gold": {
+            "available": true,
+            "value": {
+              "A": 930,
+              "B": 4960
+            }
+          },
+          "submitted_gems": {
+            "available": true,
+            "value": {
+              "A": 12,
+              "B": 1001
+            }
+          },
+          "unspent_gold": {
+            "available": true,
+            "value": {
+              "A": 10,
+              "B": 840
+            }
+          }
+        },
+        "protocol_version": 1,
+        "state": "COMPLETED",
+        "terminal_reason": null,
+        "winner": "B"
+      },
+      "interpretation": "Trusted wrapper validity smoke only; no causal strength inference."
+    }
+  ]
+}
