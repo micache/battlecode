@@ -1,93 +1,93 @@
-# Current experiment: task-06ab5dbab30646c8ac71c5203398808c
+# Current experiment: task-516845eb63134bb5a3818aad10b76920
 
-## Identity, recovery and evidence limits
-- Alpha / bot/alpha; HEAD/input d5b01ab9820633177eb3480e8e16db2836fb31e9.
+## Identity and evidence limits
+- Alpha / bot/alpha; HEAD/input c283fd8f941bdd63e02c1cac0e7f0d6bdb6461c2.
   Actual edit 1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97 / source
   dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599.
-  All nine entry files byte-matched the trusted edit base. HEAD-relative removal
-  of Prism retention was preparation. Champion c0cebd72 remains external/protected.
-- Prior task-2087eef9 was QUOTA_WAIT, unpublished, no final result or evaluation.
-  Read its exact notes/decision/patch/source and saved check; preserved copies in
-  task-06ab5d-recovery/. Old NOTES still described the evaluated Prism experiment.
-  Recover the reviewed unfinished tribute-denial source exactly; do not apply its
-  HEAD-relative patch blindly. No candidate awaiting evaluation is recorded.
-- Engine/SDK 3.0.5, lock ac2b5ad2...c56136; published-40-release-305-v1.
-  Handoff says documentation unchanged/review not required. Consulted compact
-  BOT_REFERENCE, playbooks B/C/D/E, tribute/stun rules and installed ability payloads
-  and is_ready implementation. Read RESEARCH and organizer reconciliation limits:
-  download hub is not a complete policy review; official/local parity not renewed.
+  All nine entry files matched edit commit. HEAD-relative tribute-denial deletion
+  was preparation. Protected champion c0cebd72 stays external/unchanged.
+- Previous task evaluated, not pending. Its notes preserved as
+  task-516845eb-prior-NOTES.md. Prior interrupted denial work was recovered and
+  evaluated by that task; do not recover it again as unfinished work.
+- Engine/SDK 3.0.5; lock ac2b5ad2...c56136; published-40-release-305-v1.
+  Trusted handoff says rules/API/SDK unchanged, no full rereview required.
+  Read compact reference, playbooks B/C/D/E/F/G, relevant sleeping-group and
+  capture rules, installed camp/vision/group/ability contracts, RESEARCH and
+  organizer reconciliation limits. Official parity/policy limits remain explicit.
 
 ## One falsifiable hypothesis
-Prioritizing legal in-range stuns against visible enemy tribute channels increases
-matched wins over the edit base. Nonpositive matched win gain falsifies it. Enemy
-tribute, own tribute, deaths, denial usage and reliability diagnose mechanism.
-This is an unmeasured rules/source deduction, not a traced cause of supplied losses.
+Screening unsustainable fully visible sleeping camp pulls in both targeting and
+routing increases matched wins over the edit base without new faults or fuel
+suspensions. Nonpositive matched win gain or new reliability failures falsify it.
+This is an unmeasured rules/source deduction, not a traced cause of the losses.
 
-## Evidence and alternatives
-- Evaluation 3d7c788a0c845ef76ae16654ae25754fe986c073010010d7fabb0f43f1f6b467
-  measures d5b01ab9 / 30b88729, NOT this edit: INCONCLUSIVE, 261W/139L,
-  development-base delta -0.0054054 across 185 side pairs; zero faults/missing/
-  unknown. Saved provenance in task-06ab5d-evidence.json. Contrasting evaluated
-  pilgrimage/stampede candidate rates 1.0 each; ambush is a weaker cluster.
-  Recent Prism retention, draft, support and economy variants do not justify
-  bundling their behavior into this different experiment. Earlier NOTES archived.
-- Saved completed 00ambush loss summaries: 91281934...71f5 A, own tribute 845
-  versus 1011, deaths 22 versus 6; 9ca3dd99...580c B, tribute 789 versus 1013,
-  deaths 12 versus 3. Both zero own faults/suspensions (opponent has 8 each).
-  These finals cannot establish whether an interrupt window was missed.
-- Frozen manifest 22a58a30...4c70 and all six source sets hash-verified. Boss
-  ea15ef0f/f4b4f65e: Vendetta/Varg/Ryth preferences, claims/farming emblems,
-  advantage-based skirmishes, 30-gem or nearby banking. Beta 7cab9b0f banks every
-  bag; gamma f01d496c uses size/distance/endgame. These are arena source policies,
-  not official opponent behavior or runtime input.
-- GameRules 224/273: damage leaves tribute running; stuns cancel it. Marcella is
-  stun-immune. Base damage scorer adds only 20 for control and attacks first,
-  without prioritizing objective channels. Stationary denial targets that gap.
-- Rejected broader repeat economy/draft/support/routing packages; free wards
-  might increase exposure under existing enemy-first combat. No new premise for
-  those changes. Preserve our independent composition and farming policy.
+## Evidence and choice
+- Evaluation 6f25505d...c59bb measures c283fd8f / 91c8e9bb, NOT this base or
+  candidate. INCONCLUSIVE, full 261W/139L, zero faults/missing/unknown;
+  matched edit-base delta -0.0054054 over 185 side pairs. Tribute denial was
+  ineffective on that comparison and is not included. Prism retention, recent
+  support/draft/economy variants and earlier broad risk/retreat packages remain
+  negative/deferred findings; no repeat of those packages.
+- Completed 00ambush A loss d4620ff5...4037: tribute 845 vs 1011, deaths 22 vs 6,
+  own monster damage taken 65055 vs champion damage taken 8540. B loss
+  91f48d82...aea0: tribute 789 vs 1013, deaths 12 vs 3, own monster damage taken
+  68880 vs champion damage taken 1142. Both zero own faults/fuel suspensions;
+  opponent eight suspensions each. Full summaries saved -ambush-{A,B}-summary.
+  Finals show camp mortality, not which pulls caused it.
+- Contrasting same evaluated source: pilgrimage, stampede and starfish each
+  10/10 development wins across sides/opponents. Preserve successful base policy.
+- Frozen manifest 4bb4efe4...9958 and all six file sets hash-verified. Boss
+  ea15ef0f/f4b4f65e checks group risk and waits for helpers, fixed reset roster,
+  farming emblems, favorable PvP and 30-gem/nearby banking. Beta 7cab9b0f banks
+  before selective fights; gamma f01d496c has group/capture routes and bounded
+  banking. Arena source is not runtime proof or official opponent behavior.
+- Chosen alternative: gate initiation only. Earlier committed risk-priced
+  routing/draft/retreat packages changed much more and lacked this current build.
+  Keep kit-aware Power allocation, RNG draft, ongoing fights and recovery intact.
 
-## Recovered candidate policy
-- New tribute_denial.h: inspect two ready ability slots, at most six fresh visible
-  enemies (including twins); select largest positive bag actively submitting and
-  not stun-immune. Tools: positive-duration unit/ground stun or enhanced reset
-  followed by legal basic. No chase, dash search, cached enemy state or shared bytes.
-- Champion-only hook precedes ordinary basic. Check visibility before live reads,
-  channel/cast/attack restrictions and movement exclusion; refresh target/range
-  before action. Successful action ends this fight, avoiding walking after cast.
-  Logs report a used denial tool, not proof of a completed interruption or win.
-- Entry/scan reserves 45k/28k; these are policy guards, not quantified headroom.
-  Fallback is the original combat policy. Compile-time bag tests cover ordinary
-  fights, zero bag, active tribute, immunity and relative bag value.
-- Existing own channels, recovery and spawn healing retain precedence. Draft,
-  camp combat, rotation/capture, routes, shopping, locks, RNG, four round-memory
-  bytes and exception-safe official yield remain edit-base behavior.
+## Candidate policy and limits
+- camp_pull.h assesses up to six fully visible sleeping groups, at most 32
+  visible camps and 32 members/group; six visible allied bodies including twins.
+  Skip helpers channeling or under 35% health; count helpers within four tiles
+  of both the group anchor and self. No hidden live reads or cached live state.
+- Model: 0.6 * summed camp Strength * ceil(current group HP / nearby basic DPS)
+  must fit 80% of nearby current allied health. Exposure factor is a workload
+  assumption borrowed from boss source, not an engine prediction. Spells/splash,
+  shields, item passives and actual ally intent are unmodeled.
+- Filter camp basics, reset follow-ups, direct spells, ground collateral, Varg
+  splash and camp-route goals together. Reassess after movement. Awake groups,
+  partial visibility, over-limit groups/camp counts and low fuel retain base.
+  If every eligible goal would disappear, clear veto to preserve progress.
+- Use existing cached immutable geometry via read-only camp_rotation::layout;
+  avoid loading whole group geometry repeatedly per visible monster. Scan guard
+  55k, existing combat fallback 18k; these are guards, not measured headroom.
+- Existing own channels, spawn healing, low-health recall, PvP, banking/locks,
+  shopping, capture/respawn state, four shared bytes and official yield retain
+  base behavior. Rotation observation now precedes camp combat to coordinate
+  attack/travel exclusions; this adds bounded work on active farming turns.
 
-## Checks, review and next action
-- Source integration regression RED exit 1 on base (missing policy), GREEN exit 0
-  after recovery: champion gate/pre-basic ordering, visibility, no movement,
-  bounded scans, immunity/channel gating, own channels and official yield.
-  Command: python3 experiments/alpha/check_tribute_denial.py.
-- task-06ab5d-source-check.json verifies exact recovery of unpublished prior source;
-  only bot.cpp and tribute_denial.h differ from edit base. Removing the include
-  and three hook lines makes bot.cpp byte-identical to that edit commit.
+## Checks and next action
+- Source integration check RED on base (missing header), GREEN after code and
+  geometry-cache refinement: python3 experiments/alpha/check_camp_pull.py.
+  Nine constexpr model cases compile in the trusted build (wolf, elk, golem,
+  helper/upgrades, zero damage/DPS, exact budget and rounded clearing work).
 - bot-check --owner-config /var/lib/battlecode-volume/config/alpha.json
-  PASSED exit 0. Exact checked source
-  91c8e9bb0cd9f8788328dc5b9e355dbb296d1b5f1c8fa678015767799ffed125.
-  Report .agent/check-task-06ab5dbab30646c8ac71c5203398808c.json;
-  saved task-06ab5d-bot-check.json. No source edits afterward.
-- Returned smoke IDs are identical to prior check: 7ce98af1...f92d and
-  9eabc3c7...4840, cached evidence, not fresh independent games. Both COMPLETED,
-  rounds 1216/1183, zero faults/suspensions on both sides. Full summaries saved
-  task-06ab5d-smoke-{0,1}.json. Teams contain denial kits and immune Marcella,
-  but report does not establish candidate side or runtime branch coverage.
-- Inline review: tool classification, visibility, pre-basic order, allowances,
-  channel preservation, bounds and unchanged fallback. git diff --check PASSED.
-  No agents, commit, push, tournament evaluation, publication or official action.
-- Risks: rare opportunities; enemy restarts next turn; interrupt may delay lethal
-  damage or own tribute. CC success can leave a basic unused. No all-map fuel or
-  strength claim. READY_FOR_EVAL means valid candidate, not demonstrated gain.
-- Next: supervisor evaluates exact checked source against edit base, protected
-  champion and frozen opponents under unchanged gates. Compare matched wins,
-  tribute, deaths, denial activity and reliability. If ineffective, inspect
-  actual interrupt opportunities before expanding movement or draft coupling.
+  initial and final checks PASSED exit 0. Initial source 5c85c86b...ac0e6 was
+  superseded by geometry-cache refinement. Final checked source:
+  051efd6c80a2b076bf592a60f112398d771827352319fe2f888bf85ed0a1ad33.
+  Report .agent/check-task-516845eb63134bb5a3818aad10b76920.json;
+  saved task-516845eb-bot-check.json. No bot-source edits afterward.
+- Final smokes fa13cbde...5daee / 01871495...3a76 COMPLETED at rounds 1210/1141,
+  zero faults and fuel suspensions both sides. Full -smoke-{0,1}.json saved.
+  Candidate side/opponent version and gate branch coverage remain unknown;
+  smoke scores are not claimed as competitive wins or independent trials.
+- Source hashes and edit-base comparison saved -source-check.json: only bot.cpp,
+  camp_rotation.h and new camp_pull.h change. Inline self-review checked visible
+  state access, full-group/awake bypass, bounded scans, channels, yield, collateral
+  and post-movement refresh. No agent, commit, push or official action.
+- Risks: viable spell-heavy pulls may be deferred, helper proximity is uncertain,
+  new observation cost may reduce fuel headroom, and fallback can still pull an
+  unsafe last group. No all-map reliability or strength claim. READY_FOR_EVAL
+  means valid candidate only. Next: supervisor compares exact checked candidate
+  with edit base/champion/frozen opponents under unchanged gates; inspect matched
+  wins, tribute/collection, camp deaths and reliability before broadening policy.

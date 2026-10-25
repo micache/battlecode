@@ -1,0 +1,23 @@
+{
+  "task_id": "task-516845eb63134bb5a3818aad10b76920",
+  "checked_source_hash": "051efd6c80a2b076bf592a60f112398d771827352319fe2f888bf85ed0a1ad33",
+  "source_file_sha256": {
+    "bot.cpp": "7026e9d4a11035dbd08e0b81a2f5021fd7d73b1a3da76a9608f00dbb856541ed",
+    "equipment_policy.h": "bcd0d850bc558af1d0dd268c1e5f9437bf82a4fe74703f26fc5a2b72faa07729",
+    "random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910",
+    "bot.h": "c89e51dc769abbdd346f2fd833f5ece92514a7d4e2eda0c88b2d24f411a14c24",
+    "camp_rotation.h": "8ca40b6a7c4526f7aadca8a7ac438cd2f4921e994f8df8e59debcccc1c0daa7a",
+    "main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "camp_pull.h": "1f82386bca968634d7ba6d7b5bef18663ec38b8f6effc450485297025b88568b",
+    "altar_control.h": "f15e7990954ad92203627431ff083f5ea06dcc909c7cd9b4ab3bdd5df963aa19",
+    "draft.cpp": "2c9d049104e026e52212b23fe671304d5b8d96dd36a7c241e72550063fb2f6c0"
+  },
+  "changed_from_edit_base": [
+    "bots/alpha/src/bot.cpp",
+    "bots/alpha/src/camp_rotation.h",
+    "bots/alpha/src/camp_pull.h"
+  ],
+  "unchanged_head": "c283fd8f941bdd63e02c1cac0e7f0d6bdb6461c2",
+  "prepared_head_delta": "tribute_denial.h was already absent and bot.cpp restored to actual edit base at entry; this is not a new deletion by this experiment."
+}

@@ -64,6 +64,9 @@ class rotation {
     }
 
 public:
+    // Read-only static geometry, initialized by goals(); no added live queries.
+    const std::vector<tracked_group>& layout() const { return groups; }
+
     void observe() {
         if (cambc::fuel_remaining() < observation_fuel_reserve) return;
         initialise();

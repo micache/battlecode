@@ -3,8 +3,8 @@
 #include "bot.h"
 #include "altar_control.h"
 #include "camp_rotation.h"
+#include "camp_pull.h"
 #include "equipment_policy.h"
-#include "tribute_denial.h"
 #include <array>
 #include <iostream>
 #include "random.h"
@@ -130,7 +130,7 @@ auto combat_targets() {
 }
 
 template<class Target>
-std::optional<Target> basic_target() {
+std::optional<Target> basic_target(const cambc::bitboard* excluded = nullptr) {
     auto& me = cambc::self();
     if (!me.is_alive() || !me.can_attack()
         || me.restrictions().contains(cambc::buff_restrictions::attack))
@@ -140,6 +140,10 @@ std::optional<Target> basic_target() {
     for (const auto& target : combat_targets<Target>()) {
         if (++examined > combat_target_limit || cambc::fuel_remaining() < combat_fuel_reserve)
             break;
+        if constexpr (std::is_same_v<Target, cambc::camp>) {
+            if (!target.is_visible() || !camp_pull::permits(target, excluded,
+                me.passive() == cambc::passive_type::splash_attack ? 1.f : 0.f)) continue;
+        }
         if (target.is_visible() && target.health() > 0 && range.is_set(target.position()))
             return target;
     }
@@ -159,13 +163,10 @@ bool cast_ready(const cambc::ability& ability, bool walked) {
 // Spend the separate basic and cast allowances. Never walk after this routine
 // acts: a spell may exclude movement even when can_move() still reports true.
 template<class Target>
-bool fight(bool walked = false) {
-    if constexpr (std::is_same_v<Target, cambc::champion>) {
-        if (tribute_denial::attempt(walked)) return true;
-    }
+bool fight(bool walked = false, const cambc::bitboard* excluded = nullptr) {
     auto& me = cambc::self();
     bool acted = false;
-    if (const auto target = basic_target<Target>()) {
+    if (const auto target = basic_target<Target>(excluded)) {
         me.attack(*target);
         acted = true;
     }
@@ -193,6 +194,10 @@ bool fight(bool walked = false) {
                     break;
                 if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
                     continue;
+                if constexpr (std::is_same_v<Target, cambc::camp>) {
+                    if (!camp_pull::permits(target, excluded,
+                        me.passive() == cambc::passive_type::splash_attack ? 1.f : 0.f)) continue;
+                }
                 const float score = std::min(me.strength(), target.health());
                 if (score > best_score) {
                     best_score = score;
@@ -216,6 +221,10 @@ bool fight(bool walked = false) {
                 break;
             if (!target.is_visible() || target.health() <= 0 || !range.is_set(target.position()))
                 continue;
+            if constexpr (std::is_same_v<Target, cambc::camp>) {
+                if (!camp_pull::permits(target, excluded,
+                    ground ? ability.get<cambc::ability_aoe_damage>().radius : 0.f)) continue;
+            }
             // Ground spells aim at a visible enemy/camp, not unexplored terrain.
             // Only the primary damage is scored: splash is a conservative bonus.
             float score = std::min(damage, target.health());
@@ -243,7 +252,7 @@ bool fight(bool walked = false) {
         if (cast) {
             acted = true;
             // Refresh after the cast: a kill, splash or retaliation changes targets.
-            if (const auto next = basic_target<Target>()) me.attack(*next);
+            if (const auto next = basic_target<Target>(excluded)) me.attack(*next);
         }
     }
 
@@ -276,16 +285,19 @@ bool fight(bool walked = false) {
 
 // Attack a camp already in range, otherwise move toward the nearest camp tiles.
 void farm_camps() {
-    if (fight<cambc::camp>() || cambc::fuel_remaining() < combat_fuel_reserve)
-        return;
-
     // Include unknown/expired groups, but do not revisit a personally observed
     // cooldown early merely because its spawn tiles have left our vision.
     auto goals = camp_rotation::memory().goals();
+    auto excluded = camp_pull::assess(goals);
+    if (fight<cambc::camp>(false, &excluded) || cambc::fuel_remaining() < combat_fuel_reserve)
+        return;
+    goals &= ~excluded;
 
     // Fresh vision after movement may reveal a camp already in range.
-    if (move_towards_closest(goals))
-        fight<cambc::camp>(true);
+    if (move_towards_closest(goals)) {
+        excluded = camp_pull::assess(goals);
+        fight<cambc::camp>(true, &excluded);
+    }
 }
 
 void Bot::play_turn() {

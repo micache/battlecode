@@ -1,0 +1,574 @@
+{
+  "champions": [
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 0,
+      "items": [
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "3"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "15"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "3"
+        }
+      ],
+      "metrics": {
+        "assists": "0",
+        "championDamageDone": 375.0,
+        "championDamageTaken": 9560.0,
+        "collectedGems": "30",
+        "deaths": "10",
+        "earnedGold": "570",
+        "gems": "0",
+        "gold": "120",
+        "healingDone": 0.0,
+        "healingReceived": 0.0,
+        "kills": "0",
+        "monsterDamageDone": 7995.0,
+        "monsterDamageTaken": 2440.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "450",
+        "submittedGems": "2"
+      },
+      "name": "Ryth",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 1,
+      "items": [
+        {
+          "item": "Power Shard of Health",
+          "quantity": "3"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "2"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Health",
+          "quantity": "13"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "2"
+        }
+      ],
+      "metrics": {
+        "assists": "0",
+        "championDamageDone": 810.0,
+        "championDamageTaken": 13180.0,
+        "collectedGems": "24",
+        "deaths": "9",
+        "earnedGold": "454",
+        "gems": "0",
+        "gold": "64",
+        "healingDone": 0.0,
+        "healingReceived": 1500.0,
+        "kills": "0",
+        "monsterDamageDone": 6426.0,
+        "monsterDamageTaken": 2920.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "390",
+        "submittedGems": "2"
+      },
+      "name": "Marcella",
+      "team": "teamA"
+    },
+    {
+      "consumables": [],
+      "consumablesBought": [],
+      "id": 2,
+      "items": [
+        {
+          "item": "Power Shard of Health",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "1"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Health",
+          "quantity": "6"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "1"
+        }
+      ],
+      "metrics": {
+        "assists": "0",
+        "championDamageDone": 770.0,
+        "championDamageTaken": 1624.5,
+        "collectedGems": "2",
+        "deaths": "7",
+        "earnedGold": "180",
+        "gems": "0",
+        "gold": "0",
+        "healingDone": 0.0,
+        "healingReceived": 420.0,
+        "kills": "0",
+        "monsterDamageDone": 6833.0,
+        "monsterDamageTaken": 5035.5,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "180",
+        "submittedGems": "0"
+      },
+      "name": "Prism",
+      "team": "teamA"
+    },
+    {
+      "consumables": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "id": 3,
+      "items": [
+        {
+          "item": "Power Shard of Focus",
+          "quantity": "1"
+        },
+        {
+          "item": "Power Emblem of Focus",
+          "quantity": "4"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "2"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Focus",
+          "quantity": "21"
+        },
+        {
+          "item": "Power Emblem of Focus",
+          "quantity": "4"
+        },
+        {
+          "item": "Power Shard of Health",
+          "quantity": "10"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "2"
+        }
+      ],
+      "metrics": {
+        "assists": "13",
+        "championDamageDone": 6718.25,
+        "championDamageTaken": 485.0,
+        "collectedGems": "264",
+        "deaths": "0",
+        "earnedGold": "1720",
+        "gems": "0",
+        "gold": "780",
+        "healingDone": 0.0,
+        "healingReceived": 2705.0,
+        "kills": "3",
+        "monsterDamageDone": 35338.0,
+        "monsterDamageTaken": 2320.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "940",
+        "submittedGems": "264"
+      },
+      "name": "Cassi",
+      "team": "teamB"
+    },
+    {
+      "consumables": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "2"
+        }
+      ],
+      "id": 4,
+      "items": [
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "8"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "3"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "40"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "8"
+        },
+        {
+          "item": "Power Shard of Health",
+          "quantity": "15"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "3"
+        }
+      ],
+      "metrics": {
+        "assists": "2",
+        "championDamageDone": 452.0,
+        "championDamageTaken": 405.0,
+        "collectedGems": "290",
+        "deaths": "0",
+        "earnedGold": "1890",
+        "gems": "0",
+        "gold": "220",
+        "healingDone": 0.0,
+        "healingReceived": 5325.0,
+        "kills": "1",
+        "monsterDamageDone": 17911.0,
+        "monsterDamageTaken": 3760.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "1670",
+        "submittedGems": "290"
+      },
+      "name": "Issac",
+      "team": "teamB"
+    },
+    {
+      "consumables": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "id": 5,
+      "items": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "2"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "2"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Strength",
+          "quantity": "27"
+        },
+        {
+          "item": "Power Emblem of Strength",
+          "quantity": "5"
+        },
+        {
+          "item": "Power Shard of Health",
+          "quantity": "10"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "2"
+        }
+      ],
+      "metrics": {
+        "assists": "4",
+        "championDamageDone": 9830.5,
+        "championDamageTaken": 135.0,
+        "collectedGems": "235",
+        "deaths": "0",
+        "earnedGold": "2583",
+        "gems": "0",
+        "gold": "1463",
+        "healingDone": 0.0,
+        "healingReceived": 2195.0,
+        "kills": "10",
+        "monsterDamageDone": 39113.0,
+        "monsterDamageTaken": 1740.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "1120",
+        "submittedGems": "235"
+      },
+      "name": "Tavi",
+      "team": "teamB"
+    },
+    {
+      "consumables": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "consumablesBought": [
+        {
+          "consumable": "Altar Lock",
+          "quantity": "1"
+        }
+      ],
+      "id": 6,
+      "items": [
+        {
+          "item": "Power Shard of Focus",
+          "quantity": "3"
+        },
+        {
+          "item": "Power Emblem of Focus",
+          "quantity": "8"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "4"
+        }
+      ],
+      "itemsBought": [
+        {
+          "item": "Power Shard of Focus",
+          "quantity": "43"
+        },
+        {
+          "item": "Power Emblem of Focus",
+          "quantity": "8"
+        },
+        {
+          "item": "Power Shard of Health",
+          "quantity": "20"
+        },
+        {
+          "item": "Power Emblem of Health",
+          "quantity": "4"
+        }
+      ],
+      "metrics": {
+        "assists": "7",
+        "championDamageDone": 7363.75,
+        "championDamageTaken": 930.0,
+        "collectedGems": "225",
+        "deaths": "0",
+        "earnedGold": "2147",
+        "gems": "0",
+        "gold": "247",
+        "healingDone": 0.0,
+        "healingReceived": 4370.0,
+        "kills": "6",
+        "monsterDamageDone": 48556.0,
+        "monsterDamageTaken": 2120.0,
+        "saleRefunds": "0",
+        "shieldingDone": 0.0,
+        "spentGold": "1900",
+        "submittedGems": "225"
+      },
+      "name": "Prism",
+      "team": "teamB"
+    }
+  ],
+  "diagnostics": {
+    "botFaults": {
+      "teamA": 0,
+      "teamB": 0
+    },
+    "codes": [],
+    "detailedCaptureComplete": true
+  },
+  "match": {
+    "engineBuildHash": "fcb6c3e881c453fb7fcb1ce852ff0a6f10c9e3a199126a000df05b427f4ba41f",
+    "engineVersion": "1.0.3",
+    "finalInput": 17138,
+    "finalRoundPartial": true,
+    "finalSubstep": 7,
+    "height": 41,
+    "mapHash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+    "metricSemanticsVersion": 1,
+    "outcome": "teamB",
+    "roundsCompleted": 1140,
+    "roundsStarted": 1141,
+    "seed": "17615240315955964814",
+    "width": 41
+  },
+  "normalized": {
+    "bot_faults": 0,
+    "completed": true,
+    "detail": null,
+    "fuel_suspensions": 0,
+    "metrics": {
+      "bag_loss": {
+        "available": true,
+        "value": {
+          "A": 52,
+          "B": 0
+        }
+      },
+      "bot_faults_by_side": {
+        "available": true,
+        "value": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      "carried_gems": {
+        "available": true,
+        "value": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      "champion_damage_done": {
+        "available": true,
+        "value": {
+          "A": 1955.0,
+          "B": 24364.5
+        }
+      },
+      "champion_damage_taken": {
+        "available": true,
+        "value": {
+          "A": 24364.5,
+          "B": 1955.0
+        }
+      },
+      "champion_deaths": {
+        "available": true,
+        "value": {
+          "A": 26,
+          "B": 0
+        }
+      },
+      "champion_kills": {
+        "available": true,
+        "value": {
+          "A": 0,
+          "B": 20
+        }
+      },
+      "collected_gems": {
+        "available": true,
+        "value": {
+          "A": 56,
+          "B": 1014
+        }
+      },
+      "fuel_suspensions_by_side": {
+        "available": true,
+        "value": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      "lifetime_earned_gold": {
+        "available": true,
+        "value": {
+          "A": 1204,
+          "B": 8340
+        }
+      },
+      "monster_damage_done": {
+        "available": true,
+        "value": {
+          "A": 21254.0,
+          "B": 140918.0
+        }
+      },
+      "monster_damage_taken": {
+        "available": true,
+        "value": {
+          "A": 10395.5,
+          "B": 9940.0
+        }
+      },
+      "observed_engine_seed": {
+        "available": true,
+        "value": "17615240315955964814"
+      },
+      "round": {
+        "available": true,
+        "value": 1141
+      },
+      "sale_refunds": {
+        "available": true,
+        "value": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      "spent_gold": {
+        "available": true,
+        "value": {
+          "A": 1020,
+          "B": 5630
+        }
+      },
+      "submitted_gems": {
+        "available": true,
+        "value": {
+          "A": 4,
+          "B": 1014
+        }
+      },
+      "unspent_gold": {
+        "available": true,
+        "value": {
+          "A": 184,
+          "B": 2710
+        }
+      }
+    },
+    "protocol_version": 1,
+    "state": "COMPLETED",
+    "terminal_reason": null,
+    "winner": "B"
+  },
+  "omitted": "Full timelines/events/heatmaps remain in unchanged final.json.",
+  "source_file": "final.json",
+  "source_sha256": "4423ac1f68a01561e39b009bc990b81f467b2bb73212033883f063129ba11240",
+  "teams": [
+    {
+      "submittedGems": "4",
+      "team": "teamA"
+    },
+    {
+      "submittedGems": "1014",
+      "team": "teamB"
+    }
+  ]
+}
