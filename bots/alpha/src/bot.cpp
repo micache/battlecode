@@ -69,14 +69,12 @@ bool move_towards_closest(cambc::bitboard goals) {
     return moved;
 }
 
-void Bot::buy_items(bool at_spawn) {
+void Bot::buy_items() {
     auto& me = cambc::self();
     const std::array items{cambc::item_type::power_shard_of_strength,
         cambc::item_type::power_shard_of_focus, cambc::item_type::power_shard_of_health};
     const auto cost = items[0].cost();
     if (!cost || me.gold_count() < cost || cambc::fuel_remaining() < equipment_policy::entry_fuel_reserve) return;
-    // The engine owns shop permission, including any temporary restrictions.
-    if (!at_spawn && !me.can_buy(items[0])) return;
     const auto stats = me.base_stats();
     equipment_policy::model estimate{me.max_health(), me.strength(), me.focus(),
         {stats.strength_growth, stats.focus_growth, stats.health_growth}};
@@ -110,7 +108,7 @@ void Bot::buy_items(bool at_spawn) {
     const auto inventory = me.item_count();
     const std::array<unsigned, 3> residues{inventory[items[0]], inventory[items[1]], inventory[items[2]]};
     const auto counts = equipment_policy::plan(estimate, me.gold_count() / cost,
-        residues, items[0].combine_count(), static_cast<unsigned>(chosen_stat), at_spawn);
+        residues, items[0].combine_count(), static_cast<unsigned>(chosen_stat));
     for (unsigned stat = 0; stat < items.size(); ++stat) {
         if (cambc::fuel_remaining() < equipment_policy::purchase_fuel_reserve) break;
         if (counts[stat] && me.can_buy(items[stat], counts[stat])) me.buy(items[stat], counts[stat]);
@@ -304,6 +302,7 @@ void Bot::play_turn() {
 
     // Refill control tools while dead so the next sortie can deny an altar.
     if (!me.is_alive()) {
+        prism_bank.commit();
         altar_control::buy_lock();
         return;
     }
@@ -312,6 +311,16 @@ void Bot::play_turn() {
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()
         || (!me.can_move() && !me.can_attack() && !me.can_cast()))
         return;
+
+    // Prism's bag is also temporary Focus. Bound retention and latch any bank
+    // trigger; recovery/combat below still keep their existing precedence.
+    bool bank_bag = true;
+    if (me.passive() == cambc::passive_type::gem_focus) {
+        bank_bag = prism_bank.update(me.gem_count(), cambc::round_number(),
+            cambc::global_submitted_gems(team::ally), cambc::constants::winning_gems,
+            cambc::constants::max_rounds, me.health(), me.max_health(),
+            !cambc::vision::champion_tiles(team::enemy).is_empty());
+    }
 
     // Shop before leaving spawn.
     const bool at_spawn = cambc::map::spawn_region(team::ally).is_set(me.position());
@@ -325,10 +334,6 @@ void Bot::play_turn() {
             fight<cambc::champion>();
             return;
         }
-    } else if (me.passive() == cambc::passive_type::remote_shop) {
-        // Tavi reinvests without a trip or an action allowance. Do not buy field
-        // Health: no current HP is restored, and it can provoke earlier recall.
-        buy_items(false);
     }
 
     altar_control::place_lock();
@@ -347,8 +352,8 @@ void Bot::play_turn() {
     if (fight<cambc::champion>() || cambc::fuel_remaining() < combat_fuel_reserve)
         return;
 
-    // Bank any carried gems before farming.
-    if (me.gem_count() > 0) {
+    // Other kits bank any bag; Prism can retain a small, healthy, quiet bag.
+    if (me.gem_count() > 0 && bank_bag) {
         // Capture resolves before this turn: remember the newly cooling group
         // before leaving it with the reward. No movement or channel is started.
         camp_rotation::memory().observe();

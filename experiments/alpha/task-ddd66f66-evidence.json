@@ -1,0 +1,370 @@
+{
+  "task_id": "task-ddd66f66f29645d096585472b74a7169",
+  "bot_id": "alpha",
+  "edit_commit": "1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97",
+  "base_source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+  "accepted_commit": "c0cebd720fcd55e2bbb51d57dd2c398889d4071e",
+  "input_revision": "a8095ddb6338df5c12c79323a52750edc3972174",
+  "engine_version": "3.0.5",
+  "engine_lock_hash": "ac2b5ad200d0df54380e94f82b1a327dd0407202533325808c8bf3af26c56136",
+  "evaluation_suite": "published-40-release-305-v1",
+  "entry_all_nine_source_files_match_edit": true,
+  "documentation_changed": false,
+  "evaluated_source": {
+    "build_id": "1f579e1c796e1438a8c0525937c7213d54aec337e7ce68c15eedd1070165fa42",
+    "commit": "a8095ddb6338df5c12c79323a52750edc3972174",
+    "revision_id": "23cd80f28d02f5ab31dc012725a8e1e877583021ba2bc4570ae375bd3fd20bae",
+    "source_hash": "555497da2111349c9ff7a7a9890d5faa4a576e08654dcc331b7a86415777feb8"
+  },
+  "evaluation_id": "8d60dbd197a5023a84b8773fffce4e2e4df5b946e157562aca6cc258a2f33056",
+  "evaluation_decision": "INCONCLUSIVE",
+  "development_metrics": {
+    "bag_loss": {
+      "available": true,
+      "mean": 40.68648648648649,
+      "observations": 370
+    },
+    "bot_faults_by_side": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 370
+    },
+    "carried_gems": {
+      "available": true,
+      "mean": 28.864864864864863,
+      "observations": 370
+    },
+    "champion_damage_done": {
+      "available": true,
+      "mean": 30527.104060734928,
+      "observations": 370
+    },
+    "champion_damage_taken": {
+      "available": true,
+      "mean": 15029.277694820714,
+      "observations": 370
+    },
+    "champion_deaths": {
+      "available": true,
+      "mean": 18.913513513513514,
+      "observations": 370
+    },
+    "champion_kills": {
+      "available": true,
+      "mean": 10.321621621621622,
+      "observations": 370
+    },
+    "collected_gems": {
+      "available": true,
+      "mean": 763.1972972972973,
+      "observations": 370
+    },
+    "fuel_suspensions_by_side": {
+      "available": true,
+      "mean": 0.13513513513513514,
+      "observations": 370
+    },
+    "lifetime_earned_gold": {
+      "available": true,
+      "mean": 6351.0756756756755,
+      "observations": 370
+    },
+    "monster_damage_done": {
+      "available": true,
+      "mean": 108006.09338760376,
+      "observations": 370
+    },
+    "monster_damage_taken": {
+      "available": true,
+      "mean": 41498.51743176435,
+      "observations": 370
+    },
+    "round": {
+      "available": true,
+      "mean": 1577.535135135135,
+      "observations": 370
+    },
+    "sale_refunds": {
+      "available": true,
+      "mean": 0.0,
+      "observations": 370
+    },
+    "spent_gold": {
+      "available": true,
+      "mean": 5244.189189189189,
+      "observations": 370
+    },
+    "submitted_gems": {
+      "available": true,
+      "mean": 693.645945945946,
+      "observations": 370
+    },
+    "unspent_gold": {
+      "available": true,
+      "mean": 1106.8864864864865,
+      "observations": 370
+    }
+  },
+  "development_comparison": {
+    "commit_sha": "1f5e71f3111c5a492a20f4aaf0bbd3bd0c6fff97",
+    "common_opponent_delta": 0.013513513513513514,
+    "fault_matches": [],
+    "missing": [],
+    "paired_cases": 185,
+    "per_map": {
+      "00ambush": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "00collision": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00contest": {
+        "candidate": 0.7,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "00corners": {
+        "candidate": 0.7,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "00eight": {
+        "candidate": 0.8,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00elkring": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00expanse": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00fragment": {
+        "candidate": 1.0,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00gem-fields": {
+        "candidate": 0.9,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00gemfight": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "00great-wall": {
+        "candidate": 0.9,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00interlock": {
+        "candidate": 0.5,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00lanes": {
+        "candidate": 0.7,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00lost-world": {
+        "candidate": 0.5,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00pilgrimage": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "00quadrants": {
+        "candidate": 0.6,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "00reverse-spiral": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00road-of-riches": {
+        "candidate": 1.0,
+        "incumbent": 0.9,
+        "pairs": 5
+      },
+      "00rushbait-v2": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00split": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "00stampede": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "00swirl": {
+        "candidate": 0.7,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01big-world": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01boss-battle": {
+        "candidate": 0.2,
+        "incumbent": 0.2,
+        "pairs": 5
+      },
+      "01broken-curve": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "01concentrated-wealth": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "01corridors": {
+        "candidate": 0.8,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01elk-arena": {
+        "candidate": 0.7,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01fracture": {
+        "candidate": 0.7,
+        "incumbent": 0.7,
+        "pairs": 5
+      },
+      "01gold-rush": {
+        "candidate": 0.6,
+        "incumbent": 0.5,
+        "pairs": 5
+      },
+      "01hooks": {
+        "candidate": 0.8,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01islands": {
+        "candidate": 0.9,
+        "incumbent": 0.8,
+        "pairs": 5
+      },
+      "01shortcut": {
+        "candidate": 0.1,
+        "incumbent": 0.1,
+        "pairs": 5
+      },
+      "01starfish": {
+        "candidate": 1.0,
+        "incumbent": 1.0,
+        "pairs": 5
+      },
+      "01starvation": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      },
+      "01the-farm": {
+        "candidate": 0.6,
+        "incumbent": 0.6,
+        "pairs": 5
+      },
+      "01yellow-brick-road": {
+        "candidate": 0.4,
+        "incumbent": 0.4,
+        "pairs": 5
+      }
+    },
+    "source_hash": "dd7c6c996f40dd12888dd3e3d6e877bdf574fbd3bb16a19060260f2c33931599",
+    "unknown_reliability": []
+  },
+  "development_map_contrasts": {
+    "00pilgrimage": {
+      "candidate": 1.0,
+      "incumbent": 0.4,
+      "pairs": 5
+    },
+    "00stampede": {
+      "candidate": 1.0,
+      "incumbent": 0.1,
+      "pairs": 5
+    },
+    "01starfish": {
+      "candidate": 1.0,
+      "incumbent": 0.1,
+      "pairs": 5
+    }
+  },
+  "frozen_opponents_manifest": {
+    "count": 6,
+    "manifest": "/srv/battlecode/public/strategy/task-ddd66f66f29645d096585472b74a7169/manifest.json",
+    "sha256": "522a28c459e02715b1ccf711ffba265370bd7058bd3cdc7e8192d27a7a8cb61f"
+  },
+  "all_frozen_source_file_hashes_verified": true,
+  "hypothesis_basis": "Unmeasured rules/source deduction; no allied Prism in the three newly inspected completed loss summaries.",
+  "initial_check_failure": "Floating-point 0.65f * 700 becomes 454.9999694824219. The 455/700 exact-health boundary assertion failed. Integer-percent cross multiplication corrects the boundary; assertion retained.",
+  "initial_integration_red": {
+    "command": "python3 experiments/alpha/check_prism_banking.py",
+    "exit_code": 1,
+    "missing_contracts": [
+      "prism_only",
+      "bank_gate",
+      "policy_after_channel_guard_before_shop",
+      "death_commits_surviving_bag",
+      "only_personal_enemy_vision"
+    ],
+    "preservation_contracts_passed": true
+  },
+  "final_check": {
+    "bot_id": "alpha",
+    "exit_code": 0,
+    "finished": 1792893483.1132712,
+    "matches": [
+      "32062c6dbd28265f6cd54f290d1c13b211743954e2bb157b78970f93ee35f550",
+      "01c61d801ebd422d3da03385827d1544a7ae47bc64e8a9df2355d19e10cda00b"
+    ],
+    "report_path": ".agent/check-task-ddd66f66f29645d096585472b74a7169.json",
+    "report_reference": "check:task-ddd66f66f29645d096585472b74a7169:30b8872907cc2222da221a55522cc98db6c0e7a124c288da1e4bd045ed160f17",
+    "source_hash": "30b8872907cc2222da221a55522cc98db6c0e7a124c288da1e4bd045ed160f17",
+    "started": 1792893449.2212234,
+    "state": "PASSED",
+    "task_id": "task-ddd66f66f29645d096585472b74a7169"
+  },
+  "smokes": [
+    {
+      "match_id": "32062c6dbd28265f6cd54f290d1c13b211743954e2bb157b78970f93ee35f550",
+      "state": "COMPLETED",
+      "bot_faults": 0,
+      "fuel_suspensions": 0
+    },
+    {
+      "match_id": "01c61d801ebd422d3da03385827d1544a7ae47bc64e8a9df2355d19e10cda00b",
+      "state": "COMPLETED",
+      "bot_faults": 0,
+      "fuel_suspensions": 0
+    }
+  ]
+}

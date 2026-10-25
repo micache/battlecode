@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "prism_only": true,
+    "bank_gate": true,
+    "policy_after_channel_guard_before_shop": true,
+    "death_commits_surviving_bag": true,
+    "only_personal_enemy_vision": true,
+    "pre_turn_logic_unchanged": true,
+    "bank_body_and_farming_unchanged": true
+  },
+  "passed": true,
+  "scope": "integration/source preservation, not runtime evidence"
+}
