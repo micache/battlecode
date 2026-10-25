@@ -1,0 +1,72 @@
+[
+  {
+    "match_id": "952f0c67aefbc3280b7741fcb0532dcc6e8f20e34ffadc39c03f70062b2e29a2",
+    "side": "A",
+    "file": "bot-a.stdout.log",
+    "offset": 0,
+    "total_size": 25602,
+    "lines": [
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=4,0 route_age=0 cashout=0,0 fuel=101400",
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=6,0 route_age=0 cashout=0,0 fuel=98816",
+      "r=1 mode=farm target=7 hp=1200 gems=0 xy=6,2 route_age=0 cashout=0,0 fuel=100347",
+      "r=101 mode=farm target=11 hp=840 gems=18 xy=16,0 route_age=1 cashout=0,0 fuel=51243",
+      "r=101 mode=farm target=5 hp=1000 gems=23 xy=13,4 route_age=1 cashout=0,0 fuel=48239",
+      "r=101 mode=capture target=3 hp=1120 gems=11 xy=17,11 route_age=11 cashout=0,0 fuel=83667",
+      "r=201 mode=farm target=11 hp=630 gems=20 xy=28,2 route_age=9 cashout=0,0 fuel=49380",
+      "r=201 mode=farm target=8 hp=566 gems=0 xy=24,21 route_age=9 cashout=0,0 fuel=34801",
+      "r=201 mode=farm target=11 hp=1200 gems=2 xy=28,3 route_age=8 cashout=0,0 fuel=50556"
+    ],
+    "limitation": "First and last pages only; padding omitted; edge lines may be partial.",
+    "late_offset": 17410,
+    "late_lines": [
+      "r=601 mode=farm target=8 hp=1095 gems=0 xy=25,20 route_age=1 cashout=0,0 fuel=36373",
+      "r=605 mode=bank target=19 hp=1399 gems=11 xy=21,18 route_age=1 cashout=0,0 fuel=79019",
+      "r=609 mode=farm target=4 hp=857 gems=0 xy=24,17 route_age=0 cashout=0,0 fuel=29782",
+      "r=702 mode=farm target=8 hp=1309 gems=0 xy=26,19 route_age=0 cashout=0,0 fuel=41967",
+      "r=705 mode=farm target=18 hp=961 gems=4 xy=26,35 route_age=0 cashout=0,0 fuel=41250",
+      "r=709 mode=farm target=16 hp=1500 gems=11 xy=15,6 route_age=0 cashout=0,0 fuel=45939",
+      "r=802 mode=farm target=4 hp=975 gems=0 xy=19,18 route_age=1 cashout=0,0 fuel=40633",
+      "r=805 mode=farm target=16 hp=1462 gems=0 xy=27,2 route_age=3 cashout=0,0 fuel=54502",
+      "r=809 mode=farm target=16 hp=1500 gems=0 xy=21,0 route_age=1 cashout=0,0 fuel=53796",
+      "r=902 mode=farm target=10 hp=1473 gems=0 xy=23,22 route_age=3 cashout=0,0 fuel=44641",
+      "r=905 mode=farm target=5 hp=1500 gems=1 xy=11,0 route_age=3 cashout=0,0 fuel=56733",
+      "r=909 mode=bank target=5 hp=1285 gems=26 xy=26,19 route_age=20 cashout=0,0 fuel=78627"
+    ]
+  },
+  {
+    "match_id": "116823f0a71652c9320eb758ead8113166f1806437353912eb25a6632dccaf79",
+    "side": "B",
+    "file": "bot-b.stdout.log",
+    "offset": 0,
+    "total_size": 22966,
+    "lines": [
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=4,38 route_age=0 cashout=0,0 fuel=101357",
+      "r=1 mode=farm target=5 hp=1000 gems=0 xy=6,37 route_age=0 cashout=0,0 fuel=98744",
+      "r=1 mode=farm target=2 hp=1200 gems=0 xy=6,38 route_age=0 cashout=0,0 fuel=100251",
+      "r=101 mode=farm target=5 hp=720 gems=4 xy=16,32 route_age=1 cashout=0,0 fuel=43853",
+      "r=101 mode=farm target=4 hp=960 gems=0 xy=18,26 route_age=4 cashout=0,0 fuel=39380",
+      "r=103 mode=farm target=5 hp=1180 gems=0 xy=4,38 route_age=0 cashout=0,0 fuel=53768",
+      "r=201 mode=farm target=5 hp=832 gems=0 xy=20,36 route_age=9 cashout=0,0 fuel=46445",
+      "r=201 mode=evade target=10 hp=440 gems=0 xy=19,22 route_age=1 cashout=0,0 fuel=72516",
+      "r=203 mode=capture target=12 hp=906 gems=4 xy=28,37 route_age=9 cashout=0,0 fuel=85063",
+      "r=301 mode=farm target=12 hp=804 gems=19 xy=28,36 route_age=2 cashout=0,0 fuel=50623",
+      "r=301 mode=farm target=10 hp=580 gems=0 xy=20,12 route_age=4 cashout=0,0 fuel=45691"
+    ],
+    "limitation": "First and last pages only; padding omitted; edge lines may be partial.",
+    "late_offset": 14774,
+    "late_lines": [
+      "r=601 mode=farm target=18 hp=1182 gems=0 xy=36,1 route_age=5 cashout=0,0 fuel=41609",
+      "r=601 mode=farm target=10 hp=945 gems=0 xy=22,14 route_age=0 cashout=0,0 fuel=33145",
+      "r=603 mode=farm target=5 hp=1548 gems=15 xy=20,36 route_age=2 cashout=0,0 fuel=51777",
+      "r=701 mode=bank target=19 hp=867 gems=35 xy=23,25 route_age=27 cashout=0,0 fuel=79074",
+      "r=701 mode=farm target=8 hp=1046 gems=0 xy=24,21 route_age=5 cashout=0,0 fuel=43262",
+      "r=703 mode=bank target=19 hp=1384 gems=33 xy=24,24 route_age=29 cashout=0,0 fuel=77257",
+      "r=801 mode=bank target=18 hp=1462 gems=4 xy=21,20 route_age=1 cashout=0,0 fuel=77226",
+      "r=801 mode=bank target=18 hp=1437 gems=66 xy=26,18 route_age=30 cashout=0,0 fuel=79085",
+      "r=803 mode=farm target=18 hp=1574 gems=0 xy=21,8 route_age=2 cashout=0,0 fuel=45053",
+      "r=901 mode=recover target=-1 hp=263 gems=23 xy=33,0 route_age=7 cashout=0,0 fuel=75634",
+      "r=901 mode=bank target=19 hp=895 gems=66 xy=31,34 route_age=18 cashout=0,0 fuel=78272",
+      "r=903 mode=capture target=12 hp=972 gems=0 xy=28,37 route_age=13 cashout=0,0 fuel=85591"
+    ]
+  }
+]

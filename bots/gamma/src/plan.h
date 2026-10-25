@@ -12,6 +12,11 @@ inline constexpr std::uint64_t planning_floor = 45000, action_floor = 18000;
 inline constexpr std::uint64_t distance_floor = 65000;
 inline constexpr int travel_refresh_steps = 4, travel_refresh_rounds = 12;
 inline constexpr int unreachable = 1000000;
+// One bounded cash-out opportunity per recovery episode. This does not relax
+// the normal retreat threshold or permit another camp fight while injured.
+inline constexpr int recovery_cashout_rounds = 12, recovery_bank_steps = 6;
+inline constexpr float cashout_health_floor = 0.20f;
+inline constexpr std::uint64_t cashout_fuel_floor = 55000;
 // A cached exact distance is a lower bound after moving at most displacement.
 // Unreachable stays unreachable within the same walk-connected component.
 constexpr int route_distance(int cached, int displacement, int geometric) {
@@ -19,6 +24,13 @@ constexpr int route_distance(int cached, int displacement, int geometric) {
         : (cached - displacement > geometric ? cached - displacement : geometric);
 }
 constexpr int tribute_ticks(int gems) { return gems > 0 ? (gems + 9) / 10 : 1; }
+constexpr bool cashout_fits(int distance, int gems, int remaining) {
+    return gems > 0 && distance >= 0 && distance <= recovery_bank_steps
+        && distance + tribute_ticks(gems) + 1 <= remaining;
+}
+constexpr bool cashout_healthy(float health, float maximum) {
+    return maximum > 0 && health >= cashout_health_floor * maximum;
+}
 constexpr float value(int gems, int gold, int round) {
     return 5.0f * gems + (round < 900 ? 1.0f : 0.35f) * gold;
 }
@@ -31,6 +43,11 @@ static_assert(route_distance(-1, 0, 9) == 9);
 static_assert(route_distance(2, 4, 1) == 1);
 static_assert(plan_header + 2 * max_groups <= 1024);
 static_assert(tribute_ticks(1) == 1 && tribute_ticks(10) == 1 && tribute_ticks(11) == 2);
+static_assert(cashout_fits(6, 40, 12) && cashout_fits(0, 10, 2));
+static_assert(!cashout_fits(7, 1, 12) && !cashout_fits(unreachable, 1, 12));
+static_assert(!cashout_fits(6, 60, 12) && !cashout_fits(0, 0, 12));
+static_assert(!cashout_fits(0, 10, 0) && !cashout_fits(-1, 10, 12));
+static_assert(cashout_healthy(200, 1000) && !cashout_healthy(199, 1000));
 static_assert(value(7, 0, 1) > 0 && value(0, 20, 1) > value(0, 20, 1200));
 static_assert(route_score(35, 2, 2, 0) > route_score(35, 20, 2, 0));
 }

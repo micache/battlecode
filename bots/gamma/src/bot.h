@@ -1,7 +1,5 @@
 #pragma once
 #include <cambc.h>
-#include "camp_intents.h"
-#include <array>
 #include <optional>
 #include <vector>
 
@@ -15,14 +13,10 @@ class Bot {
     };
     bool initialized = false;
     bool recovering = false;
+    int recovery_cashout_until = 0;
+    int cashout_captures = 0, cashout_submissions = 0;
     int target = -1, slot = 0, now = 0, cursor = 0;
     int last_log = -100, stuck = 0;
-    bool intents_enabled = false;
-    std::array<int, intents::bodies> peer_targets{-1,-1,-1,-1,-1};
-    std::array<intents::Observation, intents::bodies> peer_observations{};
-    void read_intents();
-    void publish_intent(int route);
-    int peer_count(int route) const;
     std::vector<Route> routes;
     cambc::bitboard terrain, spawn, altar_goals;
     std::vector<cambc::vec2> altars;
@@ -41,6 +35,7 @@ class Bot {
     bool fight(bool moved, bool champions_only = false);
     void shield();
     void recover();
+    bool recovery_cashout();
     void farm();
     bool load_route(int index);
     void observe(int index, const cambc::bitboard& visible);
