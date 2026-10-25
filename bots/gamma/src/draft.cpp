@@ -29,11 +29,10 @@ void play_draft() {
         }
         bc::draft_memory = bytes;
     }
-    // Two melee clearers plus a ranged field shopper on every map. Tavi can
-    // compound camp income without a shopping recall; the remaining picks
-    // retain Marcella's control and Heart's durable melee role.
-    constexpr std::array order{D::varg, D::vendetta, D::tavi, D::marcella,
-        D::heart_of_ruin, D::ryth, D::vesper_vale, D::ren, D::stellar,
+    // Independent melee farmers retain walking + attacking. Varg specializes
+    // in dense camps; Vendetta in finishes; Ryth/Marcella supply control.
+    constexpr std::array order{D::varg, D::vendetta, D::ryth, D::marcella,
+        D::heart_of_ruin, D::tavi, D::vesper_vale, D::ren, D::stellar,
         D::prism, D::willow, D::cassi_and_issac};
     for (auto pick : order)
         if (std::find(chosen.begin(), chosen.end(), pick) == chosen.end()) {

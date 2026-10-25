@@ -12,15 +12,6 @@ inline constexpr std::uint64_t planning_floor = 45000, action_floor = 18000;
 inline constexpr std::uint64_t distance_floor = 65000;
 inline constexpr int travel_refresh_steps = 4, travel_refresh_rounds = 12;
 inline constexpr int unreachable = 1000000;
-// Field shoppers reinvest without a gold-only recall; health recovery remains
-// independent of this predicate, including after non-healing field Health buys.
-constexpr bool needs_shop_trip(bool field_shopper, unsigned gold, unsigned threshold) {
-    return !field_shopper && gold >= threshold;
-}
-static_assert(!needs_shop_trip(true, 1000, 150));
-static_assert(!needs_shop_trip(false, 149, 150));
-static_assert(needs_shop_trip(false, 150, 150));
-static_assert(needs_shop_trip(false, 300, 300));
 // A cached exact distance is a lower bound after moving at most displacement.
 // Unreachable stays unreachable within the same walk-connected component.
 constexpr int route_distance(int cached, int displacement, int geometric) {

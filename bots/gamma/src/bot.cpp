@@ -55,12 +55,48 @@ void Bot::initialize() {
             }
         }
     }
-    // No per-body shared-memory records: visible allies and deterministic route
-    // affinity coordinate work. All eight live shared bytes remain untouched.
+    // Draft anchors give every body the same route indices. Live intents are
+    // soft hints only: they do not share an ally's vision or current position.
     const auto roster = bc::champions(team::ally);
     for (unsigned i = 0; i < roster.size(); ++i) if (roster[i] == me) slot = i;
+    intents_enabled = roster.size() <= intents::bodies && !routes.empty()
+        && routes.size() <= intents::max_routes && bc::shared_memory.size() >= 8;
     me.set_priority(100 - slot);
     initialized = true;
+}
+
+void Bot::read_intents() {
+    peer_targets.fill(-1);
+    if (!intents_enabled) return;
+    std::array<std::byte,8> bytes{};
+    bc::shared_memory.read(0, bytes);
+    std::uint64_t word = 0;
+    for (int i = 0; i < 8; ++i) word |= std::uint64_t{std::to_integer<unsigned>(bytes[i])} << (8*i);
+    if (!intents::compatible(word)) return;
+    for (int i = 0; i < intents::bodies; ++i) {
+        const int route = peer_observations[i].target(intents::record(word,i),now);
+        if (i != slot && route >= 0 && route < static_cast<int>(routes.size())) peer_targets[i] = route;
+    }
+}
+
+void Bot::publish_intent(int route) {
+    if (!intents_enabled || bc::fuel_remaining() < 10000) return;
+    // Refresh immediately before this bounded transaction. Never restore a
+    // snapshot from earlier planning after a possible fuel suspension.
+    std::array<std::byte,8> bytes{};
+    bc::shared_memory.read(0, bytes);
+    std::uint64_t word = 0;
+    for (int i = 0; i < 8; ++i) word |= std::uint64_t{std::to_integer<unsigned>(bytes[i])} << (8*i);
+    if (!intents::compatible(word)) return;
+    if (route >= static_cast<int>(routes.size())) route = -1;
+    const auto next = intents::replace(word,slot,intents::token(route,now));
+    if (word == next) return;
+    for (int i = 0; i < 8; ++i) bytes[i] = static_cast<std::byte>((next >> (8*i)) & 255);
+    bc::shared_memory.write(0, std::span<const std::byte>{bytes});
+}
+
+int Bot::peer_count(int route) const {
+    return route < 0 ? 0 : std::count(peer_targets.begin(),peer_targets.end(),route);
 }
 
 void Bot::refresh_travel() {
@@ -362,6 +398,7 @@ void Bot::farm() {
         // Stable affinity spreads the opening; a visible nearer ally overrides
         // affinity and discourages duplicate clear/capture work.
         if (i % 5 == static_cast<unsigned>(slot)) score *= 1.15f;
+        score = intents::score(score,peer_count(i));
         for (const auto& a : allies) if (a != me && a.is_visible()
             && dist(a.position(),r.anchor)+2 < dist(me.position(),r.anchor)) score *= 0.65f;
         if (score > best_score) { best_score = score; best = i; }
@@ -405,26 +442,19 @@ void Bot::log(const char* mode) {
         << " hp=" << static_cast<int>(me.health()) << " gems=" << me.gem_count()
         << " xy=" << me.position().x << "," << me.position().y
         << " route_age=" << (travel_round < 0 ? -1 : now-travel_round)
-        << " field_spent=" << field_gold_spent
+        << " peers=" << peer_count(target)
         << " fuel=" << bc::fuel_remaining() << '\n';
 }
 
 void Bot::play_turn() {
     auto& me = bc::self();
     now = bc::round_number();
+    if (initialized) { read_intents(); publish_intent(-1); }
     if (!me.is_alive()) { buy_items(); target = -1; recovering = false; return; }
     if (me.is_recalling() || me.is_submitting_gems() || me.is_teleporting()) return;
-    if (!initialized) initialize();
-    const bool home = spawn.is_set(me.position());
-    const bool field_shopper = me.champion_name() == bc::champion_type::tavi;
-    if (field_shopper && !home && me.gold_count() >= bc::item_type::jungle_shard_of_strength.cost()) {
-        const auto gold_before = me.gold_count();
-        // Each purchase still uses can_buy. Consumables remain spawn/dead-only;
-        // field Health raises max HP without healing, so recovery runs afterward.
-        buy_items();
-        field_gold_spent += gold_before - me.gold_count();
-    }
+    if (!initialized) { initialize(); read_intents(); }
     if (!me.can_move() && !me.can_attack() && !me.can_cast()) return;
+    const bool home = spawn.is_set(me.position());
     if (home) {
         buy_items();
         if (me.health() < policy::leave_spawn_fraction*me.max_health()) { log("heal"); return; }
@@ -437,6 +467,7 @@ void Bot::play_turn() {
         observe(target,bc::vision::visible_tiles());
         if (routes[target].state == 2 && routes[target].observed_at == now
             && routes[target].group->spawn_tiles().is_set(me.position())) {
+            publish_intent(target);
             if (threatened(me.position())) { shield(); fight(false,true); }
             log("capture"); return;
         }
@@ -463,9 +494,10 @@ void Bot::play_turn() {
     }
     if (enemy_near && fight(false,true)) { log("defend"); return; }
     const int shop_gold = me.item_count()[bc::item_type::jungle_emblem_of_strength] ? 300 : 150;
-    if (!home && gems == 0 && policy::needs_shop_trip(field_shopper, me.gold_count(), shop_gold) && !threatened(me.position())
+    if (!home && gems == 0 && me.gold_count() >= static_cast<unsigned>(shop_gold) && !threatened(me.position())
         && me.can_move() && me.can_attack()) { me.recall(); target = -1; log("shop"); return; }
     if (me.health() < 0.85f*me.max_health() && threatened(me.position())) shield();
     farm();
+    publish_intent(target);
     log("farm");
 }

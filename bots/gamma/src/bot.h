@@ -1,5 +1,7 @@
 #pragma once
 #include <cambc.h>
+#include "camp_intents.h"
+#include <array>
 #include <optional>
 #include <vector>
 
@@ -15,7 +17,12 @@ class Bot {
     bool recovering = false;
     int target = -1, slot = 0, now = 0, cursor = 0;
     int last_log = -100, stuck = 0;
-    unsigned field_gold_spent = 0;
+    bool intents_enabled = false;
+    std::array<int, intents::bodies> peer_targets{-1,-1,-1,-1,-1};
+    std::array<intents::Observation, intents::bodies> peer_observations{};
+    void read_intents();
+    void publish_intent(int route);
+    int peer_count(int route) const;
     std::vector<Route> routes;
     cambc::bitboard terrain, spawn, altar_goals;
     std::vector<cambc::vec2> altars;

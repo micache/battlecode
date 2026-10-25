@@ -1,0 +1,17 @@
+{
+  "match_id": "b9bafeb4c03cf9a68b4878591722c08addf3e1eced1f747335ef5e23b9a7c252",
+  "file": "bot-a.stdout.log",
+  "offset": 0,
+  "size": 35547,
+  "lines": [
+    "r=1 mode=farm target=5 hp=1000 gems=0 xy=4,0 route_age=0 field_spent=0 fuel=102391",
+    "r=1 mode=farm target=5 hp=1000 gems=0 xy=6,0 route_age=0 field_spent=0 fuel=99807",
+    "r=1 mode=farm target=7 hp=900 gems=0 xy=6,2 route_age=0 field_spent=0 fuel=101328",
+    "r=101 mode=farm target=11 hp=1000 gems=0 xy=8,0 route_age=0 field_spent=0 fuel=53779",
+    "r=101 mode=farm target=11 hp=1000 gems=19 xy=18,0 route_age=2 field_spent=0 fuel=56213",
+    "r=101 mode=capture target=3 hp=400 gems=0 xy=17,10 route_age=3 field_spent=0 fuel=86287",
+    "r=201 mode=farm target=11 hp=1000 gems=0 xy=14,0 route_age=2 field_spent=0 fuel=57201",
+    "r=201 mode=bank target=5 hp=860 gems=34 xy=23,15 route_age=16 field_spent=0 fuel=80074",
+    "r=251 mode=farm target=7 hp=900 gems=0 xy=4,0 route_age=0 field_spent=60 fuel=54011"
+  ]
+}

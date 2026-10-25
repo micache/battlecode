@@ -1,0 +1,107 @@
+{
+  "task_id": "task-9406d58abd0e4f0e8ccc42430d074465",
+  "bot_id": "gamma",
+  "base_source_hash": "54c19acff8fb33174a4a428e37eb86c925b0de461514ebc2cc990ab23a7930e6",
+  "edit_commit": "f01d496cbc5028475ceda1b5ac558e10056b2175",
+  "input_revision": "537e8fc37f395dcf4aef54c64dbe8d93411b9964",
+  "accepted_commit": "1a0675ca881d4b67cb5c6cb1822ce2ae1602dc4d",
+  "checked_source_hash": "5306ecd5b5716d22f434b3767a20178b9989e77f53a0d9d8f01041884354823d",
+  "hypothesis": "Soft expiring camp intents increase matched wins and mean tributed gems, reduce duplicate opening targets, and add no own faults or fuel suspensions; nonpositive win/tribute gains, unchanged duplication, or new reliability failures falsify it.",
+  "source_file_sha256": {
+    "bots/gamma/src/bot.cpp": "176968d67b8650d6f113e661171db5e56d349e4bce342cad23d4da411cce762c",
+    "bots/gamma/src/bot.h": "0b55f3be4d03595f1f66d58f6efa826e6a0f78f6106cb7252c77bff64ce99ce4",
+    "bots/gamma/src/camp_intents.h": "752c9f1f136b4ede89929ce105072a1c34b48f6ad7e352153b2b21437ed583a5",
+    "bots/gamma/src/draft.cpp": "e1d34874501d74d17bdbfbcc763918421cca7f775c34bb6eab482d7ad29c07b1",
+    "bots/gamma/src/draft.h": "15ddeaeb4ab39f6e3e80647fad56de9c0da7fc728d4c24ca83475060703a7bfd",
+    "bots/gamma/src/main.cpp": "aa72d15d53da5734ccaa0e7d804844724ca2c9be9990f6c7f5cb3975fe9b7a2b",
+    "bots/gamma/src/plan.h": "25504a0ee65fa66ecbcf90b8e4661eb7e4a254e5b951960985ca86710aa89919",
+    "bots/gamma/src/random.h": "5ae547e5a1686c12e00be206016fef798691db1da563adb3ed83fce355284910"
+  },
+  "source_changes_vs_edit_base": [
+    "bots/gamma/src/bot.cpp",
+    "bots/gamma/src/bot.h",
+    "bots/gamma/src/camp_intents.h"
+  ],
+  "prepared_restoration_vs_HEAD": [
+    "bots/gamma/src/bot.cpp",
+    "bots/gamma/src/bot.h",
+    "bots/gamma/src/draft.cpp",
+    "bots/gamma/src/plan.h"
+  ],
+  "frozen_manifest_sha256": "ae308f96f426c838fcc2cf904b5052c215d9e99f8b546a2506478be56dacdbff",
+  "all_six_frozen_file_sets_verified": true,
+  "check": {
+    "bot_id": "gamma",
+    "exit_code": 0,
+    "finished": 1792897074.4775634,
+    "matches": [
+      "47d7164e3bf3c399ded75b40d65862f52a8079191eb7cdd182bde4a0f5dd5e35",
+      "dfa48dac4698141091bf86f9bd7362d0f27124b5b1f96666e59248f3bda4805c"
+    ],
+    "report_reference": "check:task-9406d58abd0e4f0e8ccc42430d074465:5306ecd5b5716d22f434b3767a20178b9989e77f53a0d9d8f01041884354823d",
+    "source_hash": "5306ecd5b5716d22f434b3767a20178b9989e77f53a0d9d8f01041884354823d",
+    "started": 1792897038.9140847,
+    "state": "PASSED",
+    "task_id": "task-9406d58abd0e4f0e8ccc42430d074465"
+  },
+  "smoke": {
+    "a": {
+      "match_id": "47d7164e3bf3c399ded75b40d65862f52a8079191eb7cdd182bde4a0f5dd5e35",
+      "candidate_side": "A",
+      "map_hash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+      "map_name": null,
+      "opponent_source": null,
+      "completed": true,
+      "round": 1032,
+      "submitted": {
+        "A": 1000,
+        "B": 131
+      },
+      "faults": {
+        "A": 0,
+        "B": 0
+      },
+      "suspensions": {
+        "A": 0,
+        "B": 0
+      },
+      "opening_targets": [
+        5,
+        7,
+        2
+      ]
+    },
+    "b": {
+      "match_id": "dfa48dac4698141091bf86f9bd7362d0f27124b5b1f96666e59248f3bda4805c",
+      "candidate_side": "B",
+      "map_hash": "6e3c67956080f8da5a0042e68ea481189cd6f61061a742a8be0354a9ea5c5620",
+      "map_name": null,
+      "opponent_source": null,
+      "completed": true,
+      "round": 879,
+      "submitted": {
+        "A": 55,
+        "B": 1023
+      },
+      "faults": {
+        "A": 0,
+        "B": 0
+      },
+      "suspensions": {
+        "A": 0,
+        "B": 0
+      },
+      "opening_targets": [
+        5,
+        8,
+        2
+      ]
+    }
+  },
+  "limits": [
+    "Latest comparative evidence is later source6b27b8a7, not the current edit base or candidate.",
+    "Earlier coordination trial was not selected; its negative finding remains relevant.",
+    "Smoke validates completion/reliability only; it is not comparative strength evidence.",
+    "No official production parity or full event-policy review claim."
+  ]
+}
